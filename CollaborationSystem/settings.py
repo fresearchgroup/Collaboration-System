@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'BasicArticle',
     'Group',
     'Comments',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
