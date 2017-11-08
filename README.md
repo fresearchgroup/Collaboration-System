@@ -43,21 +43,23 @@ Steps for implementing Djnago with Mysql assuming you have already install Mysql
 3. Open the Mysql 'my.cnf' file and add the following -
 
   Open the file -
+
     ```
     sudo nano /etc/mysql/my.cnf
 
     ```
   Add to file -
 
-    ```
-    [client]
-    database = db_name
-    user = db_user
-    password = db_password
-    default-character-set = utf8
-    ```
+      ```
+      [client]
+      database = db_name
+      user = db_user
+      password = db_password
+      default-character-set = utf8
+      ```
 4. Finally run the following commands
 
    ```
    sudo systemctl daemon-reload
    sudo systemctl restart mysql
+   ```
