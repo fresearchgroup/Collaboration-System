@@ -1,5 +1,5 @@
 
-                                    COLLBORATION SYSTEM
+                                    COLLABORATION SYSTEM
 
         Requiremnets -
 
