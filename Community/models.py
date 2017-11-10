@@ -10,3 +10,8 @@ class Community(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class CommunityMembership(models.Model):
+	user = models.ForeignKey(User, related_name='communitymembership')
+	community = models.ForeignKey(Community, related_name='communitymembership')
+	role = models.ForeignKey(Roles, null=True, related_name='communitymembership')
