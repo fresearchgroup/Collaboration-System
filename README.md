@@ -27,7 +27,7 @@ Steps for implementing Djnago with Mysql assuming you have already install Mysql
 
     ```
 
-2. A the following to your Djnago project's settings.py file -
+2. Add the following to your Djnago project's settings.py file -
 
    ```
          DATABASES = {
