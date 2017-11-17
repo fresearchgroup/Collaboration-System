@@ -9,7 +9,7 @@
                 Mysql
 
 
-Steps for implementing Djnago with Mysql assuming you have already install Mysql server-
+Steps for implementing Django with Mysql assuming you have already install Mysql server-
 
 1. First thing we will need to do is install Python 3 database connector. Run the following command
 

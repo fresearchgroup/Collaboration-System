@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
-from communities.models import Community
+from Community.models import Community
 
 # Create your models here.
 
