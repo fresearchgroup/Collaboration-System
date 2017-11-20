@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'newArticle' %}">New Article</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for community in communities %}
+        <tr>
+          <td>
+            <a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a>
+          </td>
+          <td>
+            {{ community.category }}
+          </td>
+          <td class="align-middle"><small class="text-muted d-block">{{ community.desc }}</small></td>
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+{% endblock %}
