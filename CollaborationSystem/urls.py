@@ -19,6 +19,7 @@ from django.contrib.auth import views as auth_views
 from BasicArticle import viewsets
 from rest_framework import routers
 from UserRolesPermission import views as user_views
+from Community import views as communityview
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
