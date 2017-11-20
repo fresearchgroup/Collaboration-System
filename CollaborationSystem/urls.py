@@ -16,12 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from BasicArticle import views
+from BasicArticle import viewsets
 from rest_framework import routers
 from UserRolesPermission import views as user_views
 
 router = routers.DefaultRouter()
-router.register(r'articleapi', views.ArticleViewSet)
+router.register(r'articleapi', viewsets.ArticleViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
