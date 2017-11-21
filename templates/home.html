@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">User Dashboard</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-  <img src="../static/img/banner1.jpg" alt="Los Angeles" style="width:100%;">
+  <img src="{% static 'img/shattered.png' %}" alt="Los Angeles" style="width:100%;">
 
   <br /><br />
   <div class="container-fluid  alert alert-primary" role="alert">

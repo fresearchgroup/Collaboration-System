@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-<<<<<<< HEAD
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-=======
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
->>>>>>> a000dd11a62a298b3ad57e001a2380add75882db
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

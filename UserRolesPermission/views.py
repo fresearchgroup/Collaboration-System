@@ -16,8 +16,13 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def user_dashboard(request):
-	communities = CommunityMembership.objects.filter(user=request.user)
-	return render(request, 'userdashboard.html', {'communities': communities})
+    if request.user.is_authenticated:
+        communities = CommunityMembership.objects.filter(user=request.user)
+        return render(request, 'userdashboard.html', {'communities': communities})
+    else:
+        return redirect('login')
+
+
 
 def home(request):
 	return render(request, 'home.html')

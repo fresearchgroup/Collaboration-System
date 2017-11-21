@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
   <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
 
@@ -14,7 +17,7 @@
       <h2>{{ community.name }}</h2><br />
       {{myhtml|safe}}{% autoescape off%} {{community.tag_line}}{% endautoescape%}
     </div>
-
+      {% if user.is_authenticated %}
     <div class="col-sm-4">
       <b>Active Since: </b><br />
       N Contributors <br />
@@ -40,6 +43,7 @@
   </b>
     {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
 <br />
