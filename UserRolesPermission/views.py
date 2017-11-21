@@ -10,7 +10,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
-            return redirect('dashboard')
+            return redirect('user_dashboard')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
