@@ -22,8 +22,6 @@ def community_view(request, pk):
 		membership = 'FALSE'
 	return render(request, 'communityview.html', {'community': community, 'membership':membership})
 
-
-
 def community_subscribe(request):
 	if request.method == 'POST':
 		cid = request.POST['cid']
