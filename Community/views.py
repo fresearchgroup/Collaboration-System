@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.shortcuts import render
-from .models import Community
+from .models import Community, CommunityMembership
 from rest_framework import viewsets
+
 
 # Create your views here.
 
@@ -13,8 +14,30 @@ def display_communities(request):
 	return render(request, 'communities.html',{'communities':communities})
 
 def community_view(request, pk):
-    try:
-        community = Community.objects.get(pk=pk)
-    except Community.DoesNotExist:
-        raise Http404
-    return render(request, 'communityview.html', {'community': community})
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+	except CommunityMembership.DoesNotExist:
+		membership = 'FALSE'
+	return render(request, 'communityview.html', {'community': community, 'membership':membership})
+
+
+
+def community_subscribe(request):
+	if request.method == 'POST':
+		cid = request.POST['cid']
+		community=Community.objects.get(pk=cid)
+		user = request.user
+		obj = CommunityMembership.objects.create(user=user, community=community)
+		return redirect('community_view',pk=cid)
+	return render(request, 'communityview.html')
+
+def community_unsubscribe(request):
+	if request.method == 'POST':
+		cid = request.POST['cid']
+		community=Community.objects.get(pk=cid)
+		user = request.user
+		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+		return redirect('community_view',pk=cid)
+	return render(request, 'communityview.html')

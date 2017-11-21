@@ -20,9 +20,11 @@ from BasicArticle import viewsets
 from rest_framework import routers
 from UserRolesPermission import views as user_views
 from Community import views as communityview
+from Community import viewsets as communityviewsets
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
+router.register(r'communityapi', communityviewsets.CommunityViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -34,5 +36,7 @@ urlpatterns = [
 
     url(r'^communities/$', communityview.display_communities, name ='display_communities'),
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
+    url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
+    url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
 
 ]
