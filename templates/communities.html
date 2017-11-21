@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
 {% endblock %}
 

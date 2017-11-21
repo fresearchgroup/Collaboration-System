@@ -2,6 +2,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+  <li class="breadcrumb-item active" ><a href="{% url 'display_communities' %}" >Communities</a></li>
 {% endblock %}
 
 {% block content %}

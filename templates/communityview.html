@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
   <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
@@ -20,7 +21,7 @@
       N Published articles<br />
       N Public groups <br /><br />
       {% if membership == 'FALSE' %}
-      <b> <form method = "post" action ="{% url 'community_subscribe' %}">
+      <b> <form id = "subscribe" method = "post" action ="{% url 'community_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
               <input type="hidden" name="cid" value={{ community.pk}}>
