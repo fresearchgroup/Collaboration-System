@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">User Dashboard</a></li>
+{% endblock %}
+
+{% block content %}
+  <img src="../static/img/banner1.jpg" alt="Los Angeles" style="width:100%;">
+
+  <br /><br />
+  <div class="container-fluid  alert alert-primary" role="alert">
+    <div class="row">
+      <div class="col-sm-4">
+        <h3>Article 1</h3>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
+      </div>
+      <div class="col-sm-4">
+        <h3>Article 2</h3>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
+      </div>
+      <div class="col-sm-4">
+        <h3>Article 3</h3>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

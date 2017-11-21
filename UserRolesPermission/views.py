@@ -18,3 +18,6 @@ def signup(request):
 def user_dashboard(request):
 	communities = CommunityMembership.objects.filter(user=request.user)
 	return render(request, 'userdashboard.html', {'communities': communities})
+
+def home(request):
+	return render(request, 'home.html')
