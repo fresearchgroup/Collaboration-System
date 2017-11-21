@@ -1,5 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
+from Community.models import CommunityMembership
 
 from .forms import SignUpForm
 
@@ -13,3 +14,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+def user_dashboard(request):
+	communities = CommunityMembership.objects.filter(user=request.user)
+	return render(request, 'userdashboard.html', {'communities': communities})

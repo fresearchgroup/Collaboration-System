@@ -39,4 +39,6 @@ urlpatterns = [
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
 
+    url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
+
 ]
