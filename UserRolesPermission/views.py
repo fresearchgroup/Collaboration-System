@@ -1,6 +1,7 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from Community.models import CommunityMembership
+from BasicArticle.models import Articles
 
 from .forms import SignUpForm
 
@@ -25,4 +26,5 @@ def user_dashboard(request):
 
 
 def home(request):
-	return render(request, 'home.html')
+    articles = Articles.objects.all()[:3]
+    return render(request, 'home.html', {'articles':articles})
