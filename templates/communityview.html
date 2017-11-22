@@ -77,7 +77,7 @@
     <div class="col-sm-8">
       <h2>Published Content</h2><br />
       {% for article in articles %}
-      {{article.article.title}}<br />
+      <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
       {% endfor %}
     </div>
 
