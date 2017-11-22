@@ -20,7 +20,8 @@ def community_view(request, pk):
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
-	return render(request, 'communityview.html', {'community': community, 'membership':membership})
+	subscribers = CommunityMembership.objects.filter(community = pk).count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
