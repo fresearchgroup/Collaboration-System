@@ -5,6 +5,8 @@ from django.shortcuts import render
 from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles
 from rest_framework import viewsets
+from .models import CommunityGroups
+from Group.views import create_group
 
 
 # Create your views here.
@@ -63,6 +65,19 @@ def community_article_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-
-
 ##def is_community_member(request):
+
+def community_group(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				group = create_group(request)
+				obj = CommunityGroups.objects.create(group=group, user=request.user, community=community)
+				return redirect('display_communities')
+			else:
+				return render(request, 'new_group.html', {'community':community, 'status':1})
+	else:
+		return redirect('login')

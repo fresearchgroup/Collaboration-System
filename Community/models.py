@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
+from Group.models import Group
 
 # Create your models here.
 class Community(models.Model):
@@ -23,3 +24,8 @@ class CommunityArticles(models.Model):
 	article = models.ForeignKey(Articles, related_name='communityarticles')
 	user = models.ForeignKey(User, related_name='communityarticles')
 	community = models.ForeignKey(Community, related_name='communityarticles')
+
+class CommunityGroups(models.Model):
+	group = models.ForeignKey(Group, null=True, related_name='communitygroups')
+	user = models.ForeignKey(User, null=True, related_name='communitygroups')
+	community = models.ForeignKey(Community, null=True, related_name='communitygroups')

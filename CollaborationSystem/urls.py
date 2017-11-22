@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^article-view/(?P<pk>\d+)/$', articleview.view_article, name='article_view'),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
+    url(r'^community-group-create/$', communityview.community_group, name='community_group'),
 
 
 ]
