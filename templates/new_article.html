@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block breadcrumb %}
+ 
+  
+{% endblock %}
+
+{% block content %}
+{% block javascript %}
+  <script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
+  <script type="text/javascript">
+  	CKEDITOR.replace( 'editor' );
+  </script>
+{% endblock %}
+
+
+{% if user.is_authenticated %}
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="body">Body</label>
+    <textarea id ="editor" class="form-control" name="body"></textarea>
+    <input type = 'hidden' name = 'cid' value = {{pk}}>
+    <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+{% endif %}
+{% endblock %}
