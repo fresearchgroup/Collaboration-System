@@ -17,7 +17,6 @@
       <h2>{{ community.name }}</h2><br />
       {{myhtml|safe}}{% autoescape off%} {{community.tag_line}}{% endautoescape%}
     </div>
-      {% if user.is_authenticated %}
     <div class="col-sm-4">
       <b>Active Since: </b><br />
       N Contributors <br />
@@ -43,7 +42,6 @@
   </b>
     {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>
 <br />
