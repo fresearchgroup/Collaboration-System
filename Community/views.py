@@ -24,13 +24,16 @@ def community_view(request, pk):
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers})
 
 def community_subscribe(request):
-	if request.method == 'POST':
-		cid = request.POST['cid']
-		community=Community.objects.get(pk=cid)
-		user = request.user
-		obj = CommunityMembership.objects.create(user=user, community=community)
-		return redirect('community_view',pk=cid)
-	return render(request, 'communityview.html')
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			cid = request.POST['cid']
+			community=Community.objects.get(pk=cid)
+			user = request.user
+			obj = CommunityMembership.objects.create(user=user, community=community)
+			return redirect('community_view',pk=cid)
+		return render(request, 'communityview.html')
+	else:
+		return redirect('login')
 
 def community_unsubscribe(request):
 	if request.method == 'POST':
