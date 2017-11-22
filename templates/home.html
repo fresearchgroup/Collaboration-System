@@ -14,18 +14,14 @@
   <br /><br />
   <div class="container-fluid  alert alert-primary" role="alert">
     <div class="row">
+      {{myhtml|safe}}{% autoescape off%} 
+      {% for article in articles%}
       <div class="col-sm-4">
-        <h3>Article 1</h3>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
+        <h3>{{article.title}}</h3>
+        {{ article.body|truncatewords:30 }}
       </div>
-      <div class="col-sm-4">
-        <h3>Article 2</h3>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
-      </div>
-      <div class="col-sm-4">
-        <h3>Article 3</h3>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis ipsum. Erat velit scelerisque in dictum non consectetur a erat nam.
-      </div>
+      {% endfor %}
+      {% endautoescape%}
     </div>
   </div>
 
