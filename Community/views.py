@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from BasicArticle.views import create_article, view_article
 # Create your views here.
 from django.shortcuts import render
+from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles
 from rest_framework import viewsets
 
@@ -21,7 +22,8 @@ def community_view(request, pk):
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers})
+	articles = CommunityArticles.objects.filter(community = pk)
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -45,16 +47,22 @@ def community_unsubscribe(request):
 	return render(request, 'communityview.html')
 
 
-def community_article(request, pk):
+def community_article_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			article = create_article(request)
-			community = Community.objects.get(pk=pk)
-			obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-			return redirect('article_view', article.pk)
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				article = create_article(request)
+				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				return redirect('article_view', article.pk)
+			else:
+				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:
-			return render(request, 'new_article.html', {'pk':pk})
+			return redirect('home')
 	else:
 		return redirect('login')
 
 
+##def is_community_member(request):

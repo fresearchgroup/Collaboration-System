@@ -39,7 +39,15 @@
     </div>
       <button type="submit" class="btn btn-danger">Unsubscribe</button>
     </form>
-    <a href="{% url 'community_article_create' community.pk %}" class="btn btn-success">Create Article</a>
+  </b>
+  <b> <form method = "post" action ="{% url 'community_article_create' %}">
+      <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" name="cid" value={{ community.pk}}>
+            <input type="hidden" name="status" value='0'>
+    </div>
+      <button type="submit" class="btn btn-success">Create Article</button>
+    </form>
   </b>
     {% endif %}
     </div>
@@ -68,9 +76,9 @@
   <div class="row">
     <div class="col-sm-8">
       <h2>Published Content</h2><br />
-      Article 1 <br />
-      Article 2 <br />
-      ...
+      {% for article in articles %}
+      {{article.article.title}}<br />
+      {% endfor %}
     </div>
 
     <div class="col-sm-4">

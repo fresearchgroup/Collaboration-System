@@ -5,7 +5,7 @@
 {% load static %}
 
 {% block breadcrumb %}
- 
+ <li class="breadcrumb-item active">Create an Article in <h1>{{community.name}} Community</h1></li>
   
 {% endblock %}
 
@@ -29,10 +29,13 @@
   <div class="form-group">
     <label for="body">Body</label>
     <textarea id ="editor" class="form-control" name="body"></textarea>
-    <input type = 'hidden' name = 'cid' value = {{pk}}>
+    <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+    <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
   </div>
+  {% if status == 1 %}
   <button type="submit" class="btn btn-primary">Create</button>
+  {% endif %}
 </form>
 {% endif %}
 {% endblock %}
