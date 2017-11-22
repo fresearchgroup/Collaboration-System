@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-
+from BasicArticle.views import create_article, view_article
 # Create your views here.
 from django.shortcuts import render
-from .models import Community, CommunityMembership
+from .models import Community, CommunityMembership, CommunityArticles
 from rest_framework import viewsets
 
 
@@ -42,3 +42,18 @@ def community_unsubscribe(request):
 		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 		return redirect('community_view',pk=cid)
 	return render(request, 'communityview.html')
+
+
+def community_article(request, pk):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			article = create_article(request)
+			community = Community.objects.get(pk=pk)
+			obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
+			return redirect('article_view', article.pk)
+		else:
+			return render(request, 'new_article.html', {'pk':pk})
+	else:
+		return redirect('login')
+
+

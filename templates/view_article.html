@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  
+{% endblock %}
+
+{% block content %}
+<div>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active btn btn-outline-primary" href="{% url 'article_view' article.pk %}">View</a>
+  </li>
+</ul>
+</div>
+<br/>
+  <div class="panel panel-default">
+  <div class="panel-body" ><samp><label value="">{{myhtml|safe}}{% autoescape off%} {{article.body}}{% endautoescape%}</label></samp></div>
+
+</div>
+{% endblock %}

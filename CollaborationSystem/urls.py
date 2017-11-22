@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from BasicArticle import viewsets
+from BasicArticle import views as articleview
 from rest_framework import routers
 from UserRolesPermission import views as user_views
 from Community import views as communityview
@@ -39,6 +40,8 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
+    url(r'^community-article-create/(?P<pk>\d+)/$', communityview.community_article, name='community_article_create'),
+    url(r'^article-view/(?P<pk>\d+)/$', articleview.view_article, name='article_view'),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
 
