@@ -72,11 +72,9 @@
 
     <div class="col-sm-4">
       <b>Top 5 Contributors </b><br />
-      Contributor 1 <br />
-      Contributor 2 <br />
-      Contributor 3 <br />
-      Contributor 4 <br />
-      Contributor 5 <br />
+      {% for contributor in contributors %}
+      {{contributor.user.username}}<br />
+      {% endfor %}
     </div>
   </div>
 </div>
