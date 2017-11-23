@@ -18,13 +18,13 @@
     </div>
     <div class="col-sm-4">
       <b>Active Since: </b><br />
-      N Contributors <br />
+      {{subscribers}} Contributors <br />
       N Published articles<br /> <br />
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
-              <input type="hidden" name="cid" value={{ group.pk}}>
+              <input type="hidden" name="gid" value={{ group.pk}}>
       </div>
         <button type="submit" class="btn btn-primary">Join Us</button>
       </form>
@@ -33,7 +33,7 @@
     <b> <form method = "post" action ="{% url 'group_unsubscribe' %}">
       <div class="form-group">
             {% csrf_token %}
-            <input type="hidden" name="cid" value={{ group.pk}}>
+            <input type="hidden" name="gid" value={{ group.pk}}>
     </div>
       <button type="submit" class="btn btn-danger">Unsubscribe</button>
     </form>
