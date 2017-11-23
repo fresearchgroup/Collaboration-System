@@ -91,12 +91,10 @@
     </div>
 
     <div class="col-sm-4">
-      <b>Groups</b><br />
-      Group 1 - N Cotributors<br />
-      Group 2 - N Cotributors<br />
-      Group 3 - N Cotributors<br />
-      Group 4 - N Cotributors<br />
-      more ...
+      <h2>Groups</h2><br />
+      {% for group in groups %}
+      <a href="{% url 'group_view' group.group.pk %}">{{group.group.name}}</a><br />
+      {% endfor %}
     </div>
   </div>
 </div>
