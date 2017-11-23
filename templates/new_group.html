@@ -20,10 +20,6 @@
 
 {% block content %}
 {% block javascript %}
-  <script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
-  <script type="text/javascript">
-  	CKEDITOR.replace( 'editor' );
-  </script>
 {% endblock %}
 
 
@@ -37,7 +33,7 @@
   </div>
   <div class="form-group">
     <label for="desc">Description</label>
-    <textarea id ="editor" class="form-control" name="desc"></textarea>
+    <textarea  class="form-control" name="desc" rows="6"></textarea>
     <input type = 'hidden' name = 'cid' value = {{community.pk}}>
     <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">Let people know what this group is about</small>

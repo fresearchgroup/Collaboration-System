@@ -79,5 +79,7 @@ def community_group(request):
 				return redirect('display_communities')
 			else:
 				return render(request, 'new_group.html', {'community':community, 'status':1})
+		else:
+			return redirect('home')
 	else:
 		return redirect('login')
