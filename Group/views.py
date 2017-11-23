@@ -15,3 +15,16 @@ def create_group(request):
 			visibility = visibility
 			)
 		return group
+
+def group_view(request, pk):
+    try:
+        group = Group.objects.get(pk=pk)
+    except Group.DoesNotExist:
+        raise Http404
+    return render(request, 'groupview.html', {'group': group})
+
+def group_subscribe(request):
+	return redirect('login')
+
+def group_unsubscribe(request):
+	return redirect('login')

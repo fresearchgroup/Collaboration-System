@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ group.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>{{ group.name }}</h2><br />
+    </div>
+    <div class="col-sm-4">
+      <b>Active Since: </b><br />
+      N Contributors <br />
+      N Published articles<br /> <br />
+      {% if membership == 'FALSE' %}
+      <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
+        <div class="form-group">
+              {% csrf_token %}
+              <input type="hidden" name="cid" value={{ group.pk}}>
+      </div>
+        <button type="submit" class="btn btn-primary">Join Us</button>
+      </form>
+    </b>
+    {%else%}
+    <b> <form method = "post" action ="{% url 'group_unsubscribe' %}">
+      <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" name="cid" value={{ group.pk}}>
+    </div>
+      <button type="submit" class="btn btn-danger">Unsubscribe</button>
+    </form>
+  </b>
+    {% endif %}
+    </div>
+  </div>
+</div>
+<br />
+<div class="container-fluid  alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-8">
+      <h3>About Us</h3>
+      {{myhtml|safe}}{% autoescape off%} {{group.desc}}{% endautoescape%}
+    </div>
+
+    <div class="col-sm-4">
+      <b>Top 5 Contributors </b><br />
+      Contributor 1 <br />
+      Contributor 2 <br />
+      Contributor 3 <br />
+      Contributor 4 <br />
+      Contributor 5 <br />
+    </div>
+  </div>
+</div>
+<br />
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>Published Content</h2><br />
+      Article 1 <br />
+      Article 2 <br />
+      ...
+    </div>
+
+    <div class="col-sm-4">
+      <b>Similar Groups</b><br />
+      Group 1 <br />
+      Group 2 <br />
+      Group 3 <br />
+      Group 4 <br />
+      more ...
+    </div>
+  </div>
+</div>
+
+{% endblock %}
