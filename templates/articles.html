@@ -24,7 +24,7 @@
           <td>
             <a href="{% url 'article_view' article.pk %}">{{ article.title }}</a>
           </td>
-          <td class="align-middle"><small class="text-muted d-block">{{ article.body }}</small></td>
+          <td class="align-middle"><small class="text-muted d-block">{{ article.body|striptags|truncatewords:50 }}</small></td>
         </tr>
       {% endfor %}
       {% endautoescape%}

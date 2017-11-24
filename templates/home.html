@@ -19,7 +19,7 @@
       {% for article in articles%}
       <div class="col-sm-4">
         <h3>{{article.title}}</h3>
-       <p> {{ article.body|truncatewords:30 }}</p>
+       <p> {{ article.body|striptags|truncatewords:30 }}</p>
         <p><a href="{% url 'article_view' article.pk %}">See more</a></p>
       </div>
 
