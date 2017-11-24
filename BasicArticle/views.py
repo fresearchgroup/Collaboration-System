@@ -42,3 +42,19 @@ def edit_article(request, pk):
 		except Articles.DoesNotExist:
 			raise Http404
 		return render(request, 'edit_article.html', {'article': article})
+
+
+
+def delete_article(request, pk):
+	if request.method=='POST':
+		status = request.POST['status']
+		if status == '0':
+			return redirect('article_view',pk=pk)
+		elif status == '1':
+			return HttpResponse('deleted')
+	else:
+		try:
+			article = Articles.objects.get(pk=pk)
+		except Articles.DoesNotExist:
+			raise Http404
+		return render(request, 'delete_article.html', {'article': article})

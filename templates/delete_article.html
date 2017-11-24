@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Article</a></li>
+  <li class="breadcrumb-item active">{{ article.title }}</li>
+{% endblock %}
+
+{% block content %}
+<div>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link btn btn-outline-primary" href="{% url 'article_view' article.pk %}">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link btn btn-outline-primary" href="{% url 'article_edit' article.pk %}">Edit</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link active btn btn-outline-primary" href="{% url 'article_delete' article.pk %}">Delete</a>
+  </li>
+</ul>
+</div>
+<br/>
+  <div class="panel panel-default">
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>Are you sure you want to delete <h1 class="display-4">{{article.title}} ?</h1></samp></div>
+     <form method="post">
+          {% csrf_token %}
+
+          <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="radio" name ="status" value="0" class="btn btn-success">Keep</button>
+                <button type="radio" name ="status" value="1" class="btn btn-danger">Delete</button>
+          </div>
+
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}
