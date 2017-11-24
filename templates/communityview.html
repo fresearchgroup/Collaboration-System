@@ -72,8 +72,13 @@
 
     <div class="col-sm-4">
       <b>Top 5 Contributors </b><br />
+<<<<<<< HEAD
       {% for user in users %}
       {{user.username}}<br />
+=======
+      {% for contributor in contributors %}
+      {{contributor.user.username}}<br />
+>>>>>>> bc986a5e255a2d989483b49f0936c6ca1c373b77
       {% endfor %}
     </div>
   </div>
@@ -89,12 +94,10 @@
     </div>
 
     <div class="col-sm-4">
-      <b>Groups</b><br />
-      Group 1 - N Cotributors<br />
-      Group 2 - N Cotributors<br />
-      Group 3 - N Cotributors<br />
-      Group 4 - N Cotributors<br />
-      more ...
+      <h2>Groups</h2><br />
+      {% for group in groups %}
+      <a href="{% url 'group_view' group.group.pk %}">{{group.group.name}}</a><br />
+      {% endfor %}
     </div>
   </div>
 </div>
