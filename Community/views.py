@@ -25,7 +25,8 @@ def community_view(request, pk):
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
 	articles = CommunityArticles.objects.filter(community = pk)
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles})
+	users = CommunityArticles.objects.raw('select DISTINCT auth_user.id,username from auth_user, Community_communityarticles where auth_user.id = Community_communityarticles.user_id and Community_communityarticles.community_id=%s;', [pk])
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'users':users})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:

@@ -55,7 +55,7 @@
           <input type="hidden" name="cid" value={{ community.pk}}>
           <input type="hidden" name="status" value=0>
     </div>
-    <button type="submit" class="btn btn-success">Create Group</button>
+    <button type="submit" class="btn btn-primary">Create Group</button>
   </form>
   </b>
     {% endif %}
@@ -67,16 +67,14 @@
   <div class="row">
     <div class="col-sm-8">
       <h3>About Us</h3>
-      {{myhtml|safe}}{% autoescape off%} {{community.desc}}{% endautoescape%}
+      {{myhtml|safe}}{% autoescape off%} {{community.desc|truncatewords:30 }}{% endautoescape%}
     </div>
 
     <div class="col-sm-4">
       <b>Top 5 Contributors </b><br />
-      Contributor 1 <br />
-      Contributor 2 <br />
-      Contributor 3 <br />
-      Contributor 4 <br />
-      Contributor 5 <br />
+      {% for user in users %}
+      {{user.username}}<br />
+      {% endfor %}
     </div>
   </div>
 </div>

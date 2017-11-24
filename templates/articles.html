@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
@@ -10,22 +10,24 @@
 {% endblock %}
 
 {% block content %}
-  <img src="{% static 'img/shattered.png' %}" alt="Los Angeles" style="width:100%;">
-
-  <br /><br />
-  <div class="container-fluid  alert alert-primary" role="alert">
-    <div class="row">
-      {{myhtml|safe}}{% autoescape off%} 
-      {% for article in articles%}
-      <div class="col-sm-4">
-        <h3>{{article.title}}</h3>
-       <p> {{ article.body|truncatewords:30 }}</p>
-        <p><a href="{% url 'article_view' article.pk %}">See more</a></p>
-      </div>
-
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Title</th>
+        <th>Body</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for article in articles %}
+        <tr>
+          <td>
+            <a href="{% url 'article_view' article.pk %}">{{ article.title }}</a>
+          </td>
+          <td class="align-middle"><small class="text-muted d-block">{{ article.body }}</small></td>
+        </tr>
       {% endfor %}
       {% endautoescape%}
-    </div>
-  </div>
-
+    </tbody>
+  </table>
 {% endblock %}

@@ -10,10 +10,8 @@
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   {% endif %}
-  <li class="breadcrumb-item active">{{ community.name }}</li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
+  <li class="breadcrumb-item active">Create a Group in <h1>{{ community.name }} Community</h1></li>
+  
 
 
 {% endblock %}
