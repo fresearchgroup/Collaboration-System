@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import NewArticleForm
 from django.http import Http404, HttpResponse
 from .models import Articles
+from django.views.generic.edit import UpdateView
+from reversion_compare.views import HistoryCompareDetailView
 
 def display_articles(request):
 	articles=Articles.objects.all()
@@ -58,3 +60,8 @@ def delete_article(request, pk):
 		except Articles.DoesNotExist:
 			raise Http404
 		return render(request, 'delete_article.html', {'article': article})
+
+
+
+class SimpleModelHistoryCompareView(HistoryCompareDetailView):
+    model = Articles

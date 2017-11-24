@@ -4,3 +4,10 @@ from .models import Group
 
 
 admin.site.register(Group)
+
+'''class GroupArticlesAdmin(CompareVersionAdmin):
+    pass
+
+
+admin.site.register(GroupArticle, GroupArticlesAdmin)
+'''

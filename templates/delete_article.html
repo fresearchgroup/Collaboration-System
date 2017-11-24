@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Article</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.title }}</li>
 {% endblock %}
 
@@ -16,6 +18,9 @@
   </li>
   <li class="nav-item active">
     <a class="nav-link active btn btn-outline-primary" href="{% url 'article_delete' article.pk %}">Delete</a>
+  </li>
+  <li class="nav-item ">
+    <a class="nav-link  btn btn-outline-primary" href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>
 </ul>
 </div>

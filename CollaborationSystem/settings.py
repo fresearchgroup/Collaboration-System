@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'Group',
     'Comments',
     'rest_framework',
-    'widget_tweaks'
+    'widget_tweaks',
+    'reversion',
+    'reversion_compare',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'
