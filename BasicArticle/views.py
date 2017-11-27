@@ -10,14 +10,17 @@ def display_articles(request):
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):
-	if request.method == 'POST':
-		form = NewArticleForm(request.POST)
-		if form.is_valid():
-			article = Articles.objects.create(
-				title = form.cleaned_data.get('title'),
-				body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ","")
-				)
-			return article
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = NewArticleForm(request.POST)
+			if form.is_valid():
+				article = Articles.objects.create(
+					title = form.cleaned_data.get('title'),
+					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ","")
+					)
+				return article
+	else:
+		return redirect('login')
 
 def view_article(request, pk):
     try:
@@ -29,37 +32,42 @@ def view_article(request, pk):
 
 
 def edit_article(request, pk):
-
-	if request.method == 'POST':
-		form = NewArticleForm(request.POST)
-		if form.is_valid():
-			article = Articles.objects.get(pk=pk)
-			article.title = form.cleaned_data.get('title')
-			article.body = form.cleaned_data.get('body')
-			article.save(update_fields=["title","body"])
-			return redirect('article_view',pk=article.pk)
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = NewArticleForm(request.POST)
+			if form.is_valid():
+				article = Articles.objects.get(pk=pk)
+				article.title = form.cleaned_data.get('title')
+				article.body = form.cleaned_data.get('body')
+				article.save(update_fields=["title","body"])
+				return redirect('article_view',pk=article.pk)
+		else:
+			try:
+				article = Articles.objects.get(pk=pk)
+			except Articles.DoesNotExist:
+				raise Http404
+			return render(request, 'edit_article.html', {'article': article})
 	else:
-		try:
-			article = Articles.objects.get(pk=pk)
-		except Articles.DoesNotExist:
-			raise Http404
-		return render(request, 'edit_article.html', {'article': article})
+		return redirect('login')
 
 
 
 def delete_article(request, pk):
-	if request.method=='POST':
-		status = request.POST['status']
-		if status == '0':
-			return redirect('article_view',pk=pk)
-		elif status == '1':
-			return HttpResponse('deleted')
+	if request.user.is_authenticated:
+		if request.method=='POST':
+			status = request.POST['status']
+			if status == '0':
+				return redirect('article_view',pk=pk)
+			elif status == '1':
+				return HttpResponse('deleted')
+		else:
+			try:
+				article = Articles.objects.get(pk=pk)
+			except Articles.DoesNotExist:
+				raise Http404
+			return render(request, 'delete_article.html', {'article': article})
 	else:
-		try:
-			article = Articles.objects.get(pk=pk)
-		except Articles.DoesNotExist:
-			raise Http404
-		return render(request, 'delete_article.html', {'article': article})
+		return redirect('login')
 
 
 

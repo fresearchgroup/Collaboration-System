@@ -13,6 +13,7 @@
   <li class="nav-item">
     <a class="nav-link active btn btn-outline-primary" href="{% url 'article_view' article.pk %}">View</a>
   </li>
+  {% if user.is_authenticated %}
   <li class="nav-item">
     <a class="nav-link btn btn-outline-primary" href="{% url 'article_edit' article.pk %}">Edit</a>
   </li>
@@ -22,6 +23,7 @@
   <li class="nav-item ">
     <a class="nav-link  btn btn-outline-primary" href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>
+  {% endif %}
 </ul>
 </div>
 <br/>
