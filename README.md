@@ -4,9 +4,19 @@
         Requiremnets -
 
                 Django - 1.11.7 LTS
-                python - 3
+                python - 3.6
                 Django Rest API
                 Mysql
+
+        Django pakages installed - 
+
+                Django Rest Framework
+                Widget Tweaks
+                Django Reversion
+                Reversion Compare
+                MPTT
+                Haystack
+                Django Machina
 
 
 Steps for implementing Django with Mysql assuming you have already install Mysql server-
@@ -38,6 +48,7 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
               },
           }
       }
+
    ```
 
 3. Open the Mysql 'my.cnf' file and add the following -
@@ -56,8 +67,9 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
       user = db_user
       password = db_password
       default-character-set = utf8
+      
       ```
-4. Finally run the following commands
+4. Finally run the following commands -
 
    ```
    sudo systemctl daemon-reload
