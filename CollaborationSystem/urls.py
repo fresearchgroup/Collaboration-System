@@ -23,6 +23,7 @@ from UserRolesPermission import views as user_views
 from Community import views as communityview
 from Community import viewsets as communityviewsets
 from Group import views as group_views
+from machina.app import board
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -55,5 +56,7 @@ urlpatterns = [
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
+
+    url(r'^forum/', include(board.urls)),
 
 ]
