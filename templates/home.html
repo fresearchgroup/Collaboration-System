@@ -4,6 +4,7 @@
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+  <li class="breadcrumb-item active"><a href="/forum">Forum</a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   {% endif %}
