@@ -28,7 +28,7 @@ SECRET_KEY = 'myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.129.46.103','127.0.0.1','10.129.46.111']
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'reversion_compare',
     'haystack',
     'mptt',
+    'corsheaders',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reversion.middleware.RevisionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
 ]
 
@@ -143,7 +145,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), MACHINA_MAIN_STATIC_DIR]
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'user_dashboard'
 
-
+CORS_ORIGIN_ALLOW_ALL=True
 
 CACHES = {
   'default': {
