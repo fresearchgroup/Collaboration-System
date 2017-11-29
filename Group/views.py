@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
-from .models import Group, GroupMembership
+from .models import Group, GroupMembership, GroupArticles
+from BasicArticle.models import Articles
+from BasicArticle.views import create_article, view_article
 
 def create_group(request):
 	if request.method == 'POST':
@@ -45,3 +47,20 @@ def group_unsubscribe(request):
 		obj = GroupMembership.objects.filter(user=user, group=group).delete()
 		return redirect('group_view',pk=gid)
 	return render(request, 'groupview.html')
+
+def group_article_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
+			if status=='1':
+				article = create_article(request)
+				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
+				return redirect('article_view', article.pk)
+			else:
+				return render(request, 'new_article.html', {'group':group, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')

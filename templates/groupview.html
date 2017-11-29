@@ -38,6 +38,16 @@
       <button type="submit" class="btn btn-danger">Unsubscribe</button>
     </form>
   </b>
+  <b> <form method = "post" action ="{% url 'group_article_create' %}">
+      <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" name="gid" value={{ group.pk}}>
+            <input type="hidden" name="status" value='0'>
+            <input type="hidden" name="articleof" value='group'>
+    </div>
+      <button type="submit" class="btn btn-success">Create Article</button>
+    </form>
+  </b>
     {% endif %}
     </div>
   </div>

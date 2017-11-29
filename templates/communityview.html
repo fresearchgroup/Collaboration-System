@@ -44,6 +44,7 @@
             {% csrf_token %}
             <input type="hidden" name="cid" value={{ community.pk}}>
             <input type="hidden" name="status" value='0'>
+            <input type="hidden" name="articleof" value='community'>
     </div>
       <button type="submit" class="btn btn-success">Create Article</button>
     </form>

@@ -1,0 +1,1000 @@
+ 1004  sudo a2enmod proxy
+ 1005  sudo service apache2 restart 
+ 1006  a2enmod proxy
+ 1007  a2enmod proxy_http 
+ 1008  sudo a2enmod proxy_http 
+ 1009  sudo service apache2 restart 
+ 1010  cd /etc/apache2/sites-available/
+ 1011  sudo vi jenkins.conf
+ 1012  sudo a2ensite jenkins
+ 1013  sudo service apache2 reload 
+ 1014  sudo service apache2 restart 
+ 1015  sudo a2ensite jenkins
+ 1016  sudo systemctl restart apache2
+ 1017  sudo systemctl restart jenkins
+ 1018  netstat -plntu
+ 1019  cat /var/lib/jenkins/secrets/initialAdminPassword
+ 1020  cd
+ 1021  apt-get install python-software-properties
+ 1022  sudo apt-get install python-software-properties
+ 1023  java -version
+ 1024  sudo apt-get install openjdk-8-jdk
+ 1025  sudo apt-get update
+ 1026  java -version
+ 1027  wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+ 1028  echo 'deb https://pkg.jenkins.io/debian-stable binary/' | tee -a /etc/apt/sources.list
+ 1029  sudo echo 'deb https://pkg.jenkins.io/debian-stable binary/' | tee -a /etc/apt/sources.list
+ 1030  sudo apt-get update
+ 1031  sudo apt-get install jenkins
+ 1032  netstat -plntu
+ 1033  wget localhost:8080
+ 1034  vi /var/log/jenkins/jenkins.log 
+ 1035  ps aux |grep jenkins
+ 1036  java -jar jenkins.war --help
+ 1037  cd /etc/init.d/jenkins
+ 1038  vi /etc/init.d/jenkins
+ 1039  sudo vi /etc/init.d/jenkins
+ 1040  sudo /etc/init.d/jenkins restart
+ 1041  sudo systemctl daemon-reload 
+ 1042  sudo systemctl jenkins restart
+ 1043  sudo /etc/init.d/jenkins restart
+ 1044  ssh edx@10.129.36.177
+ 1045  exit
+ 1046  nslookup 
+ 1047  nslookup http://courses.iimbx.cse.iitb.ac.in
+ 1048  nslookup courses.iimbx.cse.iitb.ac.in
+ 1049  dnsdomainname 10.129.36.175
+ 1050  nslookup -type=PTR 10.129.36.175.in-addr.arpa
+ 1051  nslookup http://courses.iimb.cse.iitb.ac.in/
+ 1052  nslookup 10.129.36.175
+ 1053  exit
+ 1054  ssh edx@10.129.26.77
+ 1055  ssh edx@10.129.28.77
+ 1056  ssh edx@10.129.28.25
+ 1057  ssh edx@10.129.28.77
+ 1058  ssh 10.129.46.103
+ 1059  ssh hduser@10.129.46.103
+ 1060  ping 10.129.46.103
+ 1061  ping 10.129.46.102
+ 1062  ssh frg@10.129.46.102
+ 1063  exit
+ 1064  cd Desktop/study/script/
+ 1065  ls
+ 1066  chmod +x sshing.sh 
+ 1067  ./sshing.sh 
+ 1068  ls
+ 1069  ./sshing.sh 
+ 1070  chmod +x server1.sh 
+ 1071  ./sshing.sh 
+ 1072  pwd
+ 1073  ls
+ 1074  ./sshing.sh 
+ 1075  ls
+ 1076  ./sshing.sh 
+ 1077  ls
+ 1078  ./sshing.sh 
+ 1079  ls
+ 1080  rm firuza 
+ 1081  ls
+ 1082  ./server1.sh 
+ 1083  ls
+ 1084  rm firuza 
+ 1085  ls
+ 1086  ./server1.sh 
+ 1087  ls
+ 1088  rm firuza 
+ 1089  ls
+ 1090  ./sshing.sh 
+ 1091  ls
+ 1092  sudo su
+ 1093  ls
+ 1094  ./sshing.sh 
+ 1095  sshpass -p "123456" ssh frg@10.129.46.102
+ 1096  ./sshing.sh 
+ 1097  echo password | sudo -u root --stdin
+ 1098  echo password | sudo -S
+ 1099  ./sshing.sh 
+ 1100  exit
+ 1101  sudo apt-get install virtualbox 
+ 1102  exirt
+ 1103  exit
+ 1104  cd /tmp/.fr-KShj5Z
+ 1105  clear
+ 1106  scp -R nags@10.129.46.55:~/Documents/PB .
+ 1107  scp -r nags@10.129.46.55:~/Documents/PB .
+ 1108  ls
+ 1109  cd PB/
+ 1110  ls
+ 1111  cd PT/
+ 1112  ls
+ 1113  unzip portuguese.zip 
+ 1114  exit
+ 1115  ssh nags@10.129.46.55
+ 1116  scp -R nags@10.129.46.55:~/Documents/Collaborating_Communities .
+ 1117  scp -r nags@10.129.46.55:~/Documents/Collaborating_Communities .
+ 1118  cd Collaborating
+ 1119  cd Collaborating_Communities/
+ 1120  ls
+ 1121  sudo apt-get install build-essential module-assistant 
+ 1122  sudo m-a prepare
+ 1123  sudo apt-get install linux-headers-generic build-essential dkms
+ 1124  sudo apt-get remove virtualbox-dkms 
+ 1125  exit
+ 1126  cd /var/log/apache2/
+ 1127  ls
+ 1128  tail error.log
+ 1129  vi error.log
+ 1130  ls
+ 1131  tail error.log.1
+ 1132  ls
+ 1133  cd ..
+ 1134  cd jenkins/
+ 1135  ls
+ 1136  vi jenkins.log
+ 1137  cd /var/www/html/
+ 1138  ls
+ 1139  exit
+ 1140  cd
+ 1141  sudo systemctl status jenkins
+ 1142  cd /etc/apache2/
+ 1143  vi httpd.conf
+ 1144  ls
+ 1145  vi apache2.conf 
+ 1146  sudo gitlab-ctl stop
+ 1147  sudo /etc/init.d/apache2 restart
+ 1148  cd /var/www/html/
+ 1149  ls
+ 1150  EXIT
+ 1151  exit
+ 1152  gitlab-ctl uninstall
+ 1153  sudo gitlab-ctl uninstall
+ 1154  suso service jenkins stop
+ 1155  sudo service jenkins stop
+ 1156  sudo remove jenkins
+ 1157  sudo apt-remove jenkins
+ 1158  sudo apt-get remove --purge jenkins
+ 1159  sudo apt-get remove --auto-remove jenkins
+ 1160  cd /var/log/
+ 1161  ls
+ 1162  cd apache2/
+ 1163  ls
+ 1164  cd
+ 1165  service jenkins status
+ 1166  service jenkins stop
+ 1167  sudo /etc/init.d/jenkins restart
+ 1168  cd /etc/default/
+ 1169  ls
+ 1170  sudo ufw app list
+ 1171  sudo ufw disable
+ 1172  sudo ufw status
+ 1173  sudo /etc/init.d/nginx stop
+ 1174  sudo service ap
+ 1175  sudo /etc/init.d/apache2 restart
+ 1176  cd /etc/init.d/
+ 1177  ls
+ 1178  sudo apt-get remove nginx
+ 1179  sudo /etc/init.d/apache2 start
+ 1180  tail -f /var/log/apache2/error.log
+ 1181  vi /var/log/apache2/error.log
+ 1182  sudo /etc/init.d/apache2 reload 
+ 1183  sudo service apache2 status
+ 1184  apachectl stop
+ 1185  sudo /etc/init.d/apache2 start
+ 1186  sudo /etc/init.d/apache2 reload 
+ 1187  sudo netstat -tulpn | grep :80
+ 1188  sudo service nginx stop
+ 1189  vi apache2 
+ 1190  history
+ 1191  cd /etc/apache2/sites-available/
+ 1192  ls
+ 1193  vi jenkins.conf 
+ 1194  vi default-ssl.conf 
+ 1195  exit
+ 1196  cd /var/www/html/portal3/
+ 1197  ls
+ 1198  cd modules/
+ 1199  cd simpletest/
+ 1200  ls
+ 1201  cd /etc/apache2/sites-enabled/
+ 1202  ls
+ 1203  cd
+ 1204  ssh firuza@10.129.50.5
+ 1205  exit
+ 1206  ls
+ 1207  cd Desktop/
+ 1208  ls
+ 1209  cd iso-ubuntu/
+ 1210  ls
+ 1211  scp ubuntu-16.04.2-desktop-i386.iso dbp@10.129.28.171:~/
+ 1212  ssh dbp@10.129.28.171
+ 1213  exit
+ 1214  wget http://gitlab.cse.iitb.ac.in/mangeshg/iimbx/blob/589dd9a9511e32545d9b9c65d3a77498c89de7fd/iimbx_21082017.sql
+ 1215  vi iimbx_21082017.sql 
+ 1216  rm iimbx_21082017.sql 
+ 1217  wget http://gitlab.cse.iitb.ac.in/mangeshg/iimbx/blob/master/iimbx_21082017.sql
+ 1218  vi iimbx_21082017.sql 
+ 1219  rm iimbx_21082017.sql 
+ 1220  wget http://gitlab.cse.iitb.ac.in/mangeshg/iimbx/raw/master/iimbx_21082017.sql
+ 1221  vi iimbx_21082017.sql 
+ 1222  exit
+ 1223  ssh dbp@10.129.28.171
+ 1224  cd Desktop/study/script/
+ 1225  ls
+ 1226  ./sshing.sh 
+ 1227  cd ..
+ 1228  mkdir iimbx-cluster
+ 1229  cd iimbx-cluster/
+ 1230  git clone https://github.com/abhisgithub/IIMBx-Multiple-Cluster-Instalation
+ 1231  ls
+ 1232  cd IIMBx-Multiple-Cluster-Instalation/
+ 1233  git remote add upstream 
+ 1234  git remote add upstream https://github.com/abhisgithub/IIMBx-Multiple-Cluster-Instalation
+ 1235  git chekout master
+ 1236  git checkout master
+ 1237  git pull --rebase 
+ 1238  ls
+ 1239  gedit README.md 
+ 1240  vi README.md 
+ 1241  git status
+ 1242  git add README.md 
+ 1243  git status
+ 1244  git reset HEAD README.md
+ 1245  git status
+ 1246  vi README.md 
+ 1247  git add README.md 
+ 1248  git status
+ 1249  git push README.md
+ 1250  git status
+ 1251  git commit -m "Formatted code"
+ 1252  git push -u origin master
+ 1253  gedit README.md 
+ 1254  git add README.md 
+ 1255  git push README.md
+ 1256  git commit -m "Added details"
+ 1257  git push -u origin master
+ 1258  gedit cluster_install.sh 
+ 1259  git add cluster_install.sh 
+ 1260  git commit -m "Reading ip, name, password of 4VMs from user"
+ 1261  git push -u origin master
+ 1262  exit
+ 1263  cd /home/firuza/Desktop/LaTeX/create-space/sample_used_in_book
+ 1264  clear
+ 1265  cd /home/firuza/Desktop/LaTeX/create-space/sample_used_in_book
+ 1266  clear
+ 1267  sudo apg-get update
+ 1268  sudo apt-get update
+ 1269  sudo apt-get remove virtualbox*
+ 1270  sudo apt-get install virtualbox*
+ 1271  sudo apt-get update
+ 1272  exit
+ 1273  sudo apt-get install virtualbox
+ 1274  exit
+ 1275  cd Desktop/es/photos/7_Milan/
+ 1276  mkdir notcopied
+ 1277  cp DSCN2810.JPG notcopied/.
+ 1278  cp DSCN2821.JPG notcopied/.
+ 1279  cp DSCN2822.JPG notcopied/.
+ 1280  cp DSCN2871.JPG notcopied/.
+ 1281  exit
+ 1282  cd Desktop/pendrives/2016_1112_0406_Wedding_Firuza_Nagesh_2016/
+ 1283  ls
+ 1284  cd Registered_Marriage_2016_11_04/
+ 1285  ls -l
+ 1286  q
+ 1287  cd ..
+ 1288  ls
+ 1289  cd Wedding_at_Mahalsa_Temple_Hall_Mardol_2016_12_06/
+ 1290  ls
+ 1291  ls -l
+ 1292  exit
+ 1293  sudo apt-get install libimage-exiftool-perl
+ 1294  cd Desktop/pendrives/2016_1112_0406_Wedding_Firuza_Nagesh_2016/Registered_Marriage_2016_11_04
+ 1295  ls
+ 1296  cd marriageoffice/
+ 1297  ls
+ 1298  exiftool -AllDates="2016:11:04 11:00:00" *.jpg
+ 1299  exit
+ 1300  cd Downloads/test/
+ 1301  ls
+ 1302  lame -V2 input.wav output.mp3
+ 1303  sudo apt-get install lame
+ 1304  lame -V3 Track\ 1.wav output.mp3
+ 1305  cp output.mp3 /var/www/html/
+ 1306  sudo cp output.mp3 /var/www/html/
+ 1307  ifconfig
+ 1308  sudo gitlab-ctl stop
+ 1309  | sudo systemctl stop nginx
+ 1310  sudo systemctl stop nginx
+ 1311  sudo systemctl start apache2.service
+ 1312  cd ..
+ 1313  cd espresso_1/
+ 1314  ls
+ 1315  lame -V3 Track\ 1.wav track1.mp3
+ 1316  lame -V3 Track\ 2.wav track2.mp3
+ 1317  lame -V3 Track\ 3.wav track3.mp3
+ 1318  lame -V3 Track\ 4.wav track4.mp3
+ 1319  lame -V3 Track\ 5.wav track5.mp3
+ 1320  lame -V3 Track\ 6.wav track6.mp3
+ 1321  lame -V3 Track\ 7.wav track7.mp3
+ 1322  lame -V3 Track\ 8.wav track8.mp3
+ 1323  lame -V3 Track\ 9.wav track9.mp3
+ 1324  lame -V3 Track\ 10.wav track10.mp3
+ 1325  lame -V3 Track\ 11.wav track11.mp3
+ 1326  lame -V3 Track\ 12.wav track12.mp3
+ 1327  lame -V3 Track\ 13.wav track13.mp3
+ 1328  lame -V3 Track\ 14.wav track14.mp3
+ 1329  lame -V3 Track\ 15.wav track15.mp3
+ 1330  lame -V3 Track\ 16.wav track16.mp3
+ 1331  lame -V3 Track\ 17.wav track17.mp3
+ 1332  lame -V3 Track\ 18.wav track18.mp3
+ 1333  lame -V3 Track\ 19.wav track19.mp3
+ 1334  lame -V3 Track\ 20.wav track20.mp3
+ 1335  lame -V3 Track\ 21.wav track21.mp3
+ 1336  lame -V3 Track\ 22.wav track22.mp3
+ 1337  lame -V3 Track\ 23.wav track23.mp3
+ 1338  lame -V3 Track\ 24.wav track24.mp3
+ 1339  lame -V3 Track\ 25.wav track25.mp3
+ 1340  lame -V3 Track\ 26.wav track26.mp3
+ 1341  lame -V3 Track\ 27.wav track27.mp3
+ 1342  lame -V3 Track\ 28.wav track28.mp3
+ 1343  lame -V3 Track\ 29.wav track29.mp3
+ 1344  lame -V3 Track\ 30.wav track30.mp3
+ 1345  lame -V3 Track\ 31.wav track31.mp3
+ 1346  lame -V3 Track\ 32.wav track32.mp3
+ 1347  lame -V3 Track\ 33.wav track33.mp3
+ 1348  lame -V3 Track\ 34.wav track34.mp3
+ 1349  lame -V3 Track\ 35.wav track35.mp3
+ 1350  lame -V3 Track\ 36.wav track36.mp3
+ 1351  lame -V3 Track\ 37.wav track37.mp3
+ 1352  lame -V3 Track\ 38.wav track38.mp3
+ 1353  lame -V3 Track\ 39.wav track39.mp3
+ 1354  lame -V3 Track\ 40.wav track40.mp3
+ 1355  lame -V3 Track\ 41.wav track41.mp3
+ 1356  lame -V3 Track\ 42.wav track42.mp3
+ 1357  lame -V3 Track\ 43.wav track43.mp3
+ 1358  lame -V3 Track\ 44.wav track44.mp3
+ 1359  lame -V3 Track\ 45.wav track45.mp3
+ 1360  lame -V3 Track\ 46.wav track46.mp3
+ 1361  lame -V3 Track\ 47.wav track47.mp3
+ 1362  lame -V3 Track\ 48.wav track48.mp3
+ 1363  lame -V3 Track\ 49.wav track49.mp3
+ 1364  lame -V3 Track\ 50.wav track50.mp3
+ 1365  lame -V3 Track\ 51.wav track51.mp3
+ 1366  lame -V3 Track\ 52.wav track52.mp3
+ 1367  lame -V3 Track\ 53.wav track53.mp3
+ 1368  lame -V3 Track\ 54.wav track54.mp3
+ 1369  lame -V3 Track\ 55.wav track55.mp3
+ 1370  lame -V3 Track\ 56.wav track56.mp3
+ 1371  lame -V3 Track\ 57.wav track57.mp3
+ 1372  lame -V3 Track\ 58.wav track58.mp3
+ 1373  lame -V3 Track\ 59.wav track59.mp3
+ 1374  lame -V3 Track\ 60.wav track60.mp3
+ 1375  lame -V3 Track\ 61.wav track61.mp3
+ 1376  lame -V3 Track\ 62.wav track62.mp3
+ 1377  lame -V3 Track\ 63.wav track63.mp3
+ 1378  lame -V3 Track\ 64.wav track64.mp3
+ 1379  lame -V3 Track\ 65.wav track65.mp3
+ 1380  lame -V3 Track\ 66.wav track66.mp3
+ 1381  lame -V3 Track\ 67.wav track67.mp3
+ 1382  lame -V3 Track\ 68.wav track68.mp3
+ 1383  exit
+ 1384  ssh dbp@10.129.28.171
+ 1385  exit
+ 1386  find *.wav
+ 1387  locate *.wav
+ 1388  sudo apt-get install easytag
+ 1389  easytag 
+ 1390  exit
+ 1391  sudo su
+ 1392  sudo -S <<< arabia1000 su
+ 1393  sudo -S araiba1000 service apache2 restart
+ 1394  sudo -S <<< "araiba1000" service apache2 restart
+ 1395  sudo -S <<< "araiba1000" su
+ 1396  sudo -S 
+ 1397  su
+ 1398  echo mypassword | sudo -S command
+ 1399  echo arabia1000 | sudo -S su
+ 1400  echo arabia1000 | sudo -S /etc/init.d/apache2 restart
+ 1401  echo arabia1000 | sudo su
+ 1402  exit
+ 1403  cd Desktop/it/Beginners/espresso_1/Espresso1beginner/
+ 1404  ls
+ 1405  mv track1.mp3 track01.mp3
+ 1406  ls
+ 1407  mv track2.mp3 track02.mp3
+ 1408  mv track3.mp3 track03.mp3
+ 1409  mv track4.mp3 track04.mp3
+ 1410  mv track5.mp3 track05.mp3
+ 1411  mv track6.mp3 track06.mp3
+ 1412  mv track7.mp3 track07.mp3
+ 1413  mv track8.mp3 track08.mp3
+ 1414  mv track9.mp3 track09.mp3
+ 1415  ls
+ 1416  exit
+ 1417  ifconfig
+ 1418  exit
+ 1419  sudo pip3 install django
+ 1420  django-admin --version
+ 1421  mkdir test_django_app
+ 1422  cd test_django_app/
+ 1423  django-admin startproject testsite
+ 1424  ls
+ 1425  cd testsite/
+ 1426  ls
+ 1427  cd ..
+ 1428  cd testsite/
+ 1429  ls
+ 1430  vi manage.py 
+ 1431  cd testsite/
+ 1432  ls
+ 1433  vi settings.py 
+ 1434  cd ..
+ 1435  python3 manage.py runserver 10.129.26.212:8000
+ 1436  python manage.py migrate
+ 1437  python manage.py runserver 10.129.26.212:8000
+ 1438  sudo /etc/init.d/nginx stop
+ 1439  sudo /etc/init.d/apache2 start
+ 1440  exit
+ 1441  ssh firuza@10.129.50.5
+ 1442  cd 2016_07_28_Firuza_Ubuntu_Backup/
+ 1443  cd Backup_Database/
+ 1444  vi wiki.sql 
+ 1445  exit
+ 1446  sudo apt-get update
+ 1447  cd Downloads/
+ 1448  sudo dpkg -i WireframeSketcher-4.7.6_amd64.deb 
+ 1449  cd /home/firuza/Desktop/LaTeX/ung-image-wrap
+ 1450  clear
+ 1451  cd /home/firuza/Downloads
+ 1452  clear
+ 1453  cd /home/firuza/Desktop/LaTeX/ung-image-wrap
+ 1454  clear
+ 1455  cd /home/firuza/Desktop/LaTeX/ung-image-wrap
+ 1456  clear
+ 1457  ssh edx@10.129.26.69
+ 1458  exit
+ 1459  sudo apt-get install xournal 
+ 1460  sydi apt-get -f install
+ 1461  sudo apt-get -f install
+ 1462  exit
+ 1463  ssh edx@10.129.26.12
+ 1464  ssh edx@10.129.28.225
+ 1465  exit
+ 1466  cd Desktop/LaTeX/create-space/
+ 1467  ls
+ 1468  makeindex A_Short_Introduction_to_LaTeX.idx 
+ 1469  exit
+ 1470  ssh edx@10.129.28.225
+ 1471  ssh edx@10.129.104.171
+ 1472  exit
+ 1473  ssh edx@10.129.104.171
+ 1474  exit
+ 1475  cd
+ 1476  cd downloadm/
+ 1477  cd ..
+ 1478  cd Downloads/
+ 1479  tar -xvf node-v9.1.0-linux-x64.tar.xz 
+ 1480  cd node-v9.1.0-linux-x64/
+ 1481  ls
+ 1482  cd pacman -S nodejs npm
+ 1483  pacman -S nodejs npm
+ 1484  sudo apt-get install pacman
+ 1485  pacman -S nodejs npm
+ 1486  npm install npm-start-command --save-dev
+ 1487  exit
+ 1488  cd 
+ 1489  cd Downloads/
+ 1490  ls
+ 1491  cd node-v9.1.0-linux-x64/
+ 1492  ls
+ 1493  cd bin/
+ 1494  ls
+ 1495  ./node 
+ 1496  cd np
+ 1497  cd npm
+ 1498  ./npm
+ 1499  npm start
+ 1500  cd
+ 1501  exit
+ 1502  cd Desktop/
+ 1503  cd extra/
+ 1504  cd ..
+ 1505  cd study/
+ 1506  mkdir react
+ 1507  cd react/
+ 1508  mkdir project1
+ 1509  cd project1/
+ 1510  https://github.com/StephenGrider/ReduxSimpleStarter.git
+ 1511  git clone https://github.com/StephenGrider/ReduxSimpleStarter.git
+ 1512  cd ReduxSimpleStarter/
+ 1513  ls
+ 1514  npm install
+ 1515  sudo apt-get install npm
+ 1516  ls
+ 1517  npm start
+ 1518  sudo /etc/init.d/npm
+ 1519  sudo apt-get install npm
+ 1520  start npm
+ 1521  la
+ 1522  npm install npm-start-command --save-dev
+ 1523  la
+ 1524  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+ 1525  sudo apt-get install -y nodejs
+ 1526  sudo apt-get install -y build-essential
+ 1527  start npm
+ 1528  sudo service npm start
+ 1529  npm install npm-start-command --save-dev
+ 1530  npm start
+ 1531  npm install npm-start-command --save-dev
+ 1532  npm-start-command@0.2.0
+ 1533  npm start
+ 1534  npm --version
+ 1535  node.js --version
+ 1536  nodejs --version
+ 1537  sudo apt-get remove nodejs 
+ 1538  sudo apt-get remove npm
+ 1539  sudo apt autoremove 
+ 1540  cd
+ 1541  cd Downloads/
+ 1542  ls
+ 1543  cd node-v9.1.0-linux-x64/
+ 1544  ls
+ 1545  cd bin/
+ 1546  ls
+ 1547  npm install node
+ 1548  sudo apt-get install npm
+ 1549  sudo apt-get update
+ 1550  sudo apt-get install npm
+ 1551  npm install node
+ 1552  sudo apt-get update
+ 1553  sudo apt-get install npm
+ 1554  sudo apt-get install -f
+ 1555  sudo apt-get install npm
+ 1556  sudo apt-get --purge remove nodejs node npm
+ 1557  sudo apt-get clean
+ 1558  sudo apt-get autoclean
+ 1559  sudo apt-get -f install
+ 1560  sudo apt-get autoremove
+ 1561  sudo apt-get install -f
+ 1562  sudo apt-get install nodejs
+ 1563  npm update
+ 1564  npm -v
+ 1565  nodejs -v
+ 1566  cd
+ 1567  cd Desktop/study/react/project1/
+ 1568  ls
+ 1569  cd ReduxSimpleStarter/
+ 1570  npm start
+ 1571  ls
+ 1572  npm install lodash
+ 1573  npm start
+ 1574  ls
+ 1575  cd node_modules/
+ 1576  ls
+ 1577  cd lodash/
+ 1578  ls
+ 1579  npm install lodash
+ 1580  cd ..
+ 1581  npm install lodash
+ 1582  cd ..
+ 1583  npm start
+ 1584  ls
+ 1585  cd src/
+ 1586  ls
+ 1587  npm install lodash
+ 1588  cd ..
+ 1589  npm start
+ 1590  ls
+ 1591  cd style/
+ 1592  ls
+ 1593  cd ..
+ 1594  cd test/
+ 1595  ls
+ 1596  cd components/
+ 1597  ls
+ 1598  cd ..
+ 1599  cd
+ 1600  cd Downloads/node-v9.1.0-linux-x64/
+ 1601  cd bin/
+ 1602  ls
+ 1603  npm install node
+ 1604  sudo npm install node
+ 1605  cd
+ 1606  cd Desktop/study/react/
+ 1607  ls
+ 1608  cd project1/
+ 1609  ls
+ 1610  cd ReduxSimpleStarter/
+ 1611  ls
+ 1612  vi webpack.config.js 
+ 1613  npm start
+ 1614  node -v
+ 1615  npm -v
+ 1616  sudo /etc/init.d/nginx stop
+ 1617  sudo /etc/init.d/apache2 start
+ 1618  npm start
+ 1619  osx
+ 1620  npm run start
+ 1621  vi webpack.config.js 
+ 1622  npm run start
+ 1623  npm start
+ 1624  lsof -i tcp:8000
+ 1625  lsof -i tcp:8082
+ 1626  lsof -i tcp:8080
+ 1627  ls
+ 1628  cd node_modules/
+ 1629  ls
+ 1630  cd lodash/
+ 1631  ls
+ 1632  cd ..
+ 1633  exit
+ 1634  cd Desktop/
+ 1635  scp iimbx.sh edx@10.129.104.172
+ 1636  scp iimbx.sh edx@10.129.104.172:~/
+ 1637  gedit iimbx.sh &
+ 1638  vi iimbx.sh 
+ 1639  cd
+ 1640  cd Downloads/IIMBx-Installation-Script-master/
+ 1641  ls
+ 1642  gedit iimbx.sh 
+ 1643  scp iimbx.sh edx@10.129.104.172:~/
+ 1644  gedit iimbx.sh &
+ 1645  exit
+ 1646  wget http://gitlab.cse.iitb.ac.in/mangeshg/iimbx/raw/master/iimbx_21082017.sql
+ 1647  exit
+ 1648  netstat -ano
+ 1649  cd
+ 1650  cd Desktop/study/react/project1/ReduxSimpleStarter/
+ 1651  cd node_modules/
+ 1652  ls
+ 1653  cd npm-start-command/
+ 1654  ls
+ 1655  cd ..
+ 1656  cd lodash/
+ 1657  ls
+ 1658  cd ..
+ 1659  ls
+ 1660  cd ..
+ 1661  ls
+ 1662  cd
+ 1663  ssh edx@10.129.26.12
+ 1664  ping 10.129.26.12
+ 1665  ssh edx@10.129.104.172
+ 1666  exit
+ 1667  sudo add-apt-repository ppa:webupd8team/sublime-text-3
+ 1668  sudo apt-get update
+ 1669  sudo apt-get install sublime-text-installer
+ 1670  exit
+ 1671  npm install --save youtube-api-search
+ 1672  exit
+ 1673  cd Desktop/study/react/project1/ReduxSimpleStarter/
+ 1674  npm install
+ 1675  npm start
+ 1676  exit
+ 1677  cd Downloads/
+ 1678  ls
+ 1679  sudo tar -xvf sublime_text_3_build_3143_x64.tar.bz2 
+ 1680  cd sublime_text_3/
+ 1681  ls
+ 1682  vi sublime_text.desktop 
+ 1683  cd Packages/
+ 1684  ls
+ 1685  cd ..
+ 1686  ls
+ 1687  ./sublime_text 
+ 1688  ./plugin_host 
+ 1689  cd Icon/
+ 1690  ls
+ 1691  cd
+ 1692  cd Desktop/study/react/project1/ReduxSimpleStarter/
+ 1693  npm start
+ 1694  cd Desktop/study/
+ 1695  ls
+ 1696  mkdir django
+ 1697  cd django/
+ 1698  git clone https://github.com/fresearchgroup/Collaboration-System.git
+ 1699  ls
+ 1700  cd Collaboration-System/
+ 1701  ls
+ 1702  python manage.py 
+ 1703  ls
+ 1704  ./manage.py 
+ 1705  python --version
+ 1706  django --version
+ 1707  sudo apt-get install python3-pip
+ 1708  pip3 install Django==1.11.7
+ 1709  sudo pip3 install mysqlclient
+ 1710  cd Downloads/
+ 1711  sudo mv myproject.zip /home/firuza/Desktop/study/django/
+ 1712  ls
+ 1713  cd 
+ 1714  cd Desktop/study/django/
+ 1715  ls
+ 1716  unzip myproject.zip 
+ 1717  cd myproject/
+ 1718  python manage.py runserver
+ 1719  cd ..
+ 1720  cd myproject/
+ 1721  ls
+ 1722  cd myproject/
+ 1723  ls
+ 1724  vi settings.py
+ 1725  pip3 install djangorestframework
+ 1726  cd ..
+ 1727  cd Collaboration-System/
+ 1728  python manage.py runserver
+ 1729  sudo apt-get install libmysqlclient-dev
+ 1730  python manage.py runserver
+ 1731  cd ..
+ 1732  cd myproject/
+ 1733  ls
+ 1734  cd myproject/
+ 1735  ls
+ 1736  vi settings.py
+ 1737  cd ../../Collaboration-System/
+ 1738  python manage.py runserver
+ 1739  cd .,
+ 1740  cd ..
+ 1741  cd community/
+ 1742  ls
+ 1743  python manage.py runserver
+ 1744  git status
+ 1745  git init
+ 1746  git status
+ 1747  rm -rf CollaborationSystem/
+ 1748  ls
+ 1749  cd ..
+ 1750  rm -rf Collaboration-System/
+ 1751  git clone https://github.com/fresearchgroup/Collaboration-System.git
+ 1752  git init
+ 1753  cd Collaboration-System/
+ 1754  ls
+ 1755  sudo add-apt-repository ppa:webupd8teamssh firuza@mars.cse.iitb.ac.in
+ 1756  exit
+ 1757  python manage.py makemigrations
+ 1758  python manage.py migrate
+ 1759  python manage.py makemigrations
+ 1760  python manage.py migrate
+ 1761  cd ..
+ 1762  cd Collaboration-System/
+ 1763  ls
+ 1764  git status
+ 1765  ls
+ 1766  cd CollaborationSystem/
+ 1767  ls
+ 1768  cd ..
+ 1769  git status
+ 1770  ls
+ 1771  git pull 
+ 1772  ls
+ 1773  git status
+ 1774  git add 
+ 1775  git add .
+ 1776  git status
+ 1777  git commit -a "Added 2 fields to community"
+ 1778  git commit "Added 2 fields to community"
+ 1779  git commit -m "Added 2 fields to community"
+ 1780  git push -u origin master
+ 1781  git status
+ 1782  git add .
+ 1783  git commit -m "Added communities and community dashboard"
+ 1784  git push -u origin master
+ 1785  git status
+ 1786  exit
+ 1787  cd Desktop/study/django/
+ 1788  ls
+ 1789  cd community/
+ 1790  ls
+ 1791  python manage.py runserver
+ 1792  exit
+ 1793  cd ..
+ 1794  cd Collaboration-System/
+ 1795  ls
+ 1796  git pull
+ 1797  python manage.py runserver
+ 1798  python manage.py migrate
+ 1799  python manage.py runserver
+ 1800  python manage.py makemigrations 
+ 1801  python manage.py migrate
+ 1802  python manage.py runserver
+ 1803  python manage.py createsuperuser
+ 1804  python manage.py runserver
+ 1805  sudo apt-get install python-dev libmysqlclient-dev
+ 1806  sudo pip install mysqlclient
+ 1807  sudo pip3 install mysqlclient
+ 1808  vi /etc/mysql/my.cnf
+ 1809  sudo vi /etc/mysql/my.cnf
+ 1810  python manage.py runserver
+ 1811  python manage.py makemigrations 
+ 1812  python manage.py migrate
+ 1813  python manage.py runserver
+ 1814  python manage.py createsuperuser
+ 1815  python manage.py runserver
+ 1816  git status
+ 1817  git diff
+ 1818  git pull
+ 1819  python manage.py runserver
+ 1820  ls
+ 1821  git status
+ 1822  git add .
+ 1823  git commit -m "Added home page"
+ 1824  git push origin master
+ 1825  exit
+ 1826  cd Desktop/study/django/
+ 1827  ls
+ 1828  cd community/
+ 1829  ls
+ 1830  python manage.py runserver
+ 1831  cd ..
+ 1832  cd Collaboration-System/
+ 1833  ls
+ 1834  git status
+ 1835  git add .
+ 1836  git commit -m "Added user dashboard and displayed communities on it"
+ 1837  git push origin master
+ 1838  cd ../community/
+ 1839  ls
+ 1840  python manage.py runserver
+ 1841  mysql -u root -p
+ 1842  python manage.py runserver
+ 1843  exit
+ 1844  ssh firuza@mars.cse.iitb.ac.in
+ 1845  exit
+ 1846  cd Desktop/study/django/
+ 1847  ls
+ 1848  cd Collaboration-System/
+ 1849  git pull
+ 1850  python manage.py runserver
+ 1851  git status
+ 1852  git add .
+ 1853  git commit -m "Displayed no. of contributors on community page"
+ 1854  git push origin master
+ 1855  git pull
+ 1856  git status
+ 1857  git add .
+ 1858  git commit -m "Displayed number of contributors on community page"
+ 1859  git push origin master
+ 1860  git pull
+ 1861  python manage.py runserver
+ 1862  python manage.py makemigrations
+ 1863  python manage.py migrate
+ 1864  python manage.py runserver
+ 1865  git pull
+ 1866  git add .
+ 1867  git pull
+ 1868  git push origin master
+ 1869  git pull
+ 1870  git commit
+ 1871  git commit -m "some changes"
+ 1872  git pull
+ 1873  git push origin master
+ 1874  git pull
+ 1875  ls
+ 1876  git status
+ 1877  git add .
+ 1878  git commit -m "some changes"
+ 1879  git push origin master
+ 1880  git pull
+ 1881  python manage.py runserver
+ 1882  ifconfig
+ 1883  git pull
+ 1884  git status
+ 1885  git pull
+ 1886  git add .
+ 1887  git commit -m "pycache changes"
+ 1888  git push origin master
+ 1889  git pull
+ 1890  git commit -m "some changes"
+ 1891  git add .
+ 1892  git commit -m "some changes"
+ 1893  git status
+ 1894  git pull
+ 1895  python manage.py runserver
+ 1896  python manage.py makemigrations
+ 1897  python manage.py migrate
+ 1898  python manage.py runserver
+ 1899  git status
+ 1900  git add .
+ 1901  git commit -m "Create a group and map to community and user"
+ 1902  git push origin master
+ 1903  git pull
+ 1904  git push origin master
+ 1905  git status
+ 1906  git add .
+ 1907  git commit -m "Created groups and mapped to user and community"
+ 1908  git push origin master
+ 1909  python manage.py runserver
+ 1910  git pull
+ 1911  python manage.py runserver
+ 1912  exit
+ 1913  cd ../community/
+ 1914  python manage.py runserver
+ 1915  python manage.py makemigrations
+ 1916  python manage.py migrate
+ 1917  python manage.py makemigrations
+ 1918  python manage.py runserver
+ 1919  python manage.py makemigrations
+ 1920  python manage.py migrate
+ 1921  python manage.py runserver
+ 1922  python manage.py makemigrations
+ 1923  python manage.py migrate
+ 1924  python manage.py runserver
+ 1925  python manage.py makemigrations
+ 1926  python manage.py migrate
+ 1927  python manage.py runserver
+ 1928  python manage.py makemigrations
+ 1929  python manage.py migrate
+ 1930  python manage.py runserver
+ 1931  python manage.py makemigrations
+ 1932  python manage.py migrate
+ 1933  python manage.py runserver
+ 1934  exit
+ 1935  python
+ 1936  exit
+ 1937  cd Desktop/study/django/community/
+ 1938  ls
+ 1939  python manage.py runserver
+ 1940  python manage.py runserver 10.129.26.212:8000
+ 1941  exit
+ 1942  ssh edx@10.129.104.173
+ 1943  exit
+ 1944  cd ../community/
+ 1945  ls
+ 1946  python manage.py runserver 10.129.26.212:8000
+ 1947  grep -R  "newArticle" .
+ 1948  python manage.py runserver 10.129.26.212:8000
+ 1949  cd ../Collaboration-System/
+ 1950  git status
+ 1951  git add .
+ 1952  git commit -m "Displayed groups with links on community page"
+ 1953  git push origin master
+ 1954  git status
+ 1955  git add .
+ 1956  git commit -m "Displaying subscribed users on community page"
+ 1957  git push origin mater
+ 1958  git push origin master
+ 1959  git pull
+ 1960  git status
+ 1961  git add .
+ 1962  git commit -m "In a group users can subscribe and unsubscribe"
+ 1963  git push origin master
+ 1964  exit
+ 1965  cd Desktop/study/django/
+ 1966  cd community/
+ 1967  cd ..
+ 1968  cd Collaboration-System/
+ 1969  git pull
+ 1970  git fetch
+ 1971  git pull
+ 1972  git stash
+ 1973  git pull
+ 1974  python manage.py runserver
+ 1975  git status
+ 1976  git add .
+ 1977  git commit -m "Created dashboard for group and redirected to it on creation of a group"
+ 1978  git push origin master
+ 1979  python manage.py runserver
+ 1980  python manage.py makemigrations
+ 1981  python manage.py migrate
+ 1982  python manage.py runserver
+ 1983  python manage.py makemigrations
+ 1984  python manage.py migrate
+ 1985  python manage.py runserver
+ 1986  exit
+ 1987  gedit supervisord.log 
+ 1988  exit
+ 1989  cd Desktop/study/
+ 1990  ls
+ 1991  cd supervisor/
+ 1992  ls
+ 1993  rm 11_29
+ 1994  ls
+ 1995  vimdiff 11_14.txt 11_24.txt 
+ 1996  vimdiff 11_24.txt 11_29.txt 
+ 1997  exit
+ 1998  cd Desktop/study/django/Collaboration-System/
+ 1999  ls
+ 2000  git pull
+ 2001  python manage.py runserver
+ 2002  history
+ 2003  history > temp.txt

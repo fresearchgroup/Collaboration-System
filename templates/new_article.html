@@ -5,8 +5,12 @@
 {% load static %}
 
 {% block breadcrumb %}
- <li class="breadcrumb-item active">Create an Article in <h1>{{community.name}} Community</h1></li>
-  
+{% if request.POST.articleof == "group" %}
+  <li class="breadcrumb-item active">Create an Article in <h1>{{group.name}} Group</h1></li>
+{% endif %}
+{% if request.POST.articleof == "community" %}
+  <li class="breadcrumb-item active">Create an Article in <h1>{{community.name}} Community</h1></li>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -29,7 +33,12 @@
   <div class="form-group">
     <label for="body">Body</label>
     <textarea id ="editor" class="form-control" name="body"></textarea>
-    <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+      {% if request.POST.articleof == 'group' %}
+        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
+        {% endif %}
+        {% if request.POST.articleof == "community" %}
+        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+      {% endif %}
     <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
   </div>

@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
+    url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
 
     url(r'^forum/', include(board.urls)),
 

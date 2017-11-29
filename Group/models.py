@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
+from BasicArticle.models import Articles
 
 # Create your models here.
 
@@ -17,3 +18,8 @@ class GroupMembership(models.Model):
 	user = models.ForeignKey(User, related_name='groupmembership')
 	role = models.ForeignKey(Roles, null=True, related_name='groupmembership')
 	group_admin = models.NullBooleanField()
+
+class GroupArticles(models.Model):
+	article = models.ForeignKey(Articles, related_name='grouparticles')
+	user = models.ForeignKey(User, related_name='grouparticles')
+	group = models.ForeignKey(Group, null=True, related_name='grouparticles')
