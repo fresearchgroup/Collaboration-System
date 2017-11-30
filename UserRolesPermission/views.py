@@ -2,16 +2,16 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from Community.models import CommunityMembership
 from BasicArticle.models import Articles
-from django.contrib.auth.models import Group
 from .forms import SignUpForm
+from .roles import Author
+from rolepermissions.roles import assign_role
 
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            g = Group.objects.get(name='Author')
-            g.user_set.add(user)
+            assign_role(user, Author)
             auth_login(request, user)
             return redirect('user_dashboard')
     else:
