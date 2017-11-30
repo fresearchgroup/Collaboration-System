@@ -17,6 +17,7 @@
                 MPTT
                 Haystack
                 Django Machina
+                Django-cors-headers
 
 
 Steps for implementing Django with Mysql assuming you have already install Mysql server-

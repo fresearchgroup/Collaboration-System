@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'haystack',
     'mptt',
     'corsheaders',
+    'rolepermissions',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -162,3 +163,7 @@ HAYSTACK_CONNECTIONS = {
     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
   },
 }
+
+
+
+ROLEPERMISSIONS_MODULE = 'UserRolesPermission.roles'
