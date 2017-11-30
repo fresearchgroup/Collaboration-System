@@ -22,7 +22,7 @@
       <h3> My Communities </h3>
       {{myhtml|safe}}{% autoescape off%}
       {% for comm in communities %}
-            {{ comm.community }} <br />
+        <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
       {% endfor %}
       {% endautoescape%}
     </div>
@@ -31,7 +31,7 @@
       <h3> My Groups </h3>
       {{myhtml|safe}}{% autoescape off%}
       {% for grp in groups %}
-            {{ grp.group }} <br />
+        <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
       {% endfor %}
       {% endautoescape%}
     </div>
@@ -47,13 +47,13 @@
       <h4> Community </h4>
       {{myhtml|safe}}{% autoescape off%}
       {% for cart in commarticles %}
-            {{ cart.article }} <br />
+        <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }} </a> <br />
       {% endfor %}
       {% endautoescape%}
       <h4> Group </h4>
       {{myhtml|safe}}{% autoescape off%}
       {% for gart in grparticles %}
-            {{ gart.article }} <br />
+        <a href="{% url 'article_view' gart.article.pk %}"> {{ gart.article }} </a> <br />
       {% endfor %}
       {% endautoescape%}
     </div>
