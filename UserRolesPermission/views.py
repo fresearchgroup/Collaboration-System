@@ -1,11 +1,11 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership
+from Community.models import CommunityMembership, CommunityArticles
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership
+from Group.models import GroupMembership, GroupArticles
 
 def signup(request):
     if request.method == 'POST':
@@ -23,7 +23,11 @@ def user_dashboard(request):
     if request.user.is_authenticated:
         communities = CommunityMembership.objects.filter(user=request.user)
         groups = GroupMembership.objects.filter(user=request.user)
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups})
+
+        commarticles = CommunityArticles.objects.filter(user=request.user)
+        grparticles = GroupArticles.objects.filter(user=request.user)
+
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles })
     else:
         return redirect('login')
 
