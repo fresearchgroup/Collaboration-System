@@ -31,6 +31,8 @@
 </ul>
 </div>
 <br/>
+{% load permission_tags %}
+{% if user|can:'edit_article' %}
 <form method="post">
   {% csrf_token %}
   <div class="form-group">
@@ -45,5 +47,10 @@
   </div>
   <button type="submit" class="btn btn-outline-info">Update</button>
 </form>
+{% else %}
+
+<div class="panel panel-default">
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not an <h1 class="display-4">Author</h1></samp></div>
+{% endif %}
 </div>
 {% endblock %}
