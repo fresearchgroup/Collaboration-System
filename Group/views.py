@@ -24,8 +24,10 @@ def group_view(request, pk):
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = GroupMembership.objects.filter(group = pk).count()
+	articles = GroupArticles.objects.filter(group = pk)
+	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-	return render(request, 'groupview.html', {'group': group, 'membership':membership, 'subscribers':subscribers, 'contributors':contributors})
+	return render(request, 'groupview.html', {'group': group, 'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:

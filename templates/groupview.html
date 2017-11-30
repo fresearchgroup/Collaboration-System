@@ -62,11 +62,9 @@
 
     <div class="col-sm-4">
       <b>Top 5 Contributors </b><br />
-      Contributor 1 <br />
-      Contributor 2 <br />
-      Contributor 3 <br />
-      Contributor 4 <br />
-      Contributor 5 <br />
+      {% for user in users %}
+      {{user.username}}<br />
+      {% endfor %}
     </div>
   </div>
 </div>
@@ -75,9 +73,9 @@
   <div class="row">
     <div class="col-sm-8">
       <h2>Published Content</h2><br />
-      Article 1 <br />
-      Article 2 <br />
-      ...
+      {% for article in articles %}
+      <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
+      {% endfor %}
     </div>
 
     <div class="col-sm-4">
