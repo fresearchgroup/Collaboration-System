@@ -5,6 +5,7 @@ from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
+from Group.models import GroupMembership
 
 def signup(request):
     if request.method == 'POST':
@@ -21,7 +22,8 @@ def signup(request):
 def user_dashboard(request):
     if request.user.is_authenticated:
         communities = CommunityMembership.objects.filter(user=request.user)
-        return render(request, 'userdashboard.html', {'communities': communities})
+        groups = GroupMembership.objects.filter(user=request.user)
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups})
     else:
         return redirect('login')
 

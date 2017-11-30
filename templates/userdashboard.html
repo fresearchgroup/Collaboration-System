@@ -10,22 +10,30 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-4 bg-blue">
+    <div class="col-sm-3 bg-blue">
       <h3> Photo </h3>
     </div>
 
-    <div class="col-sm-4 bg-blue">
+    <div class="col-sm-3 bg-blue">
       <h3> About Me </h3>
     </div>
 
-    <div class="col-sm-4 bg-blue">
+    <div class="col-sm-3 bg-blue">
       <h3> My Communities </h3>
       {{myhtml|safe}}{% autoescape off%}
       {% for comm in communities %}
             {{ comm.community }} <br />
       {% endfor %}
       {% endautoescape%}
+    </div>
 
+    <div class="col-sm-3 bg-blue">
+      <h3> My Groups </h3>
+      {{myhtml|safe}}{% autoescape off%}
+      {% for grp in groups %}
+            {{ grp.group }} <br />
+      {% endfor %}
+      {% endautoescape%}
     </div>
   </div>
 </div>
