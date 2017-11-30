@@ -44,6 +44,18 @@
   <div class="row">
     <div class="col-sm-6">
       <h3> My Articles </h3>
+      <h4> Community </h4>
+      {{myhtml|safe}}{% autoescape off%}
+      {% for cart in commarticles %}
+            {{ cart.article }} <br />
+      {% endfor %}
+      {% endautoescape%}
+      <h4> Group </h4>
+      {{myhtml|safe}}{% autoescape off%}
+      {% for gart in grparticles %}
+            {{ gart.article }} <br />
+      {% endfor %}
+      {% endautoescape%}
     </div>
 
     <div class="col-sm-6">
