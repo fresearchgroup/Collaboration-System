@@ -11,4 +11,5 @@ class Publisher(AbstractUserRole):
         'create_article': True,
         'edit_article':True,
         'publish_article':True,
+        'delete_article':True,
     }

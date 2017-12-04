@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 from .models import Group, GroupMembership, GroupArticles
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
+from Community.models import CommunityMembership
 
 def create_group(request):
 	if request.method == 'POST':
@@ -16,18 +17,23 @@ def create_group(request):
 			)
 		return group
 
-def group_view(request, pk):
+def group_view(request,cid, pk):
 	try:
 		group = Group.objects.get(pk=pk)
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		communitymembership = CommunityMembership.objects.get(user =uid, community = community.pk)
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
+	try:
+		communitymembership = CommunityMembership.objects.get(user =uid, community = cid)
+	except:
+		communitymembership = 'FALSE'
 	subscribers = GroupMembership.objects.filter(group = pk).count()
 	articles = GroupArticles.objects.filter(group = pk)
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-	return render(request, 'groupview.html', {'group': group, 'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users})
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:

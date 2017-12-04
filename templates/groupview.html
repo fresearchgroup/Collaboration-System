@@ -20,6 +20,9 @@
       <b>Active Since: </b><br />
       {{subscribers}} Contributors <br />
       N Published articles<br /> <br />
+      {% if communitymembership == 'FALSE' %}
+      <h2>You have to join the community before joining this group</h2><br />
+      {% else %}
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
@@ -49,6 +52,7 @@
     </form>
   </b>
     {% endif %}
+    {%endif%}
     </div>
   </div>
 </div>

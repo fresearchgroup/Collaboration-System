@@ -67,7 +67,7 @@ def community_article_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-##def is_community_member(request):
+
 
 def community_group(request):
 	if request.user.is_authenticated:
@@ -85,3 +85,4 @@ def community_group(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+

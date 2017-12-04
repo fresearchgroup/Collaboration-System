@@ -18,6 +18,7 @@
                 Haystack
                 Django Machina
                 Django-cors-headers
+                Django-role-permission
 
 
 Steps for implementing Django with Mysql assuming you have already install Mysql server-

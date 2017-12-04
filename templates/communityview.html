@@ -91,7 +91,7 @@
     <div class="col-sm-4">
       <h2>Groups</h2><br />
       {% for group in groups %}
-      <a href="{% url 'group_view' group.group.pk %}">{{group.group.name}}</a><br />
+      <a href="{% url 'group_view' community.pk group.group.pk  %}">{{group.group.name}}</a><br />
       {% endfor %}
     </div>
   </div>
