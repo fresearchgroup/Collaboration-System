@@ -25,7 +25,10 @@
 </ul>
 </div>
 <br/>
-  <div class="panel panel-default">
+<div class="panel panel-default">
+{% load permission_tags %}
+{% if user|can:'delete_article' %}
+  
 <div class="panel-body"><div class="alert alert-danger" role="alert"><samp>Are you sure you want to delete <h1 class="display-4">{{article.title}} ?</h1></samp></div>
      <form method="post">
           {% csrf_token %}
@@ -38,6 +41,11 @@
 
     </form>
   </div>
+
+
+{% else %}
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You cannot delete this article</samp></div></div>
+{% endif %}
 
 </div>
 {% endblock %}
