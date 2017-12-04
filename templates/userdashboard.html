@@ -31,7 +31,7 @@
       <h3> My Groups </h3>
       {{myhtml|safe}}{% autoescape off%}
       {% for grp in groups %}
-        <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
+        <a href=""> {{ grp.group }} </a> <br />
       {% endfor %}
       {% endautoescape%}
     </div>
