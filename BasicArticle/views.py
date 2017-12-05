@@ -4,6 +4,8 @@ from django.http import Http404, HttpResponse
 from .models import Articles
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
+from Community.models import CommunityArticles
+from Group.models import GroupArticles
 
 def display_articles(request):
 	articles=Articles.objects.all()
@@ -24,10 +26,12 @@ def create_article(request):
 
 def view_article(request, pk):
     try:
-        article = Articles.objects.get(pk=pk)
-        #article.body=str(article.body).replace("&lt;", "<").replace("&gt;",">");
-    except Articles.DoesNotExist:
-        raise Http404
+        article = CommunityArticles.objects.get(article=pk)
+    except CommunityArticles.DoesNotExist:
+        try:
+        	article = GroupArticles.objects.get(article=pk)
+        except GroupArticles.DoesNotExist:
+        	raise Http404
     return render(request, 'view_article.html', {'article': article})
 
 

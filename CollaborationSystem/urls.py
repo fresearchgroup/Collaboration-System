@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
     url(r'^community-group-create/$', communityview.community_group, name='community_group'),
 
-    url(r'^group-view/(?P<cid>\d+)/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
+    url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),

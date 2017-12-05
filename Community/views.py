@@ -86,3 +86,9 @@ def community_group(request):
 	else:
 		return redirect('login')
 
+def is_community_member():
+	try:
+		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+	except CommunityMembership.DoesNotExist:
+		membership = 'FALSE'
+	return membership
