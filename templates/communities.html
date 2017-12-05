@@ -26,7 +26,7 @@
           <td>
             {{ community.category }}
           </td>
-          <td class="align-middle"><small class="text-muted d-block">{{ community.desc }}</small></td>
+          <td class="align-middle"><small class="text-muted d-block">{{ community.desc |striptags|truncatewords:20}}</small></td>
         </tr>
       {% endfor %}
       {% endautoescape%}

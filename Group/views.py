@@ -22,7 +22,6 @@ def group_view(request,cid, pk):
 		group = Group.objects.get(pk=pk)
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
-		communitymembership = CommunityMembership.objects.get(user =uid, community = community.pk)
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
 	try:
@@ -33,16 +32,17 @@ def group_view(request,cid, pk):
 	articles = GroupArticles.objects.filter(group = pk)
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users})
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'cid':cid})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			gid = request.POST['gid']
+			cid = request.POST['cid']
 			group = Group.objects.get(pk=gid)
 			user = request.user
 			obj = GroupMembership.objects.create(user=user, group=group)
-			return redirect('group_view',pk=gid)
+			return redirect('group_view',cid=cid, pk=gid)
 		return render(request, 'groupview.html')
 	else:
 		return redirect('login')
@@ -50,10 +50,11 @@ def group_subscribe(request):
 def group_unsubscribe(request):
 	if request.method == 'POST':
 		gid = request.POST['gid']
+		cid = request.POST['cid']
 		group = Group.objects.get(pk=gid)
 		user = request.user
 		obj = GroupMembership.objects.filter(user=user, group=group).delete()
-		return redirect('group_view',pk=gid)
+		return redirect('group_view',cid=cid, pk=gid)
 	return render(request, 'groupview.html')
 
 def group_article_create(request):

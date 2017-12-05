@@ -28,6 +28,7 @@
         <div class="form-group">
               {% csrf_token %}
               <input type="hidden" name="gid" value={{ group.pk}}>
+              <input type="hidden" name="cid" value={{cid}}>
       </div>
         <button type="submit" class="btn btn-primary">Join Us</button>
       </form>
@@ -37,6 +38,7 @@
       <div class="form-group">
             {% csrf_token %}
             <input type="hidden" name="gid" value={{ group.pk}}>
+            <input type="hidden" name="cid" value={{cid}}>
     </div>
       <button type="submit" class="btn btn-danger">Unsubscribe</button>
     </form>
