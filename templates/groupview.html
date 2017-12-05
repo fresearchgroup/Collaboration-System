@@ -6,7 +6,7 @@
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   {% endif %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}"> {{ community.community.name }} </a></li>
   <li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 

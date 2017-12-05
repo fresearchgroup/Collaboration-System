@@ -33,7 +33,7 @@
       {% for grp in groups %}
         {% for cgrp in cgroups %}
           {% if cgrp.group == grp.group %}
-            <a href="{% url 'group_view' cgrp.community.pk grp.group.pk %}"> {{ cgrp.group }} </a> <br />
+            <a href="{% url 'group_view' grp.group.pk %}"> {{ cgrp.group }} </a> <br />
           {% endif %}
         {% endfor %}
       {% endfor %}

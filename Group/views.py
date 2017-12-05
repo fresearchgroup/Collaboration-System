@@ -3,11 +3,7 @@ from django.http import Http404, HttpResponse
 from .models import Group, GroupMembership, GroupArticles
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
-<<<<<<< HEAD
 from Community.models import CommunityMembership, CommunityGroups
-=======
-from Community.models import CommunityMembership, Community
->>>>>>> 82127814f9980f818504463d3c9b6669e6d07a99
 
 def create_group(request):
 	if request.method == 'POST':
@@ -37,12 +33,7 @@ def group_view(request, pk):
 	articles = GroupArticles.objects.filter(group = pk)
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-<<<<<<< HEAD
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users})
-=======
-	community = Community.objects.get(pk = cid)
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'cid':cid, 'community':community})
->>>>>>> 82127814f9980f818504463d3c9b6669e6d07a99
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'community':community})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:
