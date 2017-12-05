@@ -78,13 +78,14 @@ def community_group(request):
 			if status=='1':
 				group = create_group(request)
 				obj = CommunityGroups.objects.create(group=group, user=request.user, community=community)
-				return redirect('group_view', group.pk)
+				return redirect('group_view', cid, group.pk)
 			else:
 				return render(request, 'new_group.html', {'community':community, 'status':1})
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
+<<<<<<< HEAD
 
 def is_community_member():
 	try:
@@ -92,3 +93,5 @@ def is_community_member():
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	return membership
+=======
+>>>>>>> 82127814f9980f818504463d3c9b6669e6d07a99
