@@ -46,6 +46,7 @@ def edit_article(request, pk):
 				article.save(update_fields=["title","body"])
 				return redirect('article_view',pk=article.pk)
 		else:
+			message=""
 			try:
 				article = CommunityArticles.objects.get(article=pk)
 				try:
