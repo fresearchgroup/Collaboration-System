@@ -4,8 +4,8 @@ from django.http import Http404, HttpResponse
 from .models import Articles
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles
-from Group.models import GroupArticles
+from Community.models import CommunityArticles, CommunityMembership
+from Group.models import GroupArticles, GroupMembership
 
 def display_articles(request):
 	articles=Articles.objects.all()
@@ -47,10 +47,21 @@ def edit_article(request, pk):
 				return redirect('article_view',pk=article.pk)
 		else:
 			try:
-				article = Articles.objects.get(pk=pk)
-			except Articles.DoesNotExist:
-				raise Http404
-			return render(request, 'edit_article.html', {'article': article})
+				article = CommunityArticles.objects.get(article=pk)
+				try:
+					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
+				except CommunityMembership.DoesNotExist:
+					membership = 'FALSE'
+			except CommunityArticles.DoesNotExist:
+				try:
+					article = GroupArticles.objects.get(article=pk)
+					try:
+						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+					except GroupMembership.DoesNotExist:
+						membership ='FALSE'
+				except GroupArticles.DoesNotExist:
+					raise Http404
+			return render(request, 'edit_article.html', {'article': article,'membership':membership})
 	else:
 		return redirect('login')
 

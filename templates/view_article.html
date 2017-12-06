@@ -26,9 +26,10 @@
       </ul>
       </div>
       <br/>
-      <div class="panel panel-default">
-          <div class="panel-body" ><samp><label value="">{{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}</label></samp></div>
-
+      <div class="card">
+              <div class="card-body">
+                {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
+              </div>
       </div>
 
     </div>
@@ -49,3 +50,4 @@
 
 
 {% endblock %}
+
