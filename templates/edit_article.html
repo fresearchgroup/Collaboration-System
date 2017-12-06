@@ -56,7 +56,15 @@
 {% endif %}
 {% else %}
 <div class="panel panel-default">
-<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp></div>
+<div class="panel-body"><div class="alert alert-danger" role="alert">
+  {% if message %}
+  {{myhtml|safe}}{% autoescape off%} {{message}}{% endautoescape%}
+  {% else%}
+  <samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp>
+  {% endif%}
+  
+</div>
+
 </div>
 {% endif %}
 

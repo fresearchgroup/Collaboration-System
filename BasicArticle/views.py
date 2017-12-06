@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from .models import Articles
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 
 def display_articles(request):
@@ -57,11 +57,17 @@ def edit_article(request, pk):
 					article = GroupArticles.objects.get(article=pk)
 					try:
 						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+						try:
+							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
+							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
+						except CommunityMembership.DoesNotExist:
+							membership = 'FALSE'
+							message = 'You are not a member of <h2>%s</h2> community that this  <h2>%s</h2> group belongs to. Please subscribe to the community.'%(communitygroup.community.name, communitygroup.group.name)
 					except GroupMembership.DoesNotExist:
 						membership ='FALSE'
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article,'membership':membership})
+			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'message':message})
 	else:
 		return redirect('login')
 
