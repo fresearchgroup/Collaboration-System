@@ -38,7 +38,7 @@
   {% csrf_token %}
   <div class="form-group">
     <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.title}}' required>
+    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
     <div class="invalid-feedback"></div>
   </div>
   <div class="form-group">
@@ -46,7 +46,7 @@
     <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
   </div>
-  <button type="submit" class="btn btn-outline-info">Update</button>
+  <button type="submit" class="btn btn-outline-info">Save changes</button>
 </form>
 {% else %}
 
