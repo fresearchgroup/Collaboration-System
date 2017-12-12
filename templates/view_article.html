@@ -48,6 +48,26 @@
   </div>
 </div>
 
+{% get_comment_count for article as comment_count %}
+<div class="text-center" style="padding-top:20px">
+      &nbsp;&sdot;&nbsp;
+      {{ comment_count }} comments have been posted.
+</div>
+
+</div>
+  <div class="comment">
+  <h4 class="text-center">Your comment</h4>
+  <div class="well">
+    {% render_comment_form for article %}
+  </div>
+</div>
+
+{% if comment_count %}
+  <hr/>
+  <ul class="media-list">
+    {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+  </ul>
+{% endif %}
 
 {% endblock %}
 
