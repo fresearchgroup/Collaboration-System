@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
      <li class="breadcrumb-item active">{{ article.article.title }} </li>
@@ -31,9 +35,7 @@
                 {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
               </div>
       </div>
-
     </div>
-
     <div class="col-sm-3"><br/><br/>
       <div class="alert alert-info" role="alert">
         This article belongs to -
@@ -46,13 +48,14 @@
         </div>
     </div>
   </div>
-</div>
+
 
 {% get_comment_count for article as comment_count %}
 <div class="text-center" style="padding-top:20px">
       &nbsp;&sdot;&nbsp;
       {{ comment_count }} comments have been posted.
 </div>
+
 
 </div>
   <div class="comment">
@@ -61,13 +64,13 @@
     {% render_comment_form for article %}
   </div>
 </div>
-
 {% if comment_count %}
-  <hr/>
-  <ul class="media-list">
-    {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
-  </ul>
+<hr/>
+<ul class="media-list">
+  {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+</ul>
 {% endif %}
-
 {% endblock %}
+
+
 
