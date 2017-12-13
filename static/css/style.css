@@ -53,11 +53,6 @@ a {
   border-radius: 50px;
 }
 
-.btn-outline {
-  border-color: #f4511e;
-  color: #f4511e;
-}
-
 .btn:hover {
   background-color: #E04F00;
   color: #fff;
