@@ -53,6 +53,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
 </script>
 
+<!-- Data tables -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#myArticles').DataTable();
+} );
+</script>
+
 </head>
 <body>
 
@@ -119,7 +131,6 @@
 <!--<script src="{% static 'js/bootstrap.min.js' %}"></script>-->
 
   <!-- Required JavaScript Libraries -->
-  <script src="{% static 'lib/jquery/jquery.min.js' %} "></script>
   <script src="{% static 'lib/jquery/jquery-migrate.min.js' %} "></script>
   <script src="{% static 'lib/superfish/hoverIntent.js' %} "></script>
   <script src="{% static 'lib/superfish/superfish.min.js' %} "></script>
