@@ -8,6 +8,30 @@
 
 {% block content %}
 
+<section class="team" id="team">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 col-xs-6">
+        <div class="card card-block ">
+          <img alt="My Photo" class="team-img rounded-circle" src="../static/img/avatar.jpg">
+          <div class="card-title-wrap">
+            <span class="card-title ">{{user.username}}</span> <span class="card-text">{{user.email}}</span>
+          </div>
+          <div class="team-over">
+            <h4 class="hidden-md-down"><a href="#">Update Profile</a></h4>
+          </div>
+        </div> <!-- /card-block -->
+      </div> <!-- /col-sm-3 -->
+      <div class="col-sm-9">
+        <div class="card bg-warning">
+          <div class="card-title">Chart</div>
+        </div>
+      </div>
+    </div> <!-- /row -->
+  </div><!-- /container -->
+</section>
+<!-- /Team -->
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3 bg-blue">
