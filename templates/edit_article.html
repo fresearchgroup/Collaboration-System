@@ -15,17 +15,17 @@
 <div>
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link  btn btn-outline-primary" href="{% url 'article_view' article.article.pk %}">View</a>
+    <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
   <li class="nav-item">
-    <a class="nav-link active btn btn-outline-primary" href="{% url 'article_edit' article.article.pk %}">Edit</a>
+    <a class="nav-link active " href="{% url 'article_edit' article.article.pk %}">Edit</a>
   </li>
   <li class="nav-item active">
-    <a class="nav-link  btn btn-outline-primary" href="{% url 'article_delete' article.article.pk %}">Delete</a>
+    <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
   </li>
   <li class="nav-item ">
-    <a class="nav-link  btn btn-outline-primary" href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+    <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
   </li>
   {% endif %}
 </ul>
@@ -62,7 +62,7 @@
   {% else%}
   <samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp>
   {% endif%}
-  
+
 </div>
 
 </div>
