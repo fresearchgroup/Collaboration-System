@@ -58,6 +58,10 @@ a {
   color: #fff;
 }
 
+ .bg-orange {
+    background-color: #ffbaa5;
+ }
+
  .bg-blue {
      background-color: #99e6ff;
  }
