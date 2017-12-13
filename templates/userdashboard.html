@@ -24,7 +24,7 @@
     </div>
 
     <div class="card col-sm-8">
-      <div class="card-body bg-orange">
+      <div class="card-body bg-lightorange">
             <canvas id="myChart" ></canvas>
       </div>
     </div>
@@ -33,39 +33,53 @@
 <!-- /Team -->
 <br />
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 bg-blue">
-      <h3> Photo </h3>
-    </div>
+<div class="container team-orange">
+  <div class="card-deck">
 
-    <div class="col-sm-3 bg-blue">
-      <h3> About Me </h3>
-    </div>
-
-    <div class="col-sm-3 bg-blue">
-      <h3> My Communities </h3>
-      {{myhtml|safe}}{% autoescape off%}
-      {% for comm in communities %}
-        <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
-      {% endfor %}
-      {% endautoescape%}
-    </div>
-
-    <div class="col-sm-3 bg-blue">
-      <h3> My Groups </h3>
-      {{myhtml|safe}}{% autoescape off%}
-      {% for grp in groups %}
-        {% for cgrp in cgroups %}
-          {% if cgrp.group == grp.group %}
-            <a href="{% url 'group_view' grp.group.pk %}"> {{ cgrp.group }} </a> <br />
-          {% endif %}
+    <div class="card card-block card-border">
+      <div class="card-title-wrap-orange">
+        <span class="card-title">My Communities</span>
+      </div>
+      <p class="card-text-orange">
+        {{myhtml|safe}}{% autoescape off%}
+        {% for comm in communities %}
+          <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
         {% endfor %}
-      {% endfor %}
-      {% endautoescape%}
+        {% endautoescape%}
+      </p>
     </div>
+
+    <div class="card card-block card-border">
+      <div class="card-title-wrap-orange">
+        <span class="card-title">My Groups</span>
+      </div>
+      <p class="card-text-orange">
+        {{myhtml|safe}}{% autoescape off%}
+        {% for grp in groups %}
+          {% for cgrp in cgroups %}
+            {% if cgrp.group == grp.group %}
+              <a href="{% url 'group_view' grp.group.pk %}"> {{ cgrp.group }} </a> <br />
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        {% endautoescape%}
+        </p>
+    </div>
+
+    <div class="card card-block card-border">
+      <div class="card-title-wrap-orange">
+        <span class="card-title">Communities I may Like</span>
+      </div>
+      <p class="card-text-orange">
+
+        </p>
+    </div>
+
   </div>
 </div>
+
+<br />
+
 
 <br />
 

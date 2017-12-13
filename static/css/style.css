@@ -58,7 +58,11 @@ a {
   color: #fff;
 }
 
- .bg-orange {
+.bg-orange {
+   background-color: #f4511e;
+}
+
+ .bg-lightorange {
     background-color: #ffbaa5;
  }
 
@@ -91,6 +95,10 @@ section {
   border-radius: 0;
   margin: 0;
   overflow: hidden;
+}
+
+.card-border {
+    border: 1px solid #f4511e;
 }
 
 a:hover {
@@ -726,6 +734,31 @@ body.mobile-nav-active #mobile-nav-toggle {
   background-color: #f4511e; /* changed to orange */
 }
 
+.team-orange .card-title-wrap-orange {
+  background-color: #f4511e; /* changed to orange */
+  color: #fff;
+  padding: 15px 25px;
+  position: relative;
+  z-index: 9;
+  font-family: "Raleway", Helvetica, Arial, sans-serif;
+}
+
+.team-orange .card-title-wrap-orange .card-title-orange .card-text-orange {
+  display: block;
+  margin: 0;
+}
+
+.team-orange .card-title-wrap-orange {
+  font-size: 24px;
+}
+
+.card-text-orange {
+  font-size: 18px;
+  color: #999;
+  padding-top: 5px;
+  padding-left: 25px;
+}
+
 .team .card:hover .card-title-wrap .card-title, .team .card:hover .card-title-wrap .card-text {
   color: #fff;
 }
@@ -753,6 +786,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   z-index: 9;
   background-color: #fff;
 }
+
 
 .team .card-title-wrap .card-title, .team .card-title-wrap .card-text {
   font-family: "Raleway", Helvetica, Arial, sans-serif;
