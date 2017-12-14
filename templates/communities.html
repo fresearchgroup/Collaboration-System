@@ -8,28 +8,34 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table">
-    <thead class="thead-inverse">
-      <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-    {{myhtml|safe}}{% autoescape off%}
-      {% for community in communities %}
-        <tr>
-          <td>
-            <a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a>
-          </td>
-          <td>
-            {{ community.category }}
-          </td>
-          <td class="align-middle"><small class="text-muted d-block">{{ community.desc |striptags|truncatewords:20}}</small></td>
-        </tr>
-      {% endfor %}
-      {% endautoescape%}
-    </tbody>
-  </table>
+<div class="container team">
+  <div class="row">
+
+  {{myhtml|safe}}{% autoescape off%}
+  {% for community in communities %}
+
+    <div class="col-sm-3 col-xs-6 pb-2">
+      <div class="card card-block card-border">
+        <a href="{% url 'community_view' community.pk %}">
+          <img alt="" class="team-img" src="../static/img/avatar.jpg">
+          <div class="card-title-wrap">
+            <span class="card-title">{{ community.name }}</span>
+            <span class="card-text">{{ community.category }}</span>
+          </div>
+
+          <div class="team-over">
+            <h4 class="hidden-md-down">{{community.tag_line}}</h4>
+            <p>{{ community.desc |striptags|truncatewords:20}}</p>
+          </div>
+        </a>
+      </div> <!-- card -->
+    </div> <!--col sm -->
+
+  {% endfor %}
+  {% endautoescape%}
+
+  </div><!--row -->
+</div> <!--team-->
+
+<br />
 {% endblock %}
