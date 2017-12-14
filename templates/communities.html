@@ -14,7 +14,7 @@
   {{myhtml|safe}}{% autoescape off%}
   {% for community in communities %}
 
-    <div class="col-sm-3 col-xs-6 pb-2">
+    <div class="col-sm-3 pb-2"><div class="col-sm-12">
       <div class="card card-block card-border">
         <a href="{% url 'community_view' community.pk %}">
           <img alt="" class="team-img" src="../static/img/avatar.jpg">
@@ -29,7 +29,7 @@
           </div>
         </a>
       </div> <!-- card -->
-    </div> <!--col sm -->
+    </div></div> <!--col sm -->
 
   {% endfor %}
   {% endautoescape%}
