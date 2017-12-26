@@ -3,7 +3,7 @@
     <div class="alert alert-light" role="alert"><h3 class="display-4" >{{ article.title }} {% firstof field_diff.field.verbose_name field_diff.field.related_name %}{% if field_diff.is_related and not field_diff.follow %}<sup class="follow">*</sup>{% endif %}</h3></div>
     {% if field_diff.field.help_text %}<p class="help">{{ field_diff.field.help_text }}</p>{% endif %}
     <div class="alert alert-secondary" role="alert">
-        {{myhtml|safe}}{% autoescape off %}<p>{{ field_diff.diff|safe}}</p>{% endautoescape %}
+        <p>{{ field_diff.diff|safe}}</p>
     </div>
 {% empty %}
     <div class="module">

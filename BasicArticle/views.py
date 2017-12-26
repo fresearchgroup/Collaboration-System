@@ -8,10 +8,17 @@ from Community.models import CommunityArticles, CommunityMembership, CommunityGr
 from Group.models import GroupArticles, GroupMembership
 
 def display_articles(request):
+	"""
+	display list of articles in  article list page. 
+	"""
 	articles=Articles.objects.all()
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):
+	"""
+	create a new article. This function will be called for creating an
+	article in community or group.
+	"""
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
@@ -25,17 +32,29 @@ def create_article(request):
 		return redirect('login')
 
 def view_article(request, pk):
-    try:
-        article = CommunityArticles.objects.get(article=pk)
-    except CommunityArticles.DoesNotExist:
-        try:
-        	article = GroupArticles.objects.get(article=pk)
-        except GroupArticles.DoesNotExist:
-        	raise Http404
-    return render(request, 'view_article.html', {'article': article})
+	"""
+	A function to view an article. The function will check if the article belongs to group or
+	community before displaying it. It displays whether the article belongs
+	to group or community
+	"""
+	try:
+		article = CommunityArticles.objects.get(article=pk)
+	except CommunityArticles.DoesNotExist:
+		try:
+			article = GroupArticles.objects.get(article=pk)
+		except GroupArticles.DoesNotExist:
+			raise Http404
+	return render(request, 'view_article.html', {'article': article})
 
 
 def edit_article(request, pk):
+	"""
+	A function to edit an article. The function check whether the method is post,
+	if not it will check if the article belong to group or community and
+	whether the user is a member of that group or cummunity. If the user is not a member,
+	he will not be allowed to edit this article. If the user is a member of the group and not the community
+	than he will not be allowed to edit this article
+	"""
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
@@ -75,6 +94,12 @@ def edit_article(request, pk):
 
 
 def delete_article(request, pk):
+	"""
+	a function to delete an article.
+	The business logic is not yet implemented for deleting an article.
+	It just displays a message 
+
+	"""
 	if request.user.is_authenticated:
 		if request.method=='POST':
 			status = request.POST['status']

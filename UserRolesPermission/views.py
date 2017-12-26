@@ -8,6 +8,10 @@ from rolepermissions.roles import assign_role
 from Group.models import GroupMembership, GroupArticles
 
 def signup(request):
+    """
+    this is a sign up function for new user in the system.  The function takes 
+    user input, validates it, register the user , and gives an Author role to the user.
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
