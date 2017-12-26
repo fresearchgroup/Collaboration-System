@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django_comments_xtd',
+    'django_comments',
     'Community',
     'UserRolesPermission',
     'BasicArticle',
@@ -163,7 +166,14 @@ HAYSTACK_CONNECTIONS = {
     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
   },
 }
+SITE_ID=1
 
+COMMENTS_APP='django_comments_xtd'
 
+COMMENTS_XTD_MAX_THREAD_LEVEL = 1  # default is 0
+
+COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order') 
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
 
 ROLEPERMISSIONS_MODULE = 'UserRolesPermission.roles'

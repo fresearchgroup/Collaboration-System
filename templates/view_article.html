@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
      <li class="breadcrumb-item active">{{ article.article.title }} </li>
@@ -10,17 +14,17 @@
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active btn btn-outline-primary" href="{% url 'article_view' article.article.pk %}">View</a>
+          <a class="nav-link active" href="{% url 'article_view' article.article.pk %}">View</a>
         </li>
         {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link btn btn-outline-primary" href="{% url 'article_edit' article.article.pk %}">Edit</a>
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link  btn btn-outline-primary" href="{% url 'article_delete' article.article.pk %}">Delete</a>
+          <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
         </li>
         <li class="nav-item ">
-          <a class="nav-link  btn btn-outline-primary" href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+          <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
         </li>
         {% endif %}
       </ul>
@@ -31,9 +35,7 @@
                 {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
               </div>
       </div>
-
     </div>
-
     <div class="col-sm-3"><br/><br/>
       <div class="alert alert-info" role="alert">
         This article belongs to -
@@ -46,8 +48,26 @@
         </div>
     </div>
   </div>
+
+
+{% get_comment_count for article as comment_count %}
+<div class="text-center" style="padding-top:20px">
+      &nbsp;&sdot;&nbsp;
+      {{ comment_count }} comments have been posted.
 </div>
 
 
+</div>
+  <div class="comment">
+  <h4 class="text-center">Your comment</h4>
+  <div class="well">
+    {% render_comment_form for article %}
+  </div>
+</div>
+{% if comment_count %}
+<hr/>
+<ul class="media-list">
+  {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+</ul>
+{% endif %}
 {% endblock %}
-
