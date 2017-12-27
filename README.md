@@ -19,6 +19,8 @@
                 Django Machina
                 Django-cors-headers
                 Django-role-permission
+                Django_comments_xtd
+                Django_comments
 
 
 Steps for implementing Django with Mysql assuming you have already install Mysql server-
@@ -77,3 +79,26 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
    sudo systemctl daemon-reload
    sudo systemctl restart mysql
    ```
+5. For Comments Module Add the following lines -
+    ```  
+    SITE_ID=1
+    COMMENTS_APP='django_comments_xtd'
+    COMMENTS_XTD_MAX_THREAD_LEVEL = 1 
+    COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order') 
+    COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
+    ```
+6. Add the followin in view_article.html to show comments -
+  ```
+  <div class="comment">
+    <h4 class="text-center">Your comment</h4>
+      <div class="well">
+        {% render_comment_form for article %}
+      </div>
+  </div>
+  {% if comment_count %}
+  <hr/>
+    <ul class="media-list">
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+    </ul>
+  {% endif %}
+  ```
