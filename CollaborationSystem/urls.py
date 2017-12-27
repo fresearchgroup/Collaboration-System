@@ -24,6 +24,7 @@ from Community import views as communityview
 from Community import viewsets as communityviewsets
 from Group import views as group_views
 from machina.app import board
+from UserRolesPermission import viewsets as user_viewsets
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -61,5 +62,6 @@ urlpatterns = [
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
 
     url(r'^forum/', include(board.urls)),
+    url(r'^registrationapi/$', user_viewsets.UserCreate.as_view(), name='account-create'),
 
 ]
