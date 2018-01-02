@@ -29,3 +29,16 @@ class CommunityGroups(models.Model):
 	group = models.ForeignKey(Group, null=True, related_name='communitygroups')
 	user = models.ForeignKey(User, null=True, related_name='communitygroups')
 	community = models.ForeignKey(Community, null=True, related_name='communitygroups')
+
+class RequestCommunityCreation(models.Model):
+	name = models.CharField(null=True, max_length=100)
+	desc = models.TextField()
+	category = models.CharField(max_length=100)
+	tag_line = models.CharField(null=True, max_length=500)
+	purpose = models.TextField()
+	requestedby = models.ForeignKey(User, null=True)
+	email = models.CharField(null=True, max_length=100)
+	status = models.CharField(null=True, max_length=100)
+
+	def __str__(self):
+		return self.name

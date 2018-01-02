@@ -4,6 +4,7 @@
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  <li class="breadcrumb-item active">{{ message }}</li>  
   {% endif %}
 {% endblock %}
 
@@ -36,6 +37,9 @@
 
   </div><!--row -->
 </div> <!--team-->
+
+
+  <a class="btn btn-primary" href="{% url 'request_community_creation' %}">Request Community Creation</a>
 
 <br />
 {% endblock %}

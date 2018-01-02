@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
 
     url(r'^comments/', include('django_comments_xtd.urls')),
-    
+
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d+)/$', articleview.view_article, name='article_view'),
     url(r'^article-edit/(?P<pk>\d+)/$', articleview.edit_article, name='article_edit'),
@@ -63,5 +63,7 @@ urlpatterns = [
 
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.UserCreate.as_view(), name='account-create'),
+
+    url(r'^request_community_creation/$', communityview.request_community_creation, name='request_community_creation'),
 
 ]
