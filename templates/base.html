@@ -95,6 +95,7 @@ $(document).ready(function() {
           <li class="menu-has-children">
             <a href="#" id="userMenu">{{ user.username }}</a>
             <ul>
+							<li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
               <li><a href="#">My account</a></li>
 							<li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
               <li><a href="#">Change password</a></li>

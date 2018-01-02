@@ -86,7 +86,6 @@ def community_group(request):
 	else:
 		return redirect('login')
 
-
 def request_community_creation(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -111,3 +110,7 @@ def request_community_creation(request):
 			return render(request, 'request_community_creation.html')
 	else:
 		return redirect('login')
+
+def handle_community_creation_requests(request):
+	requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
+	return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})

@@ -65,5 +65,6 @@ urlpatterns = [
     url(r'^registrationapi/$', user_viewsets.UserCreate.as_view(), name='account-create'),
 
     url(r'^request_community_creation/$', communityview.request_community_creation, name='request_community_creation'),
+    url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
 ]
