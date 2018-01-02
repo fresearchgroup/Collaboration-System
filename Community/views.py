@@ -3,11 +3,11 @@ from BasicArticle.views import create_article, view_article
 # Create your views here.
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
-
+from UserRolesPermission.views import user_dashboard
 
 # Create your views here.
 
@@ -86,3 +86,28 @@ def community_group(request):
 	else:
 		return redirect('login')
 
+
+def request_community_creation(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			name = request.POST['name']
+			desc = request.POST['desc']
+			category = request.POST['category']
+			tag_line = request.POST['tag_line']
+			purpose = request.POST['purpose']
+			status = request.POST['status']
+			requestcommunitycreation = RequestCommunityCreation.objects.create(
+				name = name,
+				desc  = desc,
+				category = category,
+				tag_line = tag_line,
+				purpose = purpose,
+				requestedby = request.user,
+				email = request.user.email,
+				status = status
+				)
+			return redirect('user_dashboard')
+		else:
+			return render(request, 'request_community_creation.html')
+	else:
+		return redirect('login')

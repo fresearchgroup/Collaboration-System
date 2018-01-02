@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+{% endblock %}
+
+{% block content %}
+{% block javascript %}
+{% endblock %}
+
+
+{% if user.is_authenticated %}
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="Suggest a name for your community" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="tag_line">Tag line</label>
+    <input type="text" class="form-control" id="tag_line" name="tag_line" placeholder="Suggest a tag line for your community" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="desc">Description</label>
+    <textarea  class="form-control" name="desc" rows="6"></textarea>
+    <small id="bodyhelp" class="form-text text-muted">Suggest a description about your community</small>
+  </div>
+  <div class="form-group">
+    <label for="category">Category</label>
+    <input type="text" class="form-control" id="category" name="category" placeholder="Suggest a category for your community" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="purpose">Purpose</label>
+    <textarea  class="form-control" name="purpose" rows="6"></textarea>
+    <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
+    <input type="hidden" name="status" value="Request" />
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Suggession</button>
+</form>
+{% endif %}
+{% endblock %}
