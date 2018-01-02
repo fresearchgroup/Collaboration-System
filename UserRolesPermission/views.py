@@ -31,9 +31,7 @@ def user_dashboard(request):
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
 
-        cgroups = CommunityGroups.objects.filter(user=request.user)
-
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'cgroups':cgroups })
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')
 
