@@ -31,7 +31,7 @@
   </div> <!-- /row -->
 </div><!-- /container -->
 <!-- /Team -->
-<br />
+<br /> 
 
 <div class="container team-orange">
   <div class="card-deck">
@@ -56,11 +56,7 @@
       <p class="card-text-orange">
         {{myhtml|safe}}{% autoescape off%}
         {% for grp in groups %}
-          {% for cgrp in cgroups %}
-            {% if cgrp.group == grp.group %}
-              <a href="{% url 'group_view' grp.group.pk %}"> {{ cgrp.group }} </a> <br />
-            {% endif %}
-          {% endfor %}
+              <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
         {% endfor %}
         {% endautoescape%}
         </p>

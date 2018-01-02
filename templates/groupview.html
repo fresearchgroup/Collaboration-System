@@ -65,7 +65,7 @@
 <div class="container-fluid  alert alert-primary" role="alert">
   <div class="row">
     <div class="col-sm-8">
-      <h3>About Us</h3>
+      <h3>Description</h3>
       {{myhtml|safe}}{% autoescape off%} {{group.desc}}{% endautoescape%}
     </div>
 
@@ -81,7 +81,7 @@
 <div class="container-fluid alert alert-primary" role="alert">
   <div class="row">
     <div class="col-sm-8">
-      <h2>Published Content</h2><br />
+      <h3>Published Content</h3>
       {% for article in articles %}
       <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
       {% endfor %}
