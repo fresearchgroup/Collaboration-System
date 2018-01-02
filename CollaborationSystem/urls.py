@@ -62,6 +62,6 @@ urlpatterns = [
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
 
     url(r'^forum/', include(board.urls)),
-    url(r'^registrationapi/$', user_viewsets.UserCreate.as_view(), name='account-create'),
+    url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 
 ]

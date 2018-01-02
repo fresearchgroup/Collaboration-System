@@ -66,8 +66,8 @@
 <div class="container-fluid  alert alert-primary" role="alert">
   <div class="row">
     <div class="col-sm-8">
-      <h3>About Us</h3>
-      {{myhtml|safe}}{% autoescape off%} {{community.desc|truncatewords:30 }}{% endautoescape%}
+      <h3>Description</h3>
+      {{myhtml|safe}}{% autoescape off%} {{community.desc }}{% endautoescape%}
     </div>
 
     <div class="col-sm-4">
@@ -82,14 +82,14 @@
 <div class="container-fluid alert alert-primary" role="alert">
   <div class="row">
     <div class="col-sm-8">
-      <h2>Published Content</h2><br />
+      <h3>Published Content</h3>
       {% for article in articles %}
       <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
       {% endfor %}
     </div>
 
     <div class="col-sm-4">
-      <h2>Groups</h2><br />
+      <h3>Groups</h3>
       {% for group in groups %}
       <a href="{% url 'group_view' group.group.pk  %}">{{group.group.name}}</a><br />
       {% endfor %}

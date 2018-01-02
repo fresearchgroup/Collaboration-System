@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 
 
-class UserCreate(APIView):
+class RegistrationViewsets(APIView):
     """ 
     Creates the user. 
     """
