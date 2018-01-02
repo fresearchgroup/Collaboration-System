@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="team container">
+  <div class="row">
+    <div class="col-sm-3 col-xs-6">
+      <div class="card card-block ">
+        <img alt="My Photo" class="team-img rounded-circle" src="../static/img/avatar.jpg">
+        <div class="card-title-wrap">
+          <span class="card-title ">{{user.username}}</span> <span class="card-text">{{user.email}}</span>
+        </div>
+        <div class="team-over">
+          <h4 class="hidden-md-down"><a href="#">Update Photo</a></h4>
+        </div>
+      </div> <!-- /card-block -->
+    </div> <!-- /col-sm-3 -->
+    <div class="col-sm-1">
+    </div>
+
+    <div class="card col-sm-8">
+      <div class="card-body bg-lightorange">
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="First Name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{{user.first_name}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="Last Name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="{{user.last_name}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="Email Address">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="{{user.email}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update</button>
+
+        </form>
+
+      </div>
+    </div>
+  </div> <!-- /row -->
+</div><!-- /container -->
+<!-- /Team -->
+<br />
+
+
+<br />
+
+{% endblock %}

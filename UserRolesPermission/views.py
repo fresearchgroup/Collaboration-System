@@ -6,10 +6,11 @@ from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
 from Group.models import GroupMembership, GroupArticles
+from django.contrib.auth.models import User
 
 def signup(request):
     """
-    this is a sign up function for new user in the system.  The function takes 
+    this is a sign up function for new user in the system.  The function takes
     user input, validates it, register the user , and gives an Author role to the user.
     """
     if request.method == 'POST':
@@ -35,8 +36,24 @@ def user_dashboard(request):
     else:
         return redirect('login')
 
-
-
 def home(request):
     articles = Articles.objects.all()[:3]
     return render(request, 'home.html', {'articles':articles})
+
+def update_profile(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			first_name = request.POST['first_name']
+			last_name = request.POST['last_name']
+			email = request.POST['email']
+			uid = request.user.id
+			usr = User.objects.get(pk = request.user.id)
+			usr.email=email
+			usr.first_name=first_name
+			usr.last_name=last_name
+			usr.save()
+			return redirect('user_dashboard')
+		else:
+			return render(request, 'update_profile.html')
+	else:
+		return redirect('login')
