@@ -128,11 +128,10 @@ def handle_community(request,pk):
 				tag_line = rcommunity.tag_line,
 				category = rcommunity.category
 				)
-			community = Community.objects.get(name=rcommunity.name)
 			communityadmin = Roles.objects.get(name='communityadmin')
 			communitymembership = CommunityMembership.objects.create(
 				user = rcommunity.requestedby,
-				community = community,
+				community = communitycreation,
 				role = communityadmin
 				)
 			rcommunity.status = 'approved'
