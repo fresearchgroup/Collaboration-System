@@ -20,6 +20,8 @@ class CommunityAdmin(AbstractUserRole):
         'edit_article':True,
         'publish_article':True,
         'delete_article':True,
+        'add_community_roles':True,
+        'delete_community_roles':True,
     }
 
 class GroupAdmin(AbstractUserRole):

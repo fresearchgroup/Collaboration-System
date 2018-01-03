@@ -7,6 +7,7 @@ from .models import Community, CommunityMembership, CommunityArticles, RequestCo
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
+from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
 
 # Create your views here.
@@ -34,8 +35,9 @@ def community_subscribe(request):
 		if request.method == 'POST':
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
+			role = Roles.objects.get(name='author')
 			user = request.user
-			obj = CommunityMembership.objects.create(user=user, community=community)
+			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
