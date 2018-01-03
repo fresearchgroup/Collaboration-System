@@ -59,6 +59,19 @@
               <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
         {% endfor %}
         {% endautoescape%}
+      </p>
+    </div>
+
+    <div class="card card-block card-border">
+      <div class="card-title-wrap-orange">
+        <span class="card-title">Pending Requests</span>
+      </div>
+      <p class="card-text-orange">
+        {{myhtml|safe}}{% autoescape off%}
+        {% for pending in pendingcommunities %}
+              {{ pending.name }}  <br />
+        {% endfor %}
+        {% endautoescape%}
         </p>
     </div>
 
@@ -70,6 +83,7 @@
 
         </p>
     </div>
+
 
   </div>
 </div>

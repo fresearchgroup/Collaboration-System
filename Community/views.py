@@ -9,6 +9,7 @@ from .models import CommunityGroups
 from Group.views import create_group
 from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
+from django.contrib.auth.models import Group as Roles
 
 # Create your views here.
 
@@ -116,3 +117,31 @@ def request_community_creation(request):
 def handle_community_creation_requests(request):
 	requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 	return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
+
+def handle_community(request,pk):
+	rcommunity=RequestCommunityCreation.objects.get(pk=pk)
+
+	if request.method == 'POST':
+		status = request.POST['status']
+		if status=='approve':
+			communitycreation = Community.objects.create(
+				name = rcommunity.name,
+				desc = rcommunity.desc,
+				tag_line = rcommunity.tag_line,
+				category = rcommunity.category
+				)
+			communityadmin = Roles.objects.get(name='communityadmin')
+			communitymembership = CommunityMembership.objects.create(
+				user = rcommunity.requestedby,
+				community = communitycreation,
+				role = communityadmin
+				)
+			rcommunity.status = 'approved'
+			rcommunity.save()
+
+		if status=='reject':
+			rcommunity.status = 'rejected'
+			rcommunity.save()
+
+		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
+		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
