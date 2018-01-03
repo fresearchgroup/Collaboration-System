@@ -7,9 +7,11 @@ from .models import Community, CommunityMembership, CommunityArticles, RequestCo
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
+from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
-
+from rolepermissions.roles import assign_role
+from UserRolesPermission.roles import CommunityAdmin
 # Create your views here.
 
 
@@ -35,8 +37,9 @@ def community_subscribe(request):
 		if request.method == 'POST':
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
+			role = Roles.objects.get(name='author')
 			user = request.user
-			obj = CommunityMembership.objects.create(user=user, community=community)
+			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
@@ -112,34 +115,36 @@ def request_community_creation(request):
 	else:
 		return redirect('login')
 
+
 def handle_community_creation_requests(request):
-	requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
-	return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 
-def handle_community(request,pk):
-	rcommunity=RequestCommunityCreation.objects.get(pk=pk)
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			pk = request.POST['pk']
+			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
+			user=rcommunity.requestedby
+			status = request.POST['status']
+			if status=='approve':
+				communitycreation = Community.objects.create(
+					name = rcommunity.name,
+					desc = rcommunity.desc,
+					tag_line = rcommunity.tag_line,
+					category = rcommunity.category
+					)
+				assign_role(user, CommunityAdmin)
+				communityadmin = Roles.objects.get(name='community_admin')
+				communitymembership = CommunityMembership.objects.create(
+					user = rcommunity.requestedby,
+					community = communitycreation,
+					role = communityadmin
+					)
+				rcommunity.status = 'approved'
+				rcommunity.save()
 
-	if request.method == 'POST':
-		status = request.POST['status']
-		if status=='approve':
-			communitycreation = Community.objects.create(
-				name = rcommunity.name,
-				desc = rcommunity.desc,
-				tag_line = rcommunity.tag_line,
-				category = rcommunity.category
-				)
-			communityadmin = Roles.objects.get(name='communityadmin')
-			communitymembership = CommunityMembership.objects.create(
-				user = rcommunity.requestedby,
-				community = communitycreation,
-				role = communityadmin
-				)
-			rcommunity.status = 'approved'
-			rcommunity.save()
+			if status=='reject':
+				rcommunity.status = 'rejected'
+				rcommunity.save()
 
-		if status=='reject':
-			rcommunity.status = 'rejected'
-			rcommunity.save()
 
 		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
