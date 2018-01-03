@@ -1,6 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups
+from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
@@ -32,7 +32,9 @@ def user_dashboard(request):
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
 
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
+        pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
+
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities  })
     else:
         return redirect('login')
 
