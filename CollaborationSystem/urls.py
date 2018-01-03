@@ -68,6 +68,5 @@ urlpatterns = [
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
-    url(r'^handle_community/(?P<pk>\d+)/$', communityview.handle_community, name='handle_community'),
 
 ]
