@@ -29,11 +29,12 @@
           <td>{{ req.requestedby }}</td>
           <td>{{ req.email }}</td>
           <td>
+
             <form method="post">
                  {% csrf_token %}
                  <div class="btn-group" role="group" aria-label="Basic example">
-                       <button type="radio" name ="status" value="Approve" class="btn btn-success">Approve</button>
-                       <button type="radio" name ="status" value="Reject" class="btn btn-danger">Reject</button>
+                       <button type="radio" name ="status" value="Apprve" class="btn btn-success" >Approve  </button>
+                       <button type="radio" name ="status" value="Reject" class="btn btn-danger" >Reject</button>
                  </div>
             </form>
           </td>
