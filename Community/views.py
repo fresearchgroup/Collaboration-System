@@ -12,6 +12,8 @@ from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
+from django.contrib.auth.models import User
+
 # Create your views here.
 
 
@@ -151,4 +153,17 @@ def handle_community_creation_requests(request):
 
 def manage_users(request,pk):
 	community = Community.objects.get(pk=pk)
-	return render(request, 'manageusers.html', {'community': community})
+
+	if request.method == 'POST':
+		username = request.POST['username']
+		user = User.objects.get(username = username)
+		role = Roles.objects.get(name='author')
+		status = request.POST['status']
+		if status == 'add':
+			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+		if status == 'remove':
+			obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+		return redirect('manage_users',pk=pk)
+
+	membership = CommunityMembership.objects.filter(community=pk)
+	return render(request, 'manageusers.html', {'community': community, 'membership':membership})
