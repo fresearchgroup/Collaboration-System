@@ -29,12 +29,11 @@
           <td>{{ req.requestedby }}</td>
           <td>{{ req.email }}</td>
           <td>
-
-            <form method="post">
+            <form method="post" action="{% url 'handle_community' req.pk %}">
                  {% csrf_token %}
                  <div class="btn-group" role="group" aria-label="Basic example">
-                       <button type="radio" name ="status" value="Apprve" class="btn btn-success" >Approve  </button>
-                       <button type="radio" name ="status" value="Reject" class="btn btn-danger" >Reject</button>
+                       <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
+                       <button type="radio" name ="status" value="reject" class="btn btn-danger"> Reject</button>
                  </div>
             </form>
           </td>
