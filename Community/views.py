@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from BasicArticle.views import create_article, view_article
 # Create your views here.
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation
@@ -153,17 +154,28 @@ def handle_community_creation_requests(request):
 
 def manage_users(request,pk):
 	community = Community.objects.get(pk=pk)
-
+	errormessage = ''
 	if request.method == 'POST':
 		username = request.POST['username']
 		user = User.objects.get(username = username)
 		role = Roles.objects.get(name='author')
 		status = request.POST['status']
+		try:
+			cnt = CommunityMembership.objects.filter(user=user, community=community).count()
+		except CommunityMembership.DoesNotExist:
+			raise Http404
+
 		if status == 'add':
-			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+			if cnt == 0:
+				obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+			else:
+				errormessage = 'user exists in community'
 		if status == 'remove':
-			obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+			if cnt == 0:
+				errormessage = 'no such user in the community'
+			else:
+				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 		return redirect('manage_users',pk=pk)
 
 	membership = CommunityMembership.objects.filter(community=pk)
-	return render(request, 'manageusers.html', {'community': community, 'membership':membership})
+	return render(request, 'manageusers.html', {'community': community, 'membership':membership, 'errormessage':errormessage})
