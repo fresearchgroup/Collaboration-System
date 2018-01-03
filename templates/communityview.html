@@ -10,7 +10,21 @@
 
 {% block content %}
 
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_users' community.pk %}">Manage Users</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="#">Manage Roles</a>
+  </li>
+</ul>
+<br/>
 <div class="container-fluid alert alert-primary" role="alert">
+
   <div class="row">
     <div class="col-sm-8">
       <h2>{{ community.name }}</h2><br />

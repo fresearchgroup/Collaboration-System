@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Manage Users</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="#">Manage Roles</a>
+  </li>
+</ul>
+<br/>
+
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-12">
+      {% if user.is_authenticated %}
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <button type="submit" name ="status" value="subscribe" class="btn btn-primary">Subscribe</button>
+        <button type="submit" name ="status" value="unsubscribe" class="btn btn-primary">Unsubscribe</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

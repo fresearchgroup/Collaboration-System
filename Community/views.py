@@ -143,3 +143,7 @@ def handle_community(request,pk):
 
 		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
+
+def manage_users(request,pk):
+	community = Community.objects.get(pk=pk)
+	return render(request, 'manageusers.html', {'community': community})
