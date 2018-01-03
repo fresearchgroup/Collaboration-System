@@ -118,33 +118,34 @@ def request_community_creation(request):
 
 def handle_community_creation_requests(request):
 	
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			pk = request.POST['pk']
+			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
+			user=rcommunity.requestedby
+			status = request.POST['status']
+			if status=='approve':
+				communitycreation = Community.objects.create(
+					name = rcommunity.name,
+					desc = rcommunity.desc,
+					tag_line = rcommunity.tag_line,
+					category = rcommunity.category
+					)
+				assign_role(user, CommunityAdmin)
+				communityadmin = Roles.objects.get(name='community_admin')
+				communitymembership = CommunityMembership.objects.create(
+					user = rcommunity.requestedby,
+					community = communitycreation,
+					role = communityadmin
+					)
+				rcommunity.status = 'approved'
+				rcommunity.save()
 
-	if request.method == 'POST':
-		pk = request.POST['pk']
-		rcommunity=RequestCommunityCreation.objects.get(pk=pk)
-		user=rcommunity.requestedby
-		status = request.POST['status']
-		if status=='approve':
-			communitycreation = Community.objects.create(
-				name = rcommunity.name,
-				desc = rcommunity.desc,
-				tag_line = rcommunity.tag_line,
-				category = rcommunity.category
-				)
-			assign_role(user, CommunityAdmin)
-			communityadmin = Roles.objects.get(name='community_admin')
-			communitymembership = CommunityMembership.objects.create(
-				user = rcommunity.requestedby,
-				community = communitycreation,
-				role = communityadmin
-				)
-			rcommunity.status = 'approved'
-			rcommunity.save()
-
-		if status=='reject':
-			rcommunity.status = 'rejected'
-			rcommunity.save()
+			if status=='reject':
+				rcommunity.status = 'rejected'
+				rcommunity.save()
 
 
-	requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
-	return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
+		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
+		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
+	return redirect('display_communities')
