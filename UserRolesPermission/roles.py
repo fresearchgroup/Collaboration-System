@@ -13,3 +13,19 @@ class Publisher(AbstractUserRole):
         'publish_article':True,
         'delete_article':True,
     }
+
+class CommunityAdmin(AbstractUserRole):
+    available_permissions = {
+        'create_article': True,
+        'edit_article':True,
+        'publish_article':True,
+        'delete_article':True,
+    }
+
+class GroupAdmin(AbstractUserRole):
+    available_permissions = {
+        'create_article': True,
+        'edit_article':True,
+        'publish_article':True,
+        'delete_article':True,
+    }
