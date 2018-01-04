@@ -42,7 +42,12 @@
                     {{ mem.user.username }}
                   </td>
                   <td>
-                    {{mem.role.name }}
+                    {% if mem.role.name == 'community_admin'%}
+                      Community Admin
+                      {%else%}
+                      {{mem.role.name}}
+                     {%endif%}
+
                   </td>
                 </tr>
               {% endfor %}
