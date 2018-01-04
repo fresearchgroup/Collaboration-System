@@ -162,7 +162,8 @@ def manage_users(request,pk):
 			if request.method == 'POST':
 				username = request.POST['username']
 				user = User.objects.get(username = username)
-				role = Roles.objects.get(name='author')
+				rolename = request.POST['role']
+				role = Roles.objects.get(name=rolename)
 				status = request.POST['status']
 
 				if status == 'add':
@@ -172,6 +173,13 @@ def manage_users(request,pk):
 						obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 					else:
 						errormessage = 'user exists in community'
+				if status == 'update':
+					try:
+						is_member = CommunityMembership.objects.get(user =user, community = community.pk)
+						is_member.role = role
+						is_member.save()
+					except CommunityMembership.DoesNotExist:
+						errormessage = 'no such user in the community'
 				if status == 'remove':
 					try:
 						obj = CommunityMembership.objects.filter(user=user, community=community).delete()

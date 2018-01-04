@@ -42,7 +42,7 @@
                     {{ mem.user.username }}
                   </td>
                   <td>
-                    {{ mem.role.name }}
+                    {{mem.role.name }}
                   </td>
                 </tr>
               {% endfor %}
@@ -61,8 +61,22 @@
           <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
           <div class="invalid-feedback"></div>
         </div>
-        <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
+        <div class="form-group">
+            <label for="role">Role</label>
+              <select class="form-control" id="role" name = 'role'>
+                    <option value = 'author'>Author</option>
+                    <option value = 'publisher'>Publisher</option>
+                    <option value = 'community_admin'>Community Admin</option>
+              </select>
+        </div>
+        <div class="form-group">
+          <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
+
+        <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
+      </div>
+      <div class="form-group">
         <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
+      </div>
       </form>
 
       {% endif %}
