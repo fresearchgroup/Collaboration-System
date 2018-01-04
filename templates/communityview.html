@@ -15,12 +15,11 @@
   <li class="nav-item">
     <a class="nav-link active" href="#">View</a>
   </li>
-  {% load permission_tags %}
-  {% if user|can:'add_community_roles' %}
+  {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_users' community.pk %}">Manage Users</a>
   </li>
-  {% endif %}
+  {%endif%}
 </ul>
 <br/>
 <div class="container-fluid alert alert-primary" role="alert">

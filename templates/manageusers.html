@@ -21,8 +21,6 @@
 </ul>
 <br/>
 
-{% load permission_tags %}
-{% if user|can:'add_community_roles' %}
 
 <div class="container-fluid alert alert-primary" role="alert">
   <div class="row">
@@ -38,7 +36,7 @@
               </thead>
             <tbody>
               {{myhtml|safe}}{% autoescape off%}
-              {% for mem in membership %}
+              {% for mem in members %}
                 <tr>
                   <td>
                     {{ mem.user.username }}
@@ -71,5 +69,5 @@
     </div>
   </div>
 </div>
-{% endif %}
+
 {% endblock %}

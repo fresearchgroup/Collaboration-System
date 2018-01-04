@@ -134,7 +134,6 @@ def handle_community_creation_requests(request):
 					tag_line = rcommunity.tag_line,
 					category = rcommunity.category
 					)
-				assign_role(user, CommunityAdmin)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = rcommunity.requestedby,
@@ -154,28 +153,35 @@ def handle_community_creation_requests(request):
 
 def manage_users(request,pk):
 	community = Community.objects.get(pk=pk)
+	uid = request.user.id
 	errormessage = ''
-	if request.method == 'POST':
-		username = request.POST['username']
-		user = User.objects.get(username = username)
-		role = Roles.objects.get(name='author')
-		status = request.POST['status']
-		try:
-			cnt = CommunityMembership.objects.filter(user=user, community=community).count()
-		except CommunityMembership.DoesNotExist:
-			raise Http404
+	membership = None
+	try:
+		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+		if membership.role.name == 'community_admin':
+			if request.method == 'POST':
+				username = request.POST['username']
+				user = User.objects.get(username = username)
+				role = Roles.objects.get(name='author')
+				status = request.POST['status']
 
-		if status == 'add':
-			if cnt == 0:
-				obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-			else:
-				errormessage = 'user exists in community'
-		if status == 'remove':
-			if cnt == 0:
-				errormessage = 'no such user in the community'
-			else:
-				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-		return redirect('manage_users',pk=pk)
+				if status == 'add':
+					try:
+						is_member = CommunityMembership.objects.get(user =user, community = community.pk)
+					except CommunityMembership.DoesNotExist:
+						obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+					else:
+						errormessage = 'user exists in community'
+				if status == 'remove':
+					try:
+						obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+					except CommunityMembership.DoesNotExist:
+						errormessage = 'no such user in the community'
+				return redirect('manage_users',pk=pk)
+			members = CommunityMembership.objects.filter(community = community.pk)
+			return render(request, 'manageusers.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+		else:
+			return redirect('community_view',pk=pk)
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view',pk=pk)
 
-	membership = CommunityMembership.objects.filter(community=pk)
-	return render(request, 'manageusers.html', {'community': community, 'membership':membership, 'errormessage':errormessage})
