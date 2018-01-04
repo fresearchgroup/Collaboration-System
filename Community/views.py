@@ -186,9 +186,8 @@ def manage_users(request,pk):
 							obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 						except CommunityMembership.DoesNotExist:
 							errormessage = 'no such user in the community'
-					return redirect('manage_users',pk=pk)
 				except User.DoesNotExist:
-					errormessage = "User Doesn't Exist"
+					errormessage = "no such user in the community"
 			members = CommunityMembership.objects.filter(community = community.pk)
 			return render(request, 'manageusers.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 		else:

@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rolepermissions',
     'rest_framework.authtoken',
+    'workflow',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
