@@ -97,6 +97,7 @@
         <tr class="bg-orange">
           <th style="color:white">Article</th>
           <th style="color:white">Community / Group</th>
+          <th style="color:white">Created</th>
         </tr>
         </thead>
       <tbody>
@@ -104,10 +105,13 @@
         {% for cart in commarticles %}
           <tr>
             <td>
-              <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }} </a>
+              <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }}  </a>
             </td>
             <td>
               <a href="{% url 'community_view' cart.community.pk %}">{{ cart.community }}</a>
+            </td>
+            <td>
+              {{cart.article.created_at}}
             </td>
           </tr>
         {% endfor %}
@@ -121,6 +125,9 @@
             </td>
             <td>
               <a href="{% url 'group_view' gart.group.pk  %}"> {{ gart.group }} </a>
+            </td>
+            <td>
+              {{cart.article.created_at}}
             </td>
           </tr>
         {% endfor %}
