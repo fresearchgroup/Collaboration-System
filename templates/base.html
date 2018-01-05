@@ -99,9 +99,8 @@ $(document).ready(function() {
               {% if request.user.is_superuser %}
 							<li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
               {% endif%}
-              <li><a href="#">My account</a></li>
+              <li><a href="{% url 'view_profile' %}">My account</a></li>
 							<li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-              <li><a href="#">Change password</a></li>
               <li><a href="{% url 'logout' %}">Log out</a></li>
             </ul>
           </li>

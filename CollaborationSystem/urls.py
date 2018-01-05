@@ -73,4 +73,6 @@ urlpatterns = [
 
     url(r'^manage_group/(?P<pk>\d+)/$', group_views.manage_group, name='manage_group'),
 
+    url(r'^myprofile/$', user_views.view_profile, name='view_profile'),
+
 ]
