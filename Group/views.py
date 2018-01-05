@@ -5,6 +5,9 @@ from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups
 from django.contrib.auth.models import Group as Roles
+from django.contrib.auth.models import User
+from rolepermissions.roles import assign_role
+from UserRolesPermission.roles import GroupAdmin
 
 def create_group(request):
 	if request.method == 'POST':
@@ -80,4 +83,45 @@ def group_article_create(request):
 
 def manage_group(request,pk):
 	group = Group.objects.get(pk=pk)
-	return render(request, 'managegroup.html', {'group': group})
+	uid = request.user.id
+	errormessage = ''
+	membership = None
+	try:
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership.role.name == 'group_admin':
+			if request.method == 'POST':
+				try:
+					username = request.POST['username']
+					rolename = request.POST['role']
+					user = User.objects.get(username = username)
+					role = Roles.objects.get(name=rolename)
+					status = request.POST['status']
+
+					if status == 'add':
+						try:
+							is_member = GroupMembership.objects.get(user=user, group=group.pk)
+						except GroupMembership.DoesNotExist:
+							obj = GroupMembership.objects.create(user=user, group=group, role=role)
+						else:
+							errormessage = 'user exists in group'
+					if status == 'update':
+						try:
+							is_member = GroupMembership.objects.get(user=user, group=group.pk)
+							is_member.role = role
+							is_member.save()
+						except GroupMembership.DoesNotExist:
+							errormessage = 'no such user in the group'
+					if status == 'remove':
+						try:
+							obj = GroupMembership.objects.filter(user=user, group=group).delete()
+						except GroupMembership.DoesNotExist:
+							errormessage = 'no such user in the group'
+					return redirect('manage_group',pk=pk)
+				except User.DoesNotExist:
+					errormessage = "no such user in the group"
+			members = GroupMembership.objects.filter(group=group.pk)
+			return render(request, 'managegroup.html', {'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+		else:
+			return redirect('group_view',pk=pk)
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view',pk=pk)
