@@ -4,17 +4,21 @@ from .models import Group, GroupMembership, GroupArticles
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups
+from django.contrib.auth.models import Group as Roles
 
 def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
 		desc = request.POST['desc']
+		user = request.user
 		visibility = request.POST['visibility']
 		group = Group.objects.create(
 			name = name,
 			desc  = desc,
 			visibility = visibility
 			)
+		role = Roles.objects.get(name='group_admin')
+		obj = GroupMembership.objects.create(user=user, group=group, role=role)
 		return group
 
 def group_view(request, pk):
@@ -41,7 +45,8 @@ def group_subscribe(request):
 			gid = request.POST['gid']
 			group = Group.objects.get(pk=gid)
 			user = request.user
-			obj = GroupMembership.objects.create(user=user, group=group)
+			role = Roles.objects.get(name='author')
+			obj = GroupMembership.objects.create(user=user, group=group, role=role)
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
 	else:

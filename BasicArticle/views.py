@@ -82,7 +82,7 @@ def edit_article(request, pk):
 							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 						except CommunityMembership.DoesNotExist:
 							membership = 'FALSE'
-							message = 'You are not a member of <h2>%s</h2> community that this  <h2>%s</h2> group belongs to. Please subscribe to the community.'%(communitygroup.community.name, communitygroup.group.name)
+							message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 					except GroupMembership.DoesNotExist:
 						membership ='FALSE'
 				except GroupArticles.DoesNotExist:
