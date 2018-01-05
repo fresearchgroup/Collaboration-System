@@ -83,6 +83,7 @@ def group_article_create(request):
 
 def manage_group(request,pk):
 	group = Group.objects.get(pk=pk)
+	community = CommunityGroups.objects.get(group=pk)
 	uid = request.user.id
 	errormessage = ''
 	membership = None
@@ -99,11 +100,15 @@ def manage_group(request,pk):
 
 					if status == 'add':
 						try:
-							is_member = GroupMembership.objects.get(user=user, group=group.pk)
-						except GroupMembership.DoesNotExist:
-							obj = GroupMembership.objects.create(user=user, group=group, role=role)
-						else:
-							errormessage = 'user exists in group'
+							is_community_member = CommunityMembership.objects.get(user=user, community=community.pk)
+							try:
+								is_member = GroupMembership.objects.get(user=user, group=group.pk)
+							except GroupMembership.DoesNotExist:
+								obj = GroupMembership.objects.create(user=user, group=group, role=role)
+							else:
+								errormessage = 'user exists in group'
+						except CommunityMembership.DoesNotExist:
+							errormessage = 'user is not a part of the community'
 					if status == 'update':
 						try:
 							is_member = GroupMembership.objects.get(user=user, group=group.pk)
@@ -120,7 +125,7 @@ def manage_group(request,pk):
 				except User.DoesNotExist:
 					errormessage = "no such user in the group"
 			members = GroupMembership.objects.filter(group=group.pk)
-			return render(request, 'managegroup.html', {'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+			return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
 		else:
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:
