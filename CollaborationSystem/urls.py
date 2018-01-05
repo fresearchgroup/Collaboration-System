@@ -71,4 +71,6 @@ urlpatterns = [
 
     url(r'^manage_community/(?P<pk>\d+)/$', communityview.manage_community, name='manage_community'),
 
+    url(r'^manage_group/(?P<pk>\d+)/$', group_views.manage_group, name='manage_group'),
+
 ]

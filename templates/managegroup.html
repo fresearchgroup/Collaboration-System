@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ group.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Manage Group</a>
+  </li>
+</ul>
+<br/>
+
+
+
+{% endblock %}

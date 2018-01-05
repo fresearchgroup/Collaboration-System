@@ -77,3 +77,7 @@ def group_article_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+def manage_group(request,pk):
+	group = Group.objects.get(pk=pk)
+	return render(request, 'managegroup.html', {'group': group})
