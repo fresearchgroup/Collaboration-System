@@ -6,6 +6,7 @@ from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
 from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
+from django.contrib.auth.models import Group as Roles
 
 def display_articles(request):
 	"""
@@ -108,11 +109,31 @@ def delete_article(request, pk):
 			elif status == '1':
 				return HttpResponse('deleted')
 		else:
+			message=""
 			try:
-				article = Articles.objects.get(pk=pk)
-			except Articles.DoesNotExist:
-				raise Http404
-			return render(request, 'delete_article.html', {'article': article})
+				article = CommunityArticles.objects.get(article=pk)
+				try:
+					role = Roles.objects.get(name='community_admin')
+					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk, role=role)
+				except CommunityMembership.DoesNotExist:
+					membership = 'FALSE'
+			except CommunityArticles.DoesNotExist:
+				try:
+					article = GroupArticles.objects.get(article=pk)
+					try:
+						role = Roles.objects.get(name='group_admin')
+						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk, role=role)
+						try:
+							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
+							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
+						except CommunityMembership.DoesNotExist:
+							membership = 'FALSE'
+							message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
+					except GroupMembership.DoesNotExist:
+						membership ='FALSE'
+				except GroupArticles.DoesNotExist:
+					raise Http404
+			return render(request, 'delete_article.html', {'article': article,'membership':membership})
 	else:
 		return redirect('login')
 
