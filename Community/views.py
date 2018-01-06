@@ -159,6 +159,7 @@ def manage_users(request,pk):
 	try:
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
 		if membership.role.name == 'community_admin':
+			count = CommunityMembership.objects.filter(community = community.pk, role=membership.role).count()
 			if request.method == 'POST':
 				try:
 					username = request.POST['username']
@@ -174,14 +175,14 @@ def manage_users(request,pk):
 							obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 						else:
 							errormessage = 'user exists in community'
-					if status == 'update':
+					if status == 'update' and count > 1:
 						try:
 							is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							is_member.role = role
 							is_member.save()
 						except CommunityMembership.DoesNotExist:
 							errormessage = 'no such user in the community'
-					if status == 'remove':
+					if status == 'remove' and count > 1:
 						try:
 							obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 						except CommunityMembership.DoesNotExist:

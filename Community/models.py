@@ -24,7 +24,7 @@ class CommunityArticles(models.Model):
 	article = models.ForeignKey(Articles, related_name='communityarticles')
 	user = models.ForeignKey(User, related_name='communityarticles')
 	community = models.ForeignKey(Community, related_name='communityarticles')
-
+	
 class CommunityGroups(models.Model):
 	group = models.ForeignKey(Group, null=True, related_name='communitygroups')
 	user = models.ForeignKey(User, null=True, related_name='communitygroups')
