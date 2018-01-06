@@ -175,18 +175,20 @@ def manage_community(request,pk):
 							obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 						else:
 							errormessage = 'user exists in community'
-					if status == 'update' and count > 1:
-						try:
-							is_member = CommunityMembership.objects.get(user =user, community = community.pk)
-							is_member.role = role
-							is_member.save()
-						except CommunityMembership.DoesNotExist:
-							errormessage = 'no such user in the community'
-					if status == 'remove' and count > 1:
-						try:
-							obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-						except CommunityMembership.DoesNotExist:
-							errormessage = 'no such user in the community'
+					if status == 'update':
+						if count > 1 or count == 1 and username != request.user.username:
+							try:
+								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
+								is_member.role = role
+								is_member.save()
+							except CommunityMembership.DoesNotExist:
+								errormessage = 'no such user in the community'
+					if status == 'remove':
+						if count > 1 or count == 1 and username != request.user.username:		
+							try:
+								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+							except CommunityMembership.DoesNotExist:
+								errormessage = 'no such user in the community'
 					return redirect('manage_community',pk=pk)
 				except User.DoesNotExist:
 					errormessage = "no such user in the community"

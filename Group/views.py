@@ -90,6 +90,7 @@ def manage_group(request,pk):
 	try:
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership.role.name == 'group_admin':
+			count = GroupMembership.objects.filter( group=group.pk, role=membership.role).count()
 			if request.method == 'POST':
 				try:
 					username = request.POST['username']
@@ -110,17 +111,19 @@ def manage_group(request,pk):
 						except CommunityMembership.DoesNotExist:
 							errormessage = 'user is not a part of the community'
 					if status == 'update':
-						try:
-							is_member = GroupMembership.objects.get(user=user, group=group.pk)
-							is_member.role = role
-							is_member.save()
-						except GroupMembership.DoesNotExist:
-							errormessage = 'no such user in the group'
+						if count > 1 or count == 1 and username != request.user.username:
+							try:
+								is_member = GroupMembership.objects.get(user=user, group=group.pk)
+								is_member.role = role
+								is_member.save()
+							except GroupMembership.DoesNotExist:
+								errormessage = 'no such user in the group'
 					if status == 'remove':
-						try:
-							obj = GroupMembership.objects.filter(user=user, group=group).delete()
-						except GroupMembership.DoesNotExist:
-							errormessage = 'no such user in the group'
+						if count > 1 or count == 1 and username != request.user.username:
+							try:
+								obj = GroupMembership.objects.filter(user=user, group=group).delete()
+							except GroupMembership.DoesNotExist:
+								errormessage = 'no such user in the group'
 					return redirect('manage_group',pk=pk)
 				except User.DoesNotExist:
 					errormessage = "no such user in the group"
