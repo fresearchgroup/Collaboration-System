@@ -17,7 +17,7 @@
   </li>
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
-    <a class="nav-link " href="{% url 'manage_users' community.pk %}">Manage Users</a>
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
   {%endif%}
 </ul>

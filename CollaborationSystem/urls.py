@@ -69,6 +69,10 @@ urlpatterns = [
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
 
-    url(r'^manage_users/(?P<pk>\d+)/$', communityview.manage_users, name='manage_users'),
+    url(r'^manage_community/(?P<pk>\d+)/$', communityview.manage_community, name='manage_community'),
+
+    url(r'^manage_group/(?P<pk>\d+)/$', group_views.manage_group, name='manage_group'),
+
+    url(r'^myprofile/$', user_views.view_profile, name='view_profile'),
 
 ]

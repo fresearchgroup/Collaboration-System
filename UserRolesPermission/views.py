@@ -59,3 +59,9 @@ def update_profile(request):
 			return render(request, 'update_profile.html')
 	else:
 		return redirect('login')
+
+def view_profile(request):
+	if request.user.is_authenticated:
+		return render(request, 'myprofile.html')
+	else:
+		return redirect('login')

@@ -151,7 +151,7 @@ def handle_community_creation_requests(request):
 		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 
-def manage_users(request,pk):
+def manage_community(request,pk):
 	community = Community.objects.get(pk=pk)
 	uid = request.user.id
 	errormessage = ''
@@ -187,12 +187,12 @@ def manage_users(request,pk):
 							obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 						except CommunityMembership.DoesNotExist:
 							errormessage = 'no such user in the community'
+					return redirect('manage_community',pk=pk)
 				except User.DoesNotExist:
 					errormessage = "no such user in the community"
 			members = CommunityMembership.objects.filter(community = community.pk)
-			return render(request, 'manageusers.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 		else:
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view',pk=pk)
-
