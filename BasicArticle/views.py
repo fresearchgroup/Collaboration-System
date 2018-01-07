@@ -45,6 +45,7 @@ def view_article(request, pk):
 	except CommunityArticles.DoesNotExist:
 		try:
 			article = GroupArticles.objects.get(article=pk)
+			count = article_watch(request, article.article)
 		except GroupArticles.DoesNotExist:
 			raise Http404
 	return render(request, 'view_article.html', {'article': article, 'count':count})
