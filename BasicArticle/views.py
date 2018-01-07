@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import NewArticleForm
 from django.http import Http404, HttpResponse
-from .models import Articles
+from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
 from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
@@ -41,12 +41,13 @@ def view_article(request, pk):
 	"""
 	try:
 		article = CommunityArticles.objects.get(article=pk)
+		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
 			article = GroupArticles.objects.get(article=pk)
 		except GroupArticles.DoesNotExist:
 			raise Http404
-	return render(request, 'view_article.html', {'article': article})
+	return render(request, 'view_article.html', {'article': article, 'count':count})
 
 
 def edit_article(request, pk):
@@ -141,6 +142,15 @@ def delete_article(request, pk):
 		return redirect('login')
 
 
+def article_watch(request, article):
+    if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
+    	view = ArticleViewLogs(
+    		article=article,ip=request.META['REMOTE_ADDR'],
+    		session=request.session.session_key
+    		)
+    	view.save()
+
+    return ArticleViewLogs.objects.filter(article=article).count()
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles

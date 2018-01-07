@@ -6,7 +6,13 @@ class Articles(models.Model):
 	body = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
-
+	views = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
 		return self.title
+
+class ArticleViewLogs(models.Model):
+    article = models.ForeignKey(Articles, related_name='articleviews')
+    ip = models.CharField(max_length=40)
+    session = models.CharField(max_length=40)
+    created = models.DateTimeField(auto_now_add=True)
