@@ -7,6 +7,7 @@
   {% endif %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
   <li class="breadcrumb-item active">{{ group.name }}</li>
+  <li class="breadcrumb-item active">{{ errormessage}}</li>
 {% endblock %}
 
 {% block content %}

@@ -78,6 +78,7 @@ def edit_article(request, pk):
 					article = GroupArticles.objects.get(article=pk)
 					try:
 						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+						gmember=membership
 						try:
 							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
 							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
@@ -88,7 +89,7 @@ def edit_article(request, pk):
 						membership ='FALSE'
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'message':message})
+			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'message':message, 'gmember':gmember})
 	else:
 		return redirect('login')
 

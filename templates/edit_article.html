@@ -21,9 +21,11 @@
   <li class="nav-item">
     <a class="nav-link active " href="{% url 'article_edit' article.article.pk %}">Edit</a>
   </li>
+  {% if membership.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
   <li class="nav-item active">
     <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
   </li>
+  {% endif %}
   <li class="nav-item ">
     <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
   </li>

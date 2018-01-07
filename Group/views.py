@@ -101,7 +101,7 @@ def manage_group(request,pk):
 
 					if status == 'add':
 						try:
-							is_community_member = CommunityMembership.objects.get(user=user, community=community.pk)
+							is_community_member = CommunityMembership.objects.get(user=user, community=community.community.pk)
 							try:
 								is_member = GroupMembership.objects.get(user=user, group=group.pk)
 							except GroupMembership.DoesNotExist:
