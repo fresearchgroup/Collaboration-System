@@ -26,7 +26,8 @@ def create_article(request):
 			if form.is_valid():
 				article = Articles.objects.create(
 					title = form.cleaned_data.get('title'),
-					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ","")
+					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ",""),
+					created_by = request.user
 					)
 				return article
 	else:
@@ -57,6 +58,7 @@ def edit_article(request, pk):
 	than he will not be allowed to edit this article
 	"""
 	if request.user.is_authenticated:
+		gmember=None
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
 			if form.is_valid():
