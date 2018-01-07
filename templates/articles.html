@@ -13,6 +13,7 @@
       <tr>
         <th>Title</th>
         <th>Body</th>
+        <th>Views</th>
       </tr>
     </thead>
     <tbody>
@@ -23,6 +24,7 @@
             <a href="{% url 'article_view' article.pk %}">{{ article.title }}</a>
           </td>
           <td class="align-middle"><small class="text-muted d-block">{{ article.body|striptags|truncatewords:50 }}</small></td>
+          <td>{{article.views}}</td>
         </tr>
       {% endfor %}
       {% endautoescape%}

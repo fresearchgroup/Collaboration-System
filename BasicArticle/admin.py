@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Articles
+from .models import Articles, ArticleViewLogs
 # Register your models here.
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
@@ -28,3 +28,4 @@ class VersionedArticleAdmin(CompareVersionAdmin):
 
 
 admin.site.register(Articles, VersionedArticleAdmin)
+admin.site.register(ArticleViewLogs)

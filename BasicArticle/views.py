@@ -12,7 +12,7 @@ def display_articles(request):
 	"""
 	display list of articles in  article list page. 
 	"""
-	articles=Articles.objects.all()
+	articles=Articles.objects.order_by('-views')
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):
@@ -149,8 +149,11 @@ def article_watch(request, article):
     		session=request.session.session_key
     		)
     	view.save()
+    	article = Articles.objects.get(pk=article.pk)
+    	article.views += 1
+    	article.save()
 
-    return ArticleViewLogs.objects.filter(article=article).count()
+    return article.views
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
