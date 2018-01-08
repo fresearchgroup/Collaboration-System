@@ -143,7 +143,17 @@ def update_group_info(request,pk):
 	try:
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership.role.name == 'group_admin':
-			return render(request, 'updategroupinfo.html', {'group':group})
+			if request.method == 'POST':
+				name = request.POST['name']
+				desc = request.POST['desc']
+				visibility = request.POST['visibility']
+				group.name = name
+				group.desc = desc
+				group.visibility = visibility
+				group.save()
+				return redirect('group_view',pk=pk)
+			else:
+				return render(request, 'updategroupinfo.html', {'group':group})
 		else:
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:
