@@ -71,6 +71,8 @@ def display_user_profile(request, username):
         userinfo = User.objects.get(username=username)
         communities = CommunityMembership.objects.filter(user=userinfo)
         groups = GroupMembership.objects.filter(user=userinfo)
-        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups})
+        commarticles = CommunityArticles.objects.filter(user=userinfo)
+        grparticles = GroupArticles.objects.filter(user=userinfo)
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')
