@@ -69,6 +69,8 @@ def view_profile(request):
 def display_user_profile(request, username):
     if request.user.is_authenticated:
         userinfo = User.objects.get(username=username)
-        return render(request, 'userprofile.html', {'userinfo':userinfo})
+        communities = CommunityMembership.objects.filter(user=userinfo)
+        groups = GroupMembership.objects.filter(user=userinfo)
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups})
     else:
         return redirect('login')

@@ -45,13 +45,22 @@
 
 <div class="team container">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <h3>Communities</h3>
-    </div>
-    <div class="col-sm-4">
+      {{myhtml|safe}}{% autoescape off%}
+      {% for comm in communities %}
+        <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
+      {% endfor %}
+      {% endautoescape%}    </div>
+    <div class="col-sm-3">
       <h3>Groups</h3>
+      {{myhtml|safe}}{% autoescape off%}
+      {% for grp in groups %}
+            <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
+      {% endfor %}
+      {% endautoescape%}
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-6">
       <h3>Articles</h3>
     </div>
   </div>
