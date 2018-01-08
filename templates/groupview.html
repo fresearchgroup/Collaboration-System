@@ -20,6 +20,9 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage Group</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
+  </li>
   {%endif%}
 </ul>
 <br/>
@@ -76,7 +79,7 @@
       </div>
     </div>
   </div>
-</div>  
+</div>
   </b>
   <b> <form method = "post" action ="{% url 'group_article_create' %}">
       <div class="form-group">

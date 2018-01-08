@@ -133,3 +133,18 @@ def manage_group(request,pk):
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:
 		return redirect('group_view',pk=pk)
+
+
+def update_group_info(request,pk):
+	group = Group.objects.get(pk=pk)
+	errormessage = ''
+	membership = None
+	uid = request.user.id
+	try:
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership.role.name == 'group_admin':
+			return render(request, 'updategroupinfo.html', {'group':group})
+		else:
+			return redirect('group_view',pk=pk)
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view',pk=pk)
