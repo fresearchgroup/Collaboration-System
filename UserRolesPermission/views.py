@@ -65,3 +65,10 @@ def view_profile(request):
 		return render(request, 'myprofile.html')
 	else:
 		return redirect('login')
+
+def display_user_profile(request, username):
+    if request.user.is_authenticated:
+        userinfo = User.objects.get(username=username)
+        return render(request, 'userprofile.html', {'userinfo':userinfo})
+    else:
+        return redirect('login')

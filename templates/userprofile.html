@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">User Profile</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="team container">
+  <div class="row">
+    <div class="col-sm-3 col-xs-6">
+      <div class="card card-block ">
+        <img alt="My Photo" class="team-img rounded-circle" src="../static/img/avatar.jpg">
+        <div class="card-title-wrap">
+          <span class="card-title ">{{userinfo.username}}</span>
+        </div>
+        <div class="team-over">
+          {{userinfo.first_name}}
+          {{userinfo.last_name}}
+        </div>
+      </div> <!-- /card-block -->
+    </div> <!-- /col-sm-3 -->
+
+    <div class="card col-sm-5">
+      <div class="card-body">
+        <h3> {{userinfo.username}} </h3>
+        About me
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="card-body">
+        Member Since:  {{userinfo.date_joined}} <br />
+        Last Seen: {{userinfo.last_login}} <br />
+        Profile Views: <br />
+      </div>
+    </div>
+
+  </div> <!-- /row -->
+</div><!-- /container -->
+<!-- /Team -->
+<br />
+
+<div class="team container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Communities</h3>
+    </div>
+    <div class="col-sm-4">
+      <h3>Groups</h3>
+    </div>
+    <div class="col-sm-4">
+      <h3>Articles</h3>
+    </div>
+  </div>
+</div>
+
+
+<br />
+
+{% endblock %}
