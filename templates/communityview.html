@@ -19,6 +19,9 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
   {%endif%}
 </ul>
 <br/>

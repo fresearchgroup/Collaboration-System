@@ -184,7 +184,7 @@ def manage_community(request,pk):
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
 					if status == 'remove':
-						if count > 1 or count == 1 and username != request.user.username:		
+						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 							except CommunityMembership.DoesNotExist:
@@ -194,6 +194,32 @@ def manage_community(request,pk):
 					errormessage = "no such user in the community"
 			members = CommunityMembership.objects.filter(community = community.pk)
 			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+		else:
+			return redirect('community_view',pk=pk)
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view',pk=pk)
+
+def update_community_info(request,pk):
+	community = Community.objects.get(pk=pk)
+	errormessage = ''
+	membership = None
+	uid = request.user.id
+	try:
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership.role.name == 'community_admin':
+			if request.method == 'POST':
+				name = request.POST['name']
+				desc = request.POST['desc']
+				category = request.POST['category']
+				tag_line = request.POST['tag_line']
+				community.name = name
+				community.desc = desc
+				community.category = category
+				community.tag_line = tag_line
+				community.save()
+				return redirect('community_view',pk=pk)
+			else:
+				return render(request, 'updatecommunityinfo.html', {'community':community})
 		else:
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
