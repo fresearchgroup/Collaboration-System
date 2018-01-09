@@ -33,7 +33,9 @@ def community_view(request, pk):
 	articles = CommunityArticles.objects.filter(community = pk)
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	groups = CommunityGroups.objects.filter(community = pk)
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users})
+	groupcount = groups.count()
+	articlecount = articles.count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:

@@ -35,8 +35,8 @@
     <div class="col-sm-4">
       <b>Active Since: {{community.created_at.date}}</b><br />
        {{subscribers}} Contributors <br />
-      N Published articles<br />
-      N Public groups <br /><br />
+      {{articlecount}} Published articles<br />
+      {{groupcount}} Public groups <br /><br />
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'community_subscribe' %}">
         <div class="form-group">
