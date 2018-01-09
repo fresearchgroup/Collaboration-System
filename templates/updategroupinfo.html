@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ group.name }}</li>
+  <li class="breadcrumb-item active">{{ errormessage}}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage Group</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Update Group Info</a>
+  </li>
+</ul>
+<br/>
+
+
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-12">
+      {% if user.is_authenticated %}
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="title" name="name" value="{{group.name}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group">
+          <label for="desc">Description</label>
+          <textarea  class="form-control" name="desc" rows="6">{{group.desc}}</textarea>
+          <input type="hidden" name="status" value={{status}}>
+          <small id="bodyhelp" class="form-text text-muted">Let people know what this group is about</small>
+        </div>
+        <div class="form-group">
+        <label for="visibility">Visibility</label>
+          <select name="visibility">
+            <option value="1">Public</option>
+            <option value="0">Private</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

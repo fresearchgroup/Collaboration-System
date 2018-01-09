@@ -33,7 +33,9 @@ def community_view(request, pk):
 	articles = CommunityArticles.objects.filter(community = pk)
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	groups = CommunityGroups.objects.filter(community = pk)
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users})
+	groupcount = groups.count()
+	articlecount = articles.count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -184,7 +186,7 @@ def manage_community(request,pk):
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
 					if status == 'remove':
-						if count > 1 or count == 1 and username != request.user.username:		
+						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 							except CommunityMembership.DoesNotExist:
@@ -198,3 +200,57 @@ def manage_community(request,pk):
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view',pk=pk)
+
+def update_community_info(request,pk):
+	community = Community.objects.get(pk=pk)
+	errormessage = ''
+	membership = None
+	uid = request.user.id
+	try:
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership.role.name == 'community_admin':
+			if request.method == 'POST':
+				name = request.POST['name']
+				desc = request.POST['desc']
+				category = request.POST['category']
+				tag_line = request.POST['tag_line']
+				community.name = name
+				community.desc = desc
+				community.category = category
+				community.tag_line = tag_line
+				community.save()
+				return redirect('community_view',pk=pk)
+			else:
+				return render(request, 'updatecommunityinfo.html', {'community':community})
+		else:
+			return redirect('community_view',pk=pk)
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view',pk=pk)
+
+def create_community(request):
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			username = request.POST['username']
+			
+			usr = User.objects.get(username=username)
+			name = request.POST['name']
+			desc = request.POST['desc']
+			category = request.POST['category']
+			tag_line = request.POST['tag_line']
+			role = Roles.objects.get(name='community_admin')
+			community = Community.objects.create(
+				name=name,
+				desc=desc,
+				category = category,
+				tag_line = tag_line
+				)
+			communitymembership = CommunityMembership.objects.create(
+				user = usr,
+				community = community,
+				role = role
+				)
+			return redirect('community_view', community.pk)
+		else:
+			return render(request, 'new_community.html')
+	else:
+		return redirect('login')

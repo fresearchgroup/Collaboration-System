@@ -19,6 +19,9 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
   {%endif%}
 </ul>
 <br/>
@@ -30,10 +33,10 @@
       {{myhtml|safe}}{% autoescape off%} {{community.tag_line}}{% endautoescape%}
     </div>
     <div class="col-sm-4">
-      <b>Active Since: </b><br />
+      <b>Active Since: {{community.created_at.date}}</b><br />
        {{subscribers}} Contributors <br />
-      N Published articles<br />
-      N Public groups <br /><br />
+      {{articlecount}} Published articles<br />
+      {{groupcount}} Public groups <br /><br />
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'community_subscribe' %}">
         <div class="form-group">
@@ -71,7 +74,7 @@
       </div>
     </div>
   </div>
-</div>  
+</div>
 
   </b>
   <b> <form method = "post" action ="{% url 'community_article_create' %}">
