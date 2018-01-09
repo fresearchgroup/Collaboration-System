@@ -33,7 +33,7 @@
       {{myhtml|safe}}{% autoescape off%} {{community.tag_line}}{% endautoescape%}
     </div>
     <div class="col-sm-4">
-      <b>Active Since: </b><br />
+      <b>Active Since: {{community.created_at.date}}</b><br />
        {{subscribers}} Contributors <br />
       N Published articles<br />
       N Public groups <br /><br />
