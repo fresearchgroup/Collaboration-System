@@ -39,7 +39,7 @@ def user_dashboard(request):
         return redirect('login')
 
 def home(request):
-    articles = Articles.objects.all()[:3]
+    articles = Articles.objects.order_by('-views')[:3]
     return render(request, 'home.html', {'articles':articles})
 
 def update_profile(request):

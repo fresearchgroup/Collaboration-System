@@ -13,9 +13,11 @@
     <a class="nav-link " href="{% url 'article_view' article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
-  <li class="nav-item">
-    <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
-  </li>
+  {% if article.article.state.name != 'publish'%}
+        <li class="nav-item">
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+        </li>
+        {%endif%}
   <li class="nav-item active">
     <a class="nav-link  " href="{% url 'article_delete' article.pk %}">Delete</a>
   </li>

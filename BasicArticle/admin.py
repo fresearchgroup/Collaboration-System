@@ -28,4 +28,4 @@ class VersionedArticleAdmin(CompareVersionAdmin):
 
 
 admin.site.register(Articles, VersionedArticleAdmin)
-admin.site.register(ArticleViewLogs)
+admin.site.register(ArticleViewLogs, VersionedArticleAdmin)

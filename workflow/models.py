@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import Group as Roles
 # Create your models here.
 
 

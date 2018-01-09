@@ -7,7 +7,7 @@ from reversion_compare.views import HistoryCompareDetailView
 from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
-
+from workflow.models import States, Transitions
 def display_articles(request):
 	"""
 	display list of articles in  article list page. 
@@ -24,10 +24,12 @@ def create_article(request):
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
 			if form.is_valid():
+				state = States.objects.get(name='draft')
 				article = Articles.objects.create(
 					title = form.cleaned_data.get('title'),
 					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ",""),
-					created_by = request.user
+					created_by = request.user,
+					state = state
 					)
 				return article
 	else:
@@ -41,10 +43,14 @@ def view_article(request, pk):
 	"""
 	try:
 		article = CommunityArticles.objects.get(article=pk)
+		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
 			article = GroupArticles.objects.get(article=pk)
+			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+				return redirect('home')
 			count = article_watch(request, article.article)
 		except GroupArticles.DoesNotExist:
 			raise Http404
@@ -63,37 +69,92 @@ def edit_article(request, pk):
 		gmember=None
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
-			if form.is_valid():
+			if request.POST['state'] == 'save':
+				if form.is_valid():
+					article = Articles.objects.get(pk=pk)
+					article.title = form.cleaned_data.get('title')
+					article.body = form.cleaned_data.get('body')
+					article.save(update_fields=["title","body"])
+					return redirect('article_view',pk=article.pk)
+			else:
 				article = Articles.objects.get(pk=pk)
-				article.title = form.cleaned_data.get('title')
-				article.body = form.cleaned_data.get('body')
-				article.save(update_fields=["title","body"])
-				return redirect('article_view',pk=article.pk)
+				title = request.POST['title']
+				body = request.POST['body']
+				to_state = request.POST['state']
+				current_state = request.POST['current']
+				try:
+					current_state = States.objects.get(name=current_state)
+					to_state = States.objects.get(name=to_state)
+					if current_state.name == 'draft' and to_state.name == 'visible' and "belongs_to" in request.POST:
+						article.state = to_state
+					else:
+						transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+					article.title = title
+					article.body = body
+					article.state = to_state
+					article.save(update_fields=["title","body", "state"])
+				except Transitions.DoesNotExist:
+					message = "transition doesn' exist"
+				except States.DoesNotExist:
+					message = "state doesn' exist"
+				return redirect('article_view',pk=pk)
 		else:
 			message=""
+			transition =""
+			cmember = ""
+			gmember = ""
 			try:
 				article = CommunityArticles.objects.get(article=pk)
+				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+					return redirect('home')
+				if article.article.state == States.objects.get(name='publish'):
+					return redirect('article_view',pk=pk)
+				belongs_to = 'community'
 				try:
 					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
+					cmember = membership
+					gmember = 'FALSE'
+					try:
+						transition = Transitions.objects.get(from_state=article.article.state)
+						state1 = States.objects.get(name='draft')
+						state2 = States.objects.get(name='private')
+						state3 = States.objects.get(name='visible')
+						if transition.from_state == state1 and transition.to_state ==state2:
+							transition.to_state = state3
+					except Transitions.DoesNotExist:
+						message = "transition doesn't exist"
+					except States.DoesNotExist:
+						message = "state does n't exist"
 				except CommunityMembership.DoesNotExist:
 					membership = 'FALSE'
+					cmember = 'FALSE'
 			except CommunityArticles.DoesNotExist:
 				try:
 					article = GroupArticles.objects.get(article=pk)
+					if article.article.state == States.objects.get(name='publish'):
+						return redirect('article_view',pk=pk)
+					if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+						return redirect('home')
+					belongs_to = 'group'
 					try:
 						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
-						gmember=membership
+						gmember = membership
 						try:
 							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
 							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
+							try:
+								transition = Transitions.objects.get(from_state=article.article.state)
+							except Transitions.DoesNotExist:
+								message = "transition doesn't exist"
 						except CommunityMembership.DoesNotExist:
 							membership = 'FALSE'
 							message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 					except GroupMembership.DoesNotExist:
 						membership ='FALSE'
+						gmember = 'FALSE'
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'message':message, 'gmember':gmember})
+			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition})
 	else:
 		return redirect('login')
 
@@ -158,3 +219,31 @@ def article_watch(request, article):
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
+
+
+def workflow(pk, current_state, to_state,  role, belongs_to):
+	article = Articles.objects.get(pk=pk)
+	if belongs_to == 'community':
+		if role == 'publisher':
+			current_state = States.objects.get(name=current_state)
+			to_state = States.objects.get(name=to_state)
+			if article.state == to_state:
+				return 
+			elif article.state == 'publish':
+				return 
+			else:
+				try:
+					transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+					article.state = to_state
+					article.save(update_fields=["state"])
+					return 
+				except Transitions.DoesNotExist:
+					return 
+
+		elif role == 'author':
+			return 
+
+	elif belongs_to == 'group':
+		return 
+
+
