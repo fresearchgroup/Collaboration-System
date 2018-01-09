@@ -4,7 +4,7 @@
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  <li class="breadcrumb-item active">{{ message }}</li>  
+  <li class="breadcrumb-item active">{{ message }}</li>
   {% endif %}
 {% endblock %}
 
@@ -41,5 +41,8 @@
 
   <a class="btn btn-primary" href="{% url 'request_community_creation' %}">Request Community Creation</a>
 
+  {% if request.user.is_superuser %}
+  <a class="btn btn-primary" href="{% url 'create_community' %}">Create Community</a>
+  {% endif %}
 <br />
 {% endblock %}
