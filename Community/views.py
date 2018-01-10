@@ -29,9 +29,10 @@ def community_view(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
 		role = Roles.objects.get(name='community_admin')
-		count = CommunityMembership.objects.filter(community=community,role=role).count()
-		if count < 2:
-			message = 1
+		if membership.role == role:
+			count = CommunityMembership.objects.filter(community=community,role=role).count()
+			if count < 2:
+				message = 1
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
@@ -60,15 +61,9 @@ def community_unsubscribe(request):
 		cid = request.POST['cid']
 		community=Community.objects.get(pk=cid)
 		user = request.user
-		role = Roles.objects.get(name='community_admin')
-		count = CommunityMembership.objects.filter(community=community,role=role).count()
-		if count > 1:
-			obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-			return redirect('community_view',pk=cid)
-		else:
-			return redirect('community_view', pk=cid)
-	return render(request, 'communityview.html', {'message':message})
-
+		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+		return redirect('community_view',pk=cid)
+	return render(request, 'communityview.html')
 
 def community_article_create(request):
 	if request.user.is_authenticated:
