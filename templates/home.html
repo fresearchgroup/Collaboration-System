@@ -1,19 +1,85 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
+
+{% block pagecar %}
+    <!-- BEGIN SLIDER -->
+    <div class="page-slider margin-bottom-40">
+        <div id="carousel-example-generic" class="carousel slide carousel-slider">
+            <!-- Indicators -->
+            <ol class="carousel-indicators carousel-indicators-frontend">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <!-- First slide -->
+                <div class="item carousel-item-eight active">
+                    <div class="container">
+                        <div class="carousel-position-six text-uppercase text-center">
+                            <h2 class="margin-bottom-20 animate-delay carousel-title-v5" data-animation="animated fadeInDown">
+                                Expore the power <br/>
+                                <span class="carousel-title-normal">of Collaborative Communities</span>
+                            </h2>
+                            <p class="carousel-subtitle-v5 border-top-bottom margin-bottom-30" data-animation="animated fadeInDown">Join Us</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second slide -->
+                <div class="item carousel-item-nine">
+                    <div class="container">
+                        <div class="carousel-position-six">
+                            <h2 class="animate-delay carousel-title-v6 text-uppercase" data-animation="animated fadeInDown">
+                                Want to Contribute?
+                            </h2>
+                            <p class="carousel-subtitle-v6 text-uppercase" data-animation="animated fadeInDown">
+                                Join our communities and groups
+                            </p>
+                            <p class="carousel-subtitle-v7 margin-bottom-30" data-animation="animated fadeInDown">
+                                and start collaborating with our collaborators
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third slide -->
+                <div class="item carousel-item-ten">
+                    <div class="container">
+                        <div class="carousel-position-six">
+                            <h2 class="animate-delay carousel-title-v6 text-uppercase" data-animation="animated fadeInDown">
+                                Want to Contribute?
+                            </h2>
+                            <p class="carousel-subtitle-v6 text-uppercase" data-animation="animated fadeInDown">
+                                Join our communities and groups
+                            </p>
+                            <p class="carousel-subtitle-v7 margin-bottom-30" data-animation="animated fadeInDown">
+                                and start collaborating with our collaborators
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control carousel-control-shop carousel-control-frontend" href="#carousel-example-generic" role="button" data-slide="prev">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </a>
+            <a class="right carousel-control carousel-control-shop carousel-control-frontend" href="#carousel-example-generic" role="button" data-slide="next">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+    <!-- END SLIDER -->
+
 {% endblock %}
 
 {% block content %}
-  <img src="{% static 'img/shattered.png' %}" alt="Los Angeles" style="width:100%;">
-
-  <br /><br />
+  <br />
   <div class="container-fluid  alert alert-primary" role="alert">
     <div class="row">
-      {{myhtml|safe}}{% autoescape off%} 
+      {{myhtml|safe}}{% autoescape off%}
       {% for article in articles%}
       <div class="col-sm-4">
         <h3>{{article.title}}</h3>
