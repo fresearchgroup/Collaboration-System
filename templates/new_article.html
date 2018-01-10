@@ -9,7 +9,7 @@
   <li class="breadcrumb-item active">Create an Article in <h1>{{group.name}} Group</h1></li>
 {% endif %}
 {% if request.POST.articleof == "community" %}
-  <li class="breadcrumb-item active">Create an Article in <h1>{{community.name}} Community</h1></li>
+  <li class="breadcrumb-item active">Create an Article in <h1><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></h1></li>
 {% endif %}
 {% endblock %}
 
@@ -46,5 +46,6 @@
   <button type="submit" class="btn btn-primary">Create</button>
   {% endif %}
 </form>
+<br />
 {% endif %}
 {% endblock %}
