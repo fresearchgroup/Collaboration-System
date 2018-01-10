@@ -24,9 +24,14 @@ def display_communities(request):
 
 def community_view(request, pk):
 	try:
+		message = 0
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+		role = Roles.objects.get(name='community_admin')
+		count = CommunityMembership.objects.filter(community=community,role=role).count()
+		if count < 2:
+			message = 1
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
@@ -35,7 +40,7 @@ def community_view(request, pk):
 	groups = CommunityGroups.objects.filter(community = pk)
 	groupcount = groups.count()
 	articlecount = articles.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount, 'message':message})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -55,9 +60,14 @@ def community_unsubscribe(request):
 		cid = request.POST['cid']
 		community=Community.objects.get(pk=cid)
 		user = request.user
-		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-		return redirect('community_view',pk=cid)
-	return render(request, 'communityview.html')
+		role = Roles.objects.get(name='community_admin')
+		count = CommunityMembership.objects.filter(community=community,role=role).count()
+		if count > 1:
+			obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+			return redirect('community_view',pk=cid)
+		else:
+			return redirect('community_view', pk=cid)
+	return render(request, 'communityview.html', {'message':message})
 
 
 def community_article_create(request):

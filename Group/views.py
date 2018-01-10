@@ -26,9 +26,14 @@ def create_group(request):
 
 def group_view(request, pk):
 	try:
+		message = 0
 		group = Group.objects.get(pk=pk)
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		role = Roles.objects.get(name='group_admin')
+		count = GroupMembership.objects.filter(group=group,role=role).count()
+		if count < 2:
+			message = 1
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
 	try:
@@ -40,7 +45,7 @@ def group_view(request, pk):
 	articles = GroupArticles.objects.filter(group = pk)
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'community':community})
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'community':community,'message':message})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:
