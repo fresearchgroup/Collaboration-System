@@ -9,44 +9,49 @@
 {% endblock %}
 
 {% block content %}
-<div class="container team">
-  <div class="row">
 
-  {{myhtml|safe}}{% autoescape off%}
-  {% for community in communities %}
-
-    <div class="col-sm-3 pb-2"><div class="col-sm-12">
-      <div class="card card-block card-border">
-        <a href="{% url 'community_view' community.pk %}">
-          <img alt="" class="team-img" src="../static/img/avatar.jpg">
-          <div class="card-title-wrap">
-            <span class="card-title">{{ community.name }}</span>
-            <span class="card-text">{{ community.category }}</span>
+<div class="container">
+  <!-- BEGIN SIDEBAR & CONTENT -->
+  <div class="row margin-bottom-40">
+    <!-- BEGIN CONTENT -->
+    <div class="col-md-12 col-sm-12">
+      <div class="content-page">
+        <div class="row mix-grid thumbnails">
+          {{myhtml|safe}}{% autoescape off%}
+          {% for community in communities %}
+          <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; ">
+              <img alt="" src="../static/img/avatar.jpg" class="img-responsive">
+              <div class="mix-details">
+                <h4>{{community.tag_line}}</h4>
+                <p>{{ community.desc |striptags|truncatewords:20}}</p>
+                <a class="mix-link" href="{% url 'community_view' community.pk %}">
+                  <i class="fa fa-link"></i>
+                </a>
+                <a data-rel="fancybox-button" title="{{community.name}}" href="../static/img/avatar.jpg" class="mix-preview fancybox-button">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+            <h3>{{community.name}}</h3>
+            {{community.category }}
           </div>
+          {% endfor %}
+          {% endautoescape%}
+        </div>
+      </div>
+    </div>
+    <!-- END CONTENT -->
+  </div>
+  <!-- BEGIN SIDEBAR & CONTENT -->
+</div>
 
-          <div class="team-over">
-            <h4 class="hidden-md-down">{{community.tag_line}}</h4>
-            <p>{{ community.desc |striptags|truncatewords:20}}</p>
-          </div>
-        </a>
-      </div> <!-- card -->
-    </div></div> <!--col sm -->
 
-  {% endfor %}
-  {% endautoescape%}
-
-  </div><!--row -->
-</div> <!--team-->
 {% if user.is_authenticated %}
-
   <a class="btn btn-primary" href="{% url 'request_community_creation' %}">Request Community Creation</a>
-
 {%endif%}
 
+{% if request.user.is_superuser %}
+<a class="btn btn-primary" href="{% url 'create_community' %}">Create Community</a>
+{% endif %}
 
-  {% if request.user.is_superuser %}
-  <a class="btn btn-primary" href="{% url 'create_community' %}">Create Community</a>
-  {% endif %}
-
-<br />
+<br /><br />
 {% endblock %}
