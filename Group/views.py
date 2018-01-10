@@ -31,9 +31,10 @@ def group_view(request, pk):
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		role = Roles.objects.get(name='group_admin')
-		count = GroupMembership.objects.filter(group=group,role=role).count()
-		if count < 2:
-			message = 1
+		if membership.role == role:
+			count = GroupMembership.objects.filter(group=group,role=role).count()
+			if count < 2:
+				message = 1
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
 	try:
