@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ group.name }}</li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
+<li class="breadcrumb-item">Group</li>
+<li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 
 {% block content %}

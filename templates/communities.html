@@ -3,7 +3,6 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
   {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   <li class="breadcrumb-item active">{{ message }}</li>
   {% endif %}
 {% endblock %}
