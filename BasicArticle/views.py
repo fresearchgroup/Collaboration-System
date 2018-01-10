@@ -119,9 +119,8 @@ def edit_article(request, pk):
 						transition = Transitions.objects.get(from_state=article.article.state)
 						state1 = States.objects.get(name='draft')
 						state2 = States.objects.get(name='private')
-						state3 = States.objects.get(name='visible')
 						if transition.from_state == state1 and transition.to_state ==state2:
-							transition.to_state = state3
+							transition.to_state = States.objects.get(name='visible')
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
 					except States.DoesNotExist:
@@ -137,6 +136,7 @@ def edit_article(request, pk):
 					if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 						return redirect('home')
 					belongs_to = 'group'
+					private =''
 					try:
 						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
 						gmember = membership
@@ -145,6 +145,11 @@ def edit_article(request, pk):
 							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 							try:
 								transition = Transitions.objects.get(from_state=article.article.state)
+								state1 = States.objects.get(name='visible')
+								state2 = States.objects.get(name='publishable')
+								if transition.from_state == state1 and transition.to_state ==state2:
+									transition.to_state = States.objects.get(name='publish')
+									private = States.objects.get(name='private')
 							except Transitions.DoesNotExist:
 								message = "transition doesn't exist"
 						except CommunityMembership.DoesNotExist:
@@ -155,7 +160,7 @@ def edit_article(request, pk):
 						gmember = 'FALSE'
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition})
+			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private})
 	else:
 		return redirect('login')
 

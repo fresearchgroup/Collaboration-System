@@ -63,19 +63,23 @@
     {% endif %}
 
     {%if belongs_to == 'group' %}
-        {% if transition.to_state.name == 'publish' and membership.role.name == 'publisher' %}
+        {% if article.article.state == 'visible' and membership.role.name == 'publisher' %}
             <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-            <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
-        {% endif %}
-       {%if transition.to_state.name == 'visible' %}
-            {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
-                      <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+            <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+            <button type="submit"  class="btn btn-outline-info"  name="state" value='{{private}}'> Reject </button>
+        {% else %}
+           {%if transition.to_state.name == 'visible' %}
+                {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
+                          <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                          <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>                
+                {% endif %}
+
+             {%else%}
+              <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+              <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
+              {% endif %}
             {% endif %}
-        {%else%}
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
-        {% endif %}
+        
     {% endif %}
   </form>
 
