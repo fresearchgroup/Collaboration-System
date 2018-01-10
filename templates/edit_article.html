@@ -19,11 +19,11 @@
     <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
-  <li class="nav-item">
-    <a class="nav-link active " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+  <li class="nav-item active">
+    <a class="nav-link  " href="{% url 'article_edit' article.article.pk %}">Edit</a>
   </li>
   {% if membership.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
-  <li class="nav-item active">
+  <li class="nav-item">
     <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
   </li>
   {% endif %}
@@ -51,7 +51,7 @@
     {%if belongs_to == 'community' %}
        <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
        {%if transition.to_state.name == 'publish' %}
-            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%} 
+            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
 
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
@@ -68,7 +68,7 @@
             <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
         {% endif %}
        {%if transition.to_state.name == 'visible' %}
-            {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%} 
+            {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
             {% endif %}
@@ -83,7 +83,7 @@
     <div class="panel panel-default">
     <div class="panel-body"><div class="alert alert-danger" role="alert">
       {{myhtml|safe}}{% autoescape off%} {{message}}{% endautoescape%}
-      
+
       <samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp>
 {% endif%}
 

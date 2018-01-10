@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','10.129.132.103']
 
@@ -174,7 +174,7 @@ COMMENTS_APP='django_comments_xtd'
 
 COMMENTS_XTD_MAX_THREAD_LEVEL = 1  # default is 0
 
-COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order') 
+COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
 
 COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
 

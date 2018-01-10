@@ -7,25 +7,24 @@
 {% endblock %}
 
 {% block content %}
-<div class="team container">
-  <div class="row">
-    <div class="col-sm-3 col-xs-6">
-      <div class="card card-block ">
-        <img alt="My Photo" class="team-img rounded-circle" src="../static/img/avatar.jpg">
-        <div class="card-title-wrap">
-          <span class="card-title ">{{user.username}}</span> <span class="card-text">{{user.email}}</span>
-        </div>
-        <div class="team-over">
-          <h4 class="hidden-md-down"><a href="#">Update Photo</a></h4>
-        </div>
-      </div> <!-- /card-block -->
-    </div> <!-- /col-sm-3 -->
-    <div class="col-sm-1">
-    </div>
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-4">
+      <div class="recent-work-item">
+        <em>
+          <img src="../static/img/avatar.jpg" alt="my Photo" class="img-responsive">
+          <a href=""><i class="fa fa-link"></i></a>
+          <a href="../static/img/avatar.jpg" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+        </em>
+        <a class="recent-work-description" href="javascript:;">
+          <strong>{{user.username}}</strong>
+          <b>{{user.email}}</b>
+        </a>
+      </div>
+  </div>
+  <div class="col-md-1"></div>
 
-    <div class="card col-sm-8">
-      <div class="card-body bg-lightorange">
-
+  <div class="col-md-7">
+        <h2> Update Profile </h2><br />
         <form method="post">
           {% csrf_token %}
 
@@ -51,11 +50,9 @@
 
         </form>
 
-      </div>
-    </div>
-  </div> <!-- /row -->
-</div><!-- /container -->
-<!-- /Team -->
+  </div>
+</div>
+
 <br />
 
 

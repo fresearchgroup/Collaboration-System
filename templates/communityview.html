@@ -12,8 +12,8 @@
 
 
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" href="#">View</a>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">View</a>
   </li>
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
@@ -34,7 +34,7 @@
     </div>
     <div class="col-sm-4">
       <b>Active Since: {{community.created_at.date}}</b><br />
-       {{subscribers}} Contributors <br />
+       {{subscribers}} Members <br />
       {{articlecount}} Published articles<br />
       {{groupcount}} Public groups <br /><br />
       {% if membership == 'FALSE' %}

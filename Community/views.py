@@ -228,28 +228,32 @@ def update_community_info(request,pk):
 		return redirect('community_view',pk=pk)
 
 def create_community(request):
+	errormessage = ''
 	if request.user.is_superuser:
 		if request.method == 'POST':
 			username = request.POST['username']
-			
-			usr = User.objects.get(username=username)
-			name = request.POST['name']
-			desc = request.POST['desc']
-			category = request.POST['category']
-			tag_line = request.POST['tag_line']
-			role = Roles.objects.get(name='community_admin')
-			community = Community.objects.create(
-				name=name,
-				desc=desc,
-				category = category,
-				tag_line = tag_line
-				)
-			communitymembership = CommunityMembership.objects.create(
-				user = usr,
-				community = community,
-				role = role
-				)
-			return redirect('community_view', community.pk)
+			try:
+				usr = User.objects.get(username=username)
+				name = request.POST['name']
+				desc = request.POST['desc']
+				category = request.POST['category']
+				tag_line = request.POST['tag_line']
+				role = Roles.objects.get(name='community_admin')
+				community = Community.objects.create(
+					name=name,
+					desc=desc,
+					category = category,
+					tag_line = tag_line
+					)
+				communitymembership = CommunityMembership.objects.create(
+					user = usr,
+					community = community,
+					role = role
+					)
+				return redirect('community_view', community.pk)
+			except User.DoesNotExist:
+				errormessage = 'user does not exist'
+				return render(request, 'new_community.html', {'errormessage':errormessage})
 		else:
 			return render(request, 'new_community.html')
 	else:
