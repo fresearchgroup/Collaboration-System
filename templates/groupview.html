@@ -61,6 +61,7 @@
         </button>
       </div>
       <div class="modal-body">
+        {% if message == 0 %}
         <form method = "post" action ="{% url 'group_unsubscribe' %}">
           <div class="form-group">
             {% csrf_token %}
@@ -73,6 +74,10 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         <button type="submit" class="btn btn-primary">Yes</button>
         </form>
+        {%else%}
+         <label for="message-text" class="col-form-label">Before unsubscribing please assign some other group admin</label>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+        {%endif %}
       </div>
     </div>
   </div>
