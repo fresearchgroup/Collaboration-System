@@ -12,7 +12,8 @@ def display_articles(request):
 	"""
 	display list of articles in  article list page. 
 	"""
-	articles=Articles.objects.order_by('-views')
+	state = States.objects.get(name='publish')
+	articles=Articles.objects.filter(state=state).order_by('-views')
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):

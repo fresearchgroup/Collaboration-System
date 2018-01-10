@@ -14,7 +14,7 @@ from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
 from django.contrib.auth.models import User
-
+from workflow.models import States
 # Create your views here.
 
 
@@ -253,4 +253,4 @@ def create_community(request):
 		else:
 			return render(request, 'new_community.html')
 	else:
-		return redirect('login')
+		return redirect('home')

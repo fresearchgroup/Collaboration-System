@@ -40,13 +40,13 @@
 {% if user.is_authenticated %}
 
   <a class="btn btn-primary" href="{% url 'request_community_creation' %}">Request Community Creation</a>
-<<<<<<< HEAD
+
 {%endif%}
-=======
+
 
   {% if request.user.is_superuser %}
   <a class="btn btn-primary" href="{% url 'create_community' %}">Create Community</a>
   {% endif %}
->>>>>>> 0c557e1c64ae917c7198082fdc0b057a4adc7d85
+
 <br />
 {% endblock %}
