@@ -13,8 +13,8 @@
     <div class="col-sm-9">
       <div>
       <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'article_view' article.article.pk %}">View</a>
+        <li class="nav-item active">
+          <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
         </li>
         {% if user.is_authenticated %}
         {% if article.article.state.name != 'publish'%}
@@ -22,7 +22,7 @@
           <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
         </li>
         {%endif%}
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
         </li>
         <li class="nav-item ">
@@ -32,10 +32,25 @@
       </ul>
       </div>
       <br/>
-      <div class="card">
-              <div class="card-body">
-                {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
-              </div>
+      <div class="blog-item">
+        <h2><a href="#">{{ article.article.title }} </a></h2>
+          <ul class="blog-info">
+            <li><i class="fa fa-user"></i> <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </li>
+            <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
+            {% get_comment_count for article as comment_count %}
+            <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
+            <li><i class="fa fa-eye"></i> {{count}} times </li>
+
+            {% if article.community.name %}
+            <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
+            {% endif %}
+            {% if article.group.name %}
+            <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
+            {% endif %}
+          </ul>
+        <p>
+          {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
+        </p>
       </div>
     </div>
     <div class="col-sm-3"><br/><br/>
@@ -54,26 +69,25 @@
         </div>
     </div>
   </div>
-
-
-{% get_comment_count for article as comment_count %}
-<div class="text-center" style="padding-top:20px">
-      &nbsp;&sdot;&nbsp;
-      {{ comment_count }} comments have been posted.
 </div>
 
+<h2>Comments</h2>
 
-</div>
-  <div class="comment">
-  <h4 class="text-center">Your comment</h4>
-  <div class="well">
-    {% render_comment_form for article %}
-  </div>
-</div>
 {% if comment_count %}
 <hr/>
-<ul class="media-list">
-  {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
-</ul>
+<div class="comments">
+  <div class="media">
+    <ul class="media-body">
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+    </ul>
+  </div>
+</div>
 {% endif %}
+
+<div class="post-comment padding-top-40">
+  <h3>Leave a Comment</h3>
+  <label>Message</label>
+   {% render_comment_form for article %}
+</div>
+
 {% endblock %}
