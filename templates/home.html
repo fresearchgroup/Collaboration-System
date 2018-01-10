@@ -80,6 +80,58 @@
 
 {% block content %}
   <br />
+
+  <div class="main">
+    <div class="container">
+      <!-- BEGIN RECENT WORKS -->
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-3">
+    <h2><a href="portfolio.html">Most Popular Communities</a></h2>
+    <p>Our most popular communities ...</p>
+  </div>
+  <div class="col-md-9">
+    <div class="owl-carousel owl-carousel3">
+      <div class="recent-work-item">
+        <em>
+          <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
+          <a href=""><i class="fa fa-link"></i></a>
+          <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #1" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+        </em>
+        <a class="recent-work-description" href="javascript:;">
+          <strong>Community</strong>
+          <b>category</b>
+        </a>
+      </div>
+      <div class="recent-work-item">
+        <em>
+          <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
+          <a href=""><i class="fa fa-link"></i></a>
+          <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #2" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+        </em>
+        <a class="recent-work-description" href="javascript:;">
+          <strong>Community</strong>
+          <b>category</b>
+        </a>
+      </div>
+      <div class="recent-work-item">
+        <em>
+          <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
+          <a href=""><i class="fa fa-link"></i></a>
+          <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #3" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+        </em>
+        <a class="recent-work-description" href="javascript:;">
+          <strong>Community</strong>
+          <b>category</b>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END RECENT WORKS -->
+    </div>
+  </div>
+
+
   <div class="container-fluid  alert alert-primary" role="alert">
     <div class="row">
       {{myhtml|safe}}{% autoescape off%}
