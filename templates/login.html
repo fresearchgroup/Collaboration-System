@@ -1,27 +1,55 @@
-{% extends 'base_accounts.html' %}
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-lg-4 col-md-6 col-sm-8">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title">Log in</h3>
+<!-- BEGIN SIDEBAR & CONTENT -->
+<div class="row margin-bottom-40">
+  <!-- BEGIN SIDEBAR -->
+  <div class="sidebar col-md-3 col-sm-3">
+  </div>
+  <!-- END SIDEBAR -->
 
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <button type="submit" class="btn btn-primary btn-block">Log in</button>
-          </form>
+  <!-- BEGIN CONTENT -->
+  <div class="col-md-9 col-sm-9">
+    <h1>Login</h1>
+    <div class="content-form-page">
+      <div class="row">
+        <div class="col-md-7 col-sm-7">
+
+
+            <form method="post" novalidate>
+              {% csrf_token %}
+              {% include 'includes/form.html' %}
+              <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            </form> <br />
+            <div class="text-center">
+              New to the Community? <a href="{% url 'signup' %}">Sign up</a> <br/>
+              <a href="#" class="text-muted">Forgot your password?</a>
+            </div>
+            <hr>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">
+                <div class="login-socio">
+                    <p class="text-muted">or login using:</p>
+                    <ul class="social-icons">
+                        <li><a href="javascript:;" data-original-title="facebook" class="facebook" title="facebook"></a></li>
+                        <li><a href="javascript:;" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+
         </div>
-        <div class="card-footer text-muted text-center">
-          New to the Community? <a href="{% url 'signup' %}">Sign up</a>
+        <div class="col-md-4 col-sm-4 pull-right">
         </div>
-      </div>
-      <div class="text-center py-2">
-        <small>
-          <a href="#" class="text-muted">Forgot your password?</a>
-        </small>
       </div>
     </div>
   </div>
+  <!-- END CONTENT -->
+</div>
+<!-- END SIDEBAR & CONTENT -->
+
+
 {% endblock %}
