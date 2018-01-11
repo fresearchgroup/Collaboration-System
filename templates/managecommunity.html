@@ -24,8 +24,6 @@
 </ul>
 <br/>
 
-<div class="alert">{{ errormessage }}</div>
-
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-6">
           <table id="userlist" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -75,13 +73,13 @@
         </div>
         <div class="form-group">
           <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
-
-        <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
-      </div>
-      <div class="form-group">
-        <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
+          <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
       </div>
       </form>
+      {% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+      {% endif %}
 
       {% endif %}
     </div>
