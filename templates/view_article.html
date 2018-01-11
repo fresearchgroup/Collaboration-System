@@ -78,7 +78,7 @@
 <div class="comments">
   <div class="media">
     <ul class="media-body">
-      {% render_xtdcomment_tree for article.article.pk allow_flagging allow_feedback %}
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
     </ul>
   </div>
 </div>
@@ -87,7 +87,7 @@
 <div class="post-comment padding-top-40">
   <h3>Leave a Comment</h3>
   <label>Message</label>
-   {% render_comment_form for article.article.pk %}
+   {% render_comment_form for article %}
 </div>
 
 {% endblock %}
