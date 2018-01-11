@@ -81,16 +81,22 @@ def edit_article(request, pk):
 				body = request.POST['body']
 				to_state = request.POST['state']
 				current_state = request.POST['current']
+				belongs_to = request.POST['belongs_to']
 				try:
 					current_state = States.objects.get(name=current_state)
 					to_state = States.objects.get(name=to_state)
-					if current_state.name == 'draft' and to_state.name == 'visible' and "belongs_to" in request.POST:
+					if current_state.name == 'draft' and to_state.name == 'visible' and belongs_to == 'community':
+						article.state = to_state
+					elif current_state.name == 'visible' and to_state.name == 'publish' and belongs_to == 'group':
+						article.state = to_state
+					elif to_state.name == 'private':
+						to_state = States.objects.get(name=to_state)
 						article.state = to_state
 					else:
 						transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+						article.state = to_state
 					article.title = title
 					article.body = body
-					article.state = to_state
 					article.save(update_fields=["title","body", "state"])
 				except Transitions.DoesNotExist:
 					message = "transition doesn' exist"
