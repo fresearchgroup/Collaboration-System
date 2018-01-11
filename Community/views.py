@@ -167,6 +167,7 @@ def manage_community(request,pk):
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
 		if membership.role.name == 'community_admin':
 			count = CommunityMembership.objects.filter(community = community.pk, role=membership.role).count()
+			members = CommunityMembership.objects.filter(community = community.pk)
 			if request.method == 'POST':
 				try:
 					username = request.POST['username']
@@ -190,16 +191,21 @@ def manage_community(request,pk):
 								is_member.save()
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
+						else:
+							errormessage = 'cannot update this user'
 					if status == 'remove':
 						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
-					return redirect('manage_community',pk=pk)
+						else:
+							errormessage = 'cannot remove this user'
+					return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+#					return redirect('manage_community',pk=pk)
 				except User.DoesNotExist:
 					errormessage = "no such user in the community"
-			members = CommunityMembership.objects.filter(community = community.pk)
+
 			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 		else:
 			return redirect('community_view',pk=pk)
