@@ -74,11 +74,11 @@
                 <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
-        {% endif %}
+        {% endif %}current_state
     {% endif %}
 
     {%if belongs_to == 'group' %}
-        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' or cmember.role.name == 'community_admin'%}
+        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' or article.article.state.name == 'visible' and cmember.role.name == 'community_admin'%}
 
             <form method="post">
             {% csrf_token %}
@@ -116,7 +116,7 @@
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}</button>
             {%endif%}
-
+           {%endif%}
             {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
                 <form method="post">
                 {% csrf_token %}
@@ -132,7 +132,7 @@
                   </div>
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                {%endif%}
+
              {%endif%}
 
              {%if article.article.state.name == 'draft'%}
@@ -154,7 +154,7 @@
                    {{transition.to_state.name}}</button>
              {%endif%}
 
-        
+
     {% endif %}
   </form>
 
