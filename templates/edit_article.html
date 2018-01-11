@@ -3,7 +3,7 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.article.title }}</li>
-  <li class="breadcrumb-item active">{{ cmember.role.name}}{{belongs_to}}{{article.article.state}}{{transition.to_state.name}}</li>
+  <li class="breadcrumb-item active">{{ belongs_to }} {{ membership.role }} {{gmember.role}}{{communitygroup.community}}</li>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -34,7 +34,7 @@
 </ul>
 </div>
 <br/>
-{%if membership != 'FALSE' %}
+
   <form method="post">
     {% csrf_token %}
     <div class="form-group">
@@ -63,27 +63,34 @@
     {% endif %}
 
     {%if belongs_to == 'group' %}
-        {% if article.article.state == 'visible' and membership.role.name == 'publisher' %}
+        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' or cmember.role.name == 'community_admin'%}
             <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
             <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
             <button type="submit"  class="btn btn-outline-info"  name="state" value='{{private}}'> Reject </button>
-        {% else %}
-           {%if transition.to_state.name == 'visible' %}
-                {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
-                          <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                          <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>                
-                {% endif %}
+        {%endif%}
 
-             {%else%}
-              <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-              <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
-              {% endif %}
-            {% endif %}
+           {%if article.article.state.name == 'private' %}
+                {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}   </button>
+            {%endif%}
+
+            {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                {%endif%}
+             {%endif%}
+
+             {%if article.article.state.name == 'draft'%}
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
+  
+             {%endif%}
+
         
     {% endif %}
   </form>
 
-{% else%}
+{%if membership != 'FALSE' %}
     <div class="panel panel-default">
     <div class="panel-body"><div class="alert alert-danger" role="alert">
       {{myhtml|safe}}{% autoescape off%} {{message}}{% endautoescape%}

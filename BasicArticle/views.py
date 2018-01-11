@@ -112,9 +112,7 @@ def edit_article(request, pk):
 					return redirect('article_view',pk=pk)
 				belongs_to = 'community'
 				try:
-					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
-					cmember = membership
-					gmember = 'FALSE'
+					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
 					try:
 						transition = Transitions.objects.get(from_state=article.article.state)
 						state1 = States.objects.get(name='draft')
@@ -126,7 +124,6 @@ def edit_article(request, pk):
 					except States.DoesNotExist:
 						message = "state does n't exist"
 				except CommunityMembership.DoesNotExist:
-					membership = 'FALSE'
 					cmember = 'FALSE'
 			except CommunityArticles.DoesNotExist:
 				try:
@@ -138,29 +135,26 @@ def edit_article(request, pk):
 					belongs_to = 'group'
 					private =''
 					try:
-						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
-						gmember = membership
+						communitygroup = CommunityGroups.objects.get(group=article.group.pk)
+						cmember = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 						try:
-							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
-							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
-							try:
-								transition = Transitions.objects.get(from_state=article.article.state)
-								state1 = States.objects.get(name='visible')
-								state2 = States.objects.get(name='publishable')
-								if transition.from_state == state1 and transition.to_state ==state2:
-									transition.to_state = States.objects.get(name='publish')
-									private = States.objects.get(name='private')
-							except Transitions.DoesNotExist:
-								message = "transition doesn't exist"
-						except CommunityMembership.DoesNotExist:
-							membership = 'FALSE'
-							message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
-					except GroupMembership.DoesNotExist:
-						membership ='FALSE'
-						gmember = 'FALSE'
+							gmember =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+						except GroupMembership.DoesNotExist:
+							gmember = 'FALSE'
+						try:
+							transition = Transitions.objects.get(from_state=article.article.state)
+							state1 = States.objects.get(name='visible')
+							state2 = States.objects.get(name='publishable')
+							if transition.from_state == state1 and transition.to_state ==state2:
+								transition.to_state = States.objects.get(name='publish')
+								private = States.objects.get(name='private')
+						except Transitions.DoesNotExist:
+							message = "transition doesn't exist"
+					except CommunityMembership.DoesNotExist:
+						message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article,'membership':membership, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private})
+			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,})
 	else:
 		return redirect('login')
 
