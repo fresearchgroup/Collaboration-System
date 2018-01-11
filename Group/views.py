@@ -97,6 +97,7 @@ def manage_group(request,pk):
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership.role.name == 'group_admin':
 			count = GroupMembership.objects.filter( group=group.pk, role=membership.role).count()
+			members = GroupMembership.objects.filter(group=group.pk)
 			if request.method == 'POST':
 				try:
 					username = request.POST['username']
@@ -124,16 +125,21 @@ def manage_group(request,pk):
 								is_member.save()
 							except GroupMembership.DoesNotExist:
 								errormessage = 'no such user in the group'
+						else:
+							errormessage = 'cannot update this user'
 					if status == 'remove':
 						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = GroupMembership.objects.filter(user=user, group=group).delete()
 							except GroupMembership.DoesNotExist:
 								errormessage = 'no such user in the group'
-					return redirect('manage_group',pk=pk)
+						else:
+							errormessage = 'cannot remove this user'
+					return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+					#return redirect('manage_group',pk=pk)
 				except User.DoesNotExist:
-					errormessage = "no such user in the group"
-			members = GroupMembership.objects.filter(group=group.pk)
+					errormessage = "no such user in the system"
+
 			return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
 		else:
 			return redirect('group_view',pk=pk)
