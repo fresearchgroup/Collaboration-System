@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
@@ -16,8 +18,9 @@
       <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
-        <li><i class="fa fa-comments"></i> comments </li>
-        <li><i class="fa fa-eye"></i> {{article.views}} </li>
+        {% get_comment_count for article as commentscnt %}
+        <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} views </li>
       </ul>
       <p>
         {{ article.body|striptags|truncatewords:50 }}
