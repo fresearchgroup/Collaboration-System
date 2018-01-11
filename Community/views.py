@@ -204,7 +204,7 @@ def manage_community(request,pk):
 					return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 #					return redirect('manage_community',pk=pk)
 				except User.DoesNotExist:
-					errormessage = "no such user in the community"
+					errormessage = "no such user in the system"
 
 			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 		else:
