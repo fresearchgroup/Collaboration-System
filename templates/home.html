@@ -138,42 +138,31 @@
 <div class="row margin-bottom-40">
   <!-- BEGIN TESTIMONIALS -->
   <div class="col-md-6 testimonials-v1 testimonials-v1-another-color">
-    <h2>Popular Articles</h2>
+    <h2>Most Viewed Articles</h2>
     <div id="myCarousel1" class="carousel slide">
       <!-- Carousel items -->
       <div class="carousel-inner">
-        <div class="active item">
-          <blockquote><p>Article Body</p></blockquote>
+      {{myhtml|safe}}{% autoescape off%}
+        {% for article in articles %}
+        {% if forloop.counter == 1 %}
+          <div class="active item">
+        {% else %}
+          <div class="item">
+        {% endif %}
+          <blockquote><p> {{ article.body|striptags|truncatewords:30 }}<a href="{% url 'article_view' article.pk %}">See more</a></p></blockquote>
           <div class="carousel-info">
             <img class="pull-left" src="../static/img/avatar.jpg" alt="">
             <div class="pull-left">
-              <span class="testimonials-name">Username</span>
-              <span class="testimonials-post">Article Title</span>
+              <span class="testimonials-name">{{article.created_by}}</span>
+              <span class="testimonials-post">{{article.title}}</span>
             </div>
           </div>
         </div>
-        <div class="item">
-          <blockquote><p>Article Body</p></blockquote>
-          <div class="carousel-info">
-            <img class="pull-left" src="../static/img/avatar.jpg" alt="">
-            <div class="pull-left">
-              <span class="testimonials-name">Username</span>
-              <span class="testimonials-post">Article Title</span>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <blockquote><p>Article Body</p></blockquote>
-          <div class="carousel-info">
-            <img class="pull-left" src="../static/img/avatar.jpg" alt="">
-            <div class="pull-left">
-              <span class="testimonials-name">Username</span>
-              <span class="testimonials-post">Article Title</span>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
+
       </div>
-      <!-- Carousel nav -->
+        {% endautoescape%}
+        <!-- Carousel nav -->
       <a class="left-btn" href="#myCarousel1" data-slide="prev"></a>
       <a class="right-btn" href="#myCarousel1" data-slide="next"></a>
     </div>
@@ -229,21 +218,5 @@
 </div>
 <!-- END RECENT NEWS -->
 </div>
-
-
-  <div class="container-fluid  alert alert-primary" role="alert">
-    <div class="row">
-      {{myhtml|safe}}{% autoescape off%}
-      {% for article in articles%}
-      <div class="col-sm-4">
-        <h3>{{article.title}}</h3>
-       <p> {{ article.body|striptags|truncatewords:30 }}</p>
-        <p><a href="{% url 'article_view' article.pk %}">See more</a></p>
-      </div>
-
-      {% endfor %}
-      {% endautoescape%}
-    </div>
-  </div>
 
 {% endblock %}

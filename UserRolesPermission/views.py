@@ -7,6 +7,7 @@ from .roles import Author
 from rolepermissions.roles import assign_role
 from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
+from workflow.models import States
 
 def signup(request):
     """
@@ -39,8 +40,9 @@ def user_dashboard(request):
         return redirect('login')
 
 def home(request):
-    articles = Articles.objects.order_by('-views')[:3]
-    return render(request, 'home.html', {'articles':articles})
+	state = States.objects.get(name='publish')
+	articles=Articles.objects.filter(state=state).order_by('-views')[:3]
+	return render(request, 'home.html', {'articles':articles})
 
 def update_profile(request):
 	if request.user.is_authenticated:
