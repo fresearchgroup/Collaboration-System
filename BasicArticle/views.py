@@ -67,7 +67,6 @@ def edit_article(request, pk):
 	than he will not be allowed to edit this article
 	"""
 	if request.user.is_authenticated:
-		gmember=None
 		if request.method == 'POST':
 			form = NewArticleForm(request.POST)
 			if request.POST['state'] == 'save':
@@ -104,6 +103,7 @@ def edit_article(request, pk):
 			transition =""
 			cmember = ""
 			gmember = ""
+			private = ""
 			try:
 				article = CommunityArticles.objects.get(article=pk)
 				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
