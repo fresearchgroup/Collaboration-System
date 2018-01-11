@@ -17,6 +17,12 @@
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
         <li><i class="fa fa-comments"></i> comments </li>
         <li><i class="fa fa-eye"></i> {{article.views}} </li>
+        {%if article.CNAME%}
+        <li><i class="fa fa-users"></i> {{article.CNAME}} Community </li>
+        {%endif%}
+        {%if article.GNAME%}
+        <li><i class="fa fa-users"></i> {{article.GNAME}} Group </li>
+        {%endif%}
       </ul>
       <p>
         {{ article.body|striptags|truncatewords:50 }}

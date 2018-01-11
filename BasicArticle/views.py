@@ -12,8 +12,7 @@ def display_articles(request):
 	"""
 	display list of articles in  article list page. 
 	"""
-	state = States.objects.get(name='publish')
-	articles=Articles.objects.filter(state=state).order_by('-views')
+	articles=Articles.objects.raw('select o.id,title,username,views,o.created_at,g.name GNAME,c.name CNAME from (select id,title,username,views,created_at,GID,IFNULL(CID,(select community_id from Community_communitygroups where group_id=GID )) COMMID from ( select ba.id,ba.title , username,views,created_at ,(select group_id from Group_grouparticles where article_id=ba.id) GID , (select community_id from Community_communityarticles where article_id=ba.id) CID from (select * from BasicArticle_articles  where id in (select article_id from Group_grouparticles) or id in (select article_id from Community_communityarticles)) ba join auth_user au on ba.created_by_id=au.id join workflow_states ws on ws.id=ba.state_id where ws.name="publish") t ) o  join Community_community c on c.id=COMMID left join Group_group g on g.id=GID order by views desc;')
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):
