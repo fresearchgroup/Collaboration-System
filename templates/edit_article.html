@@ -114,7 +114,7 @@
                   </div>
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}   </button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}</button>
             {%endif%}
 
             {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
@@ -151,7 +151,7 @@
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
-  
+                   {{transition.to_state.name}}</button>
              {%endif%}
 
         

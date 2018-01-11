@@ -39,7 +39,7 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
-            <li><i class="fa fa-eye"></i> {{count}} times </li>
+            <li><i class="fa fa-eye"></i> {{count}} views </li>
 
             {% if article.community.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
