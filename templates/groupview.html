@@ -30,7 +30,16 @@
       <h2>{{ group.name }}</h2><br />
     </div>
     <div class="col-sm-4">
-      <b>Active Since: </b><br />
+    <h4>  {% if membership.role  %}
+        {% if membership.role.name == 'author' %}
+        <b>Author</b> <i class="fa fa-pencil"></i>
+        {% elif membership.role.name == 'publisher' %}
+        <b>Publisher</b> <i class="fa fa-print"></i>
+        {% else %}
+        <b>Group Admin</b> <i class="fa fa-trophy"></i>
+        {% endif %}
+      {% endif %} </h4> 
+      <b>Active Since: {{group.created_at.date}} </b><br />
       {{subscribers}} Contributors <br />
       N Published articles<br /> <br />
       {% if user.is_authenticated %}

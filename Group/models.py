@@ -9,6 +9,7 @@ class Group(models.Model):
 	name = models.CharField(max_length=100)
 	desc = models.TextField()
 	visibility = models.BooleanField()
+	created_at = models.DateTimeField(null=True, auto_now_add=True)
 
 	def __str__(self):
 		return self.name
