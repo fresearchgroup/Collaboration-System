@@ -86,44 +86,26 @@
       <!-- BEGIN RECENT WORKS -->
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-3">
-    <h2><a href="portfolio.html">Most Popular Communities</a></h2>
-    <p>Our most popular communities ...</p>
+    <h2><a href="">Communities</a></h2>
+    <p>Our communities ...</p>
   </div>
   <div class="col-md-9">
     <div class="owl-carousel owl-carousel3">
+      {{myhtml|safe}}{% autoescape off%}
+      {% for comm in community %}
       <div class="recent-work-item">
         <em>
           <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
-          <a href=""><i class="fa fa-link"></i></a>
+          <a href="{% url 'community_view' comm.pk %}"><i class="fa fa-link"></i></a>
           <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #1" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
         </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>Community</strong>
-          <b>category</b>
+        <a class="recent-work-description" href="{% url 'community_view' comm.pk %}">
+          <strong>{{comm.name}}</strong>
+          <b>{{comm.category}}</b>
         </a>
       </div>
-      <div class="recent-work-item">
-        <em>
-          <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
-          <a href=""><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #2" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
-        </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>Community</strong>
-          <b>category</b>
-        </a>
-      </div>
-      <div class="recent-work-item">
-        <em>
-          <img src="../static/img/avatar.jpg" alt="Community" class="img-responsive">
-          <a href=""><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="Project Name #3" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
-        </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>Community</strong>
-          <b>category</b>
-        </a>
-      </div>
+      {% endfor %}
+      {% endautoescape%}
     </div>
   </div>
 </div>
@@ -171,7 +153,7 @@
 
 <!-- BEGIN BLOG PHOTOS STREAM -->
 <div class="col-md-3 blog-photo-stream margin-bottom-20">
-  <h2>Top Contributors</h2>
+  <h2>Contributors</h2>
   <ul class="list-unstyled">
     <li><a href="javascript:;"><img alt="" src="../static/img/avatar.jpg"></a></li>
     <li><a href="javascript:;"><img alt="" src="../static/img/avatar.jpg"></a></li>
@@ -188,33 +170,19 @@
 <!-- BEGIN RECENT NEWS -->
 <div class="col-md-3 recent-news margin-bottom-10">
   <h2>Recent Articles</h2>
+  {{myhtml|safe}}{% autoescape off%}
+    {% for articles in articlesdate %}
   <div class="row margin-bottom-10">
     <div class="col-md-3">
       <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
     </div>
     <div class="col-md-9 recent-news-inner">
-      <h3><a href="javascript:;">title</a></h3>
-      <p>body</p>
+      <h3><a href="{% url 'article_view' articles.pk %}">{{articles.title}}</a></h3>
+      <p>{{ articles.body|striptags|truncatewords:10 }}</p>
     </div>
   </div>
-  <div class="row margin-bottom-10">
-    <div class="col-md-3">
-      <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
-    </div>
-    <div class="col-md-9 recent-news-inner">
-      <h3><a href="javascript:;">title</a></h3>
-      <p>body</p>
-    </div>
-  </div>
-  <div class="row margin-bottom-10">
-    <div class="col-md-3">
-      <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
-    </div>
-    <div class="col-md-9 recent-news-inner">
-      <h3><a href="javascript:;">title</a></h3>
-      <p>body</p>
-    </div>
-  </div>
+  {% endfor %}
+  {% endautoescape%}
 </div>
 <!-- END RECENT NEWS -->
 </div>

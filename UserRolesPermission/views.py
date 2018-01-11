@@ -8,7 +8,7 @@ from rolepermissions.roles import assign_role
 from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
 from workflow.models import States
-
+from Community.models import Community
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -42,7 +42,9 @@ def user_dashboard(request):
 def home(request):
 	state = States.objects.get(name='publish')
 	articles=Articles.objects.filter(state=state).order_by('-views')[:3]
-	return render(request, 'home.html', {'articles':articles})
+	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
+	community=Community.objects.all().order_by('?')[:3]
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community})
 
 def update_profile(request):
 	if request.user.is_authenticated:
