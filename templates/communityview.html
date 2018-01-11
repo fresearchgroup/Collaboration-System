@@ -2,9 +2,6 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
   <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
 
@@ -12,16 +9,20 @@
 
 
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" href="#">View</a>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">View</a>
   </li>
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
   {%endif%}
 </ul>
 <br/>
+
 <div class="container-fluid alert alert-primary" role="alert">
 
   <div class="row">
@@ -30,10 +31,10 @@
       {{myhtml|safe}}{% autoescape off%} {{community.tag_line}}{% endautoescape%}
     </div>
     <div class="col-sm-4">
-      <b>Active Since: </b><br />
-       {{subscribers}} Contributors <br />
-      N Published articles<br />
-      N Public groups <br /><br />
+      <b>Active Since: {{community.created_at.date}}</b><br />
+       {{subscribers}} Members <br />
+      {{articlecount}} Published articles<br />
+      {{groupcount}} Public groups <br /><br />
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'community_subscribe' %}">
         <div class="form-group">
@@ -41,7 +42,9 @@
               <input type="hidden" name="cid" value={{ community.pk}}>
       </div>
         <button type="submit" class="btn btn-primary">Join Us</button>
+
       </form>
+
     </b>
     {%else%}
     <b>
@@ -57,6 +60,7 @@
         </button>
       </div>
       <div class="modal-body">
+        {% if message == 0 %}
         <form method = "post" action ="{% url 'community_unsubscribe' %}">
           <div class="form-group">
             {% csrf_token %}
@@ -68,10 +72,14 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         <button type="submit" class="btn btn-primary">Yes</button>
         </form>
+        {%else%}
+         <label for="message-text" class="col-form-label">Before unsubscribing please assign some other community admin</label>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+        {%endif %}
       </div>
     </div>
   </div>
-</div>  
+</div>
 
   </b>
   <b> <form method = "post" action ="{% url 'community_article_create' %}">

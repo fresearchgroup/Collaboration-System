@@ -17,21 +17,21 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
   </li>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">Manage Group</a>
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="#">Manage Group</a>
+    <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
   </li>
 </ul>
 <br/>
 
 
-<div class="container-fluid alert alert-primary" role="alert">
-  <div class="row">
-    <div class="col-sm-7">
-      <div class="container">
-        <div class="card bg-active">
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-6">
           <table id="userlist" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
-              <tr class="bg-orange">
+              <tr style="background-color:#E84D1C">
                 <th style="color:white">Username</th>
                 <th style="color:white">Role</th>
               </tr>
@@ -56,10 +56,8 @@
               {% endautoescape%}
             </tbody>
           </table>
-        </div>
-      </div>
     </div>
-    <div class="col-sm-5">
+    <div class="col-sm-6">
       {% if user.is_authenticated %}
       <form method="post" >
         {% csrf_token %}
@@ -89,7 +87,6 @@
       {% endif %}
     </div>
   </div>
-</div>
 
 
 {% endblock %}

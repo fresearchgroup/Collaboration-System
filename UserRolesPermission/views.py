@@ -39,7 +39,7 @@ def user_dashboard(request):
         return redirect('login')
 
 def home(request):
-    articles = Articles.objects.all()[:3]
+    articles = Articles.objects.order_by('-views')[:3]
     return render(request, 'home.html', {'articles':articles})
 
 def update_profile(request):
@@ -65,3 +65,14 @@ def view_profile(request):
 		return render(request, 'myprofile.html')
 	else:
 		return redirect('login')
+
+def display_user_profile(request, username):
+    if request.user.is_authenticated:
+        userinfo = User.objects.get(username=username)
+        communities = CommunityMembership.objects.filter(user=userinfo)
+        groups = GroupMembership.objects.filter(user=userinfo)
+        commarticles = CommunityArticles.objects.filter(user=userinfo)
+        grparticles = GroupArticles.objects.filter(user=userinfo)
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
+    else:
+        return redirect('login')

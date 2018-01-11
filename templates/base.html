@@ -6,54 +6,66 @@
 <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 -->
+<!-- metronic start -->
 
-<!-- start -->
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta content="" name="keywords">
-  <meta content="" name="description">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
-  <meta property="og:title" content="">
-  <meta property="og:image" content="">
-  <meta property="og:url" content="">
-  <meta property="og:site_name" content="">
-  <meta property="og:description" content="">
+  <meta content="Metronic Shop UI description" name="description">
+  <meta content="Metronic Shop UI keywords" name="keywords">
+  <meta content="keenthemes" name="author">
 
-  <!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:title" content="">
-  <meta name="twitter:description" content="">
-  <meta name="twitter:image" content="">
+  <meta property="og:site_name" content="-CUSTOMER VALUE-">
+  <meta property="og:title" content="-CUSTOMER VALUE-">
+  <meta property="og:description" content="-CUSTOMER VALUE-">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="-CUSTOMER VALUE-"><!-- link to image for socio -->
+  <meta property="og:url" content="-CUSTOMER VALUE-">
 
-  <!-- Favicon -->
-  <link href="{% static 'img/favicon.ico' %}" rel="icon">
+  <link rel="shortcut icon" href="favicon.ico">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:400,900" rel="stylesheet">
+  <!-- Fonts START -->
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css">
+  <!-- Fonts END -->
 
-  <!-- Bootstrap CSS File -->
-  <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-  <!-- Libraries CSS Files -->
-  <link href="{% static 'lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+  <!-- Global styles START -->
+  <link href="{% static 'assets/plugins/font-awesome/css/font-awesome.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Global styles END -->
 
-  <!-- Main Stylesheet File -->
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <!-- Page level plugin styles START -->
+  <link href="{% static 'assets/pages/css/animate.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/plugins/fancybox/source/jquery.fancybox.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/plugins/owl.carousel/assets/owl.carousel.css' %}" rel="stylesheet">
+  <!-- Page level plugin styles END -->
 
-  <!-- =======================================================
-    Theme Name: Bell
-    Theme URL: https://bootstrapmade.com/bell-free-bootstrap-4-template/
-    Author: BootstrapMade.com
-    Author URL: https://bootstrapmade.com
-  ======================================================= -->
-<!-- end -->
+  <!-- Theme styles START -->
+  <link href="{% static 'assets/pages/css/components.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/slider.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/themes/red.css' %}" rel="stylesheet" id="style-color">
+  <link href="{% static 'assets/corporate/css/custom.css' %}" rel="stylesheet">
+  <!-- Theme styles END -->
+
+  <!-- Theme styles START for communities page i.e. portfolio -->
+  <link href="{% static 'assets/pages/css/components.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/portfolio.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/themes/red.css' %}" rel="stylesheet" id="style-color">
+  <link href="{% static 'assets/corporate/css/custom.css' %}" rel="stylesheet">
+  <!-- Theme styles END for communities page i.e. portfolio-->
+<!-- metronic end -->
 
 <!-- Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
 </script>
 
 <!-- Data tables -->
+  <link href="{% static 'datatable/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+<!--
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
@@ -63,8 +75,9 @@
 $(document).ready(function() {
 	$('#myArticles').DataTable();
 	$('#userlist').DataTable();
+	$('#userArticles').DataTable();
 } );
-</script>
+</script>-->
 
 </head>
 <body>
@@ -72,52 +85,98 @@ $(document).ready(function() {
 
 {% block body %}  <!-- HERE -->
 
-  <!-- Header -->
-  <header id="header">
+<!-- BEGIN TOP BAR -->
+<div class="pre-header">
     <div class="container">
-
-      <div id="logo" class="pull-left">
-        <a href="index.html"><img src="" alt="" title="" /></img></a>
-        <!-- Uncomment below if you prefer to use a text image -->
-        <!--<h1><a href="#hero">Bell</a></h1>-->
-      </div>
-
-      <nav id="nav-menu-container">
-        <ul class="nav-menu">
-          <li><a href="{% url 'home' %}">Home </a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="{% url 'display_communities' %}">Communities</a></li>
-
-          <li><a href="/forum">Forum</a></li>
-          <li><a href="{% url 'display_articles' %}">Articles</a></li>
-          <li><a href="#">Contact Us</a></li>
-
-          {% if user.is_authenticated %}
-          <li class="menu-has-children">
-            <a href="#" id="userMenu">{{ user.username }}</a>
-            <ul>
-              {% if request.user.is_superuser %}
-							<li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
-              {% endif%}
-              <li><a href="{% url 'view_profile' %}">My account</a></li>
-							<li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-              <li><a href="{% url 'logout' %}">Log out</a></li>
-            </ul>
-          </li>
-          {% else %}
-              <li><a class="btn btn-full" href="{% url 'login' %}">Log in</a></li>
-              <li><a class="btn btn-full" href="{% url 'signup' %}">Sign up</a></li>
-          {% endif %}
-
-        </ul>
-      </nav>
-      <!-- #nav-menu-container -->
-      <nav class="nav social-nav pull-right d-none d-lg-inline">
-        <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
-      </nav>
+        <div class="row">
+            <!-- BEGIN TOP BAR LEFT PART -->
+            <div class="col-md-6 col-sm-6 additional-shop-info">
+                <ul class="list-unstyled list-inline">
+                    <li><i class="fa fa-phone"></i><span>+91 2576 4914</span></li>
+                    <li><i class="fa fa-envelope-o"></i><span>frg@cse.iitb.ac.in</span></li>
+                </ul>
+            </div>
+            <!-- END TOP BAR LEFT PART -->
+            <!-- BEGIN TOP BAR MENU -->
+            <div class="col-md-6 col-sm-6 additional-nav">
+                <ul class="list-unstyled list-inline pull-right">
+                    {% if user.is_authenticated %}
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Log In</a></li>
+                    <li><a href="{% url 'signup' %}">Sign up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- END TOP BAR MENU -->
+        </div>
     </div>
-  </header>
-  <!-- #header -->
+</div>
+<!-- END TOP BAR -->
+
+
+<!-- BEGIN HEADER -->
+<div class="header">
+  <div class="container">
+    <a class="site-logo" href="index.html"><img src="{% static 'assets/corporate/img/logos/logo-corp-red.png' %}" alt="Metronic FrontEnd"></a>
+
+    <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
+
+    <!-- BEGIN NAVIGATION -->
+    <div class="header-navigation pull-right font-transform-inherit">
+      <ul>
+
+      <li><a href="{% url 'home' %}">Home </a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="{% url 'display_communities' %}">Communities</a></li>
+
+      <li><a href="/forum">Forum</a></li>
+      <li><a href="{% url 'display_articles' %}">Articles</a></li>
+      <li><a href="#">Contact Us</a></li>
+
+        {% if user.is_authenticated %}
+        <li class="dropdown active">
+         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+            {{ user.username }}
+          </a>
+
+          <ul class="dropdown-menu">
+            {% if request.user.is_superuser %}
+            <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
+            {% endif%}
+            <li><a href="{% url 'view_profile' %}">My account</a></li>
+            <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'logout' %}">Log out</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+        <!-- BEGIN TOP SEARCH -->
+        <li class="menu-search">
+          <span class="sep"></span>
+          <i class="fa fa-search search-btn"></i>
+          <div class="search-box">
+            <form action="#">
+              <div class="input-group">
+                <input type="text" placeholder="Search" class="form-control">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit">Search</button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </li>
+        <!-- END TOP SEARCH -->
+      </ul>
+    </div>
+    <!-- END NAVIGATION -->
+  </div>
+</div>
+<!-- Header END -->
+
+  <div class="page-slider margin-bottom-40">
+          {% block pagecar %}
+          {% endblock %}
+  </div>
 
 	 <div class="container">
         <ol class="breadcrumb my-4">
@@ -126,64 +185,43 @@ $(document).ready(function() {
         </ol>
         {% block content %}
         {% endblock %}
-      </div>
+  </div>
 
 {% endblock body %}  <!-- AND HERE -->
 
-
-<footer class="site-footer">
-	<div class="bottom">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-lg-6 col-xs-12 text-lg-left text-center">
-					<p class="copyright-text">
-						© BELL Theme
-					</p>
-					<div class="credits">
-						<!--
-							All the links in the footer should remain intact.
-							You can delete the links only if you purchased the pro version.
-							Licensing information: https://bootstrapmade.com/license/
-							Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Bell
-						-->
-						<a href="">Bootstrap </a>
-					</div>
-				</div>
-
-				<div class="col-lg-6 col-xs-12 text-lg-right text-center">
-					<ul class="list-inline">
-						<li class="list-inline-item">
-							<a href="{% url 'home' %}">Home</a>
-						</li>
-
-						<li class="list-inline-item">
-							<a href="#">About Us</a>
-						</li>
-
-						<li class="list-inline-item">
-							<a href="{% url 'display_communities' %}">Communities</a>
-						</li>
-
-						<li class="list-inline-item">
-							<a href="/forum">Forum</a>
-						</li>
-
-						<li class="list-inline-item">
-							<a href="{% url 'display_articles' %}">Articles</a>
-						</li>
-
-						<li class="list-inline-item">
-							<a href="#">Contact Us</a>
-						</li>
-					</ul>
-				</div>
-
-			</div>
-		</div>
-	</div>
-</footer>
-<a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
+<!-- BEGIN FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <!-- BEGIN COPYRIGHT -->
+      <div class="col-md-4 col-sm-4 padding-top-10">
+        <a href="javascript:;">Privacy Policy</a> | <a href="javascript:;">Terms of Service</a>
+      </div>
+      <!-- END COPYRIGHT -->
+      <!-- BEGIN PAYMENTS -->
+      <div class="col-md-4 col-sm-4">
+        <ul class="social-footer list-unstyled list-inline pull-right">
+          <li><a href="javascript:;"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-google-plus"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-dribbble"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-skype"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-github"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-youtube"></i></a></li>
+          <li><a href="javascriptjavascript:;"><i class="fa fa-dropbox"></i></a></li>
+        </ul>
+      </div>
+      <!-- END PAYMENTS -->
+      <!-- BEGIN POWERED -->
+      <div class="col-md-4 col-sm-4 text-right">
+        <p class="powered">Powered by: <a href="http://www.keenthemes.com/">KeenThemes.com</a></p>
+      </div>
+      <!-- END POWERED -->
+    </div>
+  </div>
+</div>
+<!-- END FOOTER -->
 
 
 {% block javascript %}{% endblock %}
@@ -191,27 +229,57 @@ $(document).ready(function() {
 <script src="{% static 'js/propper.min.js' %}"></script>
 <!--<script src="{% static 'js/bootstrap.min.js' %}"></script>-->
 
-  <!-- Required JavaScript Libraries -->
-  <script src="{% static 'lib/jquery/jquery-migrate.min.js' %} "></script>
-  <script src="{% static 'lib/superfish/hoverIntent.js' %} "></script>
-  <script src="{% static 'lib/superfish/superfish.min.js' %} "></script>
-  <script src="{% static 'lib/tether/js/tether.min.js' %} "></script>
-  <script src="{% static 'lib/stellar/stellar.min.js' %} "></script>
-  <script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %} "></script>
-  <script src="{% static 'lib/counterup/counterup.min.js' %} "></script>
-  <script src="{% static 'lib/waypoints/waypoints.min.js' %} "></script>
-  <script src="{% static 'lib/easing/easing.js' %} "></script>
-  <script src="{% static 'lib/stickyjs/sticky.js' %} "></script>
-  <script src="{% static 'lib/parallax/parallax.js' %} "></script>
-  <script src="{% static 'lib/lockfixed/lockfixed.min.js' %} "></script>
-
-  <!-- Template Specisifc Custom Javascript File -->
-  <script src="{% static 'js/custom.js' %} "></script>
-
-  <script src="{% static 'contactform/contactform.js' %} "></script>
-
 	<!--Chart.js-->
 	<script src="{% static 'js/scriptMyContrib.js' %}"></script>
+
+	<!-- Data table -->
+<script src="{% static 'datatable/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'datatable/dataTables.bootstrap4.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'datatable/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#myArticles').DataTable();
+	$('#userlist').DataTable();
+	$('#userArticles').DataTable();
+} );
+</script>
+
+<!-- Load javascripts at bottom, this will reduce page load time -->
+<!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
+<!--[if lt IE 9]>
+<script src="assets/plugins/respond.min.js"></script>
+<![endif]-->
+<!--<script src="{% static 'assets/plugins/jquery.min.js' %}" type="text/javascript"></script>-->
+<script src="{% static 'assets/plugins/jquery-migrate.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="../static/assets/corporate/scripts/back-to-top.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
+<script src="{% static 'assets/plugins/fancybox/source/jquery.fancybox.pack.js' %}" type="text/javascript"></script><!-- pop up -->
+<script src="{% static 'assets/plugins/owl.carousel/owl.carousel.min.js' %}" type="text/javascript"></script><!-- slider for products -->
+
+<script src="{% static 'assets/corporate/scripts/layout.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/pages/scripts/bs-carousel.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+		jQuery(document).ready(function() {
+				Layout.init();
+				Layout.initTwitter();
+
+				Layout.initNavScrolling();
+		});
+</script>
+<script type="text/javascript">
+		$(document).ready(function() {
+			Layout.initOWL();
+
+			Layout.initFixHeaderWithPreHeader(); /* Switch On Header Fixing (only if you have pre-header) */
+		});
+</script>
+<!-- END PAGE LEVEL JAVASCRIPTS -->
+
+
 
 </body>
 </html>

@@ -14,7 +14,7 @@ from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
 from django.contrib.auth.models import User
-
+from workflow.models import States
 # Create your views here.
 
 
@@ -24,16 +24,24 @@ def display_communities(request):
 
 def community_view(request, pk):
 	try:
+		message = 0
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+		role = Roles.objects.get(name='community_admin')
+		if membership.role == role:
+			count = CommunityMembership.objects.filter(community=community,role=role).count()
+			if count < 2:
+				message = 1
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
 	articles = CommunityArticles.objects.filter(community = pk)
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	groups = CommunityGroups.objects.filter(community = pk)
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users})
+	groupcount = groups.count()
+	articlecount = articles.count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount, 'message':message})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -56,7 +64,6 @@ def community_unsubscribe(request):
 		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 		return redirect('community_view',pk=cid)
 	return render(request, 'communityview.html')
-
 
 def community_article_create(request):
 	if request.user.is_authenticated:
@@ -184,7 +191,7 @@ def manage_community(request,pk):
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
 					if status == 'remove':
-						if count > 1 or count == 1 and username != request.user.username:		
+						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 							except CommunityMembership.DoesNotExist:
@@ -198,3 +205,61 @@ def manage_community(request,pk):
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view',pk=pk)
+
+def update_community_info(request,pk):
+	community = Community.objects.get(pk=pk)
+	errormessage = ''
+	membership = None
+	uid = request.user.id
+	try:
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership.role.name == 'community_admin':
+			if request.method == 'POST':
+				name = request.POST['name']
+				desc = request.POST['desc']
+				category = request.POST['category']
+				tag_line = request.POST['tag_line']
+				community.name = name
+				community.desc = desc
+				community.category = category
+				community.tag_line = tag_line
+				community.save()
+				return redirect('community_view',pk=pk)
+			else:
+				return render(request, 'updatecommunityinfo.html', {'community':community})
+		else:
+			return redirect('community_view',pk=pk)
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view',pk=pk)
+
+def create_community(request):
+	errormessage = ''
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			username = request.POST['username']
+			try:
+				usr = User.objects.get(username=username)
+				name = request.POST['name']
+				desc = request.POST['desc']
+				category = request.POST['category']
+				tag_line = request.POST['tag_line']
+				role = Roles.objects.get(name='community_admin')
+				community = Community.objects.create(
+					name=name,
+					desc=desc,
+					category = category,
+					tag_line = tag_line
+					)
+				communitymembership = CommunityMembership.objects.create(
+					user = usr,
+					community = community,
+					role = role
+					)
+				return redirect('community_view', community.pk)
+			except User.DoesNotExist:
+				errormessage = 'user does not exist'
+				return render(request, 'new_community.html', {'errormessage':errormessage})
+		else:
+			return render(request, 'new_community.html')
+	else:
+		return redirect('home')

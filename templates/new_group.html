@@ -10,8 +10,8 @@
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
   {% endif %}
-  <li class="breadcrumb-item active">Create a Group in <h1>{{ community.name }} Community</h1></li>
-  
+  <li class="breadcrumb-item active">Create a Group in {{ community.name }} Community</li>
+
 
 
 {% endblock %}
@@ -47,5 +47,6 @@
   <button type="submit" class="btn btn-primary">Create</button>
   {% endif %}
 </form>
+<br />
 {% endif %}
 {% endblock %}

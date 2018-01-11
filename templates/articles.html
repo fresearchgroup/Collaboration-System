@@ -8,26 +8,23 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table">
-    <thead class="thead-inverse">
-      <tr>
-        <th>Title</th>
-        <th>Body</th>
-        <th>Views</th>
-      </tr>
-    </thead>
-    <tbody>
-    {{myhtml|safe}}{% autoescape off%}
-      {% for article in articles %}
-        <tr>
-          <td>
-            <a href="{% url 'article_view' article.pk %}">{{ article.title }}</a>
-          </td>
-          <td class="align-middle"><small class="text-muted d-block">{{ article.body|striptags|truncatewords:50 }}</small></td>
-          <td>{{article.views}}</td>
-        </tr>
-      {% endfor %}
-      {% endautoescape%}
-    </tbody>
-  </table>
+{{myhtml|safe}}{% autoescape off%}
+{% for article in articles %}
+  <div class="row margin-bottom-15">
+    <div class="col-md-12 col-sm-12">
+      <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <li><i class="fa fa-comments"></i> comments </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} </li>
+      </ul>
+      <p>
+        {{ article.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+  </div>
+  <hr class="blog-post-sep">
+{% endfor %}
+{% endautoescape%}
 {% endblock %}

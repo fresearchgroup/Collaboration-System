@@ -26,9 +26,15 @@ def create_group(request):
 
 def group_view(request, pk):
 	try:
+		message = 0
 		group = Group.objects.get(pk=pk)
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		role = Roles.objects.get(name='group_admin')
+		if membership.role == role:
+			count = GroupMembership.objects.filter(group=group,role=role).count()
+			if count < 2:
+				message = 1
 	except GroupMembership.DoesNotExist:
 		membership = 'FALSE'
 	try:
@@ -40,7 +46,7 @@ def group_view(request, pk):
 	articles = GroupArticles.objects.filter(group = pk)
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'community':community})
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'articles':articles, 'users':users, 'community':community,'message':message})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:
@@ -129,6 +135,31 @@ def manage_group(request,pk):
 					errormessage = "no such user in the group"
 			members = GroupMembership.objects.filter(group=group.pk)
 			return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+		else:
+			return redirect('group_view',pk=pk)
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view',pk=pk)
+
+
+def update_group_info(request,pk):
+	group = Group.objects.get(pk=pk)
+	errormessage = ''
+	membership = None
+	uid = request.user.id
+	try:
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership.role.name == 'group_admin':
+			if request.method == 'POST':
+				name = request.POST['name']
+				desc = request.POST['desc']
+				visibility = request.POST['visibility']
+				group.name = name
+				group.desc = desc
+				group.visibility = visibility
+				group.save()
+				return redirect('group_view',pk=pk)
+			else:
+				return render(request, 'updategroupinfo.html', {'group':group})
 		else:
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:

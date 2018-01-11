@@ -174,7 +174,7 @@ COMMENTS_APP='django_comments_xtd'
 
 COMMENTS_XTD_MAX_THREAD_LEVEL = 1  # default is 0
 
-COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order') 
+COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
 
 COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
 

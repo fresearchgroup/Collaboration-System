@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ group.name }}</li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
+<li class="breadcrumb-item">Group</li>
+<li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 
 {% block content %}
 
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" href="#">View</a>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">View</a>
   </li>
   {% if membership.role.name == 'group_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage Group</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
   </li>
   {%endif%}
 </ul>
@@ -61,6 +61,7 @@
         </button>
       </div>
       <div class="modal-body">
+        {% if message == 0 %}
         <form method = "post" action ="{% url 'group_unsubscribe' %}">
           <div class="form-group">
             {% csrf_token %}
@@ -73,10 +74,14 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         <button type="submit" class="btn btn-primary">Yes</button>
         </form>
+        {%else%}
+         <label for="message-text" class="col-form-label">Before unsubscribing please assign some other group admin</label>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+        {%endif %}
       </div>
     </div>
   </div>
-</div>  
+</div>
   </b>
   <b> <form method = "post" action ="{% url 'group_article_create' %}">
       <div class="form-group">

@@ -3,6 +3,7 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.article.title }}</li>
+  <li class="breadcrumb-item active">{{ cmember.role.name}}{{belongs_to}}{{article.article.state}}{{transition.to_state.name}}</li>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -18,11 +19,11 @@
     <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
-  <li class="nav-item">
-    <a class="nav-link active " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+  <li class="nav-item active">
+    <a class="nav-link  " href="{% url 'article_edit' article.article.pk %}">Edit</a>
   </li>
   {% if membership.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
-  <li class="nav-item active">
+  <li class="nav-item">
     <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
   </li>
   {% endif %}
@@ -34,40 +35,61 @@
 </div>
 <br/>
 {%if membership != 'FALSE' %}
-{% load permission_tags %}
-{% if user|can:'edit_article' %}
-<form method="post">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-    <div class="invalid-feedback"></div>
-  </div>
-  <div class="form-group">
-    <label for="body">Body</label>
-    <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
-    <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-  </div>
-  <button type="submit" class="btn btn-outline-info">Save changes</button>
-</form>
-{% else %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
+      <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-group">
+      <label for="body">Body</label>
+      <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+      <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+    </div>
+    <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
+    {%if belongs_to == 'community' %}
+       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
+       {%if transition.to_state.name == 'publish' %}
+            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
 
-<div class="panel panel-default">
-<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You cannot edit this article. Earn a author role for editing this content.</samp></div>
-</div>
-{% endif %}
-{% else %}
-<div class="panel panel-default">
-<div class="panel-body"><div class="alert alert-danger" role="alert">
-  {% if message %}
-  {{myhtml|safe}}{% autoescape off%} {{message}}{% endautoescape%}
-  {% else%}
-  <samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp>
-  {% endif%}
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+            {% endif %}
+        {%else%}
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+        {% endif %}
+    {% endif %}
+
+    {%if belongs_to == 'group' %}
+        {% if transition.to_state.name == 'publish' and membership.role.name == 'publisher' %}
+            <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+            <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
+        {% endif %}
+       {%if transition.to_state.name == 'visible' %}
+            {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+            {% endif %}
+        {%else%}
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+        {% endif %}
+    {% endif %}
+  </form>
+
+{% else%}
+    <div class="panel panel-default">
+    <div class="panel-body"><div class="alert alert-danger" role="alert">
+      {{myhtml|safe}}{% autoescape off%} {{message}}{% endautoescape%}
+
+      <samp>You are not a member of <h2>{{article.community.name}}{{article.group.name}}</h2> Please Join {{article.community.name}}{{article.group.name}} before editing this content</samp>
+{% endif%}
 
 </div>
 
 </div>
-{% endif %}
+
 
 {% endblock %}

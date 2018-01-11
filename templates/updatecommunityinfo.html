@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage community</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">Update community Info</a>
+  </li>
+</ul>
+<br/>
+
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-12">
+      {% if user.is_authenticated %}
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="title" name="name" value="{{community.name}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group">
+          <label for="desc">Description</label>
+          <textarea  class="form-control" name="desc" rows="6">{{community.desc}}</textarea>
+          <input type="hidden" name="status" value={{status}}>
+          <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" class="form-control" id="category" name="category" value="{{community.category}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group">
+          <label for="tag_line">Tag Line</label>
+          <input type="text" class="form-control" id="tag_line" name="tag_line" value="{{community.tag_line}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
