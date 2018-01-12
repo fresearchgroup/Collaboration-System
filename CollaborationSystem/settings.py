@@ -176,7 +176,21 @@ COMMENTS_XTD_MAX_THREAD_LEVEL = 1  # default is 0
 
 COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order')
 
-COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'Group.grouparticles': {
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
+    }
+}
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'Community.communityarticles': {
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
+    }
+}
 
 ROLEPERMISSIONS_MODULE = 'UserRolesPermission.roles'
 
