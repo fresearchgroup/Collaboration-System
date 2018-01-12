@@ -27,7 +27,7 @@ class CommunityArticles(models.Model):
 
 	def get_absolute_url(self):
 		from django.urls import reverse
-		return reverse('article_view', kwargs={'pk': self.id})
+		return reverse('article_view', kwargs={'pk': self.article_id})
 
 class CommunityGroups(models.Model):
 	group = models.ForeignKey(Group, null=True, related_name='communitygroups')

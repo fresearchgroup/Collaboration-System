@@ -23,3 +23,7 @@ class GroupArticles(models.Model):
 	article = models.ForeignKey(Articles, related_name='grouparticles')
 	user = models.ForeignKey(User, related_name='grouparticles')
 	group = models.ForeignKey(Group, null=True, related_name='grouparticles')
+	def get_absolute_url(self):
+		from django.urls import reverse
+		return reverse('article_view', kwargs={'pk': self.article_id})
+
