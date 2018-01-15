@@ -44,7 +44,7 @@
       N Published articles<br /> <br />
       {% if user.is_authenticated %}
       {% if communitymembership == 'FALSE' %}
-      <h2>You have to join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> community </h2><br />
+      <h2>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> community</h2><br />
       {% else %}
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
