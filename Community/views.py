@@ -233,7 +233,7 @@ def update_community_info(request,pk):
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
-				return render(request, 'updatecommunityinfo.html', {'community':community})
+				return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
 		else:
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
