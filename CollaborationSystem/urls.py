@@ -82,4 +82,6 @@ urlpatterns = [
 
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
+    url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+
 ]

@@ -15,6 +15,7 @@ from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
 from django.contrib.auth.models import User
 from workflow.models import States
+from django.db.models import Q
 # Create your views here.
 
 
@@ -269,3 +270,22 @@ def create_community(request):
 			return render(request, 'new_community.html')
 	else:
 		return redirect('home')
+
+def community_content(request, pk):
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			statevisible = States.objects.get(name='visible')
+			statepublishable = States.objects.get(name='publishable')
+			visiblearticles = Articles.objects.filter(state=statevisible)
+			publishablearticles = Articles.objects.filter(state=statepublishable)
+
+			commvisiblearticles = CommunityArticles.objects.filter(community = pk, article=visiblearticles)
+			commpublishablearticles = CommunityArticles.objects.filter(community = pk, article=publishablearticles)
+			commarticles = commvisiblearticles | commpublishablearticles
+
+	except CommunityMembership.DoesNotExist:
+		membership = 'FALSE'
+	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
