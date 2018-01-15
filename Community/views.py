@@ -272,20 +272,13 @@ def create_community(request):
 		return redirect('home')
 
 def community_content(request, pk):
+	commarticles = ''
 	try:
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			statevisible = States.objects.get(name='visible')
-			statepublishable = States.objects.get(name='publishable')
-			visiblearticles = Articles.objects.filter(state=statevisible)
-			publishablearticles = Articles.objects.filter(state=statepublishable)
-
-			commvisiblearticles = CommunityArticles.objects.filter(community = pk, article=visiblearticles)
-			commpublishablearticles = CommunityArticles.objects.filter(community = pk, article=publishablearticles)
-			commarticles = commvisiblearticles | commpublishablearticles
-
+			commarticles = CommunityArticles.objects.raw('select ba.id , ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 	except CommunityMembership.DoesNotExist:
-		membership = 'FALSE'
+		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
