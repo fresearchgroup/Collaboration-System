@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 
+
 {% block breadcrumb %}
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+<script type="text/javascript">
+var articlesPublished = [{{articlespublished}}];
+var articlesContributed = [{{articlescontributed}}];
+
+</script>
+
   {% endif %}
+
+
 {% endblock %}
 
 {% block content %}
