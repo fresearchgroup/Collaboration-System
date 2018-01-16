@@ -171,6 +171,9 @@ var articlesContributed = [{{articlescontributed}}];
               <a href="{% url 'article_view' gart.article.pk %}"> {{ gart.article }} </a>
             </td>
             <td>
+              {{gart.article.state.name}}
+            </td>
+            <td>
               <a href="{% url 'group_view' gart.group.pk  %}"> {{ gart.group }} </a>
             </td>
             <td>
