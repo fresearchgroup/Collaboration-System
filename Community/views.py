@@ -15,6 +15,7 @@ from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
 from django.contrib.auth.models import User
 from workflow.models import States
+from django.db.models import Q
 # Create your views here.
 
 
@@ -36,12 +37,14 @@ def community_view(request, pk):
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
+	pubarticles = CommunityArticles.objects.raw('select ba.id , ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
+
 	articles = CommunityArticles.objects.filter(community = pk)
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	groups = CommunityGroups.objects.filter(community = pk)
 	groupcount = groups.count()
 	articlecount = articles.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount, 'message':message})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount, 'message':message, 'pubarticles':pubarticles})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -232,7 +235,7 @@ def update_community_info(request,pk):
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
-				return render(request, 'updatecommunityinfo.html', {'community':community})
+				return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
 		else:
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
@@ -269,3 +272,15 @@ def create_community(request):
 			return render(request, 'new_community.html')
 	else:
 		return redirect('home')
+
+def community_content(request, pk):
+	commarticles = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			commarticles = CommunityArticles.objects.raw('select ba.id , ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})

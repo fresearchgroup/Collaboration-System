@@ -16,12 +16,19 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
   </li>
+  {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage community</a>
   </li>
   <li class="nav-item active">
     <a class="nav-link " href="#">Update community Info</a>
   </li>
+  {% endif %}
+  {% if membership %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  {%endif%}
 </ul>
 <br/>
 

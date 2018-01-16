@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item ">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
+  {%endif%}
+  {% if  membership.role.name != '' %}
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  {%endif%}
+</ul>
+<br /><br />
+
+<h1>Visible and Publishable Content</h1><br />
+{{myhtml|safe}}{% autoescape off%}
+{% for article in commarticles %}
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
+    </div>
+    <div class="col-md-10 col-sm-10">
+      <h3><a href="{% url 'article_view' article.article.pk %}">{{ article.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} </li>
+        {% get_comment_count for article as commentscnt %}
+        <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
+        {% if article.state == 'visible' %}
+        <li><i class="fa fa-bullhorn"></i> Visible </li>
+        {% endif %}
+        {% if article.state == 'publishable' %}
+        <li><i class="fa fa-bell"></i> Publishable </li>
+        {% endif %}
+      </ul>
+      <p>
+        {{ article.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+  </div>
+  <hr class="blog-post-sep">
+{% endfor %}
+{% endautoescape%}
+
+{% endblock %}

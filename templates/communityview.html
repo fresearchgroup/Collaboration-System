@@ -20,6 +20,11 @@
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
   {%endif%}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  {%endif%}
 </ul>
 <br/>
 
@@ -135,8 +140,8 @@
   <div class="row">
     <div class="col-sm-8">
       <h3>Published Content</h3>
-      {% for article in articles %}
-      <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
+      {% for article in pubarticles %}
+      <a href="{% url 'article_view' article.pk %}">{{article.title}}</a><br />
       {% endfor %}
     </div>
 
