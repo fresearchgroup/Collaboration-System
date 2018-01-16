@@ -25,6 +25,9 @@ from Community import viewsets as communityviewsets
 from Group import views as group_views
 from machina.app import board
 from UserRolesPermission import viewsets as user_viewsets
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -85,3 +88,6 @@ urlpatterns = [
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
