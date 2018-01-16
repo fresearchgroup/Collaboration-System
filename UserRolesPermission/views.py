@@ -129,6 +129,27 @@ def forgot_password(request):
            return render(request,'forgotpassword.html',args)
     return render(request,'forgotpassword.html',args)
 
+def change_password(request,uidb64,token):
+    if request.method == 'POST':
+        print("suc",request.user)
+        form = PasswordChangeForm(request.user, request.POST)
+        if  form.is_valid():
+            user = form.save()
+            print("jdhh")  
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return render(request,'resetpasswordsuccess.html')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'changepassword.html', {
+        'form': form
+    })
 
+
+def change_password_success(request):
+
+    return render(request,'resetpasswordsuccess.html') 
 
 
