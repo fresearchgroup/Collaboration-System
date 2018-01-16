@@ -98,7 +98,28 @@ var articlesContributed = [{{articlescontributed}}];
         {% for grp in groups %}
               <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
         {% endfor %}
-        {% endautoescape%}
+        {% endautoescape%} <br />
+        {% if groups.has_other_pages %}
+  <ul class="pagination">
+  {% if groups.has_previous %}
+    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.previous_page_number }}">&laquo;</a></span></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in groups.paginator.page_range %}
+    {% if groups.number == i %}
+      <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
+    {% else %}
+      <li><span style="background-color:#D0D3D4"><a href="?page2={{ i }}">{{ i }}</a></span></li>
+    {% endif %}
+  {% endfor %}
+  {% if groups.has_next %}
+    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.next_page_number }}">&raquo;</a></span></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+  </ul>
+{% endif %}
             </span>
             </h4>
           </div>

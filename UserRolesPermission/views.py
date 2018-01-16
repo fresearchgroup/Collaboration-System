@@ -39,7 +39,15 @@ def user_dashboard(request):
         except EmptyPage:
             communities = paginator.page(paginator.num_pages)
 
-        groups = GroupMembership.objects.filter(user=request.user)
+        mygroups = GroupMembership.objects.filter(user=request.user)
+        page = request.GET.get('page2',1)
+        paginator = Paginator(mygroups, 5)
+        try:
+            groups = paginator.page(page)
+        except PageNotAnInteger:
+            groups = paginator.page(1)
+        except EmptyPage:
+            groups = paginator.page(paginator.num_pages)
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
