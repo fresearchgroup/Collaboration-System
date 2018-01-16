@@ -9,6 +9,8 @@ from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -27,7 +29,16 @@ def signup(request):
 
 def user_dashboard(request):
     if request.user.is_authenticated:
-        communities = CommunityMembership.objects.filter(user=request.user)
+        mycommunities = CommunityMembership.objects.filter(user=request.user)
+        page = request.GET.get('page', 1)
+        paginator = Paginator(mycommunities, 5)
+        try:
+            communities = paginator.page(page)
+        except PageNotAnInteger:
+            communities = paginator.page(1)
+        except EmptyPage:
+            communities = paginator.page(paginator.num_pages)
+
         groups = GroupMembership.objects.filter(user=request.user)
 
         commarticles = CommunityArticles.objects.filter(user=request.user)

@@ -45,7 +45,7 @@ var articlesContributed = [{{articlescontributed}}];
   <div class="content-page">
     <div class="row margin-bottom-40">
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Communities</h3>
@@ -55,9 +55,30 @@ var articlesContributed = [{{articlescontributed}}];
         {% for comm in communities %}
           <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
         {% endfor %}
-        {% endautoescape%}
-            </span>
-            </h4>
+        {% endautoescape%} <br />
+        {% if communities.has_other_pages %}
+          <ul class="pagination">
+          {% if communities.has_previous %}
+            <li><span style="background-color:#ffffff"><a href="?page={{ communities.previous_page_number }}">&laquo;</a></span></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+          {% for i in communities.paginator.page_range %}
+            {% if communities.number == i %}
+              <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
+            {% else %}
+              <li><span style="background-color:#D0D3D4"><a href="?page={{ i }}">{{ i }}</a></span></li>
+            {% endif %}
+          {% endfor %}
+          {% if communities.has_next %}
+            <li><span style="background-color:#ffffff"><a href="?page={{ communities.next_page_number }}">&raquo;</a></span></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+          </ul>
+        {% endif %}
+      </span>
+    </h4>
           </div>
 <!--      <div class="pricing-footer">
             <a href="javascript:;" class="btn btn-primary">
@@ -67,7 +88,7 @@ var articlesContributed = [{{articlescontributed}}];
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Groups</h3>
@@ -89,7 +110,7 @@ var articlesContributed = [{{articlescontributed}}];
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>Pending Requests</h3>
@@ -100,24 +121,6 @@ var articlesContributed = [{{articlescontributed}}];
               {{ pending.name }}  <br />
         {% endfor %}
         {% endautoescape%}
-            </span>
-            </h4>
-          </div>
-<!--      <div class="pricing-footer">
-            <a href="javascript:;" class="btn btn-primary">
-               Sign Up <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-          </div>-->
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="pricing hover-effect">
-          <div class="pricing-head">
-            <h3>Communities I May Like</h3>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-
             </span>
             </h4>
           </div>
