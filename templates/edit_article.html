@@ -74,7 +74,7 @@
                 <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
-        {% endif %}current_state
+        {% endif %}
     {% endif %}
 
     {%if belongs_to == 'group' %}
