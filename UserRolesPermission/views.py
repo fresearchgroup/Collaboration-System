@@ -9,6 +9,34 @@ from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
+
+
+from UserRolesPermission.validate import validateemailid
+from django.core.mail import send_mail
+from django.template.context_processors import csrf
+from django.http import HttpResponseRedirect, HttpResponse
+from CollaborationSystem.settings import *
+from django.template import *
+from django.template import loader
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import (
+    UNUSABLE_PASSWORD_PREFIX, identify_hasher,
+)
+from django.utils.http import urlsafe_base64_encode
+from django.utils.safestring import mark_safe
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import authenticate, get_user_model
+
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
+from django.core import validators
+
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -80,6 +108,23 @@ def display_user_profile(request, username):
         return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')
+
+
+def get_users(email):
+        """Given an email, return matching user(s) who should receive a reset.
+
+        This allows subclasses to more easily customize the default policies
+        that prevent inactive users and users with unusable passwords from
+        resetting their password.
+
+        """
+
+        active_users = get_user_model()._default_manager.filter(
+            email__iexact=email, is_active=True)
+        return (u for u in active_users if u.has_usable_password())
+
+
+
 
 
 def forgot_password(request):
