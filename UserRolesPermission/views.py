@@ -35,7 +35,7 @@ def user_dashboard(request):
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities  })
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':'1500,114,106,106,107,2,133,221,783,1123,1345,1634','articlespublished':'900,350,411,502,635,5,947,1102,1400,1267,1674,1987' })
     else:
         return redirect('login')
 

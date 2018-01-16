@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 
+
 {% block breadcrumb %}
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+<script type="text/javascript">
+var articlesPublished = [{{articlespublished}}];
+var articlesContributed = [{{articlescontributed}}];
+
+</script>
+
   {% endif %}
+
+
 {% endblock %}
 
 {% block content %}
@@ -130,6 +139,7 @@
     <thead>
         <tr style="background-color:#E84D1C">
           <th style="color:white">Article</th>
+          <th style="color:white">Status</th>
           <th style="color:white">Community / Group</th>
           <th style="color:white">Created</th>
         </tr>
@@ -140,6 +150,9 @@
           <tr>
             <td>
               <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }}  </a>
+            </td>
+            <td>
+              {{cart.article.state.name}}
             </td>
             <td>
               <a href="{% url 'community_view' cart.community.pk %}">{{ cart.community }}</a>
