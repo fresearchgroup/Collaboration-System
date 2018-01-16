@@ -141,7 +141,7 @@
     <div class="col-sm-8">
       <h3>Published Content</h3>
       {% for article in pubarticles %}
-      <a href="{% url 'article_view' article.pk %}">{{article.title}}</a><br />
+      <a href="{% url 'article_view' article.id %}">{{article.title}}</a><br />
       {% endfor %}
     </div>
 

@@ -38,7 +38,7 @@
       <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
     </div>
     <div class="col-md-10 col-sm-10">
-      <h3><a href="{% url 'article_view' article.article.pk %}">{{ article.title }}</a></h3>
+      <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
         <li><i class="fa fa-eye"></i> {{article.views}} </li>
@@ -53,7 +53,7 @@
       </ul>
       <p>
         {{ article.body|striptags|truncatewords:50 }}
-        <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+        <a href="{% url 'article_view' article.id %}" class="more">Read more <i class="icon-angle-right"></i></a>
       </p>
     </div>
   </div>
