@@ -8,11 +8,21 @@ from Community.models import CommunityArticles, CommunityMembership, CommunityGr
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def display_articles(request):
 	"""
-	display list of articles in  article list page. 
+	display list of articles in  article list page.
 	"""
-	articles=Articles.objects.raw('select o.id,title,username,views,o.created_at,g.name GNAME,c.name CNAME from (select id,title,username,views,created_at,GID,CID COMMID from ( select ba.id,ba.title , username,views,created_at ,(select group_id from Group_grouparticles where article_id=ba.id) GID , (select community_id from Community_communityarticles where article_id=ba.id) CID from (select * from BasicArticle_articles  where id in (select article_id from Group_grouparticles) or id in (select article_id from Community_communityarticles)) ba join auth_user au on ba.created_by_id=au.id join workflow_states ws on ws.id=ba.state_id where ws.name="publish") t ) o  left join Community_community c on c.id=COMMID left join Group_group g on g.id=GID order by views desc;')
+	articlelist=Articles.objects.raw('select o.id,title,username,views,o.created_at,g.name GNAME,c.name CNAME from (select id,title,username,views,created_at,GID,CID COMMID from ( select ba.id,ba.title , username,views,created_at ,(select group_id from Group_grouparticles where article_id=ba.id) GID , (select community_id from Community_communityarticles where article_id=ba.id) CID from (select * from BasicArticle_articles  where id in (select article_id from Group_grouparticles) or id in (select article_id from Community_communityarticles)) ba join auth_user au on ba.created_by_id=au.id join workflow_states ws on ws.id=ba.state_id where ws.name="publish") t ) o  left join Community_community c on c.id=COMMID left join Group_group g on g.id=GID order by views desc;')
+	page = request.GET.get('page', 1)
+	paginator = Paginator(list(articlelist), 5)
+	try:
+		articles = paginator.page(page)
+	except PageNotAnInteger:
+		articles = paginator.page(1)
+	except EmptyPage:
+		articles = paginator.page(paginator.num_pages)
 	return render(request, 'articles.html',{'articles':articles})
 
 def create_article(request):
@@ -168,7 +178,7 @@ def delete_article(request, pk):
 	"""
 	a function to delete an article.
 	The business logic is not yet implemented for deleting an article.
-	It just displays a message 
+	It just displays a message
 
 	"""
 	if request.user.is_authenticated:
