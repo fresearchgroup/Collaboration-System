@@ -99,3 +99,76 @@ def display_user_profile(request, username):
         return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')
+
+
+def forgot_password(request):
+    args = {}
+    
+    args.update(csrf(request))
+    token_generator=default_token_generator
+    domain_override=None
+    #context={}
+    if request.method == 'POST':    
+           
+        email = request.POST['email']
+        
+        email_valid=validateemailid(email)
+        username=User.objects.get(email=email).username
+        #user=email
+        #print("success",user)
+        for user in get_users(email):
+            if not domain_override:
+                current_site = get_current_site(request)
+                site_name = current_site.name
+                domain = current_site.domain
+                #print("user",site_name,domain) 
+            else:
+                site_name = domain = domain_override
+            context = {
+                'email': email,
+                'domain': '127.0.0.1:8000',
+                'site_name': '127.0.0.1:8000',
+                'uid': urlsafe_base64_encode(force_bytes(user)),
+                'user': username,
+                'token': token_generator.make_token(user),
+                'protocol': 'http',
+            } 
+        print (email_valid)
+        if email_valid != -1:
+           
+           email_template='password_reset_template.html'
+           emailtext = loader.render_to_string(email_template, context)
+           ##emaildata=loader.get_template(email_template)
+           test=send_mail("Forgot Password", emailtext , DEFAULT_FROM_EMAIL ,[email], fail_silently=False)
+           print(test)
+           args['email']=email
+           return render(request,'password_reset_email.html',args)
+        else:
+           args['message']="Invalid Email Address"
+           return render(request,'forgotpassword.html',args)
+    return render(request,'forgotpassword.html',args)
+
+def change_password(request,uidb64,token):
+    if request.method == 'POST':
+        print("suc",request.user)
+        form = PasswordChangeForm(request.user, request.POST)
+        if  form.is_valid():
+            user = form.save()
+            print("jdhh")  
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return render(request,'resetpasswordsuccess.html')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'changepassword.html', {
+        'form': form
+    })
+
+
+def change_password_success(request):
+
+    return render(request,'resetpasswordsuccess.html') 
+
+
