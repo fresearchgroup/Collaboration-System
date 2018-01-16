@@ -41,6 +41,10 @@ urlpatterns = [
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^forgot_password/$', user_views.forgot_password,name='forgot_password'),
+    url(r'^reset_password/$',  user_views.reset_password,name='reset_password'),
+
+
 
     url(r'^communities/$', communityview.display_communities, name ='display_communities'),
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
@@ -86,7 +90,12 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
-
+  
+    url(r'^password_reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        user_views.change_password,
+        name='change_password'),
+    url(r'^change_password/$', user_views.change_password, name='change_password'),
+    url(r'^change_password_success/$', user_views.change_password_success, name='change_password_success'),
 ]
 
 if settings.DEBUG:
