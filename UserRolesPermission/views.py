@@ -9,6 +9,7 @@ from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
+from .models import ProfileImage
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -29,13 +30,17 @@ def user_dashboard(request):
     if request.user.is_authenticated:
         communities = CommunityMembership.objects.filter(user=request.user)
         groups = GroupMembership.objects.filter(user=request.user)
+        try:
+            user_profile = ProfileImage.objects.get(user=request.user)
+        except ProfileImage.DoesNotExist:
+            user_profile = "No Image available"
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':'1500,114,106,106,107,2,133,221,783,1123,1345,1634','articlespublished':'900,350,411,502,635,5,947,1102,1400,1267,1674,1987' })
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'user_profile':user_profile, 'articlescontributed':'1500,114,106,106,107,2,133,221,783,1123,1345,1634','articlespublished':'900,350,411,502,635,5,947,1102,1400,1267,1674,1987' })
     else:
         return redirect('login')
 
@@ -47,28 +52,36 @@ def home(request):
 	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community})
 
 def update_profile(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			first_name = request.POST['first_name']
-			last_name = request.POST['last_name']
-			email = request.POST['email']
-			uid = request.user.id
-			usr = User.objects.get(pk = request.user.id)
-			usr.email=email
-			usr.first_name=first_name
-			usr.last_name=last_name
-			usr.save()
-			return redirect('user_dashboard')
-		else:
-			return render(request, 'update_profile.html')
-	else:
-		return redirect('login')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            email = request.POST['email']
+            uid = request.user.id
+            usr = User.objects.get(pk = request.user.id)
+            usr.email=email
+            usr.first_name=first_name
+            usr.last_name=last_name
+            usr.save()
+            return redirect('user_dashboard')
+        else:
+            try:
+                user_profile = ProfileImage.objects.get(user=request.user)
+            except ProfileImage.DoesNotExist:
+                user_profile = "No Image available"
+            return render(request, 'update_profile.html', {'user_profile':user_profile})
+    else:
+        return redirect('login')
 
 def view_profile(request):
-	if request.user.is_authenticated:
-		return render(request, 'myprofile.html')
-	else:
-		return redirect('login')
+    if request.user.is_authenticated:
+        try:
+            user_profile = ProfileImage.objects.get(user=request.user)
+        except ProfileImage.DoesNotExist:
+            user_profile = "No Image available"
+        return render(request, 'myprofile.html', {'user_profile':user_profile})
+    else:
+        return redirect('login')
 
 def display_user_profile(request, username):
     if request.user.is_authenticated:
@@ -80,3 +93,18 @@ def display_user_profile(request, username):
         return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')
+
+def upload_image(request):
+
+    if request.method == 'POST':
+        photo = request.FILES['profile_image']
+        try:
+            user_profile = ProfileImage.objects.get(user=request.user)
+            user_profile.photo = photo
+            user_profile.save()
+
+        except ProfileImage.DoesNotExist:
+            obj = ProfileImage.objects.create(user = request.user, photo=photo)
+
+        return redirect('view_profile')
+    return redirect('view_profile')

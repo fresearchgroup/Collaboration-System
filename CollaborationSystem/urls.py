@@ -71,6 +71,7 @@ urlpatterns = [
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
+    url(r'^uploadphoto/$', user_views.upload_image, name='upload_photo'),
 
     url(r'^manage_community/(?P<pk>\d+)/$', communityview.manage_community, name='manage_community'),
 

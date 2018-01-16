@@ -11,14 +11,22 @@
   <div class="col-md-4">
       <div class="recent-work-item">
         <em>
-          <img src="../static/img/avatar.jpg" alt="my Photo" class="img-responsive">
-          <a href=""><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          <form method="post" action= "{% url 'upload_photo' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" alt="my Photo" class="img-responsive">
+          <input type="file" class="fa fa-link" id="validatedCustomFile" name ="profile_image" required>
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
         </em>
         <a class="recent-work-description" href="javascript:;">
           <strong>{{user.username}}</strong>
           <b>{{user.email}}</b>
         </a>
+        <br/>
+        <div class="form-group">
+              <button type="submit" class="btn btn-success">Upload Image</button>
+        </div>
+
+        </form>
       </div>
   </div>
   <div class="col-md-1"></div>
