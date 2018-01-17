@@ -28,7 +28,7 @@ SECRET_KEY = 'myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','10.129.132.103']
+ALLOWED_HOSTS = ['127.0.0.1','10.129.132.103','10.129.132.104']
 
 
 # Application definition
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rolepermissions',
     'rest_framework.authtoken',
     'workflow',
+    'social_django'
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -71,6 +72,8 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware', 
+   
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'
@@ -88,10 +91,24 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'machina.core.context_processors.metadata',
                 'django.template.context_processors.media',
+                'social_django.context_processors.backends',  
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+ 'social_core.backends.open_id.OpenIdAuth',  # for Google authentication
+ 'social_core.backends.google.GoogleOpenId',  # for Google authentication
+ 'social_core.backends.google.GoogleOAuth2',  # for Google authentication
+ 'social_core.backends.github.GithubOAuth2',  # for Github authentication
+ 'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
+ 
+ 'django.contrib.auth.backends.ModelBackend',
+)
+
+
 
 WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 
@@ -153,6 +170,19 @@ LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'user_dashboard'
 
 CORS_ORIGIN_ALLOW_ALL=True
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com'  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I1v-sHbsogVc0jAw9M9Xy1eM' #Paste Secret Key
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST ='localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD =''
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL="collaboratingcommunity@cse.iitb.ac.in"
+
+
 
 CACHES = {
   'default': {
