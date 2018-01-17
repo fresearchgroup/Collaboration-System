@@ -42,7 +42,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^forgot_password/$', user_views.forgot_password,name='forgot_password'),
-    url(r'^reset_password/$',  user_views.reset_password,name='reset_password'),
+    #url(r'^reset_password/$',  user_views.reset_password,name='reset_password'),
 
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
