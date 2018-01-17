@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'^reset_password/$',  user_views.reset_password,name='reset_password'),
 
 
+    url(r'^auth/', include('social_django.urls', namespace='social')),
 
     url(r'^communities/$', communityview.display_communities, name ='display_communities'),
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
@@ -90,7 +91,7 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
-  
+
     url(r'^password_reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         user_views.change_password,
         name='change_password'),

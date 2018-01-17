@@ -101,17 +101,34 @@ def display_user_profile(request, username):
         return redirect('login')
 
 
+def get_users(email):
+        """Given an email, return matching user(s) who should receive a reset.
+
+        This allows subclasses to more easily customize the default policies
+        that prevent inactive users and users with unusable passwords from
+        resetting their password.
+
+        """
+
+        active_users = get_user_model()._default_manager.filter(
+            email__iexact=email, is_active=True)
+        return (u for u in active_users if u.has_usable_password())
+
+
+
+
+
 def forgot_password(request):
     args = {}
-    
+
     args.update(csrf(request))
     token_generator=default_token_generator
     domain_override=None
     #context={}
-    if request.method == 'POST':    
-           
+    if request.method == 'POST':
+
         email = request.POST['email']
-        
+
         email_valid=validateemailid(email)
         username=User.objects.get(email=email).username
         #user=email
@@ -121,7 +138,7 @@ def forgot_password(request):
                 current_site = get_current_site(request)
                 site_name = current_site.name
                 domain = current_site.domain
-                #print("user",site_name,domain) 
+                #print("user",site_name,domain)
             else:
                 site_name = domain = domain_override
             context = {
@@ -132,10 +149,10 @@ def forgot_password(request):
                 'user': username,
                 'token': token_generator.make_token(user),
                 'protocol': 'http',
-            } 
+            }
         print (email_valid)
         if email_valid != -1:
-           
+
            email_template='password_reset_template.html'
            emailtext = loader.render_to_string(email_template, context)
            ##emaildata=loader.get_template(email_template)
@@ -154,7 +171,7 @@ def change_password(request,uidb64,token):
         form = PasswordChangeForm(request.user, request.POST)
         if  form.is_valid():
             user = form.save()
-            print("jdhh")  
+            print("jdhh")
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
             return render(request,'resetpasswordsuccess.html')
@@ -169,6 +186,4 @@ def change_password(request,uidb64,token):
 
 def change_password_success(request):
 
-    return render(request,'resetpasswordsuccess.html') 
-
-
+    return render(request,'resetpasswordsuccess.html')
