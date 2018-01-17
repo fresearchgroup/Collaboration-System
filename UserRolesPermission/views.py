@@ -90,6 +90,10 @@ def display_user_profile(request, username):
         groups = GroupMembership.objects.filter(user=userinfo)
         commarticles = CommunityArticles.objects.filter(user=userinfo)
         grparticles = GroupArticles.objects.filter(user=userinfo)
+        try:
+            user_profile = ProfileImage.objects.get(user=request.user)
+        except ProfileImage.DoesNotExist:
+            user_profile = "No Image available"
         return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles})
     else:
         return redirect('login')

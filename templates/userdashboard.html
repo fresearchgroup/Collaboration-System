@@ -22,7 +22,10 @@ var articlesContributed = [{{articlescontributed}}];
   <div class="col-md-4">
       <div class="recent-work-item">
         <em>
-          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" alt="my Photo" class="img-responsive">
+          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive">
+          {% if user_profile.photo is None %}
+          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+          {%endif%}
           <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
         </em>
         <a class="recent-work-description" href="javascript:;">

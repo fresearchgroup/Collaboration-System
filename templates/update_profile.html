@@ -13,7 +13,10 @@
         <em>
           <form method="post" action= "{% url 'upload_photo' %}" enctype="multipart/form-data">
             {% csrf_token %}
-          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" alt="my Photo" class="img-responsive">
+          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive">
+          {% if user_profile.photo is None %}
+          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+          {%endif%}
           <input type="file" class="fa fa-link" id="validatedCustomFile" name ="profile_image" required>
           <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
         </em>
