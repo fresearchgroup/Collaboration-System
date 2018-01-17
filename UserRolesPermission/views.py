@@ -139,7 +139,7 @@ def forgot_password(request):
         email = request.POST['email']
         
         email_valid=validateemailid(email)
-        username=User.objects.get(email=email).username
+        #username=User.objects.get(email=email).username
         #user=email
         #print("success",user)
         for user in get_users(email):
@@ -155,7 +155,7 @@ def forgot_password(request):
                 'domain': '127.0.0.1:8000',
                 'site_name': '127.0.0.1:8000',
                 'uid': urlsafe_base64_encode(force_bytes(user)),
-                'user': username,
+                'user': user,
                 'token': token_generator.make_token(user),
                 'protocol': 'http',
             } 
