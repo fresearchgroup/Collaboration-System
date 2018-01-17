@@ -9,35 +9,10 @@ from Group.models import GroupMembership, GroupArticles
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
-<<<<<<< HEAD
 from .models import ProfileImage
-=======
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-from UserRolesPermission.validate import validateemailid
-from django.core.mail import send_mail
-from django.template.context_processors import csrf
-from django.http import HttpResponseRedirect, HttpResponse
-from CollaborationSystem.settings import *
-from django.template import *
-from django.template import loader
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import (UNUSABLE_PASSWORD_PREFIX, identify_hasher)
-from django.utils.http import urlsafe_base64_encode
-from django.utils.safestring import mark_safe
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-from django.shortcuts import render, redirect
-from django.core import validators
-
 from operator import add
->>>>>>> 177a590850b0ea709799d2969442729d481102a3
+
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -56,14 +31,11 @@ def signup(request):
 
 def user_dashboard(request):
     if request.user.is_authenticated:
-<<<<<<< HEAD
-        communities = CommunityMembership.objects.filter(user=request.user)
-        groups = GroupMembership.objects.filter(user=request.user)
         try:
             user_profile = ProfileImage.objects.get(user=request.user)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
-=======
+
         mycommunities = CommunityMembership.objects.filter(user=request.user)
         page = request.GET.get('page', 1)
         paginator = Paginator(mycommunities, 5)
@@ -83,16 +55,12 @@ def user_dashboard(request):
             groups = paginator.page(1)
         except EmptyPage:
             groups = paginator.page(paginator.num_pages)
->>>>>>> 177a590850b0ea709799d2969442729d481102a3
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-<<<<<<< HEAD
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'user_profile':user_profile, 'articlescontributed':'1500,114,106,106,107,2,133,221,783,1123,1345,1634','articlespublished':'900,350,411,502,635,5,947,1102,1400,1267,1674,1987' })
-=======
         ap = User.objects.raw(
         'Select 1 id, Year, Sum(JAN) JAN,sum(FEB) FEB,sum(MAR) MAR,sum(APR) APR,sum(MAY) MAY,sum(JUN) JUN,sum(JUL) JUL,sum(AUG) AUG,sum(SEP) SEP,sum(OCT) OCT,sum(NOV) NOV,sum(DECEM) DECE, Concat(Sum(JAN) , "," , sum(FEB) , "," ,sum(MAR),",",sum(APR),",",sum(MAY),",",sum(JUN),",",sum(JUL),",",sum(AUG),",", sum(SEP) ,",",sum(OCT),",",sum(NOV),",",sum(DECEM)) Data,state_id State from (Select Year, Case when Month=1 Then 1 else 0 END JAN, Case when Month=2 Then 1 else 0 END FEB, Case when Month=3 Then 1 else 0 END MAR, Case when Month=4 Then 1 else 0 END APR, Case when Month=5 Then 1 else 0 END MAY, Case when Month=6 Then 1 else 0 END JUN, Case when Month=7 Then 1 else 0 END JUL, Case when Month=8 Then 1 else 0 END AUG, Case when Month=9 Then 1 else 0 END SEP, Case when Month=10 Then 1 else 0 END OCT, Case when Month=11 Then 1 else 0 END NOV, Case when Month=12 Then 1 else 0 END DECEM, state_id from  (select  Month(created_at) Month ,Year(created_at) Year ,state_id from BasicArticle_articles where id in (select article_id from Community_communityarticles where user_id=%s) or id in (select article_id from Group_grouparticles where user_id=%s)) T ) P group by Year,state_id having Year=2018;',
         [request.user.id,request.user.id] )
@@ -115,8 +83,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total})
->>>>>>> 177a590850b0ea709799d2969442729d481102a3
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile})
     else:
         return redirect('login')
 
@@ -174,7 +141,7 @@ def display_user_profile(request, username):
     else:
         return redirect('login')
 
-<<<<<<< HEAD
+
 def upload_image(request):
 
     if request.method == 'POST':
@@ -189,92 +156,3 @@ def upload_image(request):
 
         return redirect('view_profile')
     return redirect('view_profile')
-=======
-
-def get_users(email):
-        """Given an email, return matching user(s) who should receive a reset.
-
-        This allows subclasses to more easily customize the default policies
-        that prevent inactive users and users with unusable passwords from
-        resetting their password.
-
-        """
-
-        active_users = get_user_model()._default_manager.filter(
-            email__iexact=email, is_active=True)
-        return (u for u in active_users if u.has_usable_password())
-
-
-
-
-
-def forgot_password(request):
-    args = {}
-
-    args.update(csrf(request))
-    token_generator=default_token_generator
-    domain_override=None
-    #context={}
-    if request.method == 'POST':
-
-        email = request.POST['email']
-
-        email_valid=validateemailid(email)
-        #username=User.objects.get(email=email).username
-        #user=email
-        #print("success",user)
-        for user in get_users(email):
-            if not domain_override:
-                current_site = get_current_site(request)
-                site_name = current_site.name
-                domain = current_site.domain
-                #print("user",site_name,domain)
-            else:
-                site_name = domain = domain_override
-            context = {
-                'email': email,
-                'domain': '127.0.0.1:8000',
-                'site_name': '127.0.0.1:8000',
-                'uid': urlsafe_base64_encode(force_bytes(user)),
-                'user': user,
-                'token': token_generator.make_token(user),
-                'protocol': 'http',
-            }
-        print (email_valid)
-        if email_valid != -1:
-
-           email_template='password_reset_template.html'
-           emailtext = loader.render_to_string(email_template, context)
-           ##emaildata=loader.get_template(email_template)
-           test=send_mail("Forgot Password", emailtext , DEFAULT_FROM_EMAIL ,[email], fail_silently=False)
-           print(test)
-           args['email']=email
-           return render(request,'password_reset_email.html',args)
-        else:
-           args['message']="Invalid Email Address"
-           return render(request,'forgotpassword.html',args)
-    return render(request,'forgotpassword.html',args)
-
-def change_password(request,uidb64,token):
-    if request.method == 'POST':
-        print("suc",request.user)
-        form = PasswordChangeForm(request.user, request.POST)
-        if  form.is_valid():
-            user = form.save()
-            print("jdhh")
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return render(request,'resetpasswordsuccess.html')
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'changepassword.html', {
-        'form': form
-    })
-
-
-def change_password_success(request):
-
-    return render(request,'resetpasswordsuccess.html')
->>>>>>> 177a590850b0ea709799d2969442729d481102a3
