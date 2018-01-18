@@ -12,7 +12,10 @@
 {% for article in articles %}
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
-      <img class="img-responsive" alt="" src="../static/img/avatar.jpg">
+      <img src="{{ MEDIA_URL }}{{ article.image}}" class="img-responsive">
+      {% if article.image is None %}
+      <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+      {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
       <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
