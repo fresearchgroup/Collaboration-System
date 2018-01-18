@@ -13,14 +13,30 @@
               <label for="username">Username:</label>
               <input type="text" class="form-control" id="username" name = "username" ng-model="username">
               <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+              <span style="color:red" ng-show="form.username.$dirty && form.username.$invalid">Not valid</span>
             </div>
             <div class="form-group">
               <label for="email">Email:</label>
-              <input type="email" class="form-control" id="email" name = "email">
+              <ul class="list-inline">
+                <li class="list-inline-item col-sm-12">
+              <input type="email" class="form-control" id="email" name = "email" ng-model ="email">
+              </li>
+              <li class="list-inline-item">
+              <span class="label" style="color:red" ng-show="form.email.$dirty && form.email.$invalid && form.email.$error.email">NOT AN EMAIL!</span></h3>
+            </li>
+          </ul>
             </div>
             <div class="form-group">
               <label for="password">Password:</label>
-              <input type="password" class="form-control" id="password1" name ="password1">
+              <ul class="list-inline">
+                <li class="list-inline-item col-sm-12">
+              <input type="password" class="form-control" id="password1" name ="password1" ng-model="password1" ng-pattern="password2" ng-minlength="5">
+            </li>
+            <li class="list-inline-item">
+                <span class="label" style="color:red" ng-show="form.password1.$error.minlength">Too Short</span>
+                <span class="label" style="color:red" ng-show="form.password1.$error.pattern">Mismatch Password</span>
+            </li>
+          </ul>
               <small  class="form-text text-muted"><ul>
                       <li>Your password can't be too similar to your other personal information.</li>
                       <li>Your password must contain at least 8 characters.</li>
@@ -30,10 +46,10 @@
             </div>
             <div class="form-group">
               <label for="passwd">Password confirmation:</label>
-              <input type="password" class="form-control" id="password2" name ="password2">
+              <input type="password" class="form-control" id="password2" name ="password2" ng-model="password2">
               <small class="form-text text-muted">Enter the same password as before, for verification.</small>
             </div>
-              <button type="submit" class="btn btn-primary btn-block">Create an account</button>
+              <button type="submit" class="btn btn-primary btn-block" ng-disabled="form.$invalid">Create an account</button>
           </form>
         </div>
         <div class="card-footer text-muted text-center"> <br />
