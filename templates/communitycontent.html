@@ -35,9 +35,10 @@
 {% for article in commarticles %}
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
-      <img src="{{ MEDIA_URL }}{{ article.image}}" class="img-responsive">
-      {% if article.image is None %}
-      <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+      {% if article.image %}
+      <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}article/article_image_default.png" alt="default" class="img-responsive">
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
