@@ -38,6 +38,7 @@ def create_article(request):
 				article = Articles.objects.create(
 					title = form.cleaned_data.get('title'),
 					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ",""),
+					image = request.FILES['article_image'],
 					created_by = request.user,
 					state = state
 					)
