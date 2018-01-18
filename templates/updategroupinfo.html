@@ -16,12 +16,19 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
   </li>
+  {% if membership.role.name == 'group_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage Group</a>
   </li>
   <li class="nav-item active">
     <a class="nav-link " href="#">Update Group Info</a>
   </li>
+  {% endif %}
+  {% if  membership.role.name != '' %}
+  <li class="nav-item ">
+    <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
+  </li>
+  {%endif%}
 </ul>
 <br/>
 

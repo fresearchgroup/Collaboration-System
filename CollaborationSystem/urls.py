@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
-   
+
 
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
@@ -108,7 +108,7 @@ urlpatterns = [
     url(r'^reset/complete/$',
     auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
     name='password_reset_complete'),
-    url(r'^reset/complete/$', auth_views.PasswordResetCompleteView.as_view    
+    url(r'^reset/complete/$', auth_views.PasswordResetCompleteView.as_view
       (template_name='password_reset_complete.html') ,name='password_reset_complete'),
 
     url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
@@ -116,7 +116,9 @@ urlpatterns = [
     url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
     name='password_change_done'),
 
-    
+    url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
+
+
 ]
 
 if settings.DEBUG:

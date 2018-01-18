@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group as Roles
 from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def create_group(request):
 	if request.method == 'POST':
@@ -174,3 +175,25 @@ def update_group_info(request,pk):
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:
 		return redirect('group_view',pk=pk)
+
+def group_content(request, pk):
+	grparticles = ''
+	try:
+		group = Group.objects.get(pk=pk)
+		uid = request.user.id
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership:
+			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Group_grouparticles as ga  where ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(garticles), 5)
+			try:
+				grparticles = paginator.page(page)
+			except PageNotAnInteger:
+				grparticles = paginator.page(1)
+			except EmptyPage:
+				grparticles = paginator.page(paginator.num_pages)
+
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view', group.pk)
+	return render(request, 'groupcontent.html', {'group': group, 'membership':membership, 'grparticles':grparticles})
