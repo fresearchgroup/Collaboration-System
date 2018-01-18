@@ -7,8 +7,9 @@
       <div class="card">
         <div class="card-body">
           <h1 class="card-title">Sign up</h1>
-          <form method="post" name="form">
+          <form method="post" name="form" action = "{% url 'signup' %}">
             {% csrf_token %}
+            {% include 'includes/form.html' %}
             <div class="form-group">
               <label for="username">Username:</label>
               <input type="text" class="form-control" id="username" name = "username" ng-model="username">
@@ -30,7 +31,7 @@
               <label for="password">Password:</label>
               <ul class="list-inline">
                 <li class="list-inline-item col-sm-12">
-              <input type="password" class="form-control" id="password1" name ="password1" ng-model="password1" ng-pattern="password2" ng-minlength="5">
+              <input type="password" class="form-control" id="password1" name ="password1" ng-model="password1" ng-pattern="password2" ng-minlength="8">
             </li>
             <li class="list-inline-item">
                 <span class="label" style="color:red" ng-show="form.password1.$error.minlength">Too Short</span>
