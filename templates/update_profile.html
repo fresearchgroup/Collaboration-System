@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block breadcrumb %}
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
@@ -9,26 +12,13 @@
 {% block content %}
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-4">
-      <div class="recent-work-item">
-        <em>
+      <div class="file-loading">
           <form method="post" action= "{% url 'upload_photo' %}" enctype="multipart/form-data">
             {% csrf_token %}
-          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive">
-          {% if user_profile.photo is None %}
-          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
-          {%endif%}
-          <input type="file" class="fa fa-link" id="validatedCustomFile" name ="profile_image" required>
-          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
-        </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>{{user.username}}</strong>
-          <b>{{user.email}}</b>
-        </a>
-        <br/>
-        <div class="form-group">
-              <button type="submit" class="btn btn-success">Upload Image</button>
-        </div>
-
+          <div class="form-group">
+            <label for="Email Address">Upload Photo</label>
+            <input type="file"  id="profile_image" name ="profile_image" class="file" data-allowed-file-extensions='["jpeg", "jpg"]'  required>
+            </div>
         </form>
       </div>
   </div>
@@ -69,4 +59,13 @@
 
 <br />
 
+{% endblock %}
+
+{% block javascript %}
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 {% endblock %}
