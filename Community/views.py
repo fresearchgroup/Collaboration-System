@@ -279,7 +279,7 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.views, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(carticles), 5)
