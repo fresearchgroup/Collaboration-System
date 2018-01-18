@@ -38,10 +38,10 @@
         {% else %}
         <b>Group Admin</b> <i class="fa fa-trophy"></i>
         {% endif %}
-      {% endif %} </h4> 
+      {% endif %} </h4>
       <b>Active Since: {{group.created_at.date}} </b><br />
-      {{subscribers}} Contributors <br />
-      N Published articles<br /> <br />
+      {{subscribers}} Members <br />
+      {{pubarticlescount}} Published articles<br /> <br />
       {% if user.is_authenticated %}
       {% if communitymembership == 'FALSE' %}
       <h2>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> community</h2><br />
@@ -129,8 +129,8 @@
   <div class="row">
     <div class="col-sm-8">
       <h3>Published Content</h3>
-      {% for article in articles %}
-      <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
+      {% for article in pubarticles %}
+      <a href="{% url 'article_view' article.pk %}">{{article.title}}</a><br />
       {% endfor %}
     </div>
 
