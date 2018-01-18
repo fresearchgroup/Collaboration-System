@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'UserRolesPermission',
     'BasicArticle',
     'Group',
-    'Comments',
     'rest_framework',
     'widget_tweaks',
     'reversion',
