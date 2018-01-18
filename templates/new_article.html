@@ -3,7 +3,9 @@
 {% load widget_tweaks %}
 
 {% load static %}
-
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block breadcrumb %}
 {% if request.POST.articleof == "group" %}
   <li class="breadcrumb-item active">Create an Article in <h1>{{group.name}} Group</h1></li>
@@ -14,12 +16,6 @@
 {% endblock %}
 
 {% block content %}
-{% block javascript %}
-  <script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
-  <script type="text/javascript">
-  	CKEDITOR.replace( 'editor' );
-  </script>
-{% endblock %}
 
 
 {% if user.is_authenticated %}
@@ -44,7 +40,7 @@
   </div>
   <div class="form-group">
     <label for="image">Article Image</label>
-    <input type="file" class="fa fa-link" id="validatedCustomFile" name ="article_image" required>
+    <div><input type="file"  name ="article_image" ><span id="file_error"></span></div>
   </div>
   {% if status == 1 %}
   <button type="submit" class="btn btn-primary">Create</button>
@@ -52,4 +48,17 @@
 </form>
 <br />
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
+  <script type="text/javascript">
+    CKEDITOR.replace( 'editor' );
+  </script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 {% endblock %}
