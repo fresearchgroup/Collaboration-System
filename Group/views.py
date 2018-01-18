@@ -165,6 +165,7 @@ def update_group_info(request,pk):
 				group.name = name
 				group.desc = desc
 				group.visibility = visibility
+				group.image = request.FILES['group_image']
 				group.save()
 				return redirect('group_view',pk=pk)
 			else:
