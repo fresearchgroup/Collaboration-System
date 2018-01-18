@@ -24,7 +24,7 @@ var articlesContributed = [{{total}}];
         <em>
 
           {% if user_profile.photo %}
-          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive">
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="max-height: 350px;">
           <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
           {% else %}
           <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">

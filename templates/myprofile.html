@@ -11,7 +11,7 @@
   <div class="col-md-4">
       <div class="recent-work-item">
         <em>
-          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive">
+          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive" style="max-height: 250px;">
           {% if user_profile.photo is None %}
           <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
           {%endif%}
