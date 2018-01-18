@@ -84,7 +84,8 @@ def edit_article(request, pk):
 					article = Articles.objects.get(pk=pk)
 					article.title = form.cleaned_data.get('title')
 					article.body = form.cleaned_data.get('body')
-					article.save(update_fields=["title","body"])
+					article.image = request.FILES['article_image']
+					article.save(update_fields=["title","body","image"])
 					return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)
@@ -107,7 +108,8 @@ def edit_article(request, pk):
 						article.state = to_state
 					article.title = title
 					article.body = body
-					article.save(update_fields=["title","body", "state"])
+					article.image = request.FILES['article_image']
+					article.save(update_fields=["title","body", "image", "state"])
 				except Transitions.DoesNotExist:
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
