@@ -23,7 +23,7 @@
 
 
 {% if user.is_authenticated %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="title">Title</label>
@@ -41,6 +41,10 @@
       {% endif %}
     <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+  </div>
+  <div class="form-group">
+    <label for="image">Article Image</label>
+    <input type="file" class="fa fa-link" id="validatedCustomFile" name ="article_image" required>
   </div>
   {% if status == 1 %}
   <button type="submit" class="btn btn-primary">Create</button>
