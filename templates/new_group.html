@@ -22,7 +22,7 @@
 
 
 {% if user.is_authenticated %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
@@ -43,6 +43,11 @@
       <option value="0">Private</option>
     </select>
   </div>
+  <div class="form-group">
+    <label for="image">Group Image</label>
+    <input type="file" class="fa fa-link" id="group_image" name ="group_image" required>
+  </div>
+
   {% if status == 1 %}
   <button type="submit" class="btn btn-primary">Create</button>
   {% endif %}
