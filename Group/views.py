@@ -170,7 +170,7 @@ def update_group_info(request,pk):
 				group.save()
 				return redirect('group_view',pk=pk)
 			else:
-				return render(request, 'updategroupinfo.html', {'group':group})
+				return render(request, 'updategroupinfo.html', {'group':group,'membership':membership})
 		else:
 			return redirect('group_view',pk=pk)
 	except GroupMembership.DoesNotExist:
