@@ -28,7 +28,7 @@ SECRET_KEY = 'myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','10.129.132.103','10.129.132.104']
+ALLOWED_HOSTS = ['127.0.0.1','10.129.132.103','10.129.132.104','10.129.132.107']
 
 
 # Application definition
@@ -71,8 +71,7 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware', 
-   
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'
@@ -90,8 +89,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'machina.core.context_processors.metadata',
                 'django.template.context_processors.media',
-                'social_django.context_processors.backends',  
-                'social_django.context_processors.login_redirect', 
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -103,7 +102,7 @@ AUTHENTICATION_BACKENDS = (
  'social_core.backends.google.GoogleOAuth2',  # for Google authentication
  'social_core.backends.github.GithubOAuth2',  # for Github authentication
  'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
- 
+
  'django.contrib.auth.backends.ModelBackend',
 )
 
