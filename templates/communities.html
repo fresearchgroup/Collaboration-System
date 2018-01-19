@@ -26,16 +26,23 @@
               <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
               {%endif%}
 
-
               <div class="mix-details">
                 <h4>{{community.tag_line|truncatewords:5}}</h4>
                 <p>{{ community.desc |striptags|truncatewords:20}}</p>
                 <a class="mix-link" href="{% url 'community_view' community.pk %}">
                   <i class="fa fa-link"></i>
                 </a>
-                <a data-rel="fancybox-button" title="{{community.name}}" href="../static/img/avatar.jpg" class="mix-preview fancybox-button">
+
+                {% if community.image %}
+                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}{{ community.image}}" class="mix-preview fancybox-button">
                   <i class="fa fa-search"></i>
                 </a>
+                {% else %}
+                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}default/community_image_default.png" class="mix-preview fancybox-button">
+                  <i class="fa fa-search"></i>
+                </a>
+                {% endif %}
+
               </div>
             <h3>{{community.name|truncatewords:2}}</h3>
             {{community.category|truncatewords:2 }}
