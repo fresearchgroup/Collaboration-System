@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'workflow',
     'social_django',
-    'captcha',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
