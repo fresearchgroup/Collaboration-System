@@ -231,6 +231,11 @@ def update_community_info(request,pk):
 				community.desc = desc
 				community.category = category
 				community.tag_line = tag_line
+				try:
+					image = request.FILES['community_image']
+					community.image = image
+				except:
+					errormessage = 'image not uploaded'
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
