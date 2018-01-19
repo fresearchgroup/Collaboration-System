@@ -2,7 +2,10 @@ __pycache__/
 *.py[cod]
 .env
 venv/
-media/
+media/article
+media/community
+media/group
+media/profile
 
 # SQLite database files
 
