@@ -38,11 +38,6 @@
       {% if user.is_authenticated %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" class="form-control" id="title" name="name" value="{{community.name}}" required>
-          <div class="invalid-feedback"></div>
-        </div>
         <div class="form-group" >
           <label for="desc">Description</label>
           <textarea  class="form-control" name="desc" rows="6">{{community.desc}}</textarea>

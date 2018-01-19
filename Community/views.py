@@ -223,11 +223,9 @@ def update_community_info(request,pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership.role.name == 'community_admin':
 			if request.method == 'POST':
-				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
-				community.name = name
 				community.desc = desc
 				community.category = category
 				community.tag_line = tag_line
