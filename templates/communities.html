@@ -18,8 +18,15 @@
         <div class="row mix-grid thumbnails">
           {{myhtml|safe}}{% autoescape off%}
           {% for community in communities %}
-          <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; ">
-              <img alt="" src="../static/img/avatar.jpg" class="img-responsive">
+          <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
+            <div class="mix-inner">
+              {% if community.image %}
+              <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+              {% else %}
+              <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+              {%endif%}
+
+
               <div class="mix-details">
                 <h4>{{community.tag_line|truncatewords:5}}</h4>
                 <p>{{ community.desc |striptags|truncatewords:20}}</p>
@@ -32,6 +39,7 @@
               </div>
             <h3>{{community.name|truncatewords:2}}</h3>
             {{community.category|truncatewords:2 }}
+          </div>
           </div>
           {% endfor %}
           {% endautoescape%}
