@@ -9,7 +9,7 @@ from UserRolesPermission.helpers import RandomFileName
 class Group(models.Model):
 	name = models.CharField(max_length=100)
 	desc = models.TextField()
-	image = models.ImageField(null=True,upload_to=RandomFileName('group'))
+	image = models.ImageField(null=True,upload_to='group')
 	visibility = models.BooleanField()
 	created_at = models.DateTimeField(null=True, auto_now_add=True)
 

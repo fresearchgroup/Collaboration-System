@@ -5,4 +5,4 @@ from .helpers import RandomFileName
 
 class ProfileImage(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to=RandomFileName('profile'))
+    photo = models.ImageField(upload_to='profile')
