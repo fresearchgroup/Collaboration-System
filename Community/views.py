@@ -223,14 +223,17 @@ def update_community_info(request,pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership.role.name == 'community_admin':
 			if request.method == 'POST':
-				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
-				community.name = name
 				community.desc = desc
 				community.category = category
 				community.tag_line = tag_line
+				try:
+					image = request.FILES['community_image']
+					community.image = image
+				except:
+					errormessage = 'image not uploaded'
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
@@ -256,6 +259,7 @@ def create_community(request):
 					name=name,
 					desc=desc,
 					category = category,
+					image = request.FILES['community_image'],
 					tag_line = tag_line
 					)
 				communitymembership = CommunityMembership.objects.create(
