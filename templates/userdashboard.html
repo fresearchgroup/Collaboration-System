@@ -19,12 +19,11 @@ var articlesContributed = [{{total}}];
 
 
 <div class="row recent-work margin-bottom-40">
-  <div class="col-md-4">
+  <div class="col-md-4" style="width: 350px">
       <div class="recent-work-item">
         <em>
-
           {% if user_profile.photo %}
-          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="max-height: 350px;">
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 350px; width: 350px">
           <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
           {% else %}
           <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
