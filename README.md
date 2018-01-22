@@ -98,7 +98,7 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
   {% if comment_count %}
   <hr/>
     <ul class="media-list">
-      {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback show_feedback %}
     </ul>
   {% endif %}
   ```

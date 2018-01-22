@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block breadcrumb %}
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
@@ -9,16 +12,14 @@
 {% block content %}
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-4">
-      <div class="recent-work-item">
-        <em>
-          <img src="../static/img/avatar.jpg" alt="my Photo" class="img-responsive">
-          <a href=""><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
-        </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>{{user.username}}</strong>
-          <b>{{user.email}}</b>
-        </a>
+      <div class="file-loading">
+          <form method="post" action= "{% url 'upload_photo' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label">Upload Photo</label>
+            <input type="file"  id="profile_image" name ="profile_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'  required>
+            </div>
+        </form>
       </div>
   </div>
   <div class="col-md-1"></div>
@@ -58,4 +59,13 @@
 
 <br />
 
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 {% endblock %}

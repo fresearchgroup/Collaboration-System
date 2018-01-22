@@ -42,6 +42,10 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
+
+
+    url(r'^auth/', include('social_django.urls', namespace='social')),
+
     url(r'^communities/$', communityview.display_communities, name ='display_communities'),
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
@@ -71,6 +75,7 @@ urlpatterns = [
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
+    url(r'^uploadphoto/$', user_views.upload_image, name='upload_photo'),
 
     url(r'^manage_community/(?P<pk>\d+)/$', communityview.manage_community, name='manage_community'),
 
@@ -86,6 +91,33 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+
+    url(r'^reset/$',
+    auth_views.PasswordResetView.as_view(
+        template_name='password_reset.html',
+        email_template_name='password_reset_email.html',
+        subject_template_name='password_reset_subject.txt'
+    ),
+    name='password_reset'),
+    url(r'^reset/done/$',
+    auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'),
+    name='password_reset_done'),
+     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),
+    name='password_reset_confirm'),
+    url(r'^reset/complete/$',
+    auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
+    name='password_reset_complete'),
+    url(r'^reset/complete/$', auth_views.PasswordResetCompleteView.as_view
+      (template_name='password_reset_complete.html') ,name='password_reset_complete'),
+
+    url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
+    name='password_change'),
+    url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
+    name='password_change_done'),
+
+    url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
+
 
 ]
 

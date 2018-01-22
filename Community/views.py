@@ -223,14 +223,17 @@ def update_community_info(request,pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership.role.name == 'community_admin':
 			if request.method == 'POST':
-				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
-				community.name = name
 				community.desc = desc
 				community.category = category
 				community.tag_line = tag_line
+				try:
+					image = request.FILES['community_image']
+					community.image = image
+				except:
+					errormessage = 'image not uploaded'
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
@@ -256,6 +259,7 @@ def create_community(request):
 					name=name,
 					desc=desc,
 					category = category,
+					image = request.FILES['community_image'],
 					tag_line = tag_line
 					)
 				communitymembership = CommunityMembership.objects.create(
@@ -279,7 +283,7 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.views, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(carticles), 5)

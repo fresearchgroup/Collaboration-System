@@ -1,5 +1,5 @@
 {% load static %}<!DOCTYPE html>
-<html>
+<html  ng-app>
 <head>
 	<title></title>
   <meta charset="utf-8">
@@ -78,7 +78,7 @@ $(document).ready(function() {
 	$('#userArticles').DataTable();
 } );
 </script>-->
-
+{% block css %}{% endblock %}
 </head>
 <body>
 
@@ -148,7 +148,7 @@ $(document).ready(function() {
 						  <li><a href="{% url 'request_community_creation' %}">Request Community Creation</a></li>
 						{%endif%}
 
-            <li><a href="{% url 'view_profile' %}">My account</a></li>
+            <li><a href="{% url 'view_profile' %}">My Profile</a></li>
             <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'logout' %}">Log out</a></li>
           </ul>

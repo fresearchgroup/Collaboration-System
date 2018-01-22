@@ -20,22 +20,24 @@
 
             <form method="post" novalidate>
               {% csrf_token %}
-              {% include 'includes/form.html' %}
+              {% include 'includes/login.html' %}
               <button type="submit" class="btn btn-primary btn-block">Log in</button>
             </form> <br />
             <div class="text-center">
               New to the Community? <a href="{% url 'signup' %}">Sign up</a> <br/>
-              <a href="#" class="text-muted">Forgot your password?</a>
+             <a href="/reset" class="text-muted">Forgot your password?</a>
             </div>
             <hr>
-
+            
             <div class="row">
               <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">
                 <div class="login-socio">
                     <p class="text-muted">or login using:</p>
                     <ul class="social-icons">
                         <li><a href="javascript:;" data-original-title="facebook" class="facebook" title="facebook"></a></li>
-                        <li><a href="javascript:;" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>
+                        <li><a href="{% url 'social:begin' 'google-oauth2' %}" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>
+                         
+                         
                     </ul>
                 </div>
               </div>

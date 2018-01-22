@@ -21,6 +21,11 @@
     <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
   </li>
   {%endif%}
+  {% if  membership.role.name != '' %}
+  <li class="nav-item ">
+    <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
+  </li>
+  {%endif%}
 </ul>
 <br/>
 
@@ -28,6 +33,12 @@
   <div class="row">
     <div class="col-sm-8">
       <h2>{{ group.name }}</h2><br />
+      {% if group.image %}
+      <img src="{{ MEDIA_URL }}{{ group.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/group_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+
     </div>
     <div class="col-sm-4">
     <h4>  {% if membership.role  %}
@@ -38,10 +49,10 @@
         {% else %}
         <b>Group Admin</b> <i class="fa fa-trophy"></i>
         {% endif %}
-      {% endif %} </h4> 
+      {% endif %} </h4>
       <b>Active Since: {{group.created_at.date}} </b><br />
-      {{subscribers}} Contributors <br />
-      N Published articles<br /> <br />
+      {{subscribers}} Members <br />
+      {{pubarticlescount}} Published articles<br /> <br />
       {% if user.is_authenticated %}
       {% if communitymembership == 'FALSE' %}
       <h2>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> community</h2><br />
@@ -129,8 +140,8 @@
   <div class="row">
     <div class="col-sm-8">
       <h3>Published Content</h3>
-      {% for article in articles %}
-      <a href="{% url 'article_view' article.article.pk %}">{{article.article.title}}</a><br />
+      {% for article in pubarticles %}
+      <a href="{% url 'article_view' article.pk %}">{{article.title}}</a><br />
       {% endfor %}
     </div>
 

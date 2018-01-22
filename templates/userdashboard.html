@@ -6,7 +6,7 @@
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
 <script type="text/javascript">
 var articlesPublished = [{{articlespublished}}];
-var articlesContributed = [{{articlescontributed}}];
+var articlesContributed = [{{total}}];
 
 </script>
 
@@ -19,12 +19,16 @@ var articlesContributed = [{{articlescontributed}}];
 
 
 <div class="row recent-work margin-bottom-40">
-  <div class="col-md-4">
+  <div class="col-md-4" style="width: 350px">
       <div class="recent-work-item">
         <em>
-          <img src="../static/img/avatar.jpg" alt="my Photo" class="img-responsive">
-          <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {% if user_profile.photo %}
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 350px; width: 350px">
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {% else %}
+          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+          <a href="{{ MEDIA_URL }}profile/avatar.png" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {%endif%}
         </em>
         <a class="recent-work-description" href="javascript:;">
           <strong>{{user.username}}</strong>
@@ -45,7 +49,7 @@ var articlesContributed = [{{articlescontributed}}];
   <div class="content-page">
     <div class="row margin-bottom-40">
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Communities</h3>
@@ -55,9 +59,39 @@ var articlesContributed = [{{articlescontributed}}];
         {% for comm in communities %}
           <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
         {% endfor %}
-        {% endautoescape%}
-            </span>
-            </h4>
+        {% endautoescape%} <br />
+        <div class="row">
+        {% if communities.has_other_pages %}
+          <ul class="pagination">
+          {% if communities.has_previous %}
+            <li><span style="background-color:#ffffff"><a href="?page={{ communities.previous_page_number }}">&laquo;</a></span></li>
+            <li><span style="background-color:#D0D3D4"><a href="?page=1">{{ 1 }}</a></span></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            <li class=""><span style="background-color:#E84D1C"> 1 </span></li>
+          {% endif %}
+          {% for i in communities.paginator.page_range %}
+           {% if i != 1 and i != communities.paginator.num_pages %}
+              {% if communities.number == i %}
+                <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
+              {% elif i > communities.number|add:'-2' and i < communities.number|add:'2' %}
+                <li><span style="background-color:#D0D3D4"><a href="?page={{ i }}">{{ i }}</a></span></li>
+                {% endif %}
+           {% endif %}
+          {% endfor %}
+          {% if communities.has_next %}
+            <li><span style="background-color:#D0D3D4"><a href="?page={{ communities.paginator.num_pages }}">{{ communities.paginator.num_pages }}</a></span></li>
+            <li><span style="background-color:#ffffff"><a href="?page={{ communities.next_page_number }}">&raquo;</a></span></li>
+          {% else %}
+            <li class=""><span style="background-color:#E84D1C">{{ communities.paginator.num_pages }}</span></li>
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+
+          </ul>
+        {% endif %}
+      </div>
+      </span>
+    </h4>
           </div>
 <!--      <div class="pricing-footer">
             <a href="javascript:;" class="btn btn-primary">
@@ -67,7 +101,7 @@ var articlesContributed = [{{articlescontributed}}];
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Groups</h3>
@@ -77,7 +111,28 @@ var articlesContributed = [{{articlescontributed}}];
         {% for grp in groups %}
               <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
         {% endfor %}
-        {% endautoescape%}
+        {% endautoescape%} <br />
+        {% if groups.has_other_pages %}
+  <ul class="pagination">
+  {% if groups.has_previous %}
+    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.previous_page_number }}">&laquo;</a></span></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in groups.paginator.page_range %}
+    {% if groups.number == i %}
+      <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
+      {% elif i > groups.number|add:'-4' and i < groups.number|add:'4' %}
+      <li><span style="background-color:#D0D3D4"><a href="?page2={{ i }}">{{ i }}</a></span></li>
+    {% endif %}
+  {% endfor %}
+  {% if groups.has_next %}
+    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.next_page_number }}">&raquo;</a></span></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+  </ul>
+{% endif %}
             </span>
             </h4>
           </div>
@@ -89,7 +144,7 @@ var articlesContributed = [{{articlescontributed}}];
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>Pending Requests</h3>
@@ -100,24 +155,6 @@ var articlesContributed = [{{articlescontributed}}];
               {{ pending.name }}  <br />
         {% endfor %}
         {% endautoescape%}
-            </span>
-            </h4>
-          </div>
-<!--      <div class="pricing-footer">
-            <a href="javascript:;" class="btn btn-primary">
-               Sign Up <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-          </div>-->
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="pricing hover-effect">
-          <div class="pricing-head">
-            <h3>Communities I May Like</h3>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-
             </span>
             </h4>
           </div>

@@ -2,26 +2,28 @@
 
 {% block breadcrumb %}
   {% if user.is_authenticated %}
-  <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+  <li class="breadcrumb-item active">{{user.username}}'s Dashboard </li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="row recent-work margin-bottom-40">
-  <div class="col-md-4">
+  <div class="col-md-5" style="width: 300px">
       <div class="recent-work-item">
         <em>
-          <img src="../static/img/avatar.jpg" alt="my Photo" class="img-responsive">
+          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive" style="height:300px; width:300px">
+          {% if user_profile.photo is None %}
+          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+          {%endif%}
           <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
-          <a href="../static/img/avatar.jpg" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
         </em>
-        <a class="recent-work-description" href="javascript:;">
-          <strong>{{user.username}}</strong>
-          <b>{{user.email}}</b>
+        <a class="recent-work-description" href="">
+          <strong class="level">{{user.username}}</strong>
+          <b class="level">{{user.email}}</b>
         </a>
       </div>
   </div>
-  <div class="col-md-1"></div>
 
   <div class="col-md-7">
         <h2> Welcome {{user.username}} </h2><br />
@@ -41,7 +43,7 @@
             <label for="Email Address">{{user.email}}</label>
           </div>
 
-          <a href="#">Change Password</a>
+          <a href="/settings/password">Change Password</a>
         </form>
   </div>
 </div>
