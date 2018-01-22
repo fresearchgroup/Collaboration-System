@@ -1,0 +1,38 @@
+<div class="modal fade" id="modalCreateArticle" tabindex="-1" role="dialog" aria-labelledby="CreateArticleModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method = "post" action ="{% url 'community_article_create' %}">
+          <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" name="cid" value={{ community.pk}}>
+            <input type="hidden" name="status" value='0'>
+            <input type="hidden" name="articleof" value='community'>
+            <h4>I confirm that I understand the following terms.</h4>
+            <ul>
+            <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
+            <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
+            <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
+            <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
+            </ul>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+              I accept these terms and conditions and agree to my work being licenced under <a href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
+            </div><br />
+            <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="submit" class="btn btn-primary">Yes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
