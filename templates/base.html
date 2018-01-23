@@ -161,9 +161,10 @@ $(document).ready(function() {
           <span class="sep"></span>
           <i class="fa fa-search search-btn"></i>
           <div class="search-box">
-            <form action="#">
+            <form method ='post' action="{% url 'search_articles' %}">
+              {% csrf_token %}
               <div class="input-group">
-                <input type="text" placeholder="Search" class="form-control">
+                <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">
                 <span class="input-group-btn">
                   <button class="btn btn-primary" type="submit">Search</button>
                 </span>

@@ -102,3 +102,6 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
     </ul>
   {% endif %}
   ```
+
+7. Apache Solr 6.0.0
+Download link: http://archive.apache.org/dist/lucene/solr/6.0.0/solr-6.0.0.tgz
