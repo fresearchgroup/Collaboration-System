@@ -79,8 +79,7 @@
       <!-- END CONTENT -->
     </div>
     <!-- END SIDEBAR & CONTENT -->
-  </div>
-</div>
+
 
 
 <div class="row quote-v1 margin-bottom-30">
@@ -204,23 +203,50 @@
 </div>
 
 
-<br />
-<div class="container-fluid alert alert-primary" role="alert">
-  <div class="row">
-    <div class="col-sm-8">
-      <h3>Published Content</h3>
-      {% for article in pubarticles %}
-      <a href="{% url 'article_view' article.id %}">{{article.title}}</a><br />
-      {% endfor %}
-    </div>
+    <!-- BEGIN SIDEBAR & CONTENT -->
+    <div class="row ">
+      <!-- BEGIN CONTENT -->
+      <div class="col-md-12 col-sm-12">
+        <div class="content-page">
+          <div class="row">
+            <!-- BEGIN LEFT SIDEBAR -->
+            <div class="col-md-4 col-sm-4 blog-sidebar">
+              <div class="recent-news margin-bottom-3">
+                <h2>Published Articles</h2>
+                {{myhtml|safe}}{% autoescape off%}
+                {% for article in pubarticles %}
+                    <h3><a href="{% url 'article_view' article.id %}">{{article.title}}</a></h3>
+                    <p>{{ article.body|striptags|truncatewords:5 }}</p>
+                {% endfor %}
+                {% endautoescape%}
+              </div>
+            </div>
+            <!-- END LEFT most SIDEBAR -->
 
-    <div class="col-sm-4">
-      <h3>Groups</h3>
-      {% for group in groups %}
-      <a href="{% url 'group_view' group.group.pk  %}">{{group.group.name}}</a><br />
-      {% endfor %}
+            <div class="col-md-4 col-sm-4 blog-sidebar">
+              <h2 class="">Recent Articles</h2>
+            </div>
+
+            <!-- BEGIN RIGHT SIDEBAR -->
+            <div class="col-md-4 col-sm-4 blog-sidebar">
+              <!-- groups START -->
+              <h2 class="">Groups</h2>
+              <ul class="nav sidebar-categories margin-bottom-40">
+                {% for group in groups %}
+                <li><a href="{% url 'group_view' group.group.pk  %}">{{group.group.name}}</a></li>
+                {% endfor %}
+              </ul>
+              <!-- groups END -->
+            </div>
+            <!-- END RIGHT most SIDEBAR -->
+          </div>
+        </div>
+      </div>
+      <!-- END CONTENT -->
     </div>
+    <!-- END SIDEBAR & CONTENT -->
   </div>
 </div>
+
 
 {% endblock %}
