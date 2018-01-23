@@ -132,6 +132,7 @@ $(document).ready(function() {
       <li><a href="/forum">Forum</a></li>
       <li><a href="{% url 'display_articles' %}">Articles</a></li>
       <li><a href="#">Contact Us</a></li>
+			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
         {% if user.is_authenticated %}
         <li class="dropdown active">
@@ -200,7 +201,7 @@ $(document).ready(function() {
     <div class="row">
       <!-- BEGIN COPYRIGHT -->
       <div class="col-md-4 col-sm-4 padding-top-10">
-        <a href="javascript:;">Privacy Policy</a> | <a href="javascript:;">Terms of Service</a> | <a href="templates/FAQs.html">FAQs</a>
+        <a href="javascript:;">Privacy Policy</a> | <a href="javascript:;">Terms of Service</a>
       </div>
       <!-- END COPYRIGHT -->
       <!-- BEGIN PAYMENTS -->

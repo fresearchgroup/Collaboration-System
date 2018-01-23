@@ -27,7 +27,7 @@ from machina.app import board
 from UserRolesPermission import viewsets as user_viewsets
 from django.conf import settings
 from django.conf.urls.static import static
-
+from webcontent import views as web
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -117,6 +117,7 @@ urlpatterns = [
     name='password_change_done'),
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
+    url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
 
 
 ]
