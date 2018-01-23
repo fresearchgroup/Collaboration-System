@@ -32,17 +32,21 @@ def create_article(request):
 	"""
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			form = NewArticleForm(request.POST)
-			if form.is_valid():
-				state = States.objects.get(name='draft')
-				article = Articles.objects.create(
-					title = form.cleaned_data.get('title'),
-					body  = form.cleaned_data.get('body').replace("\<script ","").replace("&lt;script ",""),
-					image = request.FILES['article_image'],
-					created_by = request.user,
-					state = state
-					)
-				return article
+			state = States.objects.get(name='draft')
+			title = request.POST['title']
+			body  = request.POST['body']
+			try:
+				image = request.FILES['article_image']
+			except:
+				image = None
+			article = Articles.objects.create(
+				title = title,
+				body  = body,
+				image = image,
+				created_by = request.user,
+				state = state
+				)
+			return article
 	else:
 		return redirect('login')
 
