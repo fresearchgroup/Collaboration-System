@@ -82,18 +82,16 @@ def edit_article(request, pk):
 	"""
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			form = NewArticleForm(request.POST)
 			if request.POST['state'] == 'save':
-				if form.is_valid():
-					article = Articles.objects.get(pk=pk)
-					article.title = form.cleaned_data.get('title')
-					article.body = form.cleaned_data.get('body')
-					try:
-						article.image = request.FILES['article_image']
-						article.save(update_fields=["title","body","image"])
-					except:
-						article.save(update_fields=["title","body"])
-					return redirect('article_view',pk=article.pk)
+				article = Articles.objects.get(pk=pk)
+				article.title = request.POST['title']
+				article.body = request.POST['body']
+				try:
+					article.image = request.FILES['article_image']
+					article.save(update_fields=["title","body","image"])
+				except:
+					article.save(update_fields=["title","body"])
+				return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)
 				title = request.POST['title']
