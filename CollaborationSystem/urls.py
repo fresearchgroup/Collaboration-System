@@ -28,7 +28,7 @@ from UserRolesPermission import viewsets as user_viewsets
 from django.conf import settings
 from django.conf.urls.static import static
 from webcontent import views as web
-
+from search import views as search
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -118,6 +118,9 @@ urlpatterns = [
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
+    url(r'^search_articles/$', search.search_articles, name ='search_articles' ),
+
+
 
 
 ]

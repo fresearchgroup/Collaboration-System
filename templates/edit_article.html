@@ -8,9 +8,16 @@
 {% load static %}
 {% block content %}
 {% block javascript %}
-  <script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
   <script type="text/javascript">
-    CKEDITOR.replace( 'editor' );
+    ClassicEditor
+    .create( document.querySelector( '#editor' ) )
+    .then( editor => {
+        console.log( editor );
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
   </script>
 {% endblock %}
 <div>
