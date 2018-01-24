@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.article.title }}</li>
@@ -6,19 +10,6 @@
 {% endblock %}
 {% load static %}
 {% block content %}
-{% block javascript %}
-<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
-<script>
-      ClassicEditor
-        .create( document.querySelector( '#editor' ) )
-        .then( editor => {
-          console.log( editor );
-        } )
-        .catch( error => {
-          console.error( error );
-        } );
-    </script>
-{% endblock %}
 <div>
 <ul class="nav nav-tabs">
   <li class="nav-item">
@@ -63,12 +54,10 @@
                         {% else %}
                         <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                         {%endif%}<br />
-                        <div class="form-group">
-                          <label class="custom-file">
-                            <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                            <span class="custom-file-control"></span>
-                          </label>
-                        </div>
+                        <div class="form-group custom-file">
+                          <label for="image">Article Image</label>
+                          <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+                      </div>
                       <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
@@ -92,11 +81,9 @@
                   {% else %}
                   <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                   {%endif%}<br />
-                  <div class="form-group">
-                    <label class="custom-file">
-                      <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                      <span class="custom-file-control"></span>
-                    </label>
+                   <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
                   </div>
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
@@ -125,12 +112,10 @@
               {% else %}
               <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
               {%endif%}<br />
-              <div class="form-group">
-                <label class="custom-file">
-                  <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                  <span class="custom-file-control"></span>
-                </label>
-              </div>
+              <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+                  </div>
               <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
             <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
             <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
@@ -157,12 +142,10 @@
                   {% else %}
                   <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                   {%endif%}<br />
-                  <div class="form-group">
-                    <label class="custom-file">
-                      <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                      <span class="custom-file-control"></span>
-                    </label>
-                  </div>
+                  <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+                  </div>    
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}</button>
@@ -186,12 +169,10 @@
                   {% else %}
                   <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                   {%endif%}<br />
-                  <div class="form-group">
-                    <label class="custom-file">
-                      <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                      <span class="custom-file-control"></span>
-                    </label>
-                  </div>
+                  <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+                  </div>  
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
 
@@ -215,12 +196,10 @@
                 {% else %}
                 <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                 {%endif%}<br />
-                <div class="form-group">
-                  <label class="custom-file">
-                    <input type="file" class="custom-file-input" id="file" name ="article_image" >
-                    <span class="custom-file-control"></span>
-                  </label>
-                </div>
+                <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+                  </div>
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
@@ -238,4 +217,24 @@
 </div>
 
 
+{% endblock %}
+{% block javascript %}
+
+<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
+<script>
+      ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .then( editor => {
+          console.log( editor );
+        } )
+        .catch( error => {
+          console.error( error );
+        } );
+    </script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 {% endblock %}
