@@ -92,7 +92,8 @@ def home(request):
 	articles=Articles.objects.filter(state=state).order_by('-views')[:3]
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:3]
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community})
+	userphoto=ProfileImage.objects.all().order_by('?')[:15]
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto})
 
 def update_profile(request):
     if request.user.is_authenticated:
