@@ -14,11 +14,13 @@
   </li>
   {% if user.is_authenticated %}
 
-
-  <li class="nav-item ">
-    <a class="nav-link  " href="{% url 'article_delete' article.pk %}">Delete</a>
-  </li>
-  <li class="nav-item ">
+  {% if article.state.name != 'publish'%}
+        <li class="nav-item">
+          <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
+        </li>
+        {%endif%}
+  
+  <li class="nav-item active">
     <a class="nav-link active " href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>
   {% endif %}

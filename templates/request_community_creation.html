@@ -12,11 +12,11 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<form method="post" name = "form">
+<form method="post" name = "form" action ="{% url 'request_community_creation' %}">
   {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-zA-Z]*$/" placeholder="Suggest a name for your community" required>
+    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-z A-Z]*$/" placeholder="Suggest a name for your community" required>
     <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
     <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this community</span>
     </div>
@@ -24,7 +24,7 @@
   </div>
   <div class="form-group">
     <label for="tag_line">Tag line</label>
-    <input type="text" class="form-control" id="tag_line" name="tag_line" ng-model="tag_line" ng-pattern="/^[a-zA-Z]*$/" placeholder="Suggest a tag line for your community" required>
+    <input type="text" class="form-control" id="tag_line" name="tag_line" ng-model="tag_line" ng-pattern="/^[a-z A-Z]*$/" placeholder="Suggest a tag line for your community" required>
     <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
   </div>
   <div class="form-group">

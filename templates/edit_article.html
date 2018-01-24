@@ -6,7 +6,6 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.article.title }}</li>
-  <li class="breadcrumb-item active">{{ belongs_to }} {{ membership.role }} {{gmember.role}}{{communitygroup.community}}</li>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -16,14 +15,22 @@
     <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
-  <li class="nav-item active">
-    <a class="nav-link  " href="{% url 'article_edit' article.article.pk %}">Edit</a>
-  </li>
-  {% if membership.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
-  <li class="nav-item">
-    <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
-  </li>
-  {% endif %}
+  {% if article.article.state.name != 'publish'%}
+        <li class="nav-item active">
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+        </li>
+
+        {% if cmember.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
+          <li class="nav-item">
+            <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
+          </li>
+          {% elif article.article.state.name == 'draft' and request.user == article.article.created_by and cmember.role.name or  article.article.state.name == 'draft' and request.user == article.article.created_by and gmember.role.name %}
+          <li class="nav-item">
+            <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
+          </li>
+          {% endif %}
+    {%endif%}
+  
   <li class="nav-item ">
     <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
   </li>
@@ -63,7 +70,7 @@
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
             {% endif %}
-        {%else%}
+        {%elif cmember.role%}
                 <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
@@ -210,7 +217,12 @@
     {% endif %}
   </form>
 <br />
-
+{% if belongs_to == 'community' and cmember.role == None%}
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not a member. Please join <a class="nav-link " href="{% url 'community_view' article.community.pk %}">{{ article.community}}</samp></div></div>
+{%endif%}
+{% if belongs_to == 'group' and gmember.role == None%}
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not a member. Please join <a class="nav-link " href="{% url 'group_view' article.group.pk %}">{{ article.group}}</samp></div></div>
+{%endif%}
 
 </div>
 
