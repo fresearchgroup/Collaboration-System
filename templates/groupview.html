@@ -219,9 +219,11 @@
           <!-- groups START -->
           <h2 class="">Other Groups</h2>
           <ul class="nav sidebar-categories margin-bottom-40">
-            <li>Group 1</li>
-            <li>Group 2</li>
-            <li>Group 3</li>
+            {% for grp in othergroups %}
+              {% if grp.group.name != group.name %}
+                <li><a href="{% url 'group_view' grp.group.pk %}">{{grp.group.name}}</a></li>
+              {% endif %}
+            {% endfor %}
           </ul>
           <!-- groups END -->
         </div>
