@@ -131,7 +131,7 @@ $(document).ready(function() {
 
       <li><a href="/forum">Forum</a></li>
       <li><a href="{% url 'display_articles' %}">Articles</a></li>
-      <li><a href="#">Contact Us</a></li>
+      <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
         {% if user.is_authenticated %}

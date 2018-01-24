@@ -121,6 +121,8 @@ urlpatterns = [
     url(r'^search_articles/$', search.search_articles, name ='search_articles' ),
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
+    url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
+
 ]
 
 if settings.DEBUG:

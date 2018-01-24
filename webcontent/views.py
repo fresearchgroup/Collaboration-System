@@ -22,3 +22,6 @@ def provide_feedback(request):
 			return render(request, 'feedback.html')
 	else:
 		return redirect('login')
+
+def contact_us(request):
+	return render(request, 'contact.html')
