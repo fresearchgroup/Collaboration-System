@@ -17,10 +17,10 @@
 
     </div>
     <div class="col-md-10 col-sm-10">
-      <h3><a href="">{{ art.title }}</a></h3>
+      <h3><a href="{% url 'article_view' art.id %}">{{ art.title }}</a></h3>
       <p>
         {{ art.body|striptags|truncatewords:50 }}
-        <a href="" class="more">Read more <i class="icon-angle-right"></i></a>
+        <a href="{% url 'article_view' art.id %}" class="more">Read more <i class="icon-angle-right"></i></a>
       </p>
     </div>
   </div>
