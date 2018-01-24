@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
   {% if user.is_authenticated %}
@@ -62,11 +65,9 @@
         {% else %}
         <img src="{{ MEDIA_URL }}default/group_image_default.png" alt="default" class="img-responsive" width=150>
         {%endif%}<br />
-        <div class="form-group">
-          <label class="custom-file">
-            <input type="file" class="custom-file-input" id="file" name ="group_image" >
-            <span class="custom-file-control"></span>
-          </label>
+        <div class="form-group custom-file">
+          <label for="image">Group Image</label>
+          <input type="file"   id="group_image" name ="group_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
         </div>
 
         <div class="form-group">
@@ -80,4 +81,13 @@
 </div>
 
 
+{% endblock %}
+{% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 {% endblock %}
