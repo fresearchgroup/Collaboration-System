@@ -10,6 +10,6 @@ class Feedback(models.Model):
 	provided_at = models.DateTimeField(null=True, auto_now_add=True)
 
 class Faq(models.Model):
-	category = models.CharField(max_length=100)
-	question = models.CharField(max_length=100)
-	answer = models.CharField(max_length=100)
+	category = models.CharField(max_length=50)
+	question = models.CharField(max_length=200)
+	answer = models.TextField()
