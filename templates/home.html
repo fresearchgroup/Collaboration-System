@@ -85,20 +85,16 @@
     <div class="container">
       <!-- BEGIN RECENT WORKS -->
 <div class="row recent-work margin-bottom-40">
-  <div class="col-md-3">
-    <h2><a href="">Communities</a></h2>
-    <p>Our communities ...</p>
-  </div>
-  <div class="col-md-9">
-    <div class="owl-carousel owl-carousel3">
+  <div class="col-md-12">
+    <div class="owl-carousel owl-carousel4" >
       {{myhtml|safe}}{% autoescape off%}
       {% for comm in community %}
       <div class="recent-work-item">
         <em>
           {% if comm.image %}
-          <img src="{{ MEDIA_URL }}{{ comm.image}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+          <img src="{{ MEDIA_URL }}{{ comm.image}}" alt="image" class="img-responsive" style="height: 280px;">
           {% else %}
-          <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+          <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px;">
           {%endif%}
           <a href="{% url 'community_view' comm.pk %}"><i class="fa fa-link"></i></a>
           {% if comm.image %}
@@ -125,8 +121,28 @@
     </div>
   </div>
 
-
-<br />
+<!-- BEGIN STEPS -->
+<div class="row margin-bottom-40 front-steps-wrapper front-steps-count-3">
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step1">
+      <h2>Join</h2>
+      <p>Join our communities and groups</p>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step2">
+      <h2>Collaborate</h2>
+      <p>Start collaborating by creating articles and groups</p>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step3">
+      <h2>Publish</h2>
+      <p>Get your articles published and let all read them</p>
+    </div>
+  </div>
+</div>
+<!-- END STEPS -->
 
 <!-- TESTIMONIALS -->
 <div class="row margin-bottom-40">
