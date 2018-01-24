@@ -91,7 +91,7 @@ def home(request):
 	state = States.objects.get(name='publish')
 	articles=Articles.objects.filter(state=state).order_by('-views')[:3]
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
-	community=Community.objects.all().order_by('?')[:3]
+	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
 	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto})
 
