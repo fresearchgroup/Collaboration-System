@@ -27,7 +27,7 @@
     <a class="nav-link " href="#">Update Group Info</a>
   </li>
   {% endif %}
-  {% if  membership.role.name != '' %}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
   </li>
