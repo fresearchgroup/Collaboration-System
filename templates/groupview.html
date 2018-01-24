@@ -21,7 +21,7 @@
     <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
   </li>
   {%endif%}
-  {% if  membership.role.name != '' %}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
   </li>
@@ -99,7 +99,7 @@
   <div class="col-md-5 quote-v1-inner text-right">
       {% if user.is_authenticated %}
       {% if communitymembership == 'FALSE' %}
-      <h2>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> community</h2><br />
+      <span>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> </span>
       {% else %}
       {% if membership == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
