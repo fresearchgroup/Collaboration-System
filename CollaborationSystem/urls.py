@@ -120,9 +120,7 @@ urlpatterns = [
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
     url(r'^search_articles/$', search.search_articles, name ='search_articles' ),
 
-
-
-
+    url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
 ]
 
 if settings.DEBUG:
