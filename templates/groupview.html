@@ -79,10 +79,6 @@
     </div>
     <!-- END SIDEBAR & CONTENT -->
 
-  </div> <!-- END CONTAINER -->
-</div> <!-- END MAIN -->
-
-
 
 <div class="row quote-v1">
   <div class="col-md-7 quote-v1-inner">
@@ -197,26 +193,62 @@
 
   </div>
 </div>
-<br />
-<br />
-<div class="container-fluid alert alert-primary" role="alert">
-  <div class="row">
-    <div class="col-sm-8">
-      <h3>Published Content</h3>
-      {% for article in pubarticles %}
-      <a href="{% url 'article_view' article.pk %}">{{article.title}}</a><br />
-      {% endfor %}
-    </div>
 
-    <div class="col-sm-4">
-      <b>Similar Groups</b><br />
-      Group 1 <br />
-      Group 2 <br />
-      Group 3 <br />
-      Group 4 <br />
-      more ...
+
+<!-- BEGIN SIDEBAR & CONTENT -->
+<div class="row ">
+  <!-- BEGIN CONTENT -->
+  <div class="col-md-12 col-sm-12">
+    <div class="content-page">
+      <div class="row">
+        <!-- BEGIN LEFT SIDEBAR -->
+        <div class="col-md-4 col-sm-4 blog-sidebar">
+          <div class="recent-news margin-bottom-3">
+      <h2>Published Articles</h2>
+      {% for article in pubarticles %}
+        <h3><a href="{% url 'article_view' article.pk %}">{{article.title}}</a></h3>
+        <p>{{ article.body|striptags|truncatewords:5 }}</p>
+      {% endfor %}
+          </div>
+        </div>
+        <!-- END LEFT most SIDEBAR -->
+
+
+        <!-- BEGIN middle SIDEBAR -->
+        <div class="col-md-4 col-sm-4 blog-sidebar">
+          <!-- groups START -->
+          <h2 class="">Other Groups</h2>
+          <ul class="nav sidebar-categories margin-bottom-40">
+            <li>Group 1</li>
+            <li>Group 2</li>
+            <li>Group 3</li>
+          </ul>
+          <!-- groups END -->
+        </div>
+        <!-- END middle SIDEBAR -->
+
+        <div class="col-md-4 col-sm-4 blog-tags margin-bottom-20">
+          <h2 class="">Members</h2>
+          <ul>
+            {% for mem in contributors %}
+              {% if mem.role.name == 'author' %}
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-pencil"></i> {{mem.user.username}}</a></li><br />
+              {% elif mem.role.name == 'publisher' %}
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-print"></i> {{mem.user.username}}</a></li><br />
+              {% else %}
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-trophy"></i> {{mem.user.username}}</a></li><br />
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+      </div>
     </div>
   </div>
+  <!-- END CONTENT -->
 </div>
+<!-- END SIDEBAR & CONTENT -->
 
+</div> <!-- END CONTAINER -->
+</div> <!-- END MAIN -->
 {% endblock %}
