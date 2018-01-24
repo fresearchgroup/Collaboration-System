@@ -166,7 +166,11 @@ def update_group_info(request,pk):
 				group.name = name
 				group.desc = desc
 				group.visibility = visibility
-				group.image = request.FILES['group_image']
+				try:
+					image = request.FILES['group_image']
+					group.image = image
+				except:
+					errormessage = 'image not uploaded'
 				group.save()
 				return redirect('group_view',pk=pk)
 			else:
