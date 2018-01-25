@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 import pysolr
-
+path= "http://10.129.132.116:8983/solr/collab"
 def search_articles(request):
 	if request.method == 'POST':
 		searchcriteria = request.POST['searchcriteria']
-		conn=pysolr.Solr('http://127.0.0.1:8983/solr/collab')
-		articles=conn.search('title:'+searchcriteria+'*')
+		conn=pysolr.Solr(path)
+		articles=conn.search('*'+searchcriteria+'*')
 		return render(request, 'search.html',{'articles':articles})
 
-path= "http://127.0.0.1:8983/solr/collab"
+
 
 def IndexDocuments(id,title,body,date):
     conn=pysolr.Solr(path)

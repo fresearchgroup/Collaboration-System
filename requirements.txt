@@ -3,7 +3,7 @@ django-comments-xtd==2.0.9
 django-contrib-comments==1.8.0
 django-cors-headers==2.1.0
 django-haystack==2.6.1
-django-machina==0.5.6
+django-machina==0.6.0
 django-mptt==0.8.7
 django-reversion==2.0.10
 django-reversion-compare==0.8.1
