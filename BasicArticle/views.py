@@ -193,38 +193,41 @@ def delete_article(request, pk):
 
 	"""
 	if request.user.is_authenticated:
-		if request.method=='POST':
-			status = request.POST['status']
-			if status == '0':
-				return redirect('article_view',pk=pk)
-			elif status == '1':
-				return HttpResponse('deleted')
-		else:
-			message=""
-			try:
-				article = CommunityArticles.objects.get(article=pk)
+		article = Articles.objects.get(pk=pk)
+		if article.state != States.objects.get(name='publish'):
+			if request.method=='POST':
+				status = request.POST['status']
+				if status == '0':
+					return redirect('article_view',pk=pk)
+				elif status == '1':
+					article.delete()
+					return redirect('display_articles')
+			else:
+				message=""
 				try:
-					role = Roles.objects.get(name='community_admin')
-					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk, role=role)
-				except CommunityMembership.DoesNotExist:
-					membership = 'FALSE'
-			except CommunityArticles.DoesNotExist:
-				try:
-					article = GroupArticles.objects.get(article=pk)
+					article = CommunityArticles.objects.get(article=pk)
 					try:
-						role = Roles.objects.get(name='group_admin')
-						membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk, role=role)
+						membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
+					except CommunityMembership.DoesNotExist:
+						membership = 'FALSE'
+				except CommunityArticles.DoesNotExist:
+					try:
+						article = GroupArticles.objects.get(article=pk)
 						try:
-							communitygroup = CommunityGroups.objects.get(group=article.group.pk)
-							membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
-						except CommunityMembership.DoesNotExist:
-							membership = 'FALSE'
-							message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
-					except GroupMembership.DoesNotExist:
-						membership ='FALSE'
-				except GroupArticles.DoesNotExist:
-					raise Http404
-			return render(request, 'delete_article.html', {'article': article,'membership':membership})
+							membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+							try:
+								communitygroup = CommunityGroups.objects.get(group=article.group.pk)
+								membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
+							except CommunityMembership.DoesNotExist:
+								membership = 'FALSE'
+								message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
+						except GroupMembership.DoesNotExist:
+							membership ='FALSE'
+					except GroupArticles.DoesNotExist:
+						raise Http404
+				return render(request, 'delete_article.html', {'article': article,'membership':membership})
+		else:
+			return redirect('article_view',pk=pk)
 	else:
 		return redirect('login')
 
