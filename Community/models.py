@@ -7,15 +7,18 @@ from UserRolesPermission.helpers import RandomFileName
 
 # Create your models here.
 class Community(models.Model):
-	name = models.CharField(max_length=100)
-	desc = models.TextField()
-	image = models.ImageField(null=True, upload_to='community')
-	category = models.CharField(max_length=100)
-	tag_line = models.CharField(null=True, max_length=500)
-	created_at = models.DateTimeField(null=True, auto_now_add=True)
 
-	def __str__(self):
-		return self.name
+        name = models.CharField(max_length=100)
+        desc = models.TextField()
+        image = models.ImageField(null=True, upload_to='community')
+        category = models.CharField(max_length=100)
+        tag_line = models.CharField(null=True, max_length=500)
+        created_at = models.DateTimeField(null=True, auto_now_add=True)
+        forum_link = models.CharField(null=True, max_length=100)
+
+        def __str__(self):
+            return self.name
+
 
 class CommunityMembership(models.Model):
 	user = models.ForeignKey(User, related_name='communitymembership')
