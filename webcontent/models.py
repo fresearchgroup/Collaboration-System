@@ -13,8 +13,11 @@ class FaqCategory(models.Model):
 	name = models.CharField(max_length=50)
 	desc = models.TextField()
 
+	def __str__(self):
+		return self.name
 
 class Faq(models.Model):
 	category = models.ForeignKey(FaqCategory, null=True, related_name='faqcategory')
+	flow = models.FloatField(default=0.0)
 	question = models.CharField(max_length=200)
 	answer = models.TextField()
