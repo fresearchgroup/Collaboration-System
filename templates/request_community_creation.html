@@ -39,7 +39,7 @@
   </div>
   <div class="form-group">
     <label for="purpose">Purpose</label>
-    <textarea  class="form-control" name="purpose" rows="6" ng-model="purpose" ng-pattern="/^[a-zA-Z0-9]*$/"></textarea>
+    <textarea  class="form-control" name="purpose" rows="6" ng-model="purpose" ng-pattern="/^[a-z A-Z0-9]*$/"></textarea>
     <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
     <input type="hidden" name="status" value="Request" />
     <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphanumeric content are allowed</span></div>
