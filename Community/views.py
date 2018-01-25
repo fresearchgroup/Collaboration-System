@@ -138,11 +138,34 @@ def handle_community_creation_requests(request):
 			user=rcommunity.requestedby
 			status = request.POST['status']
 			if status=='approve':
+
+				# Create Forum for this community
+				from django.db import connection
+				cursor = connection.cursor()
+				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+				tree_id = cursor.fetchone()[0] + 1
+				slug = "-".join(rcommunity.name.lower().split())
+				#return HttpResponse(str(tree_id))
+				insert_stmt = (
+					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+					)
+				data = (rcommunity.name, slug, rcommunity.desc, 0,0,0,1,1,2,tree_id,0,0,0)
+				try:
+					cursor.execute(insert_stmt, data)
+					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+					forum_link = slug + '-' + str(cursor.fetchone()[0])
+				except:
+					errormessage = 'Can not create default forum for this community'
+					return render(request, 'new_community.html', {'errormessage':errormessage})
+
 				communitycreation = Community.objects.create(
 					name = rcommunity.name,
 					desc = rcommunity.desc,
 					tag_line = rcommunity.tag_line,
-					category = rcommunity.category
+					category = rcommunity.category,
+					forum_link = forum_link
+
 					)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
@@ -256,18 +279,42 @@ def create_community(request):
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
+
+				# Create Forum for this community
+				from django.db import connection
+				cursor = connection.cursor()
+				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+				tree_id = cursor.fetchone()[0] + 1
+				slug = "-".join(name.lower().split())
+				#return HttpResponse(str(tree_id))
+				insert_stmt = (
+					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+					)
+				data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
+				try:
+					cursor.execute(insert_stmt, data)
+					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+					forum_link = slug + '-' + str(cursor.fetchone()[0])
+				except:
+					errormessage = 'Can not create default forum for this community'
+					return render(request, 'new_community.html', {'errormessage':errormessage})
+
+
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
 					category = category,
-					image = request.FILES['community_image'],
-					tag_line = tag_line
+					tag_line = tag_line,
+					forum_link = forum_link
 					)
 				communitymembership = CommunityMembership.objects.create(
 					user = usr,
 					community = community,
 					role = role
 					)
+
+
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
 				errormessage = 'user does not exist'
