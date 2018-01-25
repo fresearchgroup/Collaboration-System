@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Feedback, Faq
+from .models import Feedback, Faq, FaqCategory
 
 def FAQs(request):
-	faqs=Faq.objects.all()
-	categories = Faq.objects.values('category').distinct()
+	faqs=Faq.objects.all().order_by('flow')
+	categories = FaqCategory.objects.all()
 	return render(request, 'FAQs.html',{'faqs':faqs,'categories':categories})
 
 def provide_feedback(request):
