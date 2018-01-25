@@ -234,11 +234,11 @@
           <ul>
             {% for mem in contributors %}
               {% if mem.role.name == 'author' %}
-              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-pencil"></i> {{mem.user.username}}</a></li><br />
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-pencil"></i> {{mem.user.username}}</a></li>
               {% elif mem.role.name == 'publisher' %}
-              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-print"></i> {{mem.user.username}}</a></li><br />
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-print"></i> {{mem.user.username}}</a></li>
               {% else %}
-              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-trophy"></i> {{mem.user.username}}</a></li><br />
+              <li><a href="{% url 'display_user_profile' mem.user.username %}"><i class="fa fa-trophy"></i> {{mem.user.username}}</a></li>
               {% endif %}
             {% endfor %}
           </ul>
