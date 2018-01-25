@@ -105,3 +105,9 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
 
 7. Apache Solr 6.0.0
 Download link: http://archive.apache.org/dist/lucene/solr/6.0.0/solr-6.0.0.tgz
+
+
+8. Installation Steps after database is configured- 
+
+      - python3 manage.py loaddata workflow
+      - python3 manage.py loaddata roles
