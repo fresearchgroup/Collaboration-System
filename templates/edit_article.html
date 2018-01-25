@@ -100,7 +100,7 @@
     {% endif %}
 
     {%if belongs_to == 'group' %}
-        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' or article.article.state.name == 'visible' and cmember.role.name == 'community_admin'%}
+        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' and article.article.created_by != request.user or article.article.state.name == 'visible' and cmember.role.name == 'community_admin' and article.article.created_by != request.user %}
 
             <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

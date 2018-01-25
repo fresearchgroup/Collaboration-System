@@ -9,6 +9,7 @@ from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from search.views import IndexDocuments
 
 def display_articles(request):
 	"""
@@ -122,6 +123,8 @@ def edit_article(request, pk):
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
 					message = "state doesn' exist"
+				if to_state.name == 'publish':
+					IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
