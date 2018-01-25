@@ -32,6 +32,11 @@
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
   {%endif%}
+
+  <li class="nav-item">
+	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
+  </li>
+
 </ul>
 <br/>
 
