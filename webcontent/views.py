@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Feedback
+from .models import Feedback, Faq
 
 def FAQs(request):
-	return render(request, 'FAQs.html')
+	faqs=Faq.objects.all()
+	categories = Faq.objects.values('category').distinct()
+	return render(request, 'FAQs.html',{'faqs':faqs,'categories':categories})
 
 def provide_feedback(request):
 	if request.user.is_authenticated:

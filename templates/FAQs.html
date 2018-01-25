@@ -11,89 +11,72 @@
       <!-- BEGIN CONTENT -->
       <div class="col-md-12 col-sm-12">
         <h1>Frequently Asked Questions</h1>
+        {% if not categories %}
+        <div class="content-page page-404">
+           <div class="number">
+              Oops!
+           </div>
+           <div class="details">
+              <h3>No FAQs</h3>
+              <p>
+                 Sorry, we do not have FAQs right now.
+              </p>
+           </div>
+        </div>
+        {% endif %}
         <div class="content-page">
           <div class="row">
             <div class="col-md-3 col-sm-3">
               <ul class="tabbable faq-tabbable">
-                <li class="active"><a href="#tab_1" data-toggle="tab">General Questions</a></li>
-                <li><a href="#tab_2" data-toggle="tab">Membership</a></li>
+                {{myhtml|safe}}{% autoescape off%}
+                {% for cat in categories %}
+                {% if forloop.counter == 1 %}
+                  <li class="active"><a href="#{{cat.category}}" data-toggle="tab">{{cat.category}}</a></li>
+                {% else %}
+                  <li><a href="#{{cat.category}}" data-toggle="tab">{{cat.category}}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% endautoescape%}
               </ul>
             </div>
             <div class="col-md-9 col-sm-9">
                 <div class="tab-content" style="padding:0; background: #fff;">
-                  <!-- START TAB 1 -->
-                  <div class="tab-pane active" id="tab_1">
-                     <div class="panel-group" id="accordion1">
-
-                        <div class="panel panel-danger">
-                           <div class="panel-heading">
-                              <h4 class="panel-title">
-                                 <a href="#accordion1_1" data-parent="#accordion1" data-toggle="collapse" class="accordion-toggle">
-                                 Que 1
-                                 </a>
-                              </h4>
-                           </div>
-                           <div class="panel-collapse collapse in" id="accordion1_1">
-                              <div class="panel-body">
-                                 Ans 1
-                              </div>
-                           </div>
-                        </div>
-
-                        <div class="panel panel-danger">
-                           <div class="panel-heading">
-                              <h4 class="panel-title">
-                                 <a href="#accordion1_2" data-parent="#accordion1" data-toggle="collapse" class="accordion-toggle collapsed">
-                                 Que 2
-                                 </a>
-                              </h4>
-                           </div>
-                           <div class="panel-collapse collapse" id="accordion1_2">
-                              <div class="panel-body">
-                                 Ans 2
-                              </div>
-                           </div>
-                        </div>
-
+                  {{myhtml|safe}}{% autoescape off%}
+                  {% for cat in categories %}
+                  {% with forloop.counter as outer %}
+                  <!-- START TAB -->
+                  {% if outer == 1 %}
+                    <div class="tab-pane active" id="{{cat.category}}">
+                  {% else %}
+                    <div class="tab-pane" id="{{cat.category}}">
+                  {% endif %}
+                     <div class="panel-group" id="accordion{{outer}}">
+                       {{myhtml|safe}}{% autoescape off%}
+                       {% for faq in faqs %}
+                          {% if cat.category == faq.category %}
+                            <div class="panel panel-danger">
+                               <div class="panel-heading">
+                                  <h4 class="panel-title">
+                                     <a href="#{{faq.pk}}" data-parent="#accordion{{outer}}" data-toggle="collapse" class="accordion-toggle collapsed">
+                                     {{faq.question}}
+                                     </a>
+                                  </h4>
+                               </div>
+                               <div class="panel-collapse collapse in" id="{{faq.pk}}">
+                                  <div class="panel-body">
+                                     {{faq.answer}}
+                                  </div>
+                               </div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                        {% endautoescape%}
                      </div>
                   </div>
-                  <!-- END TAB 1 -->
-
-                  <!-- START TAB 2 -->
-                  <div class="tab-pane" id="tab_2">
-                     <div class="panel-group" id="accordion2">
-                        <div class="panel panel-danger">
-                           <div class="panel-heading">
-                              <h4 class="panel-title">
-                                 <a href="#accordion2_1" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle">
-                                 Q 1
-                                 </a>
-                              </h4>
-                           </div>
-                           <div class="panel-collapse collapse  in" id="accordion2_1">
-                              <div class="panel-body">
-                                 ans 1
-                              </div>
-                           </div>
-                        </div>
-
-                        <div class="panel panel-danger">
-                           <div class="panel-heading">
-                              <h4 class="panel-title">
-                                 <a href="#accordion2_2" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle">
-                                 Q 2
-                                 </a>
-                              </h4>
-                           </div>
-                           <div class="panel-collapse collapse" id="accordion2_2">
-                              <div class="panel-body">
-                                 Ans 2
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <!-- END TAB 2 -->
+                  <!-- END TAB -->
+                  {% endwith %}
+                  {% endfor %}
+                  {% endautoescape%}
                 </div>
             </div>
           </div>
@@ -103,4 +86,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
