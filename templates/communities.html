@@ -10,6 +10,21 @@
 {% block content %}
 
 <div class="container">
+  <form class="pull-right" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="Sorting">Sort by</label>
+      <select name="sortby">
+        <option value="a_to_z">Name: A to Z</option>
+        <option value="z_to_a">Name: Z to A</option>
+        <option value="oldest">oldest</option>
+        <option value="latest">Latest</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Sort</button>
+    </div>
+  </form>
+
+
   <!-- BEGIN SIDEBAR & CONTENT -->
   <div class="row margin-bottom-40">
     <!-- BEGIN CONTENT -->
