@@ -122,6 +122,7 @@ urlpatterns = [
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
+    url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
 
 ]
 

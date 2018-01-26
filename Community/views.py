@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -357,3 +357,25 @@ def community_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
+
+def community_group_content(request, pk):
+	commgrparticles = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+#			cgarticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select distinct ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Group_grouparticles as ga, Community_communitygroups as cg where cg.community_id=%s and ba.state_id=workflow_states.id and  ga.article_id=ba.id  and ba.state_id in (select id from workflow_states as w where w.name = "visible");', [community.pk])
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(cgarticles), 5)
+			try:
+				commgrparticles = paginator.page(page)
+			except PageNotAnInteger:
+				commgrparticles = paginator.page(1)
+			except EmptyPage:
+				commgrparticles = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})

@@ -23,10 +23,10 @@
   </li>
   {%endif%}
   {% if  membership.role.name != '' %}
-  <li class="nav-item active">
+  <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
-  <li class="nav-item">
+  <li class="nav-item active">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
   {%endif%}
@@ -38,9 +38,9 @@
 </ul>
 <br /><br />
 
-<h1>Visible and Publishable Content</h1><br />
+<h1>Visible Content of our Groups</h1><br />
 {{myhtml|safe}}{% autoescape off%}
-{% for article in commarticles %}
+{% for article in commgrparticles %}
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
       {% if article.image %}
@@ -74,25 +74,25 @@
 {% endfor %}
 {% endautoescape%}
 
-{% if commarticles.has_other_pages %}
+{% if commgrparticles.has_other_pages %}
 <div class="row">
-  <div class="col-md-4 col-sm-4 items-info">{{commarticles}}</div>
+  <div class="col-md-4 col-sm-4 items-info">{{commgrparticles}}</div>
   <div class="col-md-8 col-sm-8">
     <ul class="pagination pull-right">
-    {% if commarticles.has_previous %}
-      <li><a href="?page={{ commarticles.previous_page_number }}">&laquo;</a></li>
+    {% if commgrparticles.has_previous %}
+      <li><a href="?page={{ commgrparticles.previous_page_number }}">&laquo;</a></li>
     {% else %}
       <li class="disabled"><span>&laquo;</span></li>
     {% endif %}
-    {% for i in commarticles.paginator.page_range %}
-      {% if commarticles.number == i %}
+    {% for i in commgrparticles.paginator.page_range %}
+      {% if commgrparticles.number == i %}
         <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
       {% else %}
         <li><a href="?page={{ i }}">{{ i }}</a></li>
       {% endif %}
     {% endfor %}
-    {% if commarticles.has_next %}
-      <li><a href="?page={{ commarticles.next_page_number }}">&raquo;</a></li>
+    {% if commgrparticles.has_next %}
+      <li><a href="?page={{ commgrparticles.next_page_number }}">&raquo;</a></li>
     {% else %}
       <li class="disabled"><span>&raquo;</span></li>
     {% endif %}
