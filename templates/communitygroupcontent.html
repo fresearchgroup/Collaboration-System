@@ -56,12 +56,7 @@
         <li><i class="fa fa-eye"></i> {{article.views}} </li>
         {% get_comment_count for article as commentscnt %}
         <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
-        {% if article.state == 'visible' %}
-        <li><i class="fa fa-bullhorn"></i> Visible </li>
-        {% endif %}
-        {% if article.state == 'publishable' %}
-        <li><i class="fa fa-bell"></i> Publishable </li>
-        {% endif %}
+        <li><i class="fa fa-soccer-ball-o"></i>{{article.name}} Group</li>
       </ul>
       <p>
         {{ article.body|striptags|truncatewords:50 }}
