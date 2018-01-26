@@ -138,6 +138,7 @@ $(document).ready(function() {
             {% if request.user.is_superuser %}
 						<li><a href="{% url 'create_community' %}">Create Community</a></li>
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
+						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             {% endif%}
 						{% if user.is_authenticated %}
 						  <li><a href="{% url 'request_community_creation' %}">Request Community Creation</a></li>
