@@ -36,7 +36,7 @@ def user_dashboard(request):
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
 
-        mycommunities = CommunityMembership.objects.filter(user=request.user)
+        mycommunities = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
         page = request.GET.get('page', 1)
         paginator = Paginator(mycommunities, 5)
         try:
@@ -46,7 +46,7 @@ def user_dashboard(request):
         except EmptyPage:
             communities = paginator.page(paginator.num_pages)
 
-        mygroups = GroupMembership.objects.filter(user=request.user)
+        mygroups = GroupMembership.objects.filter(user=request.user).order_by('group__name')
         page = request.GET.get('page2',1)
         paginator = Paginator(mygroups, 5)
         try:
