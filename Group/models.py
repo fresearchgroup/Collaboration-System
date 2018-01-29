@@ -12,6 +12,7 @@ class Group(models.Model):
 	image = models.ImageField(null=True,upload_to='group')
 	visibility = models.BooleanField()
 	created_at = models.DateTimeField(null=True, auto_now_add=True)
+	created_by = models.ForeignKey(User,null =True, related_name='groupcreator')
 
 	def __str__(self):
 		return self.name

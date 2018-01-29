@@ -14,14 +14,18 @@ def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
 		desc = request.POST['desc']
-		image = request.FILES['group_image']
+		try:
+			image = request.FILES['group_image']
+		except:
+			image = None
 		user = request.user
 		visibility = request.POST['visibility']
 		group = Group.objects.create(
 			name = name,
 			desc  = desc,
 			image = image,
-			visibility = visibility
+			visibility = visibility,
+			created_by = user
 			)
 		role = Roles.objects.get(name='group_admin')
 		obj = GroupMembership.objects.create(user=user, group=group, role=role)
