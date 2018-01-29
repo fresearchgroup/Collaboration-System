@@ -175,6 +175,7 @@ def handle_community_creation_requests(request):
 					desc = rcommunity.desc,
 					tag_line = rcommunity.tag_line,
 					category = rcommunity.category,
+					created_by = rcommunity.requestedby,
 					forum_link = forum_link
 
 					)
@@ -318,6 +319,7 @@ def create_community(request):
 					category = category,
 					image = request.FILES['community_image'],
 					tag_line = tag_line,
+					created_by = request.User,
 					forum_link = forum_link
 					)
 				communitymembership = CommunityMembership.objects.create(
