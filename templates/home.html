@@ -161,7 +161,11 @@
         {% endif %}
           <blockquote><p> {{ article.body|striptags|truncatewords:30 }}<a href="{% url 'article_view' article.pk %}">See more</a></p></blockquote>
           <div class="carousel-info">
-            <img class="pull-left" src="../static/img/avatar.jpg" alt="">
+            {% if article.image %}
+            <img class="pull-left" src="{{ MEDIA_URL }}{{ article.image}}" alt="image">
+            {% else %}
+            <img class="pull-left" src="{{ MEDIA_URL }}default/article_image_default.png" alt="default">
+            {%endif%}
             <div class="pull-left">
               <span class="testimonials-name">{{article.created_by}}</span>
               <span class="testimonials-post">{{article.title}}</span>

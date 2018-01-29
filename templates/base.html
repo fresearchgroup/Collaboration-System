@@ -22,8 +22,6 @@
   <meta property="og:image" content="-CUSTOMER VALUE-"><!-- link to image for socio -->
   <meta property="og:url" content="-CUSTOMER VALUE-">
 
-  <link rel="shortcut icon" href="favicon.ico">
-
   <!-- Fonts START -->
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css">
   <!-- Fonts END -->
@@ -140,6 +138,7 @@ $(document).ready(function() {
             {% if request.user.is_superuser %}
 						<li><a href="{% url 'create_community' %}">Create Community</a></li>
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
+						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             {% endif%}
 						{% if user.is_authenticated %}
 						  <li><a href="{% url 'request_community_creation' %}">Request Community Creation</a></li>

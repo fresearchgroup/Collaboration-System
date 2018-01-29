@@ -31,9 +31,9 @@
                 {{myhtml|safe}}{% autoescape off%}
                 {% for cat in categories %}
                 {% if forloop.counter == 1 %}
-                  <li class="active"><a href="#{{cat.category}}" data-toggle="tab">{{cat.category}}</a></li>
+                  <li class="active"><a href="#{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
                 {% else %}
-                  <li><a href="#{{cat.category}}" data-toggle="tab">{{cat.category}}</a></li>
+                  <li><a href="#{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
                 {% endif %}
                 {% endfor %}
                 {% endautoescape%}
@@ -46,14 +46,14 @@
                   {% with forloop.counter as outer %}
                   <!-- START TAB -->
                   {% if outer == 1 %}
-                    <div class="tab-pane active" id="{{cat.category}}">
+                    <div class="tab-pane active" id="{{cat.id}}">
                   {% else %}
-                    <div class="tab-pane" id="{{cat.category}}">
+                    <div class="tab-pane" id="{{cat.id}}">
                   {% endif %}
                      <div class="panel-group" id="accordion{{outer}}">
                        {{myhtml|safe}}{% autoescape off%}
                        {% for faq in faqs %}
-                          {% if cat.category == faq.category %}
+                          {% if cat.id == faq.category.id %}
                             <div class="panel panel-danger">
                                <div class="panel-heading">
                                   <h4 class="panel-title">

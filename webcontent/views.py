@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Feedback, Faq
+from .models import Feedback, Faq, FaqCategory
 
 def FAQs(request):
-	faqs=Faq.objects.all()
-	categories = Faq.objects.values('category').distinct()
+	faqs=Faq.objects.all().order_by('flow')
+	categories = FaqCategory.objects.all()
 	return render(request, 'FAQs.html',{'faqs':faqs,'categories':categories})
 
 def provide_feedback(request):
@@ -27,3 +27,22 @@ def provide_feedback(request):
 
 def contact_us(request):
 	return render(request, 'contact.html')
+
+def create_faq(request):
+	if request.method == 'POST':
+		question = request.POST['question']
+		answer = request.POST['answer']
+		flow = request.POST['flow']
+		category = request.POST['category']
+		cat = FaqCategory.objects.get(name=category)
+		faq = Faq.objects.create(
+			question=question,
+			answer=answer,
+			flow = flow,
+			category = cat
+			)
+		message = 'Your FAQ was successfully added!'
+		return render(request, 'new_faq.html', {'message':message})
+	else:
+		categories=FaqCategory.objects.all()
+		return render(request, 'new_faq.html', {'categories':categories})

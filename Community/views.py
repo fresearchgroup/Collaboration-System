@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -21,7 +21,18 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def display_communities(request):
-	communities=Community.objects.all()
+	if request.method == 'POST':
+		sortby = request.POST['sortby']
+		if sortby == 'a_to_z':
+			communities=Community.objects.all().order_by('name')
+		if sortby == 'z_to_a':
+			communities=Community.objects.all().order_by('-name')
+		if sortby == 'oldest':
+			communities=Community.objects.all().order_by('created_at')
+		if sortby == 'latest':
+			communities=Community.objects.all().order_by('-created_at')
+	else:
+		communities=Community.objects.all().order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
 
 def community_view(request, pk):
@@ -346,3 +357,24 @@ def community_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
+
+def community_group_content(request, pk):
+	commgrparticles = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			cgarticles = CommunityGroups.objects.raw('select bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2;', [community.pk])
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(cgarticles), 5)
+			try:
+				commgrparticles = paginator.page(page)
+			except PageNotAnInteger:
+				commgrparticles = paginator.page(1)
+			except EmptyPage:
+				commgrparticles = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
