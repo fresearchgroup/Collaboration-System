@@ -83,7 +83,7 @@ def edit_article(request, pk):
 	"""
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			if request.POST['state'] == 'save':
+			if 'state' in request.POST and request.POST['state'] == 'save':
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
 				article.body = request.POST['body']
@@ -97,21 +97,22 @@ def edit_article(request, pk):
 				article = Articles.objects.get(pk=pk)
 				title = request.POST['title']
 				body = request.POST['body']
-				to_state = request.POST['state']
 				current_state = request.POST['current']
 				try:
 					current_state = States.objects.get(name=current_state)
-					to_state = States.objects.get(name=to_state)
-					if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
-						article.state = to_state
-					elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
-						article.state = to_state
-					elif 'private' in request.POST:
+					if 'private' in request.POST:
 						to_state = States.objects.get(name='private')
 						article.state = to_state
 					else:
-						transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
-						article.state = to_state
+						to_state = request.POST['state']
+						to_state = States.objects.get(name=to_state)
+						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
+							article.state = to_state
+						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
+							article.state = to_state
+						else:
+							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+							article.state = to_state
 					article.title = title
 					article.body = body
 					try:
