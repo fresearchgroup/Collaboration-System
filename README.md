@@ -111,3 +111,4 @@ Download link: http://archive.apache.org/dist/lucene/solr/6.0.0/solr-6.0.0.tgz
 
       - python3 manage.py loaddata workflow
       - python3 manage.py loaddata roles
+      - python3 manage.py loaddata faq

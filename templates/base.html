@@ -1,4 +1,5 @@
 {% load static %}<!DOCTYPE html>
+{% load i18n %}
 <html  ng-app>
 <head>
 	<title></title>
@@ -77,10 +78,13 @@ $(document).ready(function() {
 } );
 </script>-->
 {% block css %}{% endblock %}
+{% block extra_css %}
+    {% endblock extra_css %}
 </head>
 <body>
 
-
+{% block js %}
+    {% endblock js %}
 {% block body %}  <!-- HERE -->
 
 <!-- BEGIN TOP BAR -->
@@ -180,7 +184,7 @@ $(document).ready(function() {
           {% endblock %}
   </div>
 
-	 <div class="container">
+	 <div class="container" style="min-height: 580px">
         <ol class="breadcrumb my-4">
           {% block breadcrumb %}
           {% endblock %}
@@ -190,7 +194,8 @@ $(document).ready(function() {
   </div>
 
 {% endblock body %}  <!-- AND HERE -->
-
+{% block extra_js %}
+    {% endblock extra_js %}
 <!-- BEGIN FOOTER -->
 <div class="footer">
   <div class="container">
