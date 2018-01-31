@@ -57,9 +57,17 @@ var articlesContributed = [{{total}}];
             <span style="text-align:left; padding-left:20px; padding-top:10px">
         {{myhtml|safe}}{% autoescape off%}
         {% for comm in communities %}
+          {% if comm.role.name == 'author' %}
+          <i class="fa fa-pencil" style="top:3px;"></i>
+          {% elif comm.role.name == 'publisher' %}
+          <i class="fa fa-print" style="top:3px;"></i>
+          {% else %}
+          <i class="fa fa-trophy" style="top:3px;"></i>
+          {% endif %}
           <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
         {% endfor %}
-        {% endautoescape%} <br />
+        {% endautoescape%}
+        <br />
         <div class="row">
         {% if communities.has_other_pages %}
           <ul class="pagination">
@@ -109,7 +117,14 @@ var articlesContributed = [{{total}}];
             <span style="text-align:left; padding-left:20px; padding-top:10px">
         {{myhtml|safe}}{% autoescape off%}
         {% for grp in groups %}
-              <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
+        {% if grp.role.name == 'author' %}
+          <i class="fa fa-pencil" style="top:3px;"></i>
+          {% elif comm.role.name == 'publisher' %}
+          <i class="fa fa-print" style="top:3px;"></i>
+          {% else %}
+          <i class="fa fa-trophy" style="top:3px;"></i>
+          {% endif %}
+          <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
         {% endfor %}
         {% endautoescape%} <br />
         {% if groups.has_other_pages %}
