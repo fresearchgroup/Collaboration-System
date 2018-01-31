@@ -12,6 +12,9 @@ from Community.models import Community
 from .models import ProfileImage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from operator import add
+from django.conf import settings
+import urllib
+import json
 
 def signup(request):
     """
@@ -21,10 +24,28 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            assign_role(user, Author)
-            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('user_dashboard')
+
+            ''' Begin reCAPTCHA validation '''
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            ''' End reCAPTCHA validation '''
+
+            if result['success']:
+                user = form.save()
+                assign_role(user, Author)
+                auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('user_dashboard')
+            else:
+                error = 'Captcha not verified'
+                return render(request, 'signup.html', {'form': form, 'error':error})
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
