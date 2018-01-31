@@ -31,9 +31,9 @@
                 {{myhtml|safe}}{% autoescape off%}
                 {% for cat in categories %}
                 {% if forloop.counter == 1 %}
-                  <li class="active"><a href="#{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
+                  <li class="active"><a href="#tab{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
                 {% else %}
-                  <li><a href="#{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
+                  <li><a href="#tab{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
                 {% endif %}
                 {% endfor %}
                 {% endautoescape%}
@@ -46,9 +46,9 @@
                   {% with forloop.counter as outer %}
                   <!-- START TAB -->
                   {% if outer == 1 %}
-                    <div class="tab-pane active" id="{{cat.id}}">
+                    <div class="tab-pane active" id="tab{{cat.id}}">
                   {% else %}
-                    <div class="tab-pane" id="{{cat.id}}">
+                    <div class="tab-pane" id="tab{{cat.id}}">
                   {% endif %}
                      <div class="panel-group" id="accordion{{outer}}">
                        {{myhtml|safe}}{% autoescape off%}
