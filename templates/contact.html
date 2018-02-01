@@ -15,7 +15,9 @@
             <div class="col-md-9 col-sm-9">
               <h2>Contact Form</h2>
               <p>Please feel free to contact us in case you have any issues. We would recommend you to first look at our FAQs before writing to us. Kindly use the <a href="{% url 'provide_feedback' %}" class="active">feedback form</a> to provide feedback.</p>
-
+              <div class="alert alert-danger">
+                Our email protocol is not setup. We shall be able to do so only on production server. Kindly use <a href="{% url 'provide_feedback' %}" class="active">feedback form</a> for any issues.
+              </div>
               <!-- BEGIN FORM-->
               <form action="#" role="form">
                 <div class="form-group">
