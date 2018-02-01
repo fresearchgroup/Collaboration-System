@@ -10,7 +10,7 @@ class Community(models.Model):
 
         name = models.CharField(max_length=100)
         desc = models.TextField()
-        image = models.ImageField(null=True, upload_to='community')
+        image = models.ImageField(null=True, upload_to=RandomFileName('community'))
         category = models.CharField(max_length=100)
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
