@@ -38,7 +38,20 @@
 </ul>
 <br /><br />
 
-<h1>Visible Content of our Groups</h1><br />
+<h1>Visible Content of our Groups</h1>
+{% if not commgrparticles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there is no content which is made visible by the groups of this community.
+      </p>
+   </div>
+</div>
+{% endif %}
 {{myhtml|safe}}{% autoescape off%}
 {% for article in commgrparticles %}
   <div class="row margin-bottom-15">

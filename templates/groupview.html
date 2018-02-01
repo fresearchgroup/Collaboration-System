@@ -3,7 +3,6 @@
 {% block breadcrumb %}
 <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
 <li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
-<li class="breadcrumb-item">Group</li>
 <li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 

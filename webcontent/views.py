@@ -41,8 +41,7 @@ def create_faq(request):
 			flow = flow,
 			category = cat
 			)
-		message = 'Your FAQ was successfully added!'
-		return render(request, 'new_faq.html', {'message':message})
+		return redirect('create_faq')
 	else:
 		categories=FaqCategory.objects.all()
 		return render(request, 'new_faq.html', {'categories':categories})

@@ -38,7 +38,20 @@
 </ul>
 <br /><br />
 
-<h1>Visible and Publishable Content</h1><br />
+<h1>Visible and Publishable Content</h1>
+{% if not commarticles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there is no content (visible or publishable) belonging to this community.
+      </p>
+   </div>
+</div>
+{% endif %}
 {{myhtml|safe}}{% autoescape off%}
 {% for article in commarticles %}
   <div class="row margin-bottom-15">

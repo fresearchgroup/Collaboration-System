@@ -92,7 +92,13 @@
       <ul class="nav sidebar-categories margin-bottom-40">
       {{myhtml|safe}}{% autoescape off%}
       {% for comm in communities %}
-        <li><a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> </li>
+        {% if comm.role.name == 'author' %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-pencil"></i> {{ comm.community }} </a> </li>
+        {% elif comm.role.name == 'publisher' %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-print"></i> {{ comm.community }} </a> </li>
+        {% else %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-trophy"></i> {{ comm.community }} </a> </li>
+        {% endif %}
       {% endfor %}
       {% endautoescape%}
       </ul>
@@ -105,7 +111,13 @@
       <ul class="nav sidebar-categories margin-bottom-40">
       {{myhtml|safe}}{% autoescape off%}
       {% for grp in groups %}
-            <li><a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> </li>
+        {% if grp.role.name == 'author' %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-pencil"></i> {{ grp.group }} </a> </li>
+        {% elif grp.role.name == 'publisher' %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-print"></i> {{ grp.group }} </a> </li>
+        {% else %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-trophy"></i> {{ grp.group }} </a> </li>
+        {% endif %}
       {% endfor %}
       {% endautoescape%}
       </ul>
