@@ -8,6 +8,19 @@
 
 {% block content %}
 <h1>Articles</h1>
+{% if not articles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there are no published articles from any community or group.
+      </p>
+   </div>
+</div>
+{% endif %}
 {{myhtml|safe}}{% autoescape off%}
 {% for article in articles %}
   <div class="row margin-bottom-15">
