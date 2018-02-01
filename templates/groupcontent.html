@@ -4,7 +4,6 @@
 
 {% block breadcrumb %}
 <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-<li class="breadcrumb-item">Group</li>
 <li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 
@@ -31,7 +30,20 @@
 </ul>
 <br /><br />
 
-<h1>Private and Visible Content</h1><br />
+<h1>Private and Visible Content</h1>
+{% if not grparticles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there is no content (private or visible) belonging to this group.
+      </p>
+   </div>
+</div>
+{% endif %}
 {{myhtml|safe}}{% autoescape off%}
 {% for article in grparticles %}
   <div class="row margin-bottom-15">
