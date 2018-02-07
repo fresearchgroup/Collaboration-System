@@ -112,3 +112,19 @@ Download link: http://archive.apache.org/dist/lucene/solr/6.5.0/solr-6.5.0.tgz
       - python3 manage.py loaddata workflow
       - python3 manage.py loaddata roles
       - python3 manage.py loaddata faq
+
+
+
+
+
+
+
+Note:
+
+After installing django -reversion compare module, copy the patch file from 'temp' folder of the project to virtualenv site- pakages.
+
+ sudo cp Collaboration-System/temp/patch_for_reversion_compare.py  env/lib/python3.5/site-packages/reversion_compare
+
+ cd env/lib/python3.5/site-packages/reversion_compare
+
+ sudo mv patch_for_reversion_compare.py views.py
