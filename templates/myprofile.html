@@ -11,12 +11,15 @@
   <div class="col-md-5" style="width: 300px">
       <div class="recent-work-item">
         <em>
-          <img src="{{ MEDIA_URL }}{{ user_profile.photo}}" class="img-responsive" style="height:300px; width:300px">
-          {% if user_profile.photo is None %}
-          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
-          {%endif%}
+          {% if user_profile.photo %}
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 300px; width: 300px">
           <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
           <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {% else %}
+          <img src="{{ MEDIA_URL }}profile/avatar.png" class="img-responsive">
+          <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
+          <a href="{{ MEDIA_URL }}profile/avatar.png" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {%endif%}
         </em>
         <a class="recent-work-description" href="">
           <strong class="level">{{user.username}}</strong>
