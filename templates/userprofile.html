@@ -14,10 +14,10 @@
         <em>
           {% if user_profile.photo %}
           <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 350px; width: 350px">
-          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{userinfo.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
           {% else %}
           <img src="{{ MEDIA_URL }}default/avatar.png" class="img-responsive">
-          <a href="{{ MEDIA_URL }}default/avatar.png" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          <a href="{{ MEDIA_URL }}default/avatar.png" class="fancybox-button" title="{{userinfo.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
           {%endif%}
         </em>
         <a class="recent-work-description" href="javascript:;">
