@@ -128,3 +128,14 @@ After installing django -reversion compare module, copy the patch file from 'tem
  cd env/lib/python3.5/site-packages/reversion_compare
 
  sudo mv patch_for_reversion_compare.py views.py
+
+
+ Note:
+
+ After migrations are done and all the tables are created, changes the body column in Articles tables to make it multilingual , will take symbols, unicode character etc.
+
+ do --
+
+ mysql -u root -p  (and select the database that is created and run the following sql query)
+ 
+ ALTER TABLE BasicArticle_articles MODIFY COLUMN body text CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
