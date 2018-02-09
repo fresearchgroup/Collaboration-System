@@ -151,7 +151,7 @@ def handle_community_creation_requests(request):
 			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
 			user=rcommunity.requestedby
 			status = request.POST['status']
-			if status=='approve':
+			if status=='approve' and rcommunity.status!='approved':
 
 				# Create Forum for this community
 				from django.db import connection
@@ -191,7 +191,7 @@ def handle_community_creation_requests(request):
 				rcommunity.status = 'approved'
 				rcommunity.save()
 
-			if status=='reject':
+			if status=='reject' and rcommunity.status!='rejected':
 				rcommunity.status = 'rejected'
 				rcommunity.save()
 
