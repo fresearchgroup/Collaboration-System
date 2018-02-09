@@ -1,0 +1,9 @@
+[
+
+{"model": "webcontent.faqcategory", "pk": 1, "fields": {"name": "General", "desc": "General faq question"}}, 
+{"model": "webcontent.faqcategory", "pk": 2, "fields": {"name": "Community", "desc": "Category for community faqs."}}, 
+{"model": "webcontent.faqcategory", "pk": 3, "fields": {"name": "Group", "desc": "category for groups faq"}}, 
+{"model": "webcontent.faqcategory", "pk": 4, "fields": {"name": "Resource", "desc": "category for resource faqs"}}, 
+{"model": "webcontent.faqcategory", "pk": 5, "fields": {"name": "Roles and Permissions", "desc": "categories for roles"}}, 
+{"model": "webcontent.faqcategory", "pk": 6, "fields": {"name": "Workflow", "desc": "category for workflow"}}
+]

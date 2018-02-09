@@ -17,14 +17,13 @@
           <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
         </li>
         {% if user.is_authenticated %}
-        {% if article.article.state.name != 'publish'%}
-        <li class="nav-item">
+       {% if article.article.state.name != 'publish'%}
+        <li class="nav-item ">
           <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
         </li>
-        {%endif%}
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
-        </li>
+
+    {%endif%}
+        
         <li class="nav-item ">
           <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
         </li>
@@ -39,7 +38,7 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
-            <li><i class="fa fa-eye"></i> {{count}} times </li>
+            <li><i class="fa fa-eye"></i> {{count}} views </li>
 
             {% if article.community.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
@@ -78,7 +77,7 @@
 <div class="comments">
   <div class="media">
     <ul class="media-body">
-      {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback show_feedback %}
     </ul>
   </div>
 </div>

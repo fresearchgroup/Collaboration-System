@@ -2,10 +2,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item "><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-  {% endif %}
-  <li class="breadcrumb-item ">{{ community.name }}</li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -15,15 +12,27 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
   </li>
+  {% if membership.role.name == 'community_admin' %}
   <li class="nav-item active">
     <a class="nav-link " href="#">Manage Community</a>
   </li>
   <li class="nav-item">
     <a class="nav-link " href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
+  {% endif %}
+  {% if membership %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+  <li class="nav-item">
+	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>          </li>
+
 </ul>
 <br/>
-
 
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-6">
@@ -74,13 +83,13 @@
         </div>
         <div class="form-group">
           <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
-
-        <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
-      </div>
-      <div class="form-group">
-        <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
+          <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
       </div>
       </form>
+      {% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+      {% endif %}
 
       {% endif %}
     </div>

@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -15,11 +15,24 @@ from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import CommunityAdmin
 from django.contrib.auth.models import User
 from workflow.models import States
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 
 def display_communities(request):
-	communities=Community.objects.all()
+	if request.method == 'POST':
+		sortby = request.POST['sortby']
+		if sortby == 'a_to_z':
+			communities=Community.objects.all().order_by('name')
+		if sortby == 'z_to_a':
+			communities=Community.objects.all().order_by('-name')
+		if sortby == 'oldest':
+			communities=Community.objects.all().order_by('created_at')
+		if sortby == 'latest':
+			communities=Community.objects.all().order_by('-created_at')
+	else:
+		communities=Community.objects.all().order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
 
 def community_view(request, pk):
@@ -36,12 +49,13 @@ def community_view(request, pk):
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
-	articles = CommunityArticles.objects.filter(community = pk)
+	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
+	pubarticlescount = len(list(pubarticles))
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	groups = CommunityGroups.objects.filter(community = pk)
 	groupcount = groups.count()
-	articlecount = articles.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'articles':articles, 'groups':groups, 'users':users, 'groupcount':groupcount, 'articlecount':articlecount, 'message':message})
+	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
 
 def community_subscribe(request):
 	if request.user.is_authenticated:
@@ -135,11 +149,35 @@ def handle_community_creation_requests(request):
 			user=rcommunity.requestedby
 			status = request.POST['status']
 			if status=='approve':
+
+				# Create Forum for this community
+				from django.db import connection
+				cursor = connection.cursor()
+				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+				tree_id = cursor.fetchone()[0] + 1
+				slug = "-".join(rcommunity.name.lower().split())
+				#return HttpResponse(str(tree_id))
+				insert_stmt = (
+					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+					)
+				data = (rcommunity.name, slug, rcommunity.desc, 0,0,0,1,1,2,tree_id,0,0,0)
+				try:
+					cursor.execute(insert_stmt, data)
+					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+					forum_link = slug + '-' + str(cursor.fetchone()[0])
+				except:
+					errormessage = 'Can not create default forum for this community'
+					return render(request, 'new_community.html', {'errormessage':errormessage})
+
 				communitycreation = Community.objects.create(
 					name = rcommunity.name,
 					desc = rcommunity.desc,
 					tag_line = rcommunity.tag_line,
-					category = rcommunity.category
+					category = rcommunity.category,
+					created_by = rcommunity.requestedby,
+					forum_link = forum_link
+
 					)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
@@ -167,6 +205,7 @@ def manage_community(request,pk):
 		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
 		if membership.role.name == 'community_admin':
 			count = CommunityMembership.objects.filter(community = community.pk, role=membership.role).count()
+			members = CommunityMembership.objects.filter(community = community.pk)
 			if request.method == 'POST':
 				try:
 					username = request.POST['username']
@@ -190,16 +229,21 @@ def manage_community(request,pk):
 								is_member.save()
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
+						else:
+							errormessage = 'cannot update this user'
 					if status == 'remove':
 						if count > 1 or count == 1 and username != request.user.username:
 							try:
 								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'no such user in the community'
-					return redirect('manage_community',pk=pk)
+						else:
+							errormessage = 'cannot remove this user'
+					return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+#					return redirect('manage_community',pk=pk)
 				except User.DoesNotExist:
-					errormessage = "no such user in the community"
-			members = CommunityMembership.objects.filter(community = community.pk)
+					errormessage = "no such user in the system"
+
 			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
 		else:
 			return redirect('community_view',pk=pk)
@@ -215,18 +259,21 @@ def update_community_info(request,pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership.role.name == 'community_admin':
 			if request.method == 'POST':
-				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
-				community.name = name
 				community.desc = desc
 				community.category = category
 				community.tag_line = tag_line
+				try:
+					image = request.FILES['community_image']
+					community.image = image
+				except:
+					errormessage = 'image not uploaded'
 				community.save()
 				return redirect('community_view',pk=pk)
 			else:
-				return render(request, 'updatecommunityinfo.html', {'community':community})
+				return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
 		else:
 			return redirect('community_view',pk=pk)
 	except CommunityMembership.DoesNotExist:
@@ -244,17 +291,44 @@ def create_community(request):
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
+
+				# Create Forum for this community
+				from django.db import connection
+				cursor = connection.cursor()
+				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+				tree_id = cursor.fetchone()[0] + 1
+				slug = "-".join(name.lower().split())
+				#return HttpResponse(str(tree_id))
+				insert_stmt = (
+					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+					)
+				data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
+				try:
+					cursor.execute(insert_stmt, data)
+					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+					forum_link = slug + '-' + str(cursor.fetchone()[0])
+				except:
+					errormessage = 'Can not create default forum for this community'
+					return render(request, 'new_community.html', {'errormessage':errormessage})
+
+
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
 					category = category,
-					tag_line = tag_line
+					image = request.FILES['community_image'],
+					tag_line = tag_line,
+					created_by = request.User,
+					forum_link = forum_link
 					)
 				communitymembership = CommunityMembership.objects.create(
 					user = usr,
 					community = community,
 					role = role
 					)
+
+
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
 				errormessage = 'user does not exist'
@@ -263,3 +337,46 @@ def create_community(request):
 			return render(request, 'new_community.html')
 	else:
 		return redirect('home')
+
+def community_content(request, pk):
+	commarticles = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(carticles), 5)
+			try:
+				commarticles = paginator.page(page)
+			except PageNotAnInteger:
+				commarticles = paginator.page(1)
+			except EmptyPage:
+				commarticles = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
+
+def community_group_content(request, pk):
+	commgrparticles = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			cgarticles = CommunityGroups.objects.raw('select bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2;', [community.pk])
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(cgarticles), 5)
+			try:
+				commgrparticles = paginator.page(page)
+			except PageNotAnInteger:
+				commgrparticles = paginator.page(1)
+			except EmptyPage:
+				commgrparticles = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})

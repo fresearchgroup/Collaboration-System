@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from workflow.models import States
+from UserRolesPermission.helpers import RandomFileName
 
 class Articles(models.Model):
 	title = models.CharField(max_length=100)
-	body = models.TextField()
+	body = models.TextField(null=True)
+	image = models.ImageField(null=True,upload_to=RandomFileName('article'))
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
 	views = models.PositiveIntegerField(default=0)

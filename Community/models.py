@@ -3,17 +3,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
 from Group.models import Group
+from UserRolesPermission.helpers import RandomFileName
 
 # Create your models here.
 class Community(models.Model):
-	name = models.CharField(max_length=100)
-	desc = models.TextField()
-	category = models.CharField(max_length=100)
-	tag_line = models.CharField(null=True, max_length=500)
-	created_at = models.DateTimeField(null=True, auto_now_add=True)
 
-	def __str__(self):
-		return self.name
+        name = models.CharField(max_length=100)
+        desc = models.TextField()
+        image = models.ImageField(null=True, upload_to=RandomFileName('community'))
+        category = models.CharField(max_length=100)
+        tag_line = models.CharField(null=True, max_length=500)
+        created_at = models.DateTimeField(null=True, auto_now_add=True)
+        created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
+        forum_link = models.CharField(null=True, max_length=100)
+
+        def __str__(self):
+            return self.name
+
 
 class CommunityMembership(models.Model):
 	user = models.ForeignKey(User, related_name='communitymembership')
@@ -28,6 +34,10 @@ class CommunityArticles(models.Model):
 	def get_absolute_url(self):
 		from django.urls import reverse
 		return reverse('article_view', kwargs={'pk': self.id})
+
+	def get_absolute_url(self):
+		from django.urls import reverse
+		return reverse('article_view', kwargs={'pk': self.article_id})
 
 class CommunityGroups(models.Model):
 	group = models.ForeignKey(Group, null=True, related_name='communitygroups')
