@@ -64,6 +64,8 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+			if CommunityMembership.objects.filter(user=user, community=community).exists():
+				return redirect('community_view',pk=cid)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
@@ -75,7 +77,8 @@ def community_unsubscribe(request):
 		cid = request.POST['cid']
 		community=Community.objects.get(pk=cid)
 		user = request.user
-		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+		if CommunityMembership.objects.filter(user=user, community=community).exists():
+			obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 		return redirect('community_view',pk=cid)
 	return render(request, 'communityview.html')
 

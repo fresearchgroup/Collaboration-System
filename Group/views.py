@@ -64,6 +64,8 @@ def group_subscribe(request):
 			group = Group.objects.get(pk=gid)
 			user = request.user
 			role = Roles.objects.get(name='author')
+			if GroupMembership.objects.filter(user=user, group=group).exists():
+				return redirect('group_view', pk=gid)
 			obj = GroupMembership.objects.create(user=user, group=group, role=role)
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
@@ -75,7 +77,8 @@ def group_unsubscribe(request):
 		gid = request.POST['gid']
 		group = Group.objects.get(pk=gid)
 		user = request.user
-		obj = GroupMembership.objects.filter(user=user, group=group).delete()
+		if GroupMembership.objects.filter(user=user, group=group).exists():
+			obj = GroupMembership.objects.filter(user=user, group=group).delete()
 		return redirect('group_view', pk=gid)
 	return render(request, 'groupview.html')
 
