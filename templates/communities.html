@@ -42,7 +42,7 @@
               {%endif%}
 
               <div class="mix-details">
-                <h4>{{community.name|truncatewords:2}}</h4>
+                <h4>{{community.name}}</h4>
                 <h5>{{community.tag_line|truncatewords:5}}</h5>
                 <p>{{ community.desc |striptags|truncatewords:20}}</p>
                 <a class="mix-link" href="{% url 'community_view' community.pk %}">
