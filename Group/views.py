@@ -73,14 +73,17 @@ def group_subscribe(request):
 		return redirect('login')
 
 def group_unsubscribe(request):
-	if request.method == 'POST':
-		gid = request.POST['gid']
-		group = Group.objects.get(pk=gid)
-		user = request.user
-		if GroupMembership.objects.filter(user=user, group=group).exists():
-			obj = GroupMembership.objects.filter(user=user, group=group).delete()
-		return redirect('group_view', pk=gid)
-	return render(request, 'groupview.html')
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
+			user = request.user
+			if GroupMembership.objects.filter(user=user, group=group).exists():
+				obj = GroupMembership.objects.filter(user=user, group=group).delete()
+			return redirect('group_view', pk=gid)
+		return render(request, 'groupview.html')
+	else:
+		return redirect('login')
 
 def group_article_create(request):
 	if request.user.is_authenticated:
@@ -100,94 +103,99 @@ def group_article_create(request):
 		return redirect('login')
 
 def manage_group(request,pk):
-	group = Group.objects.get(pk=pk)
-	community = CommunityGroups.objects.get(group=pk)
-	uid = request.user.id
-	errormessage = ''
-	membership = None
-	try:
-		membership = GroupMembership.objects.get(user=uid, group=group.pk)
-		if membership.role.name == 'group_admin':
-			count = GroupMembership.objects.filter( group=group.pk, role=membership.role).count()
-			members = GroupMembership.objects.filter(group=group.pk)
-			if request.method == 'POST':
-				try:
-					username = request.POST['username']
-					rolename = request.POST['role']
-					user = User.objects.get(username = username)
-					role = Roles.objects.get(name=rolename)
-					status = request.POST['status']
+	if request.user.is_authenticated:
+		group = Group.objects.get(pk=pk)
+		community = CommunityGroups.objects.get(group=pk)
+		uid = request.user.id
+		errormessage = ''
+		membership = None
+		try:
+			membership = GroupMembership.objects.get(user=uid, group=group.pk)
+			if membership.role.name == 'group_admin':
+				count = GroupMembership.objects.filter( group=group.pk, role=membership.role).count()
+				members = GroupMembership.objects.filter(group=group.pk)
+				if request.method == 'POST':
+					try:
+						username = request.POST['username']
+						rolename = request.POST['role']
+						user = User.objects.get(username = username)
+						role = Roles.objects.get(name=rolename)
+						status = request.POST['status']
 
-					if status == 'add':
-						try:
-							is_community_member = CommunityMembership.objects.get(user=user, community=community.community.pk)
+						if status == 'add':
 							try:
-								is_member = GroupMembership.objects.get(user=user, group=group.pk)
-							except GroupMembership.DoesNotExist:
-								obj = GroupMembership.objects.create(user=user, group=group, role=role)
+								is_community_member = CommunityMembership.objects.get(user=user, community=community.community.pk)
+								try:
+									is_member = GroupMembership.objects.get(user=user, group=group.pk)
+								except GroupMembership.DoesNotExist:
+									obj = GroupMembership.objects.create(user=user, group=group, role=role)
+								else:
+									errormessage = 'user exists in group'
+							except CommunityMembership.DoesNotExist:
+								errormessage = 'user is not a part of the community'
+						if status == 'update':
+							if count > 1 or count == 1 and username != request.user.username:
+								try:
+									is_member = GroupMembership.objects.get(user=user, group=group.pk)
+									is_member.role = role
+									is_member.save()
+								except GroupMembership.DoesNotExist:
+									errormessage = 'no such user in the group'
 							else:
-								errormessage = 'user exists in group'
-						except CommunityMembership.DoesNotExist:
-							errormessage = 'user is not a part of the community'
-					if status == 'update':
-						if count > 1 or count == 1 and username != request.user.username:
-							try:
-								is_member = GroupMembership.objects.get(user=user, group=group.pk)
-								is_member.role = role
-								is_member.save()
-							except GroupMembership.DoesNotExist:
-								errormessage = 'no such user in the group'
-						else:
-							errormessage = 'cannot update this user'
-					if status == 'remove':
-						if count > 1 or count == 1 and username != request.user.username:
-							try:
-								obj = GroupMembership.objects.filter(user=user, group=group).delete()
-							except GroupMembership.DoesNotExist:
-								errormessage = 'no such user in the group'
-						else:
-							errormessage = 'cannot remove this user'
-					return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
-					#return redirect('manage_group',pk=pk)
-				except User.DoesNotExist:
-					errormessage = "no such user in the system"
+								errormessage = 'cannot update this user'
+						if status == 'remove':
+							if count > 1 or count == 1 and username != request.user.username:
+								try:
+									obj = GroupMembership.objects.filter(user=user, group=group).delete()
+								except GroupMembership.DoesNotExist:
+									errormessage = 'no such user in the group'
+							else:
+								errormessage = 'cannot remove this user'
+						return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+						#return redirect('manage_group',pk=pk)
+					except User.DoesNotExist:
+						errormessage = "no such user in the system"
 
-			return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
-		else:
+				return render(request, 'managegroup.html', {'community':community, 'group':group, 'members':members, 'membership':membership, 'errormessage':errormessage})
+			else:
+				return redirect('group_view',pk=pk)
+		except GroupMembership.DoesNotExist:
 			return redirect('group_view',pk=pk)
-	except GroupMembership.DoesNotExist:
-		return redirect('group_view',pk=pk)
-
+	else:
+		return redirect('login')
 
 def update_group_info(request,pk):
-	group = Group.objects.get(pk=pk)
-	errormessage = ''
-	membership = None
-	uid = request.user.id
-	try:
-		membership = GroupMembership.objects.get(user=uid, group=group.pk)
-		if membership.role.name == 'group_admin':
-			if request.method == 'POST':
-				name = request.POST['name']
-				desc = request.POST['desc']
-				visibility = request.POST['visibility']
-				group.name = name
-				group.desc = desc
-				group.visibility = visibility
-				try:
-					image = request.FILES['group_image']
-					group.image = image
-				except:
-					errormessage = 'image not uploaded'
-				group.save()
-				return redirect('group_view',pk=pk)
+	if request.user.is_authenticated:
+		group = Group.objects.get(pk=pk)
+		errormessage = ''
+		membership = None
+		uid = request.user.id
+		try:
+			membership = GroupMembership.objects.get(user=uid, group=group.pk)
+			if membership.role.name == 'group_admin':
+				if request.method == 'POST':
+					name = request.POST['name']
+					desc = request.POST['desc']
+					visibility = request.POST['visibility']
+					group.name = name
+					group.desc = desc
+					group.visibility = visibility
+					try:
+						image = request.FILES['group_image']
+						group.image = image
+					except:
+						errormessage = 'image not uploaded'
+					group.save()
+					return redirect('group_view',pk=pk)
+				else:
+					return render(request, 'updategroupinfo.html', {'group':group,'membership':membership})
 			else:
-				return render(request, 'updategroupinfo.html', {'group':group,'membership':membership})
-		else:
+				return redirect('group_view',pk=pk)
+		except GroupMembership.DoesNotExist:
 			return redirect('group_view',pk=pk)
-	except GroupMembership.DoesNotExist:
-		return redirect('group_view',pk=pk)
-
+	else:
+		return redirect('login')
+	
 def group_content(request, pk):
 	grparticles = ''
 	try:
