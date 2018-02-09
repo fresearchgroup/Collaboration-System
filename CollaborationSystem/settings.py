@@ -169,6 +169,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), MACHINA_MAIN_STATIC_DIR]
 
+LOGIN_URL = 'login/'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'user_dashboard'
 
