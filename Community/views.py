@@ -58,9 +58,9 @@ def community_view(request, pk):
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
 
 def community_subscribe(request):
+	cid = request.POST['cid']
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
@@ -70,7 +70,7 @@ def community_subscribe(request):
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
-		return redirect('login')
+		return redirect('/login/?next=/community-view/%d' % int(cid) )
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
