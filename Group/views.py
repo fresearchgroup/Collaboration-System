@@ -195,7 +195,7 @@ def update_group_info(request,pk):
 			return redirect('group_view',pk=pk)
 	else:
 		return redirect('login')
-	
+
 def group_content(request, pk):
 	grparticles = ''
 	try:
@@ -203,7 +203,7 @@ def group_content(request, pk):
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
-			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Group_grouparticles as ga  where ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(garticles), 5)

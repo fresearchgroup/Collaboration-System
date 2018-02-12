@@ -104,7 +104,7 @@ $(document).ready(function() {
                 <ul class="list-unstyled list-inline pull-right">
                     {% if user.is_authenticated %}
                     {% else %}
-                    <li><a href="{% url 'login' %}">Log In</a></li>
+                    <li><a href="{% url 'login' %}?next={{request.path}}">Log In</a></li>
                     <li><a href="{% url 'signup' %}">Sign up</a></li>
                     {% endif %}
                 </ul>

@@ -58,9 +58,9 @@ def community_view(request, pk):
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
 
 def community_subscribe(request):
+	cid = request.POST['cid']
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
@@ -70,7 +70,7 @@ def community_subscribe(request):
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
-		return redirect('login')
+		return redirect('/login/?next=/community-view/%d' % int(cid) )
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -359,7 +359,7 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(carticles), 5)
@@ -381,7 +381,7 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(cgarticles), 5)
 			try:
