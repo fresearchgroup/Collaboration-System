@@ -15,6 +15,7 @@ from operator import add
 from django.conf import settings
 import urllib
 import json
+from django.http import JsonResponse
 
 def signup(request):
     """
@@ -178,3 +179,13 @@ def upload_image(request):
 
         return redirect('view_profile')
     return redirect('view_profile')
+
+
+def username_exist(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A user with this username already exists.'
+    return JsonResponse(data)
