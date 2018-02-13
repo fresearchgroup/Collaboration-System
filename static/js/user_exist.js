@@ -4,6 +4,7 @@ $('document').ready(function(){
   var form = $(this).closest("form");
   if (username == '') {
     $('#username').siblings("span#check").text('');
+    $('#username').siblings("span#check2").text('');
     return;
   }
   $.ajax({
