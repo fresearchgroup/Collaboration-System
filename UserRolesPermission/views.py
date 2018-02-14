@@ -5,7 +5,7 @@ from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles
+from Group.models import GroupMembership, GroupArticles, Group
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
@@ -115,7 +115,11 @@ def home(request):
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto})
+	countcommunity = Community.objects.all().count()
+	countgroup = Group.objects.all().count()
+	countarticles = Articles.objects.filter(state=state).count()
+	countusers = User.objects.all().count()
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countgroup':countgroup, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:
