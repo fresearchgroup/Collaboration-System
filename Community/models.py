@@ -4,7 +4,21 @@ from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
 from Group.models import Group
 from UserRolesPermission.helpers import RandomFileName
-
+import os
+import datetime
+import threading
+import pickle
+class EventLogger:
+	lock=threading.Lock()
+	@staticmethod
+	def logevent(content):
+		date = datetime.datetime.now().strftime("%y-%m-%d")
+		myfile = open("hello.txt", "a")
+		myfile.write("content")
+		myfile.close()
+	
+#EventLogger.logevent("random" +"\n")
+#EventLogger.logevent("data") 
 # Create your models here.
 class Community(models.Model):
 
