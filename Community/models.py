@@ -14,12 +14,12 @@ class EventLogger:
 	@staticmethod
 	def logevent(content):
 		date = datetime.datetime.now().strftime("%y-%m-%d")
-		myfile = open("hello.txt", "a")
-		myfile.write("content")
-		myfile.close()
-	
-#EventLogger.logevent("random" +"\n")
-#EventLogger.logevent("data") 
+		with EventLogger.lock:
+			with open(date+".log","a")as myfile:
+				myfile.write(content)
+		
+#EventLogger.logevent("random"+"\n");
+#EventLogger.logevent("Event"); 
 # Create your models here.
 class Community(models.Model):
 
