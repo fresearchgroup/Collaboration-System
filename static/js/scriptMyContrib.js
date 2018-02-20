@@ -1,7 +1,7 @@
 // Our labels along the x-axis
 // For drawing the lines
- var articlesPublished = [86,114,106,106,107,2,133,221,783,1123,1345,1634];
-var articlesContributed = [282,350,411,502,635,5,947,1102,1400,1267,1674,1987];
+ //var articlesPublished = [86,114,106,106,107,2,133,221,783,1123,1345,1634];
+//var articlesContributed = [282,350,411,502,635,5,947,1102,1400,1267,1674,1987];
 var label1=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 /*
 
