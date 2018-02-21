@@ -6,6 +6,7 @@ media/article
 media/community
 media/group
 media/profile
+CollaboartionSystem/settings.py
 
 # SQLite database files
 
