@@ -10,6 +10,12 @@
 {% block content %}
 
 <div class="container">
+  <div class="search-box" class="col-md-9 col-sm-9">
+              <div class="input-group">
+                <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">
+                </div>
+              </div>
+  <div class="col-md-12 col-sm-12">            
   <form class="pull-right" method="post">
     {% csrf_token %}
     <div class="form-group">
@@ -23,14 +29,14 @@
       <button type="submit" class="btn btn-primary">Sort</button>
     </div>
   </form>
-
+</div>
 
   <!-- BEGIN SIDEBAR & CONTENT -->
   <div class="row margin-bottom-40">
     <!-- BEGIN CONTENT -->
     <div class="col-md-12 col-sm-12">
       <div class="content-page">
-        <div class="row mix-grid thumbnails">
+        <div  class="row mix-grid thumbnails">
           {{myhtml|safe}}{% autoescape off%}
           {% for community in communities %}
           <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
@@ -77,4 +83,16 @@
 
 
 <br /><br />
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#searchcriteria").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#communities *").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
 {% endblock %}
