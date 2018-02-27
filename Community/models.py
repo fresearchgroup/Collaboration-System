@@ -3,14 +3,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
 from Group.models import Group
-from UserRolesPermission.helpers import RandomFileName
+import os, uuid
 
-# Create your models here.
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('community', filename)
+
 class Community(models.Model):
 
         name = models.CharField(max_length=100)
         desc = models.TextField()
-        image = models.ImageField(null=True, upload_to=RandomFileName('community'))
+        image = models.ImageField(null=True, upload_to=get_file_path)
         category = models.CharField(max_length=100)
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
