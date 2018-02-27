@@ -2,14 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
-from UserRolesPermission.helpers import RandomFileName
+import os, uuid
 
 # Create your models here.
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('group', filename)
 
 class Group(models.Model):
 	name = models.CharField(max_length=100)
 	desc = models.TextField()
-	image = models.ImageField(null=True,upload_to=RandomFileName('group'))
+	image = models.ImageField(null=True,upload_to=get_file_path)
 	visibility = models.BooleanField()
 	created_at = models.DateTimeField(null=True, auto_now_add=True)
 	created_by = models.ForeignKey(User,null =True, related_name='groupcreator')
@@ -29,3 +33,8 @@ class GroupArticles(models.Model):
 	def get_absolute_url(self):
 		from django.urls import reverse
 		return reverse('article_view', kwargs={'pk': self.article_id})
+
+
+
+
+
