@@ -9,7 +9,7 @@ from Group.models import GroupMembership, GroupArticles, Group
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
-from .models import ProfileImage
+from .models import ProfileImage, favourite
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from operator import add
 from django.conf import settings
@@ -193,3 +193,7 @@ def username_exist(request):
     if data['is_taken']:
         data['error_message'] = 'A user with this username already exists.'
     return JsonResponse(data)
+
+def favourites(request):
+    if request.user.is_authenticated:
+        pass
