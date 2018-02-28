@@ -113,7 +113,7 @@
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link " href="#">View</a>
+    <a class="nav-link " href="{% url 'community_view' forum.id|add:'-1' %}">View</a>
   </li>
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
