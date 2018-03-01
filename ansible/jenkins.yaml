@@ -1,0 +1,11 @@
+- hosts: all
+  tasks:
+
+  - name: Install xmlRunner
+    pip: name=xmlrunner
+  - name: Install Unittest
+    pip: name=unittest2
+  - name: Install selenium
+    pip: name=selenium
+  - name: Install Django
+    pip: name=django version=1.11.7
