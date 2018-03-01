@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
+from UserRolesPermission.models import favourite
 
 def display_articles(request):
 	"""
@@ -70,7 +71,10 @@ def view_article(request, pk):
 			count = article_watch(request, article.article)
 		except GroupArticles.DoesNotExist:
 			raise Http404
-	return render(request, 'view_article.html', {'article': article, 'count':count})
+	is_fav =''
+	if request.user.is_authenticated:
+		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
 
 
 def edit_article(request, pk):

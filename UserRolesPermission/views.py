@@ -213,11 +213,3 @@ def favourites(request):
                 obj = favourite.objects.filter(user = user, resource = resource_id, category= category).delete()
                 return HttpResponse('removed')
         return HttpResponse('ok')
-    #if request.method == 'GET':
-       # username = request.GET.get('username', None)
-       # user= User.objects.get(username=username)
-        #resource_id = request.GET.get('rid', None)
-        #category = request.GET.get('category', None)
-
-        #data = favourite.objects.filter(user = user, resource = resource_id, category= category).exists()
-       # return JsonResponse(data)
