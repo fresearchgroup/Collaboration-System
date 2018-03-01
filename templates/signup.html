@@ -10,7 +10,7 @@
           {% if error %}
                   <div class="alert alert-danger">{{ error }}</div>
           {% endif %}
-          <form method="post" name="form" action = "{% url 'signup' %}">
+          <form method="post" name="form" action = "{% url 'signup' %}" data-validate-username-url="{% url 'check_user' %}">
             {% csrf_token %}
             {% include 'includes/form.html' %}
             <div class="form-group">
@@ -18,6 +18,8 @@
               <input type="text" class="form-control" id="username" name = "username" ng-model="username" required>
               <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
               <span style="color:red" ng-show="form.username.$dirty && form.username.$invalid">Not valid</span>
+              <span style="color:red" id ='check2'></span>
+              <span style="color:green" id ='check'></span>
             </div>
             <div class="form-group">
               <label for="email">Email:</label>
@@ -67,4 +69,5 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/user_exist.js' %}"></script>
 {% endblock %}

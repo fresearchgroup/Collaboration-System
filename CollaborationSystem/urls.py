@@ -36,7 +36,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
     url(r'^admin/', admin.site.urls),
-    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
@@ -124,6 +124,8 @@ urlpatterns = [
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
     url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
+    
+    url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
 
 ]
 

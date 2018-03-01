@@ -41,21 +41,8 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
 
     ```
 
-2. Add the following to your Djnago project's settings.py file -
 
-   ```
-         DATABASES = {
-          'default': {
-              'ENGINE': 'django.db.backends.mysql',
-              'OPTIONS': {
-                  'read_default_file': '/etc/mysql/my.cnf',
-              },
-          }
-      }
-
-   ```
-
-3. Open the Mysql 'my.cnf' file and add the following -
+2. Open the Mysql 'my.cnf' file and add the following -
 
   Open the file -
 
@@ -73,13 +60,16 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
       default-character-set = utf8
       
       ```
-4. Finally run the following commands -
+3. Finally run the following commands -
 
    ```
    sudo systemctl daemon-reload
    sudo systemctl restart mysql
    ```
-5. For Comments Module Add the following lines -
+
+
+
+ For Comments Module Add the following lines -
     ```  
     SITE_ID=1
     COMMENTS_APP='django_comments_xtd'
@@ -87,7 +77,7 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
     COMMENTS_XTD_LIST_ORDER = ('-thread_id', 'order') 
     COMMENTS_XTD_APP_MODEL_OPTIONS = {'allow_feedback': True, 'allow_flagging': True}
     ```
-6. Add the followin in view_article.html to show comments -
+ Add the followin in view_article.html to show comments -
   ```
   <div class="comment">
     <h4 class="text-center">Your comment</h4>
@@ -103,19 +93,16 @@ Steps for implementing Django with Mysql assuming you have already install Mysql
   {% endif %}
   ```
 
-7. Apache Solr 6.0.0
+Apache Solr 6.5.0
 Download link: http://archive.apache.org/dist/lucene/solr/6.5.0/solr-6.5.0.tgz
 
 
-8. Installation Steps after database is configured- 
+
+Installation Steps after database is configured- 
 
       - python3 manage.py loaddata workflow
       - python3 manage.py loaddata roles
       - python3 manage.py loaddata faq
-
-
-
-
 
 
 
@@ -139,3 +126,7 @@ After installing django -reversion compare module, copy the patch file from 'tem
  mysql -u root -p  (and select the database that is created and run the following sql query)
  
  ALTER TABLE BasicArticle_articles MODIFY COLUMN body text CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+ Git:
+
+ Created a develop branch

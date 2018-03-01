@@ -58,26 +58,32 @@ def community_view(request, pk):
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
 
 def community_subscribe(request):
+	cid = request.POST['cid']
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+			if CommunityMembership.objects.filter(user=user, community=community).exists():
+				return redirect('community_view',pk=cid)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
-		return redirect('login')
+		return redirect('/login/?next=/community-view/%d' % int(cid) )
 
 def community_unsubscribe(request):
-	if request.method == 'POST':
-		cid = request.POST['cid']
-		community=Community.objects.get(pk=cid)
-		user = request.user
-		obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-		return redirect('community_view',pk=cid)
-	return render(request, 'communityview.html')
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			cid = request.POST['cid']
+			community=Community.objects.get(pk=cid)
+			user = request.user
+			if CommunityMembership.objects.filter(user=user, community=community).exists():
+				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+			return redirect('community_view',pk=cid)
+		return render(request, 'communityview.html')
+	else:
+		return redirect('login')
 
 def community_article_create(request):
 	if request.user.is_authenticated:
@@ -148,7 +154,7 @@ def handle_community_creation_requests(request):
 			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
 			user=rcommunity.requestedby
 			status = request.POST['status']
-			if status=='approve':
+			if status=='approve' and rcommunity.status!='approved':
 
 				# Create Forum for this community
 				from django.db import connection
@@ -188,96 +194,104 @@ def handle_community_creation_requests(request):
 				rcommunity.status = 'approved'
 				rcommunity.save()
 
-			if status=='reject':
+			if status=='reject' and rcommunity.status!='rejected':
 				rcommunity.status = 'rejected'
 				rcommunity.save()
 
 
 		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
+	else:
+		return redirect('login')
 
 def manage_community(request,pk):
-	community = Community.objects.get(pk=pk)
-	uid = request.user.id
-	errormessage = ''
-	membership = None
-	try:
-		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
-		if membership.role.name == 'community_admin':
-			count = CommunityMembership.objects.filter(community = community.pk, role=membership.role).count()
-			members = CommunityMembership.objects.filter(community = community.pk)
-			if request.method == 'POST':
-				try:
-					username = request.POST['username']
-					rolename = request.POST['role']
-					user = User.objects.get(username = username)
-					role = Roles.objects.get(name=rolename)
-					status = request.POST['status']
+	if request.user.is_authenticated:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		errormessage = ''
+		membership = None
+		try:
+			membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+			if membership.role.name == 'community_admin':
+				count = CommunityMembership.objects.filter(community = community.pk, role=membership.role).count()
+				members = CommunityMembership.objects.filter(community = community.pk)
+				if request.method == 'POST':
+					try:
+						username = request.POST['username']
+						rolename = request.POST['role']
+						user = User.objects.get(username = username)
+						role = Roles.objects.get(name=rolename)
+						status = request.POST['status']
 
-					if status == 'add':
-						try:
-							is_member = CommunityMembership.objects.get(user =user, community = community.pk)
-						except CommunityMembership.DoesNotExist:
-							obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-						else:
-							errormessage = 'user exists in community'
-					if status == 'update':
-						if count > 1 or count == 1 and username != request.user.username:
+						if status == 'add':
 							try:
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
-								is_member.role = role
-								is_member.save()
 							except CommunityMembership.DoesNotExist:
-								errormessage = 'no such user in the community'
-						else:
-							errormessage = 'cannot update this user'
-					if status == 'remove':
-						if count > 1 or count == 1 and username != request.user.username:
-							try:
-								obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-							except CommunityMembership.DoesNotExist:
-								errormessage = 'no such user in the community'
-						else:
-							errormessage = 'cannot remove this user'
-					return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
-#					return redirect('manage_community',pk=pk)
-				except User.DoesNotExist:
-					errormessage = "no such user in the system"
+								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+							else:
+								errormessage = 'user exists in community'
+						if status == 'update':
+							if count > 1 or count == 1 and username != request.user.username:
+								try:
+									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
+									is_member.role = role
+									is_member.save()
+								except CommunityMembership.DoesNotExist:
+									errormessage = 'no such user in the community'
+							else:
+								errormessage = 'cannot update this user'
+						if status == 'remove':
+							if count > 1 or count == 1 and username != request.user.username:
+								try:
+									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+								except CommunityMembership.DoesNotExist:
+									errormessage = 'no such user in the community'
+							else:
+								errormessage = 'cannot remove this user'
+						return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+	#					return redirect('manage_community',pk=pk)
+					except User.DoesNotExist:
+						errormessage = "no such user in the system"
 
-			return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
-		else:
+				return render(request, 'managecommunity.html', {'community': community, 'members':members,'membership':membership, 'errormessage':errormessage})
+			else:
+				return redirect('community_view',pk=pk)
+		except CommunityMembership.DoesNotExist:
 			return redirect('community_view',pk=pk)
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view',pk=pk)
+	else:
+		return redirect('login')
 
 def update_community_info(request,pk):
-	community = Community.objects.get(pk=pk)
-	errormessage = ''
-	membership = None
-	uid = request.user.id
-	try:
-		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-		if membership.role.name == 'community_admin':
-			if request.method == 'POST':
-				desc = request.POST['desc']
-				category = request.POST['category']
-				tag_line = request.POST['tag_line']
-				community.desc = desc
-				community.category = category
-				community.tag_line = tag_line
-				try:
-					image = request.FILES['community_image']
-					community.image = image
-				except:
-					errormessage = 'image not uploaded'
-				community.save()
-				return redirect('community_view',pk=pk)
+	if request.user.is_authenticated:
+		community = Community.objects.get(pk=pk)
+		errormessage = ''
+		membership = None
+		uid = request.user.id
+		try:
+			membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+			if membership.role.name == 'community_admin':
+				if request.method == 'POST':
+					desc = request.POST['desc']
+					category = request.POST['category']
+					tag_line = request.POST['tag_line']
+					community.desc = desc
+					community.category = category
+					community.tag_line = tag_line
+					try:
+						image = request.FILES['community_image']
+						community.image = image
+					except:
+						errormessage = 'image not uploaded'
+					community.save()
+					return redirect('community_view',pk=pk)
+				else:
+					return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
 			else:
-				return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
-		else:
+				return redirect('community_view',pk=pk)
+		except CommunityMembership.DoesNotExist:
 			return redirect('community_view',pk=pk)
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view',pk=pk)
+	else:
+		return redirect('login')
 
 def create_community(request):
 	errormessage = ''
@@ -345,7 +359,7 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(carticles), 5)
@@ -367,7 +381,7 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(cgarticles), 5)
 			try:

@@ -5,7 +5,7 @@ from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles
+from Group.models import GroupMembership, GroupArticles, Group
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
@@ -15,6 +15,7 @@ from operator import add
 from django.conf import settings
 import urllib
 import json
+from django.http import JsonResponse
 
 def signup(request):
     """
@@ -85,8 +86,8 @@ def user_dashboard(request):
         ap = User.objects.raw(
         'Select 1 id, Year, Sum(JAN) JAN,sum(FEB) FEB,sum(MAR) MAR,sum(APR) APR,sum(MAY) MAY,sum(JUN) JUN,sum(JUL) JUL,sum(AUG) AUG,sum(SEP) SEP,sum(OCT) OCT,sum(NOV) NOV,sum(DECEM) DECE, Concat(Sum(JAN) , "," , sum(FEB) , "," ,sum(MAR),",",sum(APR),",",sum(MAY),",",sum(JUN),",",sum(JUL),",",sum(AUG),",", sum(SEP) ,",",sum(OCT),",",sum(NOV),",",sum(DECEM)) Data,state_id State from (Select Year, Case when Month=1 Then 1 else 0 END JAN, Case when Month=2 Then 1 else 0 END FEB, Case when Month=3 Then 1 else 0 END MAR, Case when Month=4 Then 1 else 0 END APR, Case when Month=5 Then 1 else 0 END MAY, Case when Month=6 Then 1 else 0 END JUN, Case when Month=7 Then 1 else 0 END JUL, Case when Month=8 Then 1 else 0 END AUG, Case when Month=9 Then 1 else 0 END SEP, Case when Month=10 Then 1 else 0 END OCT, Case when Month=11 Then 1 else 0 END NOV, Case when Month=12 Then 1 else 0 END DECEM, state_id from  (select  Month(created_at) Month ,Year(created_at) Year ,state_id from BasicArticle_articles where id in (select article_id from Community_communityarticles where user_id=%s) or id in (select article_id from Group_grouparticles where user_id=%s)) T ) P group by Year,state_id having Year=2018;',
         [request.user.id,request.user.id] )
-        visiblelist = []
-        publishablelist = []
+        visiblelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        publishablelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         articlespublished = ''
         for a in ap:
             if a.State == 3: #publsihed
@@ -114,7 +115,11 @@ def home(request):
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto})
+	countcommunity = Community.objects.all().count()
+	countgroup = Group.objects.all().count()
+	countarticles = Articles.objects.filter(state=state).count()
+	countusers = User.objects.all().count()
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countgroup':countgroup, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:
@@ -178,3 +183,13 @@ def upload_image(request):
 
         return redirect('view_profile')
     return redirect('view_profile')
+
+
+def username_exist(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A user with this username already exists.'
+    return JsonResponse(data)

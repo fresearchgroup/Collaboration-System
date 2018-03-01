@@ -66,9 +66,8 @@
       <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
-        <li><i class="fa fa-eye"></i> {{article.views}} </li>
-        {% get_comment_count for article as commentscnt %}
-        <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} views </li>
+        <li><i class="fa fa-comments"></i> {{ article.username }} </li>
         <li><i class="fa fa-soccer-ball-o"></i>{{article.name}} Group</li>
       </ul>
       <p>

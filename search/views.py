@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 import pysolr
-path= "http://10.129.132.116:8983/solr/collab"
+path= "http://10.129.132.103:8983/solr/collab"
 def search_articles(request):
 	if request.method == 'POST':
 		searchcriteria = request.POST['searchcriteria']
