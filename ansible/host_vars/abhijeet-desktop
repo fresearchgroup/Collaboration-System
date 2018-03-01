@@ -1,0 +1,12 @@
+---
+repo_url: https://github.com/fresearchgroup 
+repo: Collaboration-System
+home_dir: /home/ubuntu
+upass: 123456
+repo_dir: "{{ home_dir }}/{{ repo }}"
+django_dir: "{{ repo_dir }}/"
+static_dir: "{{ home_dir }}/static"
+django_project: Collaboration-System
+dbname: django
+dbuser: root 
+dbpassword: root 
