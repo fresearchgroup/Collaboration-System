@@ -25,7 +25,10 @@ def display_articles(request):
 		articles = paginator.page(1)
 	except EmptyPage:
 		articles = paginator.page(paginator.num_pages)
-	return render(request, 'articles.html',{'articles':articles})
+	fav_articles = ''
+	if request.user.is_authenticated:
+		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
+	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
 def create_article(request):
 	"""
