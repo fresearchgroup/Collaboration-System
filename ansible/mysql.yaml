@@ -1,0 +1,9 @@
+- hosts: all
+
+  tasks:
+  - name: Install the Python MySQLB module
+    pip: name=MySQL-python
+  - name: Create User
+    mysql_user: name={{dbuser}} password={{dbpassword}} login_user=root login_password=root priv='*.*:ALL' state=present
+  - name: ensure database is created
+    mysql_db: db={{dbname}} login_user=root login_password=root state=present 

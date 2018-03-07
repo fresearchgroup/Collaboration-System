@@ -1,0 +1,53 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Create ubuntu user
+      user: name=ubuntu password={{ upass }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa
+    
+    - name: Read SSH public key
+      slurp: src=/home/ubuntu/.ssh/id_rsa.pub
+      register: public_key
+    
+    - debug: msg="{{ public_key['content'] | b64decode }}"
+    
+    - name: Running apt update
+      apt: update_cache=yes
+    
+    - name: Installing required packages
+      apt: name={{item}} state=present
+      with_items:
+       - mysql-server
+       - python3-dev
+       - libmysqlclient-dev
+       - git
+       - python3-pip
+    
+    - name: Install the Python MySQLB module
+      pip: name=MySQL-python
+    - name: Create User
+      mysql_user: name={{dbuser}} password={{dbpassword}} login_user=root login_password=root priv='*.*:ALL' state=present
+    - name: ensure database is created
+      mysql_db: db={{dbname}} login_user=root login_password=root state=present
+    
+    - name: pull branch master
+      git:
+        repo={{ repo_url }}/{{ repo }}.git
+        dest={{ repo_dir }}
+        accept_hostkey=yes
+
+    - name: install python requirements
+      pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
+
+
+    - name: django makemigrations
+      shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
+    - name: django migrate
+      shell: ./manage.py migrate --noinput chdir={{ django_dir }}
+    - name: django loaddata workflow
+      shell: ./manage.py loaddata workflow chdir={{ django_dir }}
+    - name: django loaaddata roles   
+      shell: ./manage.py loaddata roles chdir={{ django_dir }}
+    - name: django loaaddata faq   
+      shell: ./manage.py loaddata faq chdir={{ django_dir }}
+    - name: Django Runserver
+      shell: nohup python3 manage.py runserver 127.0.0.1:8081 & 

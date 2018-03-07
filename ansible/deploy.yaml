@@ -1,0 +1,22 @@
+---
+- hosts: all
+  tasks:
+  - name: pull branch master
+    git:
+      repo={{ repo_url }}/{{ repo }}.git
+      dest={{ repo_dir }}
+      accept_hostkey=yes
+
+  - name: install python requirements
+    pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
+  
+  - name: django makemigrations
+    shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
+  - name: django loaddata wf
+    shell: ./manage.py loaddata workflow chdir={{ django_dir }}
+  - name: djang loaaddata roles   
+    shell: ./manage.py loaddata roles chdir={{ django_dir }}
+  - name: djang loaaddata faq   
+    shell: ./manage.py loaddata faq chdir={{ django_dir }}
+  - name: Django Runserver
+    shell: python3 manage.py runserver &
