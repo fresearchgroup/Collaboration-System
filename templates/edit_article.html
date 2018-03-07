@@ -33,6 +33,10 @@
   
   <li class="nav-item ">
     <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+  </li> 
+     <li class="nav-item" style="float: right;"
+>
+    <a class="nav-link " href="{% url 'chat_index' %}">Chat For Article</a>
   </li>
   {% endif %}
 </ul>

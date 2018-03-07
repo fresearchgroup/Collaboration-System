@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'chat.apps.ChatConfig',
     'django.contrib.sites',
     'django_comments_xtd',
     'django_comments',
@@ -121,9 +122,9 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
+        'NAME': 'csdb',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'kamlesh',
         'HOST': 'localhost',
         'PORT': '3306',
     }
