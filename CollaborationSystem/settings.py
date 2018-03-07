@@ -176,8 +176,8 @@ LOGIN_REDIRECT_URL = 'user_dashboard'
 
 CORS_ORIGIN_ALLOW_ALL=True
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I1v-sHbsogVc0jAw9M9Xy1eM' #Paste Secret Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET') #Paste Secret Key
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_HOST =config('EMAIL_HOST'),
