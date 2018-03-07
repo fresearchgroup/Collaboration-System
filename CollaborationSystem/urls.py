@@ -126,6 +126,7 @@ urlpatterns = [
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
     
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
+    url(r'^favourites/$', user_views.favourites, name ='favourites' ),
 
 ]
 
