@@ -16,12 +16,14 @@
    <div class="details">
       <h3>No Content</h3>
       <p>
-         Sorry, currently there are no published articles from any community or group.
+         Sorry, currently there are no published articles from any community or group. 
       </p>
    </div>
 </div>
 {% endif %}
 {{myhtml|safe}}{% autoescape off%}
+<div class="row ">
+  <div class="col-md-10 col-sm-10">
 {% for article in articles %}
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
@@ -31,7 +33,7 @@
       <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
       {%endif%}
     </div>
-    <div class="col-md-10 col-sm-10">
+    <div class="col-md-7 col-sm-7">
       <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
@@ -50,9 +52,27 @@
         <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
       </p>
     </div>
+
   </div>
+
   <hr class="blog-post-sep">
 {% endfor %}
+</div>
+{%if favs != ''%}
+<div class="col-md-2 col-sm-2">
+                <div class="card" style="width: 18rem;">
+                  <div class="card-header alert alert-warning">
+                    Favourite Articles
+                  </div>
+                  {%for article in favs%}
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="{% url 'article_view' article.id %}">{{article.title}}</a></li>
+                  </ul>
+                  {%endfor%}
+          </div>
+    </div>
+    {%endif%}
+</div>
 {% endautoescape%}
 
 {% if articles.has_other_pages %}

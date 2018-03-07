@@ -9,13 +9,15 @@ from Group.models import GroupMembership, GroupArticles, Group
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
-from .models import ProfileImage
+from .models import ProfileImage, favourite
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from operator import add
 from django.conf import settings
 import urllib
 import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 def signup(request):
     """
@@ -193,3 +195,21 @@ def username_exist(request):
     if data['is_taken']:
         data['error_message'] = 'A user with this username already exists.'
     return JsonResponse(data)
+
+@csrf_exempt
+def favourites(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user= User.objects.get(username=username)
+        resource_id = request.POST.get('rid')
+        category = request.POST.get('category')
+        status = request.POST.get('status')
+        if status == 'add':
+            if not favourite.objects.filter(user = user, resource = resource_id, category= category).exists():
+                obj = favourite.objects.create(user = user, resource = resource_id, category= category)
+                return HttpResponse('added')
+        if status == 'remove':
+            if  favourite.objects.filter(user = user, resource = resource_id, category= category).exists():
+                obj = favourite.objects.filter(user = user, resource = resource_id, category= category).delete()
+                return HttpResponse('removed')
+        return HttpResponse('ok')

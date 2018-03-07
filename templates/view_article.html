@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load comments %}
 {% load comments_xtd %}
-
+{% load static %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
@@ -46,6 +46,21 @@
             {% if article.group.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
             {% endif %}
+            {%if user.is_authenticated %}
+            {%if is_fav %}
+            <li><i id ="fav_submit" class="fa fa-star"></i>Favourites</li>
+            {% else %}
+            <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
+            {%endif%}
+            <form methd = "post">
+                <input id="username" type="hidden" value="{{request.user.username}}"/>
+                <input id="rid" type="hidden" value="{{article.article.pk}}"/>
+                <input id="category" type="hidden" value="article"/>
+                <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
+                <input id="url" type="hidden" value="{% url 'favourites' %}"/> 
+              </form>
+            {% endif %}
+            
           </ul>
         <p>
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
@@ -89,4 +104,7 @@
    {% render_comment_form for article %}
 </div>
 
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/favourite.js' %}"></script>
 {% endblock %}

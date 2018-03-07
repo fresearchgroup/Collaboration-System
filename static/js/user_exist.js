@@ -21,6 +21,7 @@ $('document').ready(function(){
       	$('#username').parent().addClass("form_error");
       	$('#username').siblings("span#check2").text('Sorry Username is taken');
         $('#username').siblings("span#check").text('');
+        $('#submit').prop('disabled', True);
       }else {
       	$('#username').parent().removeClass();
       	$('#username').parent().addClass("form_success");

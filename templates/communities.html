@@ -10,17 +10,17 @@
 {% block content %}
 
 <div class="container">
-  <form class="pull-right" method="post">
+  <form class="pull-right" method="post" >
     {% csrf_token %}
     <div class="form-group">
       <label for="Sorting">Sort by</label>
-      <select name="sortby">
+      <select id="select_community" name="sortby" class="btn btn-primary" onchange="this.form.submit()">
         <option value="a_to_z">Name: A to Z</option>
         <option value="z_to_a">Name: Z to A</option>
         <option value="oldest">oldest</option>
         <option value="latest">Latest</option>
       </select>
-      <button type="submit" class="btn btn-primary">Sort</button>
+
     </div>
   </form>
 

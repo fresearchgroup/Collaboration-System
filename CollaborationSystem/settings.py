@@ -14,6 +14,7 @@ import os
 from machina import get_apps as get_machina_apps
 from machina import MACHINA_MAIN_TEMPLATE_DIR
 from machina import MACHINA_MAIN_STATIC_DIR
+from decouple import config, Csv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,12 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 
 # Application definition
@@ -121,11 +122,11 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'collaboration',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
@@ -175,16 +176,16 @@ LOGIN_REDIRECT_URL = 'user_dashboard'
 
 CORS_ORIGIN_ALLOW_ALL=True
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I1v-sHbsogVc0jAw9M9Xy1eM' #Paste Secret Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET') #Paste Secret Key
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST ='localhost'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD =''
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL="collaboratingcommunity@cse.iitb.ac.in"
+EMAIL_HOST =config('EMAIL_HOST'),
+EMAIL_HOST_USER = config('EMAIL_HOST_USER'),
+EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD'),
+EMAIL_PORT = config('EMAIL_PORT', cast=int),
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool),
+DEFAULT_FROM_EMAIL=config('DEFAULT_FROM_EMAIL'),
 
 
 
@@ -239,7 +240,7 @@ REST_FRAMEWORK = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-GOOGLE_RECAPTCHA_SECRET_KEY = '6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK'
+GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True
