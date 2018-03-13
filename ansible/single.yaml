@@ -8,7 +8,7 @@
       slurp: src=/home/ubuntu/.ssh/id_rsa.pub
       register: public_key
     
-    - debug: msg="{{ public_key['content'] | b64decode }}"
+#    - debug: msg="{{ public_key['content'] | b64decode }}"
     
     - name: Running apt update
       apt: update_cache=yes
@@ -17,13 +17,14 @@
       apt: name={{item}} state=present
       with_items:
        - mysql-server
-       - python3-dev
+       - python3.6-dev
        - libmysqlclient-dev
        - git
        - python3-pip
+       - python-mysqldb
     
-    - name: Install the Python MySQLB module
-      pip: name=MySQL-python
+   # - name: Install the Python MySQLB module
+    #  pip: name=MySQL-python
     - name: Create User
       mysql_user: name={{dbuser}} password={{dbpassword}} login_user=root login_password=root priv='*.*:ALL' state=present
     - name: ensure database is created
@@ -40,14 +41,14 @@
 
 
     - name: django makemigrations
-      shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
+      shell: python3.6 manage.py makemigrations --noinput chdir={{django_dir}}
     - name: django migrate
-      shell: ./manage.py migrate --noinput chdir={{ django_dir }}
+      shell: python3.6 manage.py migrate --noinput chdir={{ django_dir }}
     - name: django loaddata workflow
-      shell: ./manage.py loaddata workflow chdir={{ django_dir }}
+      shell: python3.6 manage.py loaddata workflow chdir={{ django_dir }}
     - name: django loaaddata roles   
-      shell: ./manage.py loaddata roles chdir={{ django_dir }}
+      shell: python3.6 manage.py loaddata roles chdir={{ django_dir }}
     - name: django loaaddata faq   
-      shell: ./manage.py loaddata faq chdir={{ django_dir }}
+      shell: python3.6 manage.py loaddata faq chdir={{ django_dir }}
     - name: Django Runserver
       shell: nohup python3 manage.py runserver 127.0.0.1:8081 & 
