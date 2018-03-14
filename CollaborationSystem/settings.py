@@ -122,19 +122,12 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
-=======
-        'NAME': 'csdb',
-        'USER': 'root',
-        'PASSWORD': '111111',
-        'HOST': 'localhost',
-        'PORT': '3306',
->>>>>>> 76d5b19a2ae63750ecad4c246676bca063aa1c60
+
     }
 }
 
