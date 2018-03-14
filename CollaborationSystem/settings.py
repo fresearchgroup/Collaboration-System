@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'pysolr',
     'search',
     'webcontent',
-    'course',
+    'Course',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
