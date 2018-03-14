@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'social_django',
     'pysolr',
     'search',
-    'webcontent'
+    'webcontent',
+    'course',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
