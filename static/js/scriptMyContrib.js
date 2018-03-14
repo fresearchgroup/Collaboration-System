@@ -11,6 +11,7 @@ var data = {
             label: "Articles Contributed",
             backgroundColor: "blue",
             data:articlesContributed
+            
         },
         {
             label: "Articles Published",
