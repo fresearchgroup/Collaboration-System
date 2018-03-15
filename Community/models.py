@@ -3,12 +3,34 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
 from Group.models import Group
-import os, uuid
+from Group.models import Group
+from UserRolesPermission.helpers import RandomFileName
 
-def get_file_path(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('community', filename)
+import os, uuid 
+import os
+import datetime
+import threading
+import pickle
+
+class EventLogger:
+	lock=threading.Lock()
+	@staticmethod
+	def logevent(content):
+		date = datetime.datetime.now().strftime("%y-%m-%d")
+		myfile = open("hello.txt", "a")
+		myfile.write("content")
+		myfile.close()
+	
+#EventLogger.logevent("random" +"\n")
+#EventLogger.logevent("data") 
+# Create your models here.
+class Community(models.Model):
+
+
+	def get_file_path(instance, filename):
+		ext = filename.split('.')[-1]
+		filename = "%s.%s" % (uuid.uuid4(), ext)
+		return os.path.join('community', filename)
 
 class Community(models.Model):
 
