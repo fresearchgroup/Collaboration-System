@@ -28,7 +28,8 @@ def create_topics(request, pk):
 def course_view(request, pk):
 	try:
 		course = CommunityCourses.objects.get(course=pk)
+		topics = Topics.objects.filter(course=pk)
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics})
