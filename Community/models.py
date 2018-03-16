@@ -58,7 +58,7 @@ class RequestCommunityCreation(models.Model):
 	def __str__(self):
 		return self.name
 
-class CommunityCourse(models.Model):
+class CommunityCourses(models.Model):
 	course = models.ForeignKey(Course, null=True, related_name='communitycourses')
 	user = models.ForeignKey(User, null=True, related_name='communitycourses')
 	community = models.ForeignKey(Community, null=True, related_name='communitycourses')
