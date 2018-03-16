@@ -17,14 +17,18 @@ def create_topics(request, pk):
 		if request.method == 'POST':
 			name = request.POST['name']
 			parentid = request.POST['parentid']
-			if Topics.objects.filter(pk=pk).exist():
-				parent = Topics.objects.get(pk=pk)
+			if Topics.objects.filter(pk=parentid).exist():
+				parent = Topics.objects.get(pk=parentid)
 			else:
 				parent = None
 			course = Course.objects.get(pk=pk)
-
 			topic = Topics.objects.create(name = name, parent=parent, course = course )
-
 			return topic
+		else:
+			course = Course.objects.get(pk=pk)
+			topics = Topics.object.filter(course=course)
+			return render(request, 'signup.html', {'course': course, 'topics':topics})
+
+
 
 
