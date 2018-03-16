@@ -3,7 +3,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.course.name }} </li>
+  <li class="breadcrumb-item active">{{ course.name }} </li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
@@ -16,7 +16,7 @@
         </li>
         {% if user.is_authenticated %}
         <li class="nav-item ">
-          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+          <a class="nav-link " href="#">Edit</a>
         </li>
         {% endif %}
       </ul>
@@ -36,6 +36,16 @@
                 </li>
             {% endrecursetree %}
         </ul>
+
+         <form method="post" novalidate>
+             {% csrf_token %}
+             <table>
+               {{ form.as_table }}
+             </table>
+             <button type="submit">Save</button>
+           </form>
+
+
       </div>
     </div>
     <div class="col-sm-8"><br/><br/>
