@@ -3,9 +3,27 @@
 
 {% block pagecar %}
     <!-- BEGIN SLIDER -->
-    <div class="page-slider">
-        <div id="carousel-example-generic" class="carousel slide carousel-slider">
+  <div style="width: 1578px; height: 702px; display: none; opacity: 1.8;" id="mask"></div>
+
+      <!-- device test, don't remove. javascript needed! -->
+    <span class="visible-xs"></span><span class="visible-sm"></span><span class="visible-md"></span><span class="visible-lg"></span>
+    <!-- device test end -->
+    <!-- container + head wrapper end -->
+    
+      <div id="k-head" class="container"><!-- container + head wrapper -->
+  
+      <div class="row"><!-- row -->
+        
+            <nav class="k-functional-navig"><!-- functional navig -->
+     <ul class="list-inline pull-right">
+       </ul>
+        <div class="page-slider">
+            <div id="carousel-example-generic" class="carousel slide carousel-slider" data-interval="3000" data-ride="carousel">
             <!-- Indicators -->
+                <!-- Controls -->
+                    <a class="left carousel-control" href="#carousel-featured" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                      <a class="right carousel-control" href="#carousel-featured" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                        <!-- Controls end -->
             <ol class="carousel-indicators carousel-indicators-frontend">
                 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                 <li data-target="#carousel-example-generic" data-slide-to="1"></li>
@@ -20,7 +38,8 @@
                       <div class="carousel-position-six text-uppercase text-center">
                           <h2 class="margin-bottom-20 animate-delay carousel-title-v5" data-animation="animated fadeInDown">
                               Explore the power <br/>
-                              <span class="carousel-title-normal">of Collaborative Communities</span>
+                              <span class="carousel-title-normal">of Collaborative Communities<span>
+                              
                           </h2>
                           <!--<p class="carousel-subtitle-v5 border-top-bottom margin-bottom-30" data-animation="animated fadeInDown">Join Us</p>-->
                       </div>
