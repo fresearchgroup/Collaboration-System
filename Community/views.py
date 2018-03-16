@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from Course.views import course_view, create_course
 # Create your views here.
 
 
@@ -394,3 +395,20 @@ def community_group_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
+
+def community_course_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				course = create_course(request)
+				obj = CommunityCourses.objects.create(course=course, user=request.user, community=community)
+				return redirect('course_view', course.pk)
+			else:
+				return render(request, 'new_course.html', {'community':community, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')

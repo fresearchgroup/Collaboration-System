@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from .models import Course, Topics
-
-
-
+from Community.models import CommunityCourses
 
 def create_course(request):
 	name = request.POST['name']
@@ -10,9 +8,7 @@ def create_course(request):
 	course = Course.objects.create(name=name, desc=desc)
 	return course
 
-
 def create_topics(request, pk):
-
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			name = request.POST['name']
@@ -29,6 +25,10 @@ def create_topics(request, pk):
 			topics = Topics.object.filter(course=course)
 			return render(request, 'signup.html', {'course': course, 'topics':topics})
 
-
-
-
+def course_view(request, pk):
+	try:
+		course = CommunityCourses.objects.get(course=pk)
+#		count = course_watch(request, course.course) #Shall add this later
+	except CommunityCourses.DoesNotExist:
+		raise Http404
+	return render(request, 'view_course.html', {'course':course})
