@@ -29,6 +29,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
+from Course import views as courseview
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
 #router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -124,9 +125,12 @@ urlpatterns = [
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
     url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
-    
+
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
+
+    url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
+    url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
 
 ]
 
