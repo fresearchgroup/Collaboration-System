@@ -11,7 +11,7 @@
     pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
   
   - name: django makemigrations
-    shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
+    shell: python3.6 manage.py makemigrations --noinput chdir={{django_dir}}
   - name: django loaddata wf
     shell: ./manage.py loaddata workflow chdir={{ django_dir }}
   - name: djang loaaddata roles   
@@ -19,4 +19,4 @@
   - name: djang loaaddata faq   
     shell: ./manage.py loaddata faq chdir={{ django_dir }}
   - name: Django Runserver
-    shell: python3 manage.py runserver &
+    shell: python3.6 manage.py runserver &

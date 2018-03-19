@@ -12,3 +12,6 @@
        - libmysqlclient-dev
        - git
        - python3-pip
+       - uwsgi
+       - uwsgi-plugin-python
+       - nginx
