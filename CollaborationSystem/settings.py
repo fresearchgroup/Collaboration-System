@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'chat.apps.ChatConfig',
     'django.contrib.sites',
     'django_comments_xtd',
     'django_comments',
@@ -117,7 +118,7 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
+#comete for chating
 
 DATABASES = {
     'default': {
