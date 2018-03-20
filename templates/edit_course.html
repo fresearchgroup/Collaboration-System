@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container-fluid ">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-12">
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item active">
@@ -22,9 +22,11 @@
         {% endif %}
       </ul>
       </div>
+    </div>
+    <div class="col-sm-4">
       <br/>
       <div class="blog-item">
-        <h2><a href="#">{{ course.course.name }} </a></h2>
+        <h3><a href="#">Topics for {{ course.course.name }} </a></h3>
             <ul>
                 {% recursetree topics %}
                     <li><p>
@@ -33,7 +35,6 @@
                         <input type='hidden' name='status' value='update'>
                         <input type='hidden' name='nodeid' value = {{node.id}}>
                         <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value = {{node.name}} />
-                        <!--<span id='txt{{node.id}}' name='name' onsubmit="Edit({{node.id}})" contentEditable='true' >{{node.name}}</span>-->
                       </form>
                         {% if not node.is_leaf_node %}
                             <ul class="children">
@@ -43,20 +44,25 @@
                     </p></li>
                 {% endrecursetree %}
             </ul>
-         <form id="newtopic" method="post" novalidate>
-             {% csrf_token %}
-             <table>
-               {{ form.as_p }}
-             </table>
-             {% csrf_token %}
-             <input type="hidden" name="status" value="addtopic">
-             <button type="submit">Save</button>
-           </form>
-
       </div>
     </div>
-    <div class="col-sm-8"><br/><br/>
-      content
+    <div class="col-sm-4"><br />
+      <h3><a href="#">Add Topic </a></h3>
+      <form id="newtopic" method="post" novalidate>
+          {% csrf_token %}
+          <table>
+            {{ form.as_p }}
+          </table>
+          {% csrf_token %}
+          <input type="hidden" name="status" value="addtopic">
+          <button type="submit">Save</button>
+        </form>
+    </div>
+    <div class="col-sm-4"><br />
+      <h3><a href="#">Move Topics</a></h3>
+          <input type="hidden" name="status" value="movetopic">
+        </form>
+
     </div>
   </div>
 </div>
@@ -65,22 +71,7 @@
 
 {% block javascript %}
 <script>
-/*function Edit(nodeid) {
-      document.getElementById("txt"+nodeid).contentEditable = true;
-      if(! (document.getElementById("btn"+nodeid)) ){
-          var node = document.createElement("BUTTON");
-          node.setAttribute('id', "btn"+nodeid);
-          node.innerHTML = "Save";
-          node.onClick = "saveTopic("+nodeid+")";
-          document.getElementById("txt"+nodeid).appendChild(node);
-      }
-}*/
 function saveTopic(nodeid) {
-
-      //document.getElementById("txt"+nodeid).contentEditable = false;
-      //var element = document.getElementById("btn"+nodeid);
-      //element.parentNode.removeChild(element);
-
       document.getElementById("txt"+nodeid).addEventListener("keydown", function(e) {
           if (!e) { var e = window.event; }
           e.preventDefault(); // sometimes useful
