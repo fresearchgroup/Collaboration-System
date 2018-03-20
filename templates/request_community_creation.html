@@ -10,45 +10,107 @@
 {% endblock %}
 
 {% block content %}
+{% block javascript %}
+{% endblock %}
+
 
 {% if user.is_authenticated %}
-<form method="post" name = "form" action ="{% url 'request_community_creation' %}">
+<html>
+<head>
+    
+    <script>
+    
+function idd(field_id,field1)
+{
+    var id1=document.getElementById(field_id).value;
+    var f1=document.getElementById(field1);
+    var s1=/^[a-zA-Z_ ]+$/;
+    var format=/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    id1=id1.trim();
+   if(id1.length<2)
+        {
+
+        f1.innerHTML="<font color=red>please enter some value</font> ";
+             document.getElementById(field_id).style.borderColor="yellow";
+              document.getElementById("mySubmit").disabled = true;
+        }
+    else if(isNaN(id1)==false)
+        {
+
+        f1.innerHTML="<font color=red>please use character</font> ";
+             document.getElementById(field_id).style.borderColor="yellow";
+              document.getElementById("mySubmit").disabled = true;
+        }
+    else if(!id1.match(s1)){
+            f1.innerHTML="<font color=red>please enter only alphabets</fond>";
+            document.getElementById(field_id).style.borderColor="yellow";
+             document.getElementById("mySubmit").disabled = true;
+}
+        else{
+            
+        f1.innerHTML="";
+         document.getElementById("mySubmit").disabled = false;
+    }
+    
+   
+}
+</script>
+<script>
+function myFunction() {
+    document.getElementById("myForm").reset();
+}
+    
+    
+    </script>
+    
+   
+</head>
+<form id="myForm"  method="post">
+
   {% csrf_token %}
+
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-z A-Z ()]*$/" placeholder="Suggest a name for your community" required>
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
-    <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this community</span>
-    </div>
-
-  </div>
-  <div class="form-group">
-    <label for="tag_line">Tag line</label>
-    <input type="text" class="form-control" id="tag_line" name="tag_line" ng-model="tag_line" ng-pattern="/^[a-z A-Z0-9 !&()':-]*$/" placeholder="Suggest a tag line for your community" required>
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
-  </div>
-  <div class="form-group">
-    <label for="desc">Description</label>
-    <textarea  class="form-control" name="desc" rows="6"></textarea>
-    <small id="bodyhelp" class="form-text text-muted">Suggest a description about your community</small>
-  </div>
-  <div class="form-group">
-    <label for="category">Category</label>
-    <input type="text" class="form-control" id="category" name="category" placeholder="Suggest a category for your community" required>
+    <input type="text" class="form-control" id="name" name="name" placeholder="Suggest a name for your community" onblur="idd('name','1')" required>
+    <span id="1" value=""></span>
     <div class="invalid-feedback"></div>
   </div>
+
+  <div class="form-group">
+    <label for="tag_line">Tag line</label>
+    <input type="text" class="form-control" id="tag_line" name="tag_line" placeholder="Suggest a tag line for your community" onblur="idd('tag_line','2')" required>
+    <span id="2" value=""></span>
+    <div class="invalid-feedback"></div>
+  </div>
+
+  <div class="form-group">
+    <label for="desc">Description</label>
+    <textarea class="form-control" id="desc" name="desc"  placeholder="Suggest a description about your community" row="6"  onblur="idd('desc','3')" required></textarea>
+     <span id="3" value=""></span>
+  </div>
+
+  <div class="form-group">
+    <label for="category">Category</label>
+    <input type="text" class="form-control" id="category" name="category" placeholder="Suggest a category for your community" onblur="idd('category','4')" required>
+     <span id="4" value=""></span>
+    <div class="invalid-feedback"></div>
+  </div>
+
   <div class="form-group">
     <label for="purpose">Purpose</label>
-    <textarea  class="form-control" name="purpose" rows="6" ng-model="purpose" ng-pattern="/^[a-z A-Z0-9 !&()':-]*$/"></textarea>
-    <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
+    <textarea class="form-control" id="purpose" name="purpose" placeholder="Mention the purpose of creating this community" onblur="idd('purpose','5')" required></textarea>
+     <span id="5" value=""></span>
+    <div class="invalid-feedback"></div>
     <input type="hidden" name="status" value="Request" />
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphanumeric content are allowed</span></div>
   </div>
-  <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
+
+
+  
+<button type="submit" id="mySubmit" class="btn btn-primary" ng-disabled="form.$invalid">Submit Suggession</button>
+<button type="button"  class="btn btn-primary" onclick="myFunction()" value="Reset form">Reset Form</button>
 </form>
+
+</html>
+
 {% endif %}
-<br />
-{% endblock %}
-{% block javascript %}
-<script src="{% static 'js/angular.min.js' %}"></script>
 {% endblock %}
