@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 {% extends 'base.html' %}
 {% load mptt_tags %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.name }} </li>
+  <li class="breadcrumb-item active">{{ course.course.name }} </li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
@@ -24,27 +25,33 @@
       <br/>
       <div class="blog-item">
         <h2><a href="#">{{ course.course.name }} </a></h2>
-        <ul>
-            {% recursetree topics %}
-                <li>
-                    {{ node.name }}
-                    {% if not node.is_leaf_node %}
-                        <ul class="children">
-                            {{ children }}
-                        </ul>
-                    {% endif %}
-                </li>
-            {% endrecursetree %}
-        </ul>
-
-         <form method="post" novalidate>
+            <ul>
+                {% recursetree topics %}
+                    <li><p>
+                      <form id="updatetopic" method="post" action="{% url 'course_edit' course.course.pk %}">
+                        {% csrf_token %}
+                        <input type='hidden' name='status' value='update'>
+                        <input type='hidden' name='nodeid' value = {{node.id}}>
+                        <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value = {{node.name}} />
+                        <!--<span id='txt{{node.id}}' name='name' onsubmit="Edit({{node.id}})" contentEditable='true' >{{node.name}}</span>-->
+                      </form>
+                        {% if not node.is_leaf_node %}
+                            <ul class="children">
+                                {{ children }}
+                            </ul>
+                        {% endif %}
+                    </p></li>
+                {% endrecursetree %}
+            </ul>
+         <form id="newtopic" method="post" novalidate>
              {% csrf_token %}
              <table>
-               {{ form.as_table }}
+               {{ form.as_p }}
              </table>
+             {% csrf_token %}
+             <input type="hidden" name="status" value="addtopic">
              <button type="submit">Save</button>
            </form>
-
 
       </div>
     </div>
@@ -53,5 +60,39 @@
     </div>
   </div>
 </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+/*function Edit(nodeid) {
+      document.getElementById("txt"+nodeid).contentEditable = true;
+      if(! (document.getElementById("btn"+nodeid)) ){
+          var node = document.createElement("BUTTON");
+          node.setAttribute('id', "btn"+nodeid);
+          node.innerHTML = "Save";
+          node.onClick = "saveTopic("+nodeid+")";
+          document.getElementById("txt"+nodeid).appendChild(node);
+      }
+}*/
+function saveTopic(nodeid) {
+
+      //document.getElementById("txt"+nodeid).contentEditable = false;
+      //var element = document.getElementById("btn"+nodeid);
+      //element.parentNode.removeChild(element);
+
+      document.getElementById("txt"+nodeid).addEventListener("keydown", function(e) {
+          if (!e) { var e = window.event; }
+          e.preventDefault(); // sometimes useful
+
+          // Enter is pressed
+          if (e.keyCode == 13) { submitForm(); }
+      }, false);
+
+      function submitForm(){
+          document.updatetopic.submit();
+          document.updatetopic.method='post';
+      }
+</script>
 
 {% endblock %}

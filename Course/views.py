@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Course, Topics
 from Community.models import CommunityCourses
 from .forms import TopicForm
@@ -13,8 +13,8 @@ def create_topics(request, pk):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			name = request.POST['name']
-			parentid = request.POST['parentid']
-			if Topics.objects.filter(pk=parentid).exist():
+			parentid = request.POST['parent']
+			if Topics.objects.filter(pk=parentid).exists():
 				parent = Topics.objects.get(pk=parentid)
 			else:
 				parent = None
@@ -38,15 +38,21 @@ def course_view(request, pk):
 def course_edit(request, pk):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			pass
+			status = request.POST['status']
+			if status == 'addtopic':
+				create_topics(request,pk)
+			if status == 'update':
+				nodeid = request.POST['nodeid']
+				name = request.POST['name'+nodeid]
+				topic = Topics.objects.get(pk=nodeid)
+				topic.name = name
+				topic.save()
+			return redirect('course_edit',pk=pk)
 		else:
 			try:
 				course = CommunityCourses.objects.get(course=pk)
 				topics = Topics.objects.filter(course=pk)
 				form = TopicForm(course.course)
-#				form.course.queryset = CommunityCourses.objects.filter(course=pk)
-				#form.fields['name'].queryset=Topics.objects.filter(course=course.course)
-		#		count = course_watch(request, course.course) #Shall add this later
 			except CommunityCourses.DoesNotExist:
 				raise Http404
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
