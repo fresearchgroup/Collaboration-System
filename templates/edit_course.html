@@ -60,9 +60,33 @@
     </div>
     <div class="col-sm-4"><br />
       <h3><a href="#">Move Topics</a></h3>
-          <input type="hidden" name="status" value="movetopic">
-        </form>
-
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="Sorting">From:</label>
+          <select id="fromtopics" name="fromtopic" onchange="this.form.submit()">
+            {% recursetree topics %}
+              <option value = {{ node.pk }}> {{node.name}} </option>
+              {% if not node.is_leaf_node %}
+                {{ children }}
+              {% endif %}
+            {% endrecursetree %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="Sorting">To:</label>
+          <select id="totopics" name="totopic">
+            {% recursetree topics %}
+              <option value = {{ node.pk }}> {{node.name}} </option>
+              {% if not node.is_leaf_node %}
+                {{ children }}
+              {% endif %}
+            {% endrecursetree %}
+          </select>
+        </div>
+        <input type="hidden" name="status" value="movetopic" />
+        <button type="submit">Save</button>
+      </form>
     </div>
   </div>
 </div>
