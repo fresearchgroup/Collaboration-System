@@ -1,4 +1,10 @@
+from django.core.urlresolvers import reverse
+from django.urls import resolve
 from django.test import TestCase
+from django.contrib.auth.models import User
+from .views import display_articles,view_article,create_article,edit_article,delete_article,article_watch
+from .models import Articles
+
 class ArticleViewsTestCase(TestCase):
     def test_index(self):
         resp = self.client.get('/articles/')

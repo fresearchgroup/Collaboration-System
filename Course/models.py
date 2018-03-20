@@ -24,7 +24,7 @@ class Links(models.Model):
 	desc = models.TextField()
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_links')
 
-class videos(models.Model):
+class Videos(models.Model):
 	video = models.CharField(max_length=300)
 	desc = models.TextField()
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_videos')
