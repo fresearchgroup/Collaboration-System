@@ -10,6 +10,9 @@
     
 #    - debug: msg="{{ public_key['content'] | b64decode }}"
     
+#    - name: Adding python3.6 ppa
+#      shell: sudo add-apt-repository ppa:deadsnakes/ppa
+ 
     - name: Running apt update
       apt: update_cache=yes
     
@@ -17,18 +20,27 @@
       apt: name={{item}} state=present
       with_items:
        - mysql-server
-       - python3.6-dev
+       - python3-dev
        - libmysqlclient-dev
        - git
        - python3-pip
        - python-mysqldb
+       - nginx
+    #   - python-pip
+
     
+    - name: Install gunicorn
+      pip: name=gunicorn executable=pip3
+
+    #- name: Install supervisor 
+    #  pip: name=supervisor
    # - name: Install the Python MySQLB module
     #  pip: name=MySQL-python
     - name: Create User
       mysql_user: name={{dbuser}} password={{dbpassword}} login_user=root login_password=root priv='*.*:ALL' state=present
     - name: ensure database is created
       mysql_db: db={{dbname}} login_user=root login_password=root state=present
+
     
     - name: pull branch master
       git:
@@ -36,19 +48,43 @@
         dest={{ repo_dir }}
         accept_hostkey=yes
 
+    - name: copy environment file
+      copy:
+        src: /home/nithin/frg/Collaboration-System/ansible/.env
+        dest: /home/ubuntu/Collaboration-System/.env
+
     - name: install python requirements
       pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
 
-
+    - name: copy nginx file
+      copy:
+        src: /home/ubuntu/Collaboration-System/ansible/nginx.conf
+        dest: /etc/nginx/sites-enabled/nginx.conf
+    - name: copy nginx file
+      copy:
+        src: /home/ubuntu/Collaboration-System/ansible/gunicorn.service
+        dest: /etc/systemd/system/gunicorn.service   
+    #- name: copy supervisord.conf file
+    #   copy:
+    #    src: /home/ubuntu/Collaboration-System/ansible/supervisord.conf
+    #    dest: /etc/supervisord.conf
+ 
+  #  - name: copy supervisord startup script
+   #    copy:
+    #    src: /home/ubuntu/Collaboration-System/ansible/supervisord
+    #    dest: /etc/init.d/supervisord
+    
     - name: django makemigrations
-      shell: python3.6 manage.py makemigrations --noinput chdir={{django_dir}}
+      shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
     - name: django migrate
-      shell: python3.6 manage.py migrate --noinput chdir={{ django_dir }}
+      shell: python3 manage.py migrate --noinput chdir={{ django_dir }}
     - name: django loaddata workflow
-      shell: python3.6 manage.py loaddata workflow chdir={{ django_dir }}
+      shell: python3 manage.py loaddata workflow chdir={{ django_dir }}
     - name: django loaaddata roles   
-      shell: python3.6 manage.py loaddata roles chdir={{ django_dir }}
+      shell: python3 manage.py loaddata roles chdir={{ django_dir }}
     - name: django loaaddata faq   
-      shell: python3.6 manage.py loaddata faq chdir={{ django_dir }}
-    - name: Django Runserver
-      shell: nohup python3 manage.py runserver 127.0.0.1:8081 & 
+      shell: python3 manage.py loaddata faq chdir={{ django_dir }}
+#    - name: Django Runserver
+#      shell: python3 manage.py runserver 127.0.0.1:8081
+    - name: gunicorn Restart
+      service: name=gunicorn state=restarted
