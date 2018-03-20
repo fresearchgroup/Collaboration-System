@@ -1,7 +1,8 @@
+from django.core.urlresolvers import reverse
+from django.urls import resolve
 from django.test import TestCase
 from .views import group_view ,group_article_create,group_subscribe
 from .models import  Group ,GroupMembership ,GroupArticles
-
 class Grouptest(TestCase):
 
 
