@@ -42,11 +42,7 @@ def course_edit(request, pk):
 			if status == 'addtopic':
 				create_topics(request,pk)
 			if status == 'update':
-				nodeid = request.POST['nodeid']
-				name = request.POST['name'+nodeid]
-				topic = Topics.objects.get(pk=nodeid)
-				topic.name = name
-				topic.save()
+				update_topic_name(request)
 			return redirect('course_edit',pk=pk)
 		else:
 			try:
@@ -56,3 +52,12 @@ def course_edit(request, pk):
 			except CommunityCourses.DoesNotExist:
 				raise Http404
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
+
+def update_topic_name(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			nodeid = request.POST['nodeid']
+			name = request.POST['name'+nodeid]
+			topic = Topics.objects.get(pk=nodeid)
+			topic.name = name
+			topic.save()
