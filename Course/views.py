@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Course, Topics
 from Community.models import CommunityCourses
 from .forms import TopicForm
+from django.http import Http404, HttpResponse
 
 def create_course(request):
 	name = request.POST['name']
@@ -14,10 +15,10 @@ def create_topics(request, pk):
 		if request.method == 'POST':
 			name = request.POST['name']
 			parentid = request.POST['parent']
-			if Topics.objects.filter(pk=parentid).exists():
-				parent = Topics.objects.get(pk=parentid)
-			else:
+			if parentid == '':
 				parent = None
+			else:
+				parent = Topics.objects.get(pk=parentid)
 			course = Course.objects.get(pk=pk)
 			topic = Topics.objects.create(name = name, parent=parent, course = course )
 			return topic
