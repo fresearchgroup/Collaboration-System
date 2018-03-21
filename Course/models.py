@@ -9,7 +9,7 @@ class Course(models.Model):
 		return self.name
 
 class Topics(MPTTModel):
-	name = models.CharField(max_length=50, unique=True)
+	name = models.CharField(max_length=50)
 	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 	course = models.ForeignKey(Course,null=True, related_name='course_topics')
 
