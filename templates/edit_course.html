@@ -64,7 +64,8 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="topic">Topic:</label>
-          <select id="fromtopics" name="fromtopic" onChange="loadTopics()">
+
+          <select id="topic" name="topic" onChange="loadTopics()">
             {% recursetree topics %}
               <option value = {{ node.id }}> {{node.name}} </option>
               {% if not node.is_leaf_node %}
@@ -75,7 +76,7 @@
         </div>
         <div class="form-group">
           <label for="moving">Move To:</label>
-          <select id="totopics" name="totopic">
+          <select id="parent" name="parent">
           </select>
         </div>
         <input type="hidden" name="status" value="movetopic" />
@@ -104,10 +105,10 @@ function submitForm(){
 }
 
 function loadTopics(){
-    var selectedTopic = document.getElementById("fromtopics").value;
-    var topicList= document.getElementById("fromtopics");
-    document.getElementById('totopics').innerHTML = "";
-    var sel = document.getElementById('totopics');
+    var selectedTopic = document.getElementById("topic").value;
+    var topicList= document.getElementById("topic");
+    document.getElementById('parent').innerHTML = "";
+    var sel = document.getElementById('parent');
     for(i=0; i<topicList.options.length;i++){
         if (! (selectedTopic == topicList.options[i].value)) {
             var opt = document.createElement('option');

@@ -43,6 +43,8 @@ def course_edit(request, pk):
 				create_topics(request,pk)
 			if status == 'update':
 				update_topic_name(request)
+			if status == 'movetopic':
+				move_topic(request)
 			return redirect('course_edit',pk=pk)
 		else:
 			try:
@@ -60,4 +62,17 @@ def update_topic_name(request):
 			name = request.POST['name'+nodeid]
 			topic = Topics.objects.get(pk=nodeid)
 			topic.name = name
+			topic.save()
+
+def move_topic(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			parent = request.POST['parent']
+			if Topics.objects.filter(pk=parent).exists():
+				parent = Topics.objects.get(pk=parent)
+			else:
+				parent = None
+			topic = request.POST['topic']
+			topic = Topics.objects.get(pk=topic)
+			topic.parent = parent
 			topic.save()
