@@ -88,22 +88,17 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
+<script type="text/javascript">
 function saveTopic(nodeid) {
       document.getElementById("txt"+nodeid).addEventListener("keydown", function(e) {
-          if (!e) { var e = window.event; }
-          e.preventDefault(); // sometimes useful
-
           // Enter is pressed
           if (e.keyCode == 13) { submitForm(); }
       }, false);
 }
-
 function submitForm(){
     document.updatetopic.submit();
     document.updatetopic.method='post';
 }
-
 function loadTopics(){
     var selectedTopic = document.getElementById("topic").value;
     var topicList= document.getElementById("topic");
@@ -119,5 +114,4 @@ function loadTopics(){
     }
 }
 </script>
-
 {% endblock %}
