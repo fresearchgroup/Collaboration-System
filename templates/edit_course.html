@@ -63,10 +63,10 @@
       <form method="post" >
         {% csrf_token %}
         <div class="form-group">
-          <label for="Sorting">From:</label>
-          <select id="fromtopics" name="fromtopic" onchange="this.form.submit()">
+          <label for="topic">Topic:</label>
+          <select id="fromtopics" name="fromtopic" onChange="loadTopics()">
             {% recursetree topics %}
-              <option value = {{ node.pk }}> {{node.name}} </option>
+              <option value = {{ node.id }}> {{node.name}} </option>
               {% if not node.is_leaf_node %}
                 {{ children }}
               {% endif %}
@@ -74,14 +74,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="Sorting">To:</label>
+          <label for="moving">Move To:</label>
           <select id="totopics" name="totopic">
-            {% recursetree topics %}
-              <option value = {{ node.pk }}> {{node.name}} </option>
-              {% if not node.is_leaf_node %}
-                {{ children }}
-              {% endif %}
-            {% endrecursetree %}
           </select>
         </div>
         <input type="hidden" name="status" value="movetopic" />
@@ -90,7 +84,6 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block javascript %}
@@ -103,11 +96,27 @@ function saveTopic(nodeid) {
           // Enter is pressed
           if (e.keyCode == 13) { submitForm(); }
       }, false);
+}
 
-      function submitForm(){
-          document.updatetopic.submit();
-          document.updatetopic.method='post';
-      }
+function submitForm(){
+    document.updatetopic.submit();
+    document.updatetopic.method='post';
+}
+
+function loadTopics(){
+    var selectedTopic = document.getElementById("fromtopics").value;
+    var topicList= document.getElementById("fromtopics");
+    document.getElementById('totopics').innerHTML = "";
+    var sel = document.getElementById('totopics');
+    for(i=0; i<topicList.options.length;i++){
+        if (! (selectedTopic == topicList.options[i].value)) {
+            var opt = document.createElement('option');
+            opt.innerHTML = topicList.options[i].innerHTML;
+            opt.value = topicList.options[i].value;
+            sel.appendChild(opt);
+        }
+    }
+}
 </script>
 
 {% endblock %}
