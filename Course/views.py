@@ -69,10 +69,10 @@ def move_topic(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			parent = request.POST['parent']
-			if Topics.objects.filter(pk=parent).exists():
-				parent = Topics.objects.get(pk=parent)
-			else:
+			if parent == '':
 				parent = None
+			else:
+				parent = Topics.objects.get(pk=parent)
 			topic = request.POST['topic']
 			topic = Topics.objects.get(pk=topic)
 			topic.parent = parent

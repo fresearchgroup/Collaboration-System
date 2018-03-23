@@ -104,6 +104,10 @@ function loadTopics(){
     var topicList= document.getElementById("topic");
     document.getElementById('parent').innerHTML = "";
     var sel = document.getElementById('parent');
+    var firstoption = document.createElement('option');
+    firstoption.innerHTML = '---------';
+    firstoption.value = '';
+    sel.appendChild(firstoption);
     for(i=0; i<topicList.options.length;i++){
         if (! (selectedTopic == topicList.options[i].value)) {
             var opt = document.createElement('option');
@@ -113,5 +117,6 @@ function loadTopics(){
         }
     }
 }
+window.onload = loadTopics;
 </script>
 {% endblock %}
