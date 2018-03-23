@@ -1,5 +1,8 @@
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 
-                                    COLLABORATION SYSTEM
+
+COLLABORATION SYSTEM
 
         Requiremnets -
 
@@ -127,3 +130,4 @@ After installing django -reversion compare module, copy the patch file from 'tem
  
  ALTER TABLE BasicArticle_articles MODIFY COLUMN body text CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
 
+Git:
