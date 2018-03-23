@@ -46,6 +46,8 @@ def course_edit(request, pk):
 				update_topic_name(request)
 			if status == 'movetopic':
 				move_topic(request)
+			if status == 'deletetopic':
+				delete_topic(request)
 			return redirect('course_edit',pk=pk)
 		else:
 			try:
@@ -77,3 +79,9 @@ def move_topic(request):
 			topic = Topics.objects.get(pk=topic)
 			topic.parent = parent
 			topic.save()
+
+def delete_topic(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			nodeid = request.POST['nodeid']
+			topic = Topics.objects.filter(pk=nodeid).delete()
