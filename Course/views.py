@@ -83,5 +83,5 @@ def move_topic(request):
 def delete_topic(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			nodeid = request.POST['nodeid']
-			topic = Topics.objects.filter(pk=nodeid).delete()
+			deletenodeid = request.POST['deletenodeid']
+			topic = Topics.objects.filter(pk=deletenodeid).delete()
