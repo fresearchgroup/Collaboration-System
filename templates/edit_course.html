@@ -35,7 +35,7 @@
                         <input type='hidden' id='status' name='status' value='update'>
                         <input type='hidden' id='nodeid' name='nodeid' value = {{node.id}}>
                         <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
-                        <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value = {{node.name}} />
+                        <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value =" {{node.name}} "/>
                       </form>
                         {% if not node.is_leaf_node %}
                             <ul class="children">
