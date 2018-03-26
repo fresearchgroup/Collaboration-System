@@ -57,6 +57,8 @@ def course_edit(request, pk):
 			except CommunityCourses.DoesNotExist:
 				raise Http404
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
+	else:
+		return redirect('login')
 
 def update_topic_name(request):
 	if request.user.is_authenticated:
