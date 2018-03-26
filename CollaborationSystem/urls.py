@@ -39,11 +39,6 @@ urlpatterns = [
     url(r'^$', user_views.home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login'),
-    #url(r'^chat/', include('chat.urls')),
-
-    url(r'^chat_index$', views.chat_index, name='chat_index'),
-    # url used to process the xmlhttprequests done by nodejs socket.io
-    url(r'^save_message/$', views.save_message, name='chat_save_message'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
@@ -134,6 +129,11 @@ urlpatterns = [
     
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
+        #url(r'^chat/', include('chat.urls')),
+
+    url(r'^chat_index$', views.chat_index, name='chat_index'),
+    # url used to process the xmlhttprequests done by nodejs socket.io
+    url(r'^save_message/$', views.save_message, name='chat_save_message'),
 
 
 ]

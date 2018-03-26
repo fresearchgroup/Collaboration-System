@@ -4,9 +4,15 @@ from django.shortcuts import render
 from .models import Message
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from UserRolesPermission.models import ProfileImage
+from django.contrib.auth import login as auth_login
+
+
 
 # this view is the base view
 def chat_index(request):
+    
 
     # UNCOMMENT THE LINES BEFORE IF YOU WANT THE APP TO DELETE SOME MESSAGES WHEN THERE ARE MANY
 
@@ -22,7 +28,7 @@ def chat_index(request):
     context = {
         'messages': Message.objects.all()
     }
-
+    
     # and returns it to the page
     return render(request, 'chat_index.html', context)
 
