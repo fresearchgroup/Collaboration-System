@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load mptt_tags %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
+  <li class="breadcrumb-item active">{{ course.course.name }} </li>
+{% endblock %}
+{% block content %}
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-4">
+      <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item active">
+          <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+      <br/>
+      <div class="blog-item">
+        <h2><a href="#">{{ course.course.name }} </a></h2>
+        <ul>
+            {% recursetree topics %}
+                <li>
+                    {{ node.name }}
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-8"><br/><br/>
+      content
+    </div>
+  </div>
+</div>
+
+{% endblock %}
