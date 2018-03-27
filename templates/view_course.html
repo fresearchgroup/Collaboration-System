@@ -1,4 +1,21 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr{
+background-color:#FE642E;
+
+  }
+  #clr{
+    color:black;
+  }
+</style>
+{% endblock %}
+
 {% load mptt_tags %}
 
 {% block breadcrumb %}
@@ -8,7 +25,6 @@
 {% block content %}
 <div class="container-fluid ">
   <div class="row">
-    <div class="col-sm-4">
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item active">
@@ -22,12 +38,17 @@
       </ul>
       </div>
       <br/>
+    <div class="col-sm-4">
       <div class="blog-item">
         <h2><a href="#">{{ course.course.name }} </a></h2>
-        <ul>
+      </div>
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
+
+        <ul >
             {% recursetree topics %}
-                <li>
-                    {{ node.name }}
+                <li><a href="#" >
+                    {{ node.name }} </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
                             {{ children }}
@@ -36,12 +57,43 @@
                 </li>
             {% endrecursetree %}
         </ul>
-      </div>
+          </div>
+        </div>
     </div>
-    <div class="col-sm-8"><br/><br/>
-      content
+    <div class="col-sm-8">
+               <nav id="menu" class="nav-main">    
+<ul class="nav nav-pills nav-justified" style=" overflow: auto;
+    white-space: nowrap;">
+  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
+  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
+
+  
+
+</ul>
+</nav>
+
     </div>
   </div>
 </div>
+
+{% endblock %}
+{% block javascript %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
+< <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+        </script>
 
 {% endblock %}
