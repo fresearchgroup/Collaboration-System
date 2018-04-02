@@ -334,7 +334,7 @@ def create_community(request):
 					category = category,
 					image = request.FILES['community_image'],
 					tag_line = tag_line,
-					created_by = request.User,
+					created_by = usr,
 					forum_link = forum_link
 					)
 				communitymembership = CommunityMembership.objects.create(
