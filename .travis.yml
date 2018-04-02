@@ -1,0 +1,22 @@
+    language: python # => 1
+
+    python: # => 2
+      - "3.6"
+
+    services: # => 3
+      - mysql
+
+    env: # => 4
+      -DJANGO=1.11.7 DB=mysql
+
+    install: # => 5
+      - pip3 install -r requirements.txt
+
+    before_script: # => 6
+      - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root')"  
+      - mysql -e 'create database django;' -u root -proot
+      - cp .env.example .env
+
+    script: # => 7
+      - python3 manage.py test --keepdb Community Group BasicArticle 
+

@@ -46,6 +46,8 @@ def course_edit(request, pk):
 				update_topic_name(request)
 			if status == 'movetopic':
 				move_topic(request)
+			if status == 'deletetopic':
+				delete_topic(request)
 			return redirect('course_edit',pk=pk)
 		else:
 			try:
@@ -55,6 +57,8 @@ def course_edit(request, pk):
 			except CommunityCourses.DoesNotExist:
 				raise Http404
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
+	else:
+		return redirect('login')
 
 def update_topic_name(request):
 	if request.user.is_authenticated:
@@ -69,11 +73,17 @@ def move_topic(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			parent = request.POST['parent']
-			if Topics.objects.filter(pk=parent).exists():
-				parent = Topics.objects.get(pk=parent)
-			else:
+			if parent == '':
 				parent = None
+			else:
+				parent = Topics.objects.get(pk=parent)
 			topic = request.POST['topic']
 			topic = Topics.objects.get(pk=topic)
 			topic.parent = parent
 			topic.save()
+
+def delete_topic(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			deletenodeid = request.POST['deletenodeid']
+			topic = Topics.objects.filter(pk=deletenodeid).delete()

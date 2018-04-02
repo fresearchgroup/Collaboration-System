@@ -18,6 +18,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from datetime import date
 
 def signup(request):
     """
@@ -54,10 +55,15 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def user_dashboard(request):
+    currentyear=date.today()
+    number =[]
+    for n in range (2017,currentyear.year+1):
+        number.append(n)
     if request.method == 'POST': # If the form has been submitted...
         yearby=request.POST['selectbyyear']
     else :
-        yearby=2018
+        today=date.today()
+        yearby=today.year
 
     if request.user.is_authenticated:
 
@@ -113,7 +119,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile ,'yearby':yearby})
+        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile ,'yearby':yearby,'number':number})
     else:
         return redirect('login')
 
