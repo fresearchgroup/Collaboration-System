@@ -3,7 +3,7 @@
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
 <link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
-<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
 <link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
 <style type="text/css">
   #liclr{
@@ -34,6 +34,9 @@ background-color:#FE642E;
         <li class="nav-item ">
           <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
+        </li>
         {% endif %}
       </ul>
       </div>
@@ -47,8 +50,12 @@ background-color:#FE642E;
 
         <ul >
             {% recursetree topics %}
-                <li><a href="#" >
-                    {{ node.name }} </a>
+                <li><a href="#" ><form id="viewresources" method="post" action="{% url 'course_view' course.course.pk %}">
+                  {% csrf_token %}
+                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} >
+                  <input type="submit" class="btn btn-link" value =" {{node.name}} ">
+                </form> 
+                    </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
                             {{ children }}
@@ -61,36 +68,32 @@ background-color:#FE642E;
         </div>
     </div>
     <div class="col-sm-8">
-               <nav id="menu" class="nav-main">    
-<ul class="nav nav-pills nav-justified" style=" overflow: auto;
-    white-space: nowrap;">
-  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="video.html" >Video</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="audio.html" >Audio</a></li>
-  <li role="presentation" id="liclr" ><a  id="clr" href="pdf.html" >Pdf</a></li>
-
-  
-
-</ul>
-</nav>
+      
+ <nav id="menu" class="nav-main">    
+<ul class="nav nav-pills nav-justified inverse" style=" overflow: auto;
+    white-space: nowrap;">  
+    {% for links in links %}
+    {% if links.types == 'Youtube' %}
+  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
+  {% else %}
+  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
+  {%endif%}
+{% endfor %}
+  </ul>
+ </nav>
 
     </div>
+    <br />
+   <iframe width="560" height="315" src="" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+   {{links.desc}}
   </div>
 </div>
 
 {% endblock %}
 {% block javascript %}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
-< <script type="text/javascript">
+ <script type="text/javascript">
             $(document).ready(function() {
                 $('.demo').ntm();
             });

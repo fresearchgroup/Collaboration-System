@@ -23,7 +23,8 @@ class Links(models.Model):
 	link = models.CharField(max_length=300)
 	desc = models.TextField()
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_links')
-
+	types = models.CharField(max_length=300 ,null=True)
+	
 class Videos(models.Model):
 	video = models.CharField(max_length=300)
 	desc = models.TextField()
