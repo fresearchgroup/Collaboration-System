@@ -12,12 +12,15 @@
     <div class="col-sm-12">
       <div>
       <ul class="nav nav-tabs">
-        <li class="nav-item active">
+        <li class="nav-item ">
           <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item ">
-          <a class="nav-link " href="#">Edit</a>
+        <li class="nav-item active ">
+          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
         </li>
         {% endif %}
       </ul>
