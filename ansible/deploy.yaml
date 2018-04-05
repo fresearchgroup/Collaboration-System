@@ -1,22 +1,27 @@
----
 - hosts: all
-  tasks:
-  - name: pull branch master
-    git:
-      repo={{ repo_url }}/{{ repo }}.git
-      dest={{ repo_dir }}
-      accept_hostkey=yes
+  gather_facts: no
 
-  - name: install python requirements
-    pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
-  
-  - name: django makemigrations
-    shell: python3.6 manage.py makemigrations --noinput chdir={{django_dir}}
-  - name: django loaddata wf
-    shell: ./manage.py loaddata workflow chdir={{ django_dir }}
-  - name: djang loaaddata roles   
-    shell: ./manage.py loaddata roles chdir={{ django_dir }}
-  - name: djang loaaddata faq   
-    shell: ./manage.py loaddata faq chdir={{ django_dir }}
-  - name: Django Runserver
-    shell: python3.6 manage.py runserver &
+  tasks:
+    - name:  Create ubuntu user
+      user: name=edx password=edx generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa
+
+    - name: Read SSH public key
+      slurp: src=/home/ubuntu/.ssh/id_rsa.pub
+      register: public_key
+   
+    - name: Running apt update
+      apt: update cache=yes
+
+    - name: Install git
+      apt: name=git state=present
+
+    - name: Copy script file
+      copy:
+        src: ./django.sh 
+        dest: /home/edx/django.sh
+
+    - name: Give Permission to run
+      shell: sudo chmod +x django.sh
+
+    - name: Run Script
+      shell: ./django.sh edx
