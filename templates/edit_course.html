@@ -1,5 +1,24 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
+
+{%load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr{
+background-color:#FE642E;
+
+  }
+  #clr{
+    color:black;
+  }
+</style>
+{% endblock %}
+
+
 {% load mptt_tags %}
 
 {% block breadcrumb %}
@@ -12,43 +31,55 @@
     <div class="col-sm-12">
       <div>
       <ul class="nav nav-tabs">
-        <li class="nav-item ">
+        <li class="nav-item active">
           <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item active ">
-          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+        <li class="nav-item ">
+          <a class="nav-link " href="#">Edit</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ">
           <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
         </li>
+        
         {% endif %}
       </ul>
       </div>
     </div>
+
     <div class="col-sm-4">
       <br/>
       <div class="blog-item">
         <h3><a href="#">Topics for {{ course.course.name }} </a></h3>
-            <ul>
-                {% recursetree topics %}
-                    <li><p>
-                      <form id="updatetopic" method="post" action="{% url 'course_edit' course.course.pk %}">
+
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
+
+        <ul >
+            {% recursetree topics %}
+                <li><a href="#" >
+                    
+
+                    <form id="updatetopic" method="post" action="{% url 'course_edit' course.course.pk %}">
                         {% csrf_token %}
                         <input type='hidden' id='status' name='status' value='update'>
                         <input type='hidden' id='nodeid' name='nodeid' value = {{node.id}}>
                         <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
                         <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value =" {{node.name}} "/>
                       </form>
-                        {% if not node.is_leaf_node %}
-                            <ul class="children">
-                                {{ children }}
-                            </ul>
-                        {% endif %}
-                    </p></li>
-                {% endrecursetree %}
-            </ul>
-            <div class="modal fade" id="modalDeleteTopic" tabindex="-1" role="dialog" aria-labelledby="DeleteTopicmodal" aria-hidden="true">
+                      </a>
+
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+          </div>
+        </div>           
+         <div class="modal fade" id="modalDeleteTopic" tabindex="-1" role="dialog" aria-labelledby="DeleteTopicmodal" aria-hidden="true">
               <div class="modal-dialog text-left" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -131,7 +162,7 @@ function submitForm(){
     document.updatetopic.submit();
     document.updatetopic.method='post';
 }
-function loadTopics(){
+function loadTopics(){ 
     var selectedTopic = document.getElementById("topic").value;
     var topicList= document.getElementById("topic");
     document.getElementById('parent').innerHTML = "";
@@ -154,5 +185,17 @@ $(document).on("click", ".DeleteTopicDialog", function () {
      var nodeid = $(this).data('id');
      $(".modal-body #deletenodeid").val( nodeid );
 });
+
+</script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
+< <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+        </script>
+
+
+
 </script>
 {% endblock %}
