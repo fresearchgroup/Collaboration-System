@@ -12,6 +12,7 @@ def create_course(request):
 
 def create_topics(request, pk):
 	if request.user.is_authenticated:
+		course = Course.objects.get(pk=pk)
 		if request.method == 'POST':
 			name = request.POST['name']
 			parentid = request.POST['parent']
@@ -19,11 +20,9 @@ def create_topics(request, pk):
 				parent = None
 			else:
 				parent = Topics.objects.get(pk=parentid)
-			course = Course.objects.get(pk=pk)
 			topic = Topics.objects.create(name = name, parent=parent, course = course )
 			return topic
 		else:
-			course = Course.objects.get(pk=pk)
 			topics = Topics.object.filter(course=course)
 			return render(request, 'signup.html', {'course': course, 'topics':topics})
 
