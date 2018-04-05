@@ -11,35 +11,29 @@ def create_course(request):
 	return course
 
 def create_topics(request, pk):
-	if request.user.is_authenticated:
-		course = Course.objects.get(pk=pk)
-		if request.method == 'POST':
-			name = request.POST['name']
-			parentid = request.POST['parent']
-			if parentid == '':
-				parent = None
-			else:
-				parent = Topics.objects.get(pk=parentid)
-			topic = Topics.objects.create(name = name, parent=parent, course = course )
-			return topic
-		else:
-			topics = Topics.object.filter(course=course)
-			return render(request, 'signup.html', {'course': course, 'topics':topics})
+	course = Course.objects.get(pk=pk)
+	name = request.POST['name']
+	parentid = request.POST['parent']
+	if parentid == '':
+		parent = None
+	else:
+		parent = Topics.objects.get(pk=parentid)
+	topic = Topics.objects.create(name = name, parent=parent, course = course )
+	return topic
 
 def course_view(request, pk):
-	if request.user.is_authenticated:
-		try:
-			course = CommunityCourses.objects.get(course=pk)
-			topics = Topics.objects.filter(course=pk)
-	#		count = course_watch(request, course.course) #Shall add this later
-		except CommunityCourses.DoesNotExist:
-			raise Http404
-		if request.method == 'POST':
-			nodeid = request.POST['nodeid']
-			if nodeid!=None:
-				topic = Topics.objects.get(pk=nodeid)
-				links = Links.objects.filter(topics = topic)
-				return render(request, 'view_course.html', {'course':course, 'topics':topics, 'links':links, 'test':'test'})
+	try:
+		course = CommunityCourses.objects.get(course=pk)
+		topics = Topics.objects.filter(course=pk)
+#		count = course_watch(request, course.course) #Shall add this later
+	except CommunityCourses.DoesNotExist:
+		raise Http404
+	if request.method == 'POST':
+		nodeid = request.POST['nodeid']
+		if nodeid!=None:
+			topic = Topics.objects.get(pk=nodeid)
+			links = Links.objects.filter(topics = topic)
+			return render(request, 'view_course.html', {'course':course, 'topics':topics, 'links':links, 'test':'test'})
 	return render(request, 'view_course.html', {'course':course, 'topics':topics})
 
 def course_edit(request, pk):
