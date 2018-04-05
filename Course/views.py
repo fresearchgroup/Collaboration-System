@@ -61,32 +61,26 @@ def course_edit(request, pk):
 		return redirect('login')
 
 def update_topic_name(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			nodeid = request.POST['nodeid']
-			name = request.POST['name'+nodeid]
-			topic = Topics.objects.get(pk=nodeid)
-			topic.name = name
-			topic.save()
+	nodeid = request.POST['nodeid']
+	name = request.POST['name'+nodeid]
+	topic = Topics.objects.get(pk=nodeid)
+	topic.name = name
+	topic.save()
 
 def move_topic(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			parent = request.POST['parent']
-			if parent == '':
-				parent = None
-			else:
-				parent = Topics.objects.get(pk=parent)
-			topic = request.POST['topic']
-			topic = Topics.objects.get(pk=topic)
-			topic.parent = parent
-			topic.save()
+	parent = request.POST['parent']
+	if parent == '':
+		parent = None
+	else:
+		parent = Topics.objects.get(pk=parent)
+	topic = request.POST['topic']
+	topic = Topics.objects.get(pk=topic)
+	topic.parent = parent
+	topic.save()
 
 def delete_topic(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			deletenodeid = request.POST['deletenodeid']
-			topic = Topics.objects.filter(pk=deletenodeid).delete()
+	deletenodeid = request.POST['deletenodeid']
+	topic = Topics.objects.filter(pk=deletenodeid).delete()
 
 def manage_resource(request, pk):
 	if request.user.is_authenticated:
