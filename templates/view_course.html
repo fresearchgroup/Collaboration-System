@@ -35,7 +35,7 @@ background-color:#FE642E;
           <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource </a>
         </li>
         {% endif %}
       </ul>
@@ -71,19 +71,26 @@ background-color:#FE642E;
  <nav id="menu" class="nav-main">    
 <ul class="nav nav-pills nav-justified inverse" style=" overflow: auto;
     white-space: nowrap;">  
-    {% for links in links %}
-    {% if links.types == 'Youtube' %}
-  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
+    {% if link %}
+      {% if link.types == 'Youtube' %}
+        <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
+        {% else %}
+        <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
+        {%endif%}
+    {% endif %}
+    {% for link in links %}
+    {% if link.types == 'Youtube' %}
+  <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
   {% else %}
-  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
+  <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
   {%endif%}
 {% endfor %}
   </ul>
  </nav>
     </div>
     <br />
-   <iframe width="560" height="315" src="" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-   {{links.desc}}
+   <iframe width="560" height="315" src="{{link.link}}" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+   {{link.desc}}
   </div>
 </div>
 
