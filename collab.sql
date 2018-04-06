@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
 --
--- Host: localhost    Database: base
+-- Host: localhost    Database: tempx
 -- ------------------------------------------------------
 -- Server version	5.7.21-0ubuntu0.16.04.1
 
@@ -88,7 +88,7 @@ CREATE TABLE `Community_community` (
   `name` varchar(100) NOT NULL,
   `desc` longtext NOT NULL,
   `category` varchar(100) NOT NULL,
-  `created_at` datetime(6),
+  `created_at` datetime(6) DEFAULT NULL,
   `tag_line` varchar(500) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
   `forum_link` varchar(100) DEFAULT NULL,
@@ -391,7 +391,7 @@ CREATE TABLE `Group_group` (
   `name` varchar(100) NOT NULL,
   `desc` longtext NOT NULL,
   `visibility` tinyint(1) NOT NULL,
-  `created_at` datetime(6),
+  `created_at` datetime(6) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -635,7 +635,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$d83Rwzcuvqo4$0WoDwnrEo+dYnvBz+uW6ISv/2GqHbvdOYL4hZAUaapk=','2018-04-04 07:28:43.063490',1,'admin','','','admin@mail.com',1,1,'2018-04-04 07:28:01.344285');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$d83Rwzcuvqo4$0WoDwnrEo+dYnvBz+uW6ISv/2GqHbvdOYL4hZAUaapk=','2018-04-06 13:28:39.603525',1,'admin','','','admin@mail.com',1,1,'2018-04-04 07:28:01.344285');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -955,7 +955,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('zv6orfgi8o7utx5ayrzl00q5stxechmu','Yjk3MTlhMzdkYWI4ODE5MzRhNjBhZjhiNjMxNWE1Y2Q1ZmY4MWNiODp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYW5vbnltb3VzX2ZvcnVtX2tleSI6IjFhMmMyMWVmMTUwYzQ1ZWM5NDFjYTkzYzdmM2JmZGJlIiwiX2F1dGhfdXNlcl9oYXNoIjoiNjg3YmQ4YTRkYTA1MjhkNGJhMzAyYzViYTA4NzVlYTAxZGVkYjQ0MyJ9','2018-04-04 08:03:55.223770');
+INSERT INTO `django_session` VALUES ('0wz6ek4n5ozackhh8lqm1jgc9bicervf','ZmVkMGM4ODVmN2UwYTZhZmJmZjJmYzI0YWNiODA1MzI3MGFhNDJjMjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiMmZjNGQwNDUyNTllNGFkZmJiZjAzNjM5M2VhZjJmODIifQ==','2018-04-06 13:59:54.001167'),('zv6orfgi8o7utx5ayrzl00q5stxechmu','Yjk3MTlhMzdkYWI4ODE5MzRhNjBhZjhiNjMxNWE1Y2Q1ZmY4MWNiODp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYW5vbnltb3VzX2ZvcnVtX2tleSI6IjFhMmMyMWVmMTUwYzQ1ZWM5NDFjYTkzYzdmM2JmZGJlIiwiX2F1dGhfdXNlcl9oYXNoIjoiNjg3YmQ4YTRkYTA1MjhkNGJhMzAyYzViYTA4NzVlYTAxZGVkYjQ0MyJ9','2018-04-04 08:03:55.223770');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1302,7 +1302,7 @@ CREATE TABLE `forum_permission_userforumpermission` (
   CONSTRAINT `forum_permission_use_forum_id_f781f4d6_fk_forum_for` FOREIGN KEY (`forum_id`) REFERENCES `forum_forum` (`id`),
   CONSTRAINT `forum_permission_use_permission_id_9090e930_fk_forum_per` FOREIGN KEY (`permission_id`) REFERENCES `forum_permission_forumpermission` (`id`),
   CONSTRAINT `forum_permission_use_user_id_8106d02d_fk_auth_user` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1311,6 +1311,7 @@ CREATE TABLE `forum_permission_userforumpermission` (
 
 LOCK TABLES `forum_permission_userforumpermission` WRITE;
 /*!40000 ALTER TABLE `forum_permission_userforumpermission` DISABLE KEYS */;
+INSERT INTO `forum_permission_userforumpermission` VALUES (1,1,1,NULL,1,NULL),(2,1,1,NULL,2,NULL);
 /*!40000 ALTER TABLE `forum_permission_userforumpermission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1729,7 +1730,7 @@ CREATE TABLE `webcontent_feedback` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `body` longtext NOT NULL,
-  `provided_at` datetime(6),
+  `provided_at` datetime(6) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `webcontent_feedback_user_id_943add81_fk_auth_user_id` (`user_id`),
@@ -1810,4 +1811,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-04 13:08:16
+-- Dump completed on 2018-04-06 19:00:53
