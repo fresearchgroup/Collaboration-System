@@ -5,9 +5,9 @@ from .forms import TopicForm
 from django.http import Http404, HttpResponse
 
 def create_course(request):
-	name = request.POST['name']
-	desc = request.POST['desc']
-	course = Course.objects.create(name=name, desc=desc)
+	title = request.POST['name']
+	body = request.POST['desc']
+	course = Course.objects.create(name=title, desc=body)
 	return course
 
 def create_topics(request, pk):
@@ -25,7 +25,8 @@ def course_view(request, pk):
 	try:
 		course = CommunityCourses.objects.get(course=pk)
 		topics = Topics.objects.filter(course=pk)
-		link = Links.objects.get(topics = topics[0])
+		topic = topics.first()
+		links = Links.objects.filter(topics = topic)
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
@@ -35,7 +36,7 @@ def course_view(request, pk):
 			topic = Topics.objects.get(pk=nodeid)
 			links = Links.objects.filter(topics = topic)
 			return render(request, 'view_course.html', {'course':course, 'topics':topics, 'links':links, 'test':'test'})
-	return render(request, 'view_course.html', {'course':course, 'topics':topics,'link':link})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics,'links':links})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
@@ -106,6 +107,3 @@ def manage_resource(request, pk):
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
 	else:
 		return redirect('course_view',pk=pk)
-
-
-
