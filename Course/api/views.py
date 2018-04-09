@@ -1,6 +1,7 @@
 from rest_framework import generics
 from Course.models import Course
-from .serializers import CourseSerializer, CommunityCourseSerializer
+from .serializers import CourseSerializer
+from Community.models import Community
 
 class CourseCreateApiView(generics.CreateAPIView):
 	lookup_field = 'pk'
@@ -8,10 +9,6 @@ class CourseCreateApiView(generics.CreateAPIView):
 
 	def get_queryset(self):
 		return Course.objects.all()
-
-	def perform_create(self, serializer):
-		serializer.save(created_by=self.request.user)
-
 
 class CourseRUDApiView(generics.RetrieveUpdateDestroyAPIView):
 	lookup_field = 'pk'
