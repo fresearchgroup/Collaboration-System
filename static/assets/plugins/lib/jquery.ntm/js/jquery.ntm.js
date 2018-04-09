@@ -8,8 +8,8 @@
         parentClass: 'parent',
         activeClass: 'active',
         selectedClass: 'selected',
-        expandClass: 'opened',
-        collapseClass: 'closed',
+        expandClass: 'closed',
+        collapseClass: 'opened',
         spoilerButtonClickMinX: 4,
         spoilerButtonClickMaxX: 20,
         spoilerButtonClickMinY: 8,
@@ -58,7 +58,7 @@
                 }
             });
 
-            $('.' + options.collapseClass + ' > ul', this).hide();
+            $('.' + options.collapseClass + ' > ul', this).show();
 
             $('.' + options.parentClass + ' > a', this).click(function(e) {
                 var posX = $(this).offset().left;
