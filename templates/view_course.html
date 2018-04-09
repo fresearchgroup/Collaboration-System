@@ -70,24 +70,10 @@ background-color:#FE642E;
     <div class="col-sm-8">
  <nav id="menu" class="nav-main">
 <ul class="nav nav-pills nav-justified inverse" style=" overflow: auto;
-<<<<<<< HEAD
     white-space: nowrap;">
     {% for links in links %}
     {% if links.types == 'Youtube' %}
   <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
-=======
-    white-space: nowrap;">  
-    {% if link %}
-      {% if link.types == 'Youtube' %}
-        <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
-        {% else %}
-        <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
-        {%endif%}
-    {% endif %}
-    {% for link in links %}
-    {% if link.types == 'Youtube' %}
-  <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
->>>>>>> 4b83e7ab2d8394d36e7d2f273e9b07df34ae9fd9
   {% else %}
   <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
   {%endif%}
