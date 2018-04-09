@@ -1,6 +1,7 @@
 from django.conf.urls import url
-from .views import CourseApiView
+from .views import CourseRUDApiView, CourseCreateApiView
 
 urlpatterns = [
-    url(r'^(?P<pk>\d*)/$', CourseApiView.as_view(), name='cousre-api'),
+	url(r'^$', CourseCreateApiView.as_view(), name='cousre-create-api'),
+    url(r'^(?P<pk>\d*)/$', CourseRUDApiView.as_view(), name='cousre-rud-api'),
     ]
