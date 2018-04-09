@@ -5,9 +5,9 @@ from .forms import TopicForm
 from django.http import Http404, HttpResponse
 
 def create_course(request):
-	name = request.POST['name']
-	desc = request.POST['desc']
-	course = Course.objects.create(name=name, desc=desc)
+	title = request.POST['name']
+	body = request.POST['desc']
+	course = Course.objects.create(name=title, desc=body)
 	return course
 
 def create_topics(request, pk):
@@ -107,6 +107,3 @@ def manage_resource(request, pk):
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
 	else:
 		return redirect('course_view',pk=pk)
-
-
-

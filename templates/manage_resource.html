@@ -20,7 +20,7 @@ background-color:#FE642E;
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.course.name }} </li>
+  <li class="breadcrumb-item active">{{ course.course.title }} </li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
