@@ -64,10 +64,10 @@
     </div>
     <div class="col-md-10 col-sm-10">
       {% if article.type == 'article' %}
-        <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+        <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
       {% if article.type == 'course' %}
-        <h3><a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
+        <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}}</li>
