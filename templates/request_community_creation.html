@@ -44,7 +44,7 @@
     <input type="hidden" name="status" value="Request" />
     <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphanumeric content are allowed</span></div>
   </div>
-  <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
+  <button id="submit" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
 </form>
 {% endif %}
 <br />
