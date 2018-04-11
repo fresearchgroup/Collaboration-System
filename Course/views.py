@@ -30,12 +30,6 @@ def course_view(request, pk):
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	if request.method == 'POST':
-		nodeid = request.POST['nodeid']
-		if nodeid!=None:
-			topic = Topics.objects.get(pk=nodeid)
-			links = Links.objects.filter(topics = topic)
-			return render(request, 'view_course.html', {'course':course, 'topics':topics, 'links':links, 'test':'test'})
 	return render(request, 'view_course.html', {'course':course, 'topics':topics,'links':links})
 
 def course_edit(request, pk):
