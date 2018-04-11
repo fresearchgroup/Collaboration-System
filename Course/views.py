@@ -102,12 +102,3 @@ def manage_resource(request, pk):
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
 	else:
 		return redirect('course_view',pk=pk)
-
-def get_topic_id(request):
-	if request.method == 'POST':
-		topicid = request.POST['nodeid']
-		if topicid!=None:
-			topic = Topics.objects.get(pk=topicid)
-			links = Links.objects.filter(topics = topic)
-			count=links.count()
-			return render(request, 'view_course.html', {'links':links,'count':count})
