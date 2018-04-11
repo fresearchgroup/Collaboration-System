@@ -27,16 +27,11 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
+		
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	if request.method == 'POST':
-		nodeid = request.POST['nodeid']
-		if nodeid!=None:
-			topic = Topics.objects.get(pk=nodeid)
-			links = Links.objects.filter(topics = topic)
-			return render(request, 'view_course.html', {'course':course, 'topics':topics, 'links':links, 'test':'test'})
-	return render(request, 'view_course.html', {'course':course, 'topics':topics,'links':links})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
@@ -107,3 +102,12 @@ def manage_resource(request, pk):
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
 	else:
 		return redirect('course_view',pk=pk)
+
+def get_topic_id(request):
+	if request.method == 'POST':
+		topicid = request.POST['nodeid']
+		if topicid!=None:
+			topic = Topics.objects.get(pk=topicid)
+			links = Links.objects.filter(topics = topic)
+			count=links.count()
+			return render(request, 'view_course.html', {'links':links,'count':count})

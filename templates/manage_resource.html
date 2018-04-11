@@ -24,8 +24,7 @@ background-color:#FE642E;
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
-  <div class="row">
-      <div>
+    <div>
       <ul class="nav nav-tabs">
         <li class="nav-item ">
           <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
@@ -40,7 +39,8 @@ background-color:#FE642E;
         {% endif %}
       </ul>
       </div>
-      <br/>
+      <div class="alert alert-success" role="alert"><center> <h5>Topics for {{ course.course.title }} </h5></center></div>
+      <div class="row">
     <div class="col-sm-8">
       <form id="managetopic" method="post" action="{% url 'manage_resource' course.course.pk %}">
                         {% csrf_token %}
@@ -57,16 +57,13 @@ background-color:#FE642E;
     <label>Type</label></br>
     <div class="radio">
   <label>
-    <input type="radio" name="topic_type" id="topic_type" value="Youtube" data-toggle="modal" data-target="#myModal1" checked>
-    <span>Youtube</span>
+    <input type="radio" name="topic_type" id="topic_type" value="Youtube" data-toggle="modal" data-target="#myModal1">Youtube
   </label>
     <label>
-    <input type="radio" name="topic_type" id="topic_type" value="External" data-toggle="modal" data-target="#myModal1" checked>
-    <span>External</span>
+    <input type="radio" name="topic_type" id="topic_type" value="External" data-toggle="modal" data-target="#myModal1">External
   </label>
     <label>
-    <input type="radio" name="topic_type" id="topic_type" value="PublishedArticle" data-toggle="modal" data-target="#myModal" checked>
-    <span>published Article</span>
+    <input type="radio" name="topic_type" id="topic_type" value="PublishedArticle" data-toggle="modal" data-target="#myModal" >published Article
   </label>
 </div>
   </div>
