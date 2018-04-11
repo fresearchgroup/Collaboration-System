@@ -34,6 +34,5 @@ class TopicsLinksSerializer(serializers.ModelSerializer):
 
 			'link',
 			'desc',
-			'topics',
 			'types'
 		]
