@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{%load static %}
+{% block css %}
+  <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block breadcrumb %}
   {% if user.is_authenticated %}
@@ -115,39 +118,8 @@ var articlesContributed = [{{total}}];
             <h3>My Groups</h3>
             <h4>
             <span style="text-align:left; padding-left:20px; padding-top:10px">
-        {{myhtml|safe}}{% autoescape off%}
-        {% for grp in groups %}
-        {% if grp.role.name == 'author' %}
-          <i class="fa fa-pencil" style="top:3px;"></i>
-          {% elif comm.role.name == 'publisher' %}
-          <i class="fa fa-print" style="top:3px;"></i>
-          {% else %}
-          <i class="fa fa-trophy" style="top:3px;"></i>
-          {% endif %}
-          <a href="{% url 'group_view' grp.group.pk %}"> {{ grp.group }} </a> <br />
-        {% endfor %}
-        {% endautoescape%} <br />
-        {% if groups.has_other_pages %}
-  <ul class="pagination">
-  {% if groups.has_previous %}
-    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.previous_page_number }}">&laquo;</a></span></li>
-  {% else %}
-    <li class="disabled"><span>&laquo;</span></li>
-  {% endif %}
-  {% for i in groups.paginator.page_range %}
-    {% if groups.number == i %}
-      <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
-      {% elif i > groups.number|add:'-4' and i < groups.number|add:'4' %}
-      <li><span style="background-color:#D0D3D4"><a href="?page2={{ i }}">{{ i }}</a></span></li>
-    {% endif %}
-  {% endfor %}
-  {% if groups.has_next %}
-    <li><span style="background-color:#ffffff"><a href="?page2={{ groups.next_page_number }}">&raquo;</a></span></li>
-  {% else %}
-    <li class="disabled"><span>&raquo;</span></li>
-  {% endif %}
-  </ul>
-{% endif %}
+              <div class="data-container"></div>
+              <div id="pagination-mygroups"></div>
             </span>
             </h4>
           </div>
@@ -241,4 +213,53 @@ var articlesContributed = [{{total}}];
 </div>
 <br />
 
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
+  <script>
+    $(function() {
+      (function(name) {
+        var container = $('#pagination-mygroups');
+
+        var sources = function () {
+          var result = [];
+          {% for grp in mygroups %}
+            var temp = ''
+            {% if grp.role.name == 'author' %}
+              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
+            {% elif comm.role.name == 'publisher' %}
+              temp += '<i class="fa fa-print" style="top:3px;"></i> '
+            {% else %}
+              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
+            {% endif %}
+            temp += '<a href="{% url 'group_view' grp.group.pk %}">' + '{{ grp.group }}' + '</a>';
+            result.push(temp);
+          {% endfor %}
+          return result;
+        }();
+
+        var options = {
+          dataSource: sources,
+          pageSize: 5,
+          showGoInput: true,
+          showGoButton: true,
+          showPageNumbers: false,
+          showNavigator: true,
+
+          callback: function (data, pagination) {
+            var dataHtml = '';
+            //Get the datasource (item)
+            $.each(data, function (index, item) {
+              dataHtml += item + '<br />';
+            });
+            dataHtml += '<br />'
+            //Add data to container
+            container.prev().html(dataHtml);
+          }
+        };
+        container.pagination(options);
+      })('mygroups-pagination');
+    })
+  </script>
 {% endblock %}

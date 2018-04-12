@@ -71,14 +71,6 @@ def user_dashboard(request):
             communities = paginator.page(paginator.num_pages)
 
         mygroups = GroupMembership.objects.filter(user=request.user).order_by('group__name')
-        page = request.GET.get('page2',1)
-        paginator = Paginator(mygroups, 5)
-        try:
-            groups = paginator.page(page)
-        except PageNotAnInteger:
-            groups = paginator.page(1)
-        except EmptyPage:
-            groups = paginator.page(paginator.num_pages)
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
@@ -107,7 +99,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'communities': communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile})
+        return render(request, 'userdashboard.html', {'communities': communities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile})
     else:
         return redirect('login')
 
