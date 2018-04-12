@@ -57,52 +57,11 @@ var articlesContributed = [{{total}}];
           <div class="pricing-head">
             <h3>My Communities</h3>
             <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-        {{myhtml|safe}}{% autoescape off%}
-        {% for comm in communities %}
-          {% if comm.role.name == 'author' %}
-          <i class="fa fa-pencil" style="top:3px;"></i>
-          {% elif comm.role.name == 'publisher' %}
-          <i class="fa fa-print" style="top:3px;"></i>
-          {% else %}
-          <i class="fa fa-trophy" style="top:3px;"></i>
-          {% endif %}
-          <a href="{% url 'community_view' comm.community.pk %}"> {{ comm.community }} </a> <br />
-        {% endfor %}
-        {% endautoescape%}
-        <br />
-        <div class="row">
-        {% if communities.has_other_pages %}
-          <ul class="pagination">
-          {% if communities.has_previous %}
-            <li><span style="background-color:#ffffff"><a href="?page={{ communities.previous_page_number }}">&laquo;</a></span></li>
-            <li><span style="background-color:#D0D3D4"><a href="?page=1">{{ 1 }}</a></span></li>
-          {% else %}
-            <li class="disabled"><span>&laquo;</span></li>
-            <li class=""><span style="background-color:#E84D1C"> 1 </span></li>
-          {% endif %}
-          {% for i in communities.paginator.page_range %}
-           {% if i != 1 and i != communities.paginator.num_pages %}
-              {% if communities.number == i %}
-                <li class="" ><span style="background-color:#E84D1C">{{ i }} </span></li>
-              {% elif i > communities.number|add:'-2' and i < communities.number|add:'2' %}
-                <li><span style="background-color:#D0D3D4"><a href="?page={{ i }}">{{ i }}</a></span></li>
-                {% endif %}
-           {% endif %}
-          {% endfor %}
-          {% if communities.has_next %}
-            <li><span style="background-color:#D0D3D4"><a href="?page={{ communities.paginator.num_pages }}">{{ communities.paginator.num_pages }}</a></span></li>
-            <li><span style="background-color:#ffffff"><a href="?page={{ communities.next_page_number }}">&raquo;</a></span></li>
-          {% else %}
-            <li class=""><span style="background-color:#E84D1C">{{ communities.paginator.num_pages }}</span></li>
-            <li class="disabled"><span>&raquo;</span></li>
-          {% endif %}
-
-          </ul>
-        {% endif %}
-      </div>
-      </span>
-    </h4>
+              <span style="text-align:left; padding-left:20px; padding-top:10px">
+                <div class="data-container"></div>
+                <div id="pagination-mycommunities"></div>
+              </span>
+            </h4>
           </div>
 <!--      <div class="pricing-footer">
             <a href="javascript:;" class="btn btn-primary">
@@ -228,7 +187,7 @@ var articlesContributed = [{{total}}];
             var temp = ''
             {% if grp.role.name == 'author' %}
               temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
-            {% elif comm.role.name == 'publisher' %}
+            {% elif grp.role.name == 'publisher' %}
               temp += '<i class="fa fa-print" style="top:3px;"></i> '
             {% else %}
               temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
@@ -260,6 +219,48 @@ var articlesContributed = [{{total}}];
         };
         container.pagination(options);
       })('mygroups-pagination');
+
+      (function(name) {
+        var container = $('#pagination-mycommunities');
+
+        var sources = function () {
+          var result = [];
+          {% for comm in mycommunities %}
+            var temp = ''
+            {% if comm.role.name == 'author' %}
+              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
+            {% elif comm.role.name == 'publisher' %}
+              temp += '<i class="fa fa-print" style="top:3px;"></i> '
+            {% else %}
+              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
+            {% endif %}
+            temp += '<a href="{% url 'community_view' comm.community.pk %}">' + '{{ comm.community }}' + '</a>';
+            result.push(temp);
+          {% endfor %}
+          return result;
+        }();
+
+        var options = {
+          dataSource: sources,
+          pageSize: 5,
+          showGoInput: true,
+          showGoButton: true,
+          showPageNumbers: false,
+          showNavigator: true,
+
+          callback: function (data, pagination) {
+            var dataHtml = '';
+            //Get the datasource (item)
+            $.each(data, function (index, item) {
+              dataHtml += item + '<br />';
+            });
+            dataHtml += '<br />'
+            //Add data to container
+            container.prev().html(dataHtml);
+          }
+        };
+        container.pagination(options);
+      })('mycommunities-pagination');
     })
   </script>
 {% endblock %}

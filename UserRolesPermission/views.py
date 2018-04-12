@@ -61,15 +61,6 @@ def user_dashboard(request):
             user_profile = "No Image available"
 
         mycommunities = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
-        page = request.GET.get('page', 1)
-        paginator = Paginator(mycommunities, 5)
-        try:
-            communities = paginator.page(page)
-        except PageNotAnInteger:
-            communities = paginator.page(1)
-        except EmptyPage:
-            communities = paginator.page(paginator.num_pages)
-
         mygroups = GroupMembership.objects.filter(user=request.user).order_by('group__name')
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
@@ -99,7 +90,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'communities': communities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile})
     else:
         return redirect('login')
 
