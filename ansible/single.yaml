@@ -1,17 +1,16 @@
-- hosts: all
+- hosts: glenn
   gather_facts: no
   tasks:
-    - name: Create ubuntu user
-      user: name=ubuntu password={{ upass }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa
+    - name: Create edx user
+      user: name=edx password={{ upass | password_hash('sha512') }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa groups=sudo shell=/bin/bash
     
     - name: Read SSH public key
-      slurp: src=/home/ubuntu/.ssh/id_rsa.pub
+      slurp: src=/home/edx/.ssh/id_rsa.pub
       register: public_key
     
-#    - debug: msg="{{ public_key['content'] | b64decode }}"
-    
-#    - name: Adding python3.6 ppa
-#      shell: sudo add-apt-repository ppa:deadsnakes/ppa
+- hosts: edx
+  gather_facts: no
+  tasks:
  
     - name: Running apt update
       apt: update_cache=yes
@@ -26,18 +25,31 @@
        - python3-pip
        - python-mysqldb
        - nginx
-    #   - python-pip
+       - supervisor
 
+    - name: Enable supervisor
+      shell: systemctl enable supervisor
+    - name: Start supervisor
+      shell: systemctl start supervisor
+          
+    - name: Install virtualenv
+      pip: name=virtualenv executable=pip3
     
+    - name: Create Virtual Environment
+      shell: virtualenv collab -p python3
+
+    - name: Activate Virtual Environment
+      shell: source collab/bin/activate executable=/bin/bash
+
     - name: Install gunicorn
       pip: name=gunicorn executable=pip3
+    
+    - name: Install psycopg2
+      pip: name=psycopg2 executable=pip3
 
-    #- name: Install supervisor 
-    #  pip: name=supervisor
-   # - name: Install the Python MySQLB module
-    #  pip: name=MySQL-python
     - name: Create User
       mysql_user: name={{dbuser}} password={{dbpassword}} login_user=root login_password=root priv='*.*:ALL' state=present
+    
     - name: ensure database is created
       mysql_db: db={{dbname}} login_user=root login_password=root state=present
 
@@ -48,43 +60,100 @@
         dest={{ repo_dir }}
         accept_hostkey=yes
 
-    - name: copy environment file
-      copy:
-        src: /home/nithin/frg/Collaboration-System/ansible/.env
-        dest: /home/ubuntu/Collaboration-System/.env
-
     - name: install python requirements
       pip: requirements={{ repo_dir }}/requirements.txt executable=pip3 extra_args=--upgrade
 
-    - name: copy nginx file
+
+    - name: set STATIC_ROOT
+      shell: sed -i '170 a STATIC_ROOT = "/home/edx/static"' Collaboration-System/CollaborationSystem/settings.py
+
+    - name: copy environment file
       copy:
-        src: /home/ubuntu/Collaboration-System/ansible/nginx.conf
-        dest: /etc/nginx/sites-enabled/nginx.conf
-    - name: copy nginx file
+        src={{ config_files_dir }}/.env
+        dest=/home/edx/Collaboration-System/.env
+
+    - name: Collect Static
+      shell: python3 Collaboration-System/manage.py collectstatic
+
+    - name: Copy gunicorn_start.bash
       copy:
-        src: /home/ubuntu/Collaboration-System/ansible/gunicorn.service
-        dest: /etc/systemd/system/gunicorn.service   
-    #- name: copy supervisord.conf file
-    #   copy:
-    #    src: /home/ubuntu/Collaboration-System/ansible/supervisord.conf
-    #    dest: /etc/supervisord.conf
- 
-  #  - name: copy supervisord startup script
-   #    copy:
-    #    src: /home/ubuntu/Collaboration-System/ansible/supervisord
-    #    dest: /etc/init.d/supervisord
-    
-    - name: django makemigrations
-      shell: python3 manage.py makemigrations --noinput chdir={{django_dir}}
-    - name: django migrate
-      shell: python3 manage.py migrate --noinput chdir={{ django_dir }}
-    - name: django loaddata workflow
-      shell: python3 manage.py loaddata workflow chdir={{ django_dir }}
-    - name: django loaaddata roles   
-      shell: python3 manage.py loaddata roles chdir={{ django_dir }}
-    - name: django loaaddata faq   
-      shell: python3 manage.py loaddata faq chdir={{ django_dir }}
-#    - name: Django Runserver
-#      shell: python3 manage.py runserver 127.0.0.1:8081
-    - name: gunicorn Restart
-      service: name=gunicorn state=restarted
+        src={{ config_files_dir }}/gunicorn_start.bash
+        dest=/home/edx/gunicorn_start.bash
+
+    - name: Give it execute permissions
+      shell: chmod +x gunicorn_start.bash
+
+     - name: Make run and logs directories
+      shell: mkdir logs
+
+    - name: Create log file for gunicorn
+      shell: touch logs/gunicorn.log
+
+    - name: Copy config file
+      copy:
+        src={{ config_files_dir }}/edx.conf
+        dest=/etc/supervisor/conf.d/edx.conf
+
+    - name: Restart Supervisor
+      shell: systemctl enable supervisor
+
+    - name: Enable Supervisor
+      shell: systemctl enable supervisor
+
+    - name: Copy gunicorn.service file
+      copy:
+        src={{ config_files_dir }}/gunicorn.service
+        dest=/etc/systemd/system/gunicorn.service
+
+    - name: Start gunicorn
+      shell: systemctl start gunicorn
+
+    - name: Enable gunicorn
+      shell: systemctl enable gunicorn
+
+    - name: Copy nginx config file
+      copy:
+        src={{ config_files_dir }}/nginx.conf 
+        dest=/etc/nginx/sites-available/nginx.conf
+
+    - name: Create a symlink
+      shell: ln -sf /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/nginx.conf
+
+    - name: Allow Nginx
+      shell: ufw allow 'Nginx Full'
+
+    - name: Restart nginx
+      shell: systemctl restart nginx
+
+    - name: Restart supervisor
+      shell: supervisorctl restart edx
+
+    - name: Restart gunicorn
+      shell: service gunicorn restart
+
+    - name: Restart supervisor
+      shell: service supervisor restart
+
+    - name: Create Directory for Reversion Compare
+      shell: mkdir -p /home/edx/collab/lib/python3.5/site-packages/reversion_compare/
+
+    - name: Copy patch
+      shell: cp Collaboration-System/temp/patch_for_reversion_compare.py /home/edx/collab/lib/python3.5/site-packages/reversion_compare/views.py
+
+    - name: Migrate
+      shell: python3 Collaboration-System/manage.py migrate
+
+    - name: loaddata workflow
+      shell: python3 Collaboration-System/manage.py loaddata workflow
+
+    - name: loaddata roles
+      shell: python3 Collaboration-System/manage.py loaddata roles
+
+    - name: loaddata faq
+      shell: python3 Collaboration-System/manage.py loaddata faq
+
+
+  # - name: Start Gunicorn
+  #   shell: cd /home/edx/Collaboration-System && gunicorn CollaborationSystem.wsgi:application --name=CollaborationSystem --workers=3 --user=edx --group=edx --bind=unix:/home/edx/run/gunicorn.sock --log-level=debug --log-file=-
+
+
