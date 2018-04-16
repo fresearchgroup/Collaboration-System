@@ -68,18 +68,25 @@ background-color:#FE642E;
         </div>
     </div>
     <div class="col-sm-8">
- <nav id="menu" class="nav-main">
-<ul class="nav nav-pills nav-justified inverse" style=" overflow: auto;
-    white-space: nowrap;">
+ 
+    <div>
+      <ul class="nav nav-tabs">
+
     {% for links in links %}
-    {% if links.types == 'Youtube' %}
-  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
-  {% else %}
-  <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
-  {%endif%}
-{% endfor %}
-  </ul>
- </nav>
+        {% if links.types == 'Youtube' %}
+
+      <li class="nav-item active">
+            <a class="nav-link " href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a>
+          </li>
+
+      {% else %}
+      <li class="nav-item active">
+          <a class="nav-link " href="{{link.link}}" target="frame1"><i class="fa fa-link" style="font-size: 20px;"></i></a>
+        </li>
+      {%endif%}
+    {% endfor %}
+    </div>
+
     </div>
     <br />
    <iframe width="560" height="315" src="{{link.link}}" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
