@@ -77,8 +77,15 @@ background-color:#FE642E;
     </div>
     <div id= "collection" class="tab-content">
 
-
-    </div>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">{{ course.course.title }}</h5>
+          <blockquote class="blockquote mb-0">
+                <p>{{ course.course.body | safe }}</p>
+                <footer class="blockquote-footer">Created by: {{course.course.created_by}} </footer>
+              </blockquote>
+        </div>
+      </div>
 
     </div>
     <br />
