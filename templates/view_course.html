@@ -116,11 +116,19 @@ background-color:#FE642E;
 
                                   $("#list").append(list);
                                   
-                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
                                   $("#collection").append(listcollection);
                                   }
 
+                                  if(links['types'] == 'External'){
+
+                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+
+                                  $("#list").append(list);
                                   
+                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'"></iframe></div>'
+                                  $("#collection").append(listcollection);
+                                  }
                                   }
 
                           }
