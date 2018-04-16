@@ -75,7 +75,7 @@ background-color:#FE642E;
       </ul>
 
     </div>
-    <div id= "collection">
+    <div id= "collection" class="tab-content">
 
 
     </div>
@@ -112,13 +112,15 @@ background-color:#FE642E;
                                   links = data[i];
                                   if(links['types'] == 'Youtube'){
 
-                                    var list = '<li class="nav-item active"><a class="nav-link " href="#' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
 
                                   $("#list").append(list);
                                   
-                                  listcollection = '<div id='+links['id'] +  '><iframe width="560" height="315" src=" ' + links['link'] +'" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
                                   $("#collection").append(listcollection);
                                   }
+
+                                  
                                   }
 
                           }
