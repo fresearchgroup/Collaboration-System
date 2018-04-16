@@ -109,27 +109,52 @@ background-color:#FE642E;
                           type: 'get',
                           cache: false,
                           success: function(data){
+                             var count = 1;
                               for(i in data){
                                   links = data[i];
                                   if(links['types'] == 'Youtube'){
 
-                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+                                    if (count == 1){
+                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                      count++;
+                                    } else {
+
+                                      var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+
+                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+
+                                    }
 
                                   $("#list").append(list);
-                                  
-                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
                                   $("#collection").append(listcollection);
                                   }
 
                                   if(links['types'] == 'External'){
 
-                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+                                    if (count ==1){
 
-                                  $("#list").append(list);
-                                  
-                                  listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'"></iframe></div>'
+                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+                                 
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'"></iframe></div>'
+                                      count++;
+                                    }
+                                      else
+
+                                    {
+
+                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+                                 
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'"></iframe></div>'
+
+                                    }
+
+                                   $("#list").append(list);
                                   $("#collection").append(listcollection);
+
+
                                   }
+                                  //for loop ends here
                                   }
 
                           }
