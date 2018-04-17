@@ -381,7 +381,7 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(cgarticles), 5)
 			try:
