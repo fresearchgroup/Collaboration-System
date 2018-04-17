@@ -104,6 +104,22 @@ var articlesContributed = [{{total}}];
         {% endautoescape%}
             </span>
             </h4>
+            <h4>
+            <span style="text-align:left; padding-left:20px; padding-top:10px">
+        {{myhtml|safe}}{% autoescape off%}
+        {% for invite in grpinvitations %}
+              <form method="post" action="{% url 'handle_group_invitations' %}">
+                   {% csrf_token %}
+                   <a href="{% url 'group_view' invite.group.id %}"> {{ invite.group.name  }} </a>
+                   <input type='hidden' name = 'pk' value ={{invite.pk}} />
+                   <button type="radio" name ="status" value="Accept" class="btn btn-success" >Accept  </button>
+                   <button type="radio" name ="status" value="Reject" class="btn btn-danger"> Reject</button>
+              </form>
+                <br />
+        {% endfor %}
+        {% endautoescape%}
+            </span>
+            </h4>
           </div>
 <!--      <div class="pricing-footer">
             <a href="javascript:;" class="btn btn-primary">
