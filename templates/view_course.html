@@ -49,11 +49,11 @@ background-color:#FE642E;
 
         <ul >
             {% recursetree topics %}
-                <li><a  href="#" id="id1" style="text-decoration: none;"><form name="form1" id="form1" method="post" action="{% url 'course_view' course.course.pk %}" data-toggle="tooltip" data-placement="top" title="{{count}} chapter in here">
-                  {% csrf_token %}
-                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} >
-                  <input type="submit" class="btn btn-link" value =" {{node.name}} ">
-                  <span class="badge">{{count}}</span>
+                <li><a  href="#" id="id1" style="text-decoration: none;"><form name="form1" method="post"  data-toggle="tooltip" data-placement="top" title="{{count}}11 chapter in here">
+                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} />
+                 <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
+                  <span>{{node.name}}</span> 
+                  <span class="badge">{{count}}11</span>
                 </form>
 
                  </a>

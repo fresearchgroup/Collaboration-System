@@ -4,6 +4,7 @@ from .serializers import CourseSerializer, TopicsLinksSerializer
 from Community.models import Community
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 class CourseCreateApiView(generics.CreateAPIView):
 	lookup_field = 'pk'
@@ -27,4 +28,3 @@ class TopicsLinksApiView(generics.ListAPIView):
 	def get_queryset(self):
 		topics = self.kwargs['pk']
 		return Links.objects.filter(topics=topics)
-
