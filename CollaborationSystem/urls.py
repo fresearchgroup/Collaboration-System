@@ -67,6 +67,7 @@ urlpatterns = [
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
+    url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
 
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
@@ -124,7 +125,7 @@ urlpatterns = [
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
     url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
-    
+
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
 

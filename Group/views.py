@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
-from .models import Group, GroupMembership, GroupArticles
+from .models import Group, GroupMembership, GroupArticles, GroupInvitations
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups
@@ -128,7 +128,7 @@ def manage_group(request,pk):
 								try:
 									is_member = GroupMembership.objects.get(user=user, group=group.pk)
 								except GroupMembership.DoesNotExist:
-									obj = GroupMembership.objects.create(user=user, group=group, role=role)
+									grpinvite = GroupInvitations.objects.create(invitedby=request.user, user=user, role=role, status='Invited', group=group)
 								else:
 									errormessage = 'user exists in group'
 							except CommunityMembership.DoesNotExist:
@@ -217,3 +217,20 @@ def group_content(request, pk):
 	except GroupMembership.DoesNotExist:
 		return redirect('group_view', group.pk)
 	return render(request, 'groupcontent.html', {'group': group, 'membership':membership, 'grparticles':grparticles})
+
+def handle_group_invitations(request):
+	if request.method == 'POST':
+		pk = request.POST['pk']
+		grpinivtation=GroupInvitations.objects.get(pk=pk)
+		status = request.POST['status']
+
+		if status=='Accept' and grpinivtation.status!='Accepted':
+			grpmmbership = GroupMembership.objects.create(user=grpinivtation.user, group=grpinivtation.group, role=grpinivtation.role)
+			grpinivtation.status = 'Accepted'
+			grpinivtation.save()
+
+		if status=='Reject' and grpinivtation.status!='Rejected':
+			grpinivtation.status = 'Rejected'
+			grpinivtation.save()
+
+		return redirect('user_dashboard')
