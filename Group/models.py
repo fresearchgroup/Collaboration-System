@@ -34,7 +34,10 @@ class GroupArticles(models.Model):
 		from django.urls import reverse
 		return reverse('article_view', kwargs={'pk': self.article_id})
 
-
-
-
-
+class GroupInvitations(models.Model):
+    invitedby = models.ForeignKey(User, related_name='groupinvitationsinvitedby')
+    invitedat = models.DateTimeField(null=True, auto_now_add=True)
+    user = models.ForeignKey(User, related_name='groupinvitations')
+    role = models.ForeignKey(Roles, null=True, related_name='groupinvitations')
+    status = models.CharField(null=True, max_length=100)
+    group = models.ForeignKey(Group, related_name='groupinvitations')
