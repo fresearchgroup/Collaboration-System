@@ -109,6 +109,7 @@
       <span>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> </span>
       {% else %}
       {% if membership == 'FALSE' %}
+         {% if invitereceived == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
@@ -118,6 +119,16 @@
         <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in margin-right-10"></i>Join Us</button>
       </form>
     </b>
+        {% else %}
+        {% for invite in invitereceived %}
+          <form method="post" action="{% url 'handle_group_invitations' %}">
+               {% csrf_token %}
+               <input type='hidden' name = 'pk' value ={{invite.pk}} />
+               <button type="radio" name ="status" value="Accept" class="btn btn-success" >Accept Invitation </button>
+               <button type="radio" name ="status" value="Reject" class="btn btn-danger"> Reject Invitation </button>
+          </form>
+        {% endfor %}
+        {% endif %}
     {%else%}
     <b>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
