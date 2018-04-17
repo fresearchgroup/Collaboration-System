@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponse
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
-	course = Course.objects.create(name=title, desc=body)
+	course = Course.objects.create(title=title, body=body)
 	return course
 
 def create_topics(request, pk):

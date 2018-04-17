@@ -129,6 +129,3 @@ After installing django -reversion compare module, copy the patch file from 'tem
  mysql -u root -p  (and select the database that is created and run the following sql query)
  
  ALTER TABLE BasicArticle_articles MODIFY COLUMN body text CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
-
-Git:
-Last updated: 5 April 2018, 16:26hrs

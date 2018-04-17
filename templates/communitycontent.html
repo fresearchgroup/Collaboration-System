@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
+
 {% load comments %}
 {% load comments_xtd %}
 
@@ -52,8 +59,10 @@
    </div>
 </div>
 {% endif %}
+<div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
 {% for article in commarticles %}
+<div class="infinite-item">
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
       {% if article.image %}
@@ -64,10 +73,10 @@
     </div>
     <div class="col-md-10 col-sm-10">
       {% if article.type == 'article' %}
-        <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+        <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
       {% if article.type == 'course' %}
-        <h3><a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
+        <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}}</li>
@@ -92,35 +101,30 @@
     </div>
   </div>
   <hr class="blog-post-sep">
-
+</div>
 {% endfor %}
 {% endautoescape%}
-
-{% if commarticles.has_other_pages %}
-<div class="row">
-  <div class="col-md-4 col-sm-4 items-info">{{commarticles}}</div>
-  <div class="col-md-8 col-sm-8">
-    <ul class="pagination pull-right">
-    {% if commarticles.has_previous %}
-      <li><a href="?page={{ commarticles.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in commarticles.paginator.page_range %}
-      {% if commarticles.number == i %}
-        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if commarticles.has_next %}
-      <li><a href="?page={{ commarticles.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
 </div>
-</div>
-<br />
+{% if commarticles.has_next %}
+  <a class="infinite-more-link" href="?page={{ commarticles.next_page_number }}">More</a>
 {% endif %}
+
+<div class="loading" style="display: none;">
+  Loading...
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script>
 {% endblock %}

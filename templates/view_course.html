@@ -49,14 +49,9 @@ background-color:#FE642E;
 
         <ul >
             {% recursetree topics %}
-                <li><a  href="#" id="id1" style="text-decoration: none;"><form name="form1" method="post"  data-toggle="tooltip" data-placement="top" title="{{count}}11 chapter in here">
-                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} />
-                 <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
-                  <span>{{node.name}}</span> 
-                  <span class="badge">{{count}}11</span>
-                </form>
-
-                 </a>
+                <li><a class = "topics" href="#" >
+                  <input type="button" value="{{node.name}}" id="{{node.id}}" class="btn-link"/>
+                    </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
                             {{ children }}
@@ -69,50 +64,103 @@ background-color:#FE642E;
         </div>
     </div>
     <div class="col-sm-8">
-      <div class="row">
- <div id="phideshow" class="jumbotron ">
-  <h4 class="alert-secondary"> <b>Course Title: </b> {{ course.course.title }}</h4>
-  <h4 class="alert-secondary"> <b>Course Description: </b> {{ course.course.body }}</h4>
-  <h4 class="alert-secondary"> <b>Created By: </b> {{ course.course.created_by }}</h4>
-  <h4 class="alert-secondary"> <b>Created At : </b> {{ course.course.created_at }}</h4>
- </div>
-</div>
- <nav id="menu" class="nav-main">
-<ul class="nav nav-pills nav-justified nav-inverse" style=" overflow: auto;
-    white-space: nowrap;">
-    {% for links in links %}
-    {% if links.types == 'Youtube' %}
-  <li role="presentation" ><a href="{{links.link}}" target="frame1"><i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
-  {% else %}
-  <li role="presentation" ><a href="{{link.link}}" target="frame1"><i  class="fa fa-link" style="font-size: 20px;"></i></a></li>
-  {%endif%}
-{% endfor %}
-  </ul>
- </nav>
+    <div id= "collection" class="tab-content">
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">{{ course.course.title }}</h2>
+          <blockquote class="blockquote mb-0">
+                <p>{{ course.course.body | safe }}</p>
+                <footer class="blockquote-footer">Created by: {{course.course.created_by}} </footer>
+              </blockquote>
+        </div>
+      </div>
     </div>
     <br />
-   <iframe width="560" height="315" src="{{link.link}}" name="frame1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-   {{link.desc}}
+   
   </div>
 </div>
-
+</div>
 {% endblock %}
 {% block javascript %}
         <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('.demo').ntm();
-  });
+ <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+        </script>
+        <script  type="text/javascript">
 
- $(document).ready(function(){
-    $("#id2").click(function(){
-        $("#phideshow").show();
-    });
-});
+                $(".btn-link").click(function(){
 
-  window.onload = function(){
-   $("#phideshow").hide(0);
-}
-</script>
+                  var id = $(this).attr('id');
+                  var url = "/api/course/topics/links/" + id;
+                  //var url = "{% url 'home' %}" + "api/course/topics/links" +links; 
+                  $("#list").empty();
+                  $("#collection").empty();
+                  $.ajax({
+                          url: url,
+                          type: 'get',
+                          cache: false,
+                          success: function(data){
+                             var count = 1;
+                              for(i in data){
+                                  links = data[i];
+                                  if(links['types'] == 'Youtube'){
+
+                                    if (count == 1){
+                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                      count++;
+                                    } else {
+
+                                      var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
+
+                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+
+                                    }
+
+                                  $("#list").append(list);
+                                  $("#collection").append(listcollection);
+                                  }
+
+                                  if(links['types'] == 'External'){
+
+                                    if (count ==1){
+
+                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+                                 
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+                                      count++;
+                                    }
+                                      else
+
+                                    {
+
+                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
+                                 
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+
+                                    }
+
+                                   $("#list").append(list);
+                                  $("#collection").append(listcollection);
+
+
+                                  }
+                                  //for loop ends here
+                                  }
+
+                          }
+
+                        
+
+                        });
+    
+            });
+                
+
+
+        </script>
 {% endblock %}
