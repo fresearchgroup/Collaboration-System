@@ -28,6 +28,7 @@
 </ul>
 <br/>
 
+{% if membership.role or group.visibility == 1 %}
 <div class="main">
   <div class="container">
     <!-- BEGIN SIDEBAR & CONTENT -->
@@ -47,7 +48,14 @@
                   {%endif%}
                 </div>
                 <div class="col-md-8 col-sm-8">
-                  <h2> {{ group.name}} </h2>
+                  <h2>
+                    {% if group.visibility == 0 %}
+                      <i class="fa fa-lock" style="color: #E84D1C;" ></i>
+                    {% else %}
+                      <i class="fa fa-unlock" style="color: #E84D1C;" ></i>
+                    {% endif %}
+                    {{ group.name}}
+                  </h2>
                   <ul class="blog-info">
                     <li><i class="fa fa-institution"></i>Since: {{group.created_at.date}}</li>
                     <li><i class="fa fa-users"></i> {{subscribers}} Members </li>
@@ -252,4 +260,7 @@
 
 </div> <!-- END CONTAINER -->
 </div> <!-- END MAIN -->
+{% else %}
+    <h1><i class="fa fa-lock" style="color: #E84D1C;" ></i>This is a private group</h1>
+{% endif %}
 {% endblock %}
