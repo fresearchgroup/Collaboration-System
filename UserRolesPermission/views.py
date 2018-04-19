@@ -18,6 +18,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.core import serializers
 
 def signup(request):
     """
@@ -197,3 +198,11 @@ def favourites(request):
                 obj = favourite.objects.filter(user = user, resource = resource_id, category= category).delete()
                 return HttpResponse('removed')
         return HttpResponse('ok')
+
+@csrf_exempt
+def group_invitations(request):
+    userid = request.GET.get('userid', None)
+    user = User.objects.get(id=userid)
+    grpinvitations = GroupInvitations.objects.filter(status='Invited', user=user).values('id', 'status', 'group__name', 'group__id', 'group__image')
+    grpinvitations_list = list(grpinvitations)
+    return JsonResponse(grpinvitations_list, safe=False)

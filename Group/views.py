@@ -225,7 +225,7 @@ def group_content(request, pk):
 
 def handle_group_invitations(request):
 	if request.method == 'POST':
-		pk = request.POST['pk']
+		pk = int(request.POST['pk'])
 		grpinivtation=GroupInvitations.objects.get(pk=pk)
 		status = request.POST['status']
 
