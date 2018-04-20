@@ -132,10 +132,10 @@ def manage_group(request,pk):
 								is_community_member = CommunityMembership.objects.get(user=user, community=community.community.pk)
 								try:
 									is_member = GroupMembership.objects.get(user=user, group=group.pk)
+									errormessage = 'user exists in group'
 								except GroupMembership.DoesNotExist:
 									grpinvite = GroupInvitations.objects.create(invitedby=request.user, user=user, role=role, status='Invited', group=group)
-								else:
-									errormessage = 'user exists in group'
+									errormessage = 'invitation sent sucessfully to ' + username
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'user is not a part of the community'
 						if status == 'update':
