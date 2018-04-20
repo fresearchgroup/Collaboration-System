@@ -3,11 +3,12 @@ from .models import Course, Topics, Links
 from Community.models import CommunityCourses
 from .forms import TopicForm
 from django.http import Http404, HttpResponse
+from django.contrib.auth.models import User
 
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
-	course = Course.objects.create(title=title, body=body)
+	course = Course.objects.create(title=title, body=body, created_by=request.user)
 	return course
 
 def create_topics(request, pk):
