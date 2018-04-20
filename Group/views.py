@@ -134,8 +134,7 @@ def manage_group(request,pk):
 									is_member = GroupMembership.objects.get(user=user, group=group.pk)
 									errormessage = 'user exists in group'
 								except GroupMembership.DoesNotExist:
-									grpinvite = GroupInvitations.objects.create(invitedby=request.user, user=user, role=role, status='Invited', group=group)
-									errormessage = 'invitation sent sucessfully to ' + username
+									errormessage = inviteUser(request, group, user, role)
 							except CommunityMembership.DoesNotExist:
 								errormessage = 'user is not a part of the community'
 						if status == 'update':
@@ -168,6 +167,21 @@ def manage_group(request,pk):
 			return redirect('group_view',pk=pk)
 	else:
 		return redirect('login')
+
+def inviteUser(request, group, user, role):
+	if(isInvited(group, user)):
+		errormessage = user.username + ' is already invited to join this group'
+	else:
+		grpinvite = GroupInvitations.objects.create(invitedby=request.user, user=user, role=role, status='Invited', group=group)
+		errormessage = 'invitation sent sucessfully to ' + user.username
+	return errormessage
+
+def isInvited(group, user):
+	try:
+		is_invited = GroupInvitations.objects.get(user=user, group=group.pk, status='Invited')
+		return True
+	except GroupInvitations.DoesNotExist:
+		return False
 
 def update_group_info(request,pk):
 	if request.user.is_authenticated:
