@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Course, Topics, Links
+from .models import Course, Topics, Links, TopicArticle 
 from Community.models import CommunityCourses
 from .forms import TopicForm
+from workflow.models import States
 from django.http import Http404, HttpResponse
+from BasicArticle.models import Articles
 
 def create_course(request):
 	title = request.POST['name']
@@ -88,16 +90,21 @@ def manage_resource(request, pk):
 				topic_link=request.POST['topic_link']
 				topic_description=request.POST['topic_description']
 				link = Links.objects.create(link = topic_link, desc= topic_description, topics = topic, types=topic_type)
-				return redirect('course_view',pk=pk)
+				return redirect('course_view',pk=pk)	
 			elif topic_type=='PublishedArticle':
-				article_chosen=request.POST[article_chosen]
-				return redirect('course_view',pk=pk)
+				article_id=request.POST['article_id']
+				article = Articles.objects.get(pk=article_id)
+				topicarticle = TopicArticle.objects.create(topics=topic, article=article)
+				return redirect('course_view',pk=pk)				
 		else:
 			try:
 				course = CommunityCourses.objects.get(course=pk)
 				topics = Topics.objects.filter(course=pk)
+				articles = Articles.objects.filter(state__name='publish')
 			except CommunityCourses.DoesNotExist:
 				raise Http404
-			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
+			return render(request, 'manage_resource.html', {'course':course, 'topics':topics, 'articles':articles})
 	else:
 		return redirect('course_view',pk=pk)
+
+				
