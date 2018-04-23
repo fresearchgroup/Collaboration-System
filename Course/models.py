@@ -1,6 +1,7 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
+from BasicArticle.models import Articles
 
 class Course(models.Model):
 	title = models.CharField(max_length=100)
@@ -32,3 +33,8 @@ class Videos(models.Model):
 	video = models.CharField(max_length=300)
 	desc = models.TextField()
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_videos')
+
+class TopicArticle(models.Model):
+	article = models.ForeignKey(Articles, related_name='topics_articles')
+	topics = models.ForeignKey(Topics,null=True, related_name='topics_articles')
+    
