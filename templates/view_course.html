@@ -65,13 +65,11 @@ background-color:#FE642E;
         </div>
     </div>
     <div class="col-sm-8">
- 
     <div >
       <ul  id = "list" class="nav nav-tabs">
 
 
 
-  
       </ul>
 
     </div>
@@ -89,7 +87,6 @@ background-color:#FE642E;
 
     </div>
     <br />
-   
   </div>
 </div>
 
@@ -108,7 +105,6 @@ background-color:#FE642E;
 
                   var id = $(this).attr('id');
                   var url = "/api/course/topics/links/" + id;
-                  //var url = "{% url 'home' %}" + "api/course/topics/links" +links; 
                   $("#list").empty();
                   $("#collection").empty();
                   $.ajax({
@@ -142,7 +138,6 @@ background-color:#FE642E;
                                     if (count ==1){
 
                                       var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
                                   var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
                                       count++;
                                     }
@@ -151,7 +146,6 @@ background-color:#FE642E;
                                     {
 
                                     var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
                                   var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
 
                                     }
@@ -166,12 +160,9 @@ background-color:#FE642E;
 
                           }
 
-                        
 
                         });
-    
             });
-                
 
 
         </script>
