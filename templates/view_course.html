@@ -123,13 +123,13 @@ background-color:#FE642E;
 
                                     if (count == 1){
                                       var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
                                       count++;
                                     } else {
 
                                       var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
 
-                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
 
                                     }
 
@@ -143,7 +143,7 @@ background-color:#FE642E;
 
                                       var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
                                  
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
                                       count++;
                                     }
                                       else
@@ -152,7 +152,7 @@ background-color:#FE642E;
 
                                     var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
                                  
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
 
                                     }
 
