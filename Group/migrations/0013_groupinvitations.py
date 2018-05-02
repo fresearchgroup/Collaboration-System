@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('auth', '0010_auto_20171213_0911'),
         ('Group', '0012_auto_20180227_1134'),
     ]
 
