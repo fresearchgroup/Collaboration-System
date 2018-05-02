@@ -100,9 +100,7 @@ background-color:#FE642E;
             });
         </script>
         <script  type="text/javascript">
-
-                $(".btn-link").click(function(){
-
+            $(".btn-link").click(function(){
                   var id = $(this).attr('id');
                   var url = "/api/course/topics/links/" + id;
                   var url_articles = "/api/course/topics/articles/" + id;
@@ -110,61 +108,35 @@ background-color:#FE642E;
                   $("#list").empty();
                   $("#collection").empty();
                   $.ajax({
-                          url: url,
-                          type: 'get',
-                          cache: false,
-                          success: function(data){
-                             var count = 1;
-                              for(i in data){
-                                  countResources++;
-                                  links = data[i];
-                                  if(links['types'] == 'Youtube'){
-
-                                    if (countResources == 1){
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src=" ' + links['link'] +'" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>'
-                                      count++;
-                                    } else {
-
-                                      var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-
-                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src=" ' + links['link'] +'" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>'
-
-                                    }
-
-                                  $("#list").append(list);
-                                  $("#collection").append(listcollection);
-                                  }
-
-                                  if(links['types'] == 'External'){
-
-                                    if (countResources ==1){
-
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src=" ' + links['link'] +'"></iframe></div></div>'
-                                      count++;
-                                    }
-                                      else
-
-                                    {
-
-                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src=" ' + links['link'] +'"></iframe></div></div>'
-
-                                    }
-
-                                   $("#list").append(list);
-                                  $("#collection").append(listcollection);
-
-
-                                  }
-                                  //for loop ends here
-                                  }
-
-                          }
-
-
-                        });
+                      url: url,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                         var icon= ''
+                          for(i in data){
+                              countResources++;
+                              links = data[i];
+                              if(links['types'] == 'Youtube'){
+                                icon = '<i  class="fa fa-youtube" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+                              }
+                              if(links['types'] == 'External'){
+                                icon = '<i  class="fa fa-link" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'"></iframe>'
+                              }
+                              if (countResources == 1){ //active frame
+                                  var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div></div>'
+                              }
+                              else { //inactive frames
+                                  var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div></div>'
+                              }
+                              $("#list").append(list);
+                              $("#collection").append(listcollection);
+                          } //end of for
+                      }
+                  });
                   $.ajax({
                       url: url_articles,
                       type: 'get',
