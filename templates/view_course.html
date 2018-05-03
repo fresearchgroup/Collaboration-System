@@ -43,7 +43,7 @@ background-color:#FE642E;
       <br/>
     <div class="col-sm-4">
       <div class="blog-item">
-        <h2><a href="#">{{ course.course.title }} </a></h2>
+        <h2><a href="{% url 'course_view' course.course.pk %}">{{ course.course.title }} </a></h2>
       </div>
       <div style="margin-right: 0px;height:450px; overflow: scroll; ">
        <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
@@ -77,10 +77,10 @@ background-color:#FE642E;
 
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title">{{ course.course.title }}</h5>
           <blockquote class="blockquote mb-0">
                 <p>{{ course.course.body | safe }}</p>
-                <footer class="blockquote-footer">Created by: {{course.course.created_by}} </footer>
+                <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' course.course.created_by %}">{{course.course.created_by}} </a> </h4>
+                <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
               </blockquote>
         </div>
       </div>
