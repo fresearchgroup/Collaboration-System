@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Course, Topics, Links, TopicArticle 
-from Community.models import CommunityCourses
+from .models import Course, Topics, Links, TopicArticle
+from Community.models import CommunityCourses, Community, CommunityMembership
 from .forms import TopicForm
 from workflow.models import States
 from django.http import Http404, HttpResponse
@@ -91,12 +91,12 @@ def manage_resource(request, pk):
 				topic_link=request.POST['topic_link']
 				topic_description=request.POST['topic_description']
 				link = Links.objects.create(link = topic_link, desc= topic_description, topics = topic, types=topic_type)
-				return redirect('course_view',pk=pk)	
+				return redirect('course_view',pk=pk)
 			elif topic_type=='PublishedArticle':
 				article_id=request.POST['article_id']
 				article = Articles.objects.get(pk=article_id)
 				topicarticle = TopicArticle.objects.create(topics=topic, article=article)
-				return redirect('course_view',pk=pk)				
+				return redirect('course_view',pk=pk)
 		else:
 			try:
 				course = CommunityCourses.objects.get(course=pk)
@@ -108,4 +108,29 @@ def manage_resource(request, pk):
 	else:
 		return redirect('course_view',pk=pk)
 
-				
+
+def update_course_info(request,pk):
+	if request.user.is_authenticated:
+		course = Course.objects.get(pk=pk)
+		community = CommunityCourses.objects.get(course=pk)
+		uid = request.user.id
+		membership = None
+		comm = Community.objects.get(pk=community.community.id)
+		try:
+			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
+			if membership:
+				if request.method == 'POST':
+					title = request.POST['name']
+					body = request.POST['desc']
+					course.title = title
+					course.body = body
+					course.save()
+					return redirect('course_view',pk=pk)
+				else:
+					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm})
+			else:
+				return redirect('course_view',pk=pk)
+		except CommunityMembership.DoesNotExist:
+			return redirect('login')
+	else:
+		return redirect('login')

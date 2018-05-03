@@ -37,6 +37,9 @@ background-color:#FE642E;
         <li class="nav-item">
           <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource </a>
         </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
         {% endif %}
       </ul>
       </div>
