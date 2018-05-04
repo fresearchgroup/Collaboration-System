@@ -1,11 +1,14 @@
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
-from .models import Course, Topics, Links
+from .models import Course, Topics, Links, TopicArticle
 # Register your models here.
 
 
 admin.site.register(Course)
 admin.site.register(Links)
+admin.site.register(TopicArticle)
+
+
 
 admin.site.register(
     Topics,
