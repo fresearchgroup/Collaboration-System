@@ -36,18 +36,16 @@ background-color:#FE642E;
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
         </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
         {% endif %}
       </ul>
       </div>
-      <br/> 
-
+      <br/>
       <div class="col-sm-4">
-      <div class="blog-item">
-        <h2><a href="#">{{ course.course.name }} </a></h2>
-      </div>
       <div style="margin-right: 0px;height:450px; overflow: scroll; ">
        <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
- 
         <ul >
             {% recursetree topics %}
                 <li><a href="#"> <form id="manageresources" name="nodeidform" method="post" >
@@ -59,7 +57,7 @@ background-color:#FE642E;
                  <i class="fa fa-edit EditTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalEditTopic" data-whatever="@mdo"></i>
                  <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
                   {%endif%}
-                </form> 
+                </form>
                               </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
@@ -123,8 +121,8 @@ background-color:#FE642E;
   </label>
 </div>
       </div>
-     
-          
+
+
 
 
       <div class="modal-footer">
