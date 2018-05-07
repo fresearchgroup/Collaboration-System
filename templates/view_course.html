@@ -111,66 +111,6 @@ background-color:#FE642E;
                   $("#list").empty();
                   $("#collection").empty();
                   $.ajax({
-<<<<<<< HEAD
-                          url: url,
-                          type: 'get',
-                          cache: false,
-                          success: function(data){
-                             var count = 1;
-                              for(i in data){
-                                  links = data[i];
-                                  if(links['types'] == 'Youtube'){
-
-                                    if (count == 1){
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
-                                      count++;
-                                    } else {
-
-                                      var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-
-                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
-
-                                    }
-
-                                  $("#list").append(list);
-                                  $("#collection").append(listcollection);
-                                  }
-
-                                  if(links['types'] == 'External'){
-
-                                    if (count ==1){
-
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
-                                      count++;
-                                    }
-                                      else
-
-                                    {
-
-                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
-
-                                    }
-
-                                   $("#list").append(list);
-                                  $("#collection").append(listcollection);
-
-
-                                  }
-                                  //for loop ends here
-                                  }
-
-                          }
-
-                        
-
-                        });
-    
-=======
                       url: url,
                       type: 'get',
                       cache: false,
@@ -229,7 +169,6 @@ background-color:#FE642E;
                           } //end of for
                       } // end of success function
                   }); // end of ajax-article
->>>>>>> 6c0c52422390eab1e9f369f5d7a07eefa3e42ace
             });
         </script>
 
