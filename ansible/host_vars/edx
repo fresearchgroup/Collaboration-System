@@ -2,7 +2,7 @@
 repo_url: https://github.com/fresearchgroup 
 repo: Collaboration-System
 home_dir: /home/edx
-upass: edx
+upass: 123456
 repo_dir: "{{ home_dir }}/{{ repo }}"
 config_files_dir: /home/nithin/config
 django_dir: "{{ repo_dir }}/"

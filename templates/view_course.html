@@ -37,14 +37,24 @@ background-color:#FE642E;
         <li class="nav-item">
           <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource </a>
         </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
         {% endif %}
       </ul>
       </div>
     <div class="alert alert-success" role="alert"><center> <h5>{{ course.course.title }}</h5></center></div>
     <div class="row">
     <div class="col-sm-4">
+<<<<<<< HEAD
       <input type="button" class="btn btn-link" value="About Course" id="id2">
            <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+=======
+      <div class="blog-item">
+        <h2><a href="{% url 'course_view' course.course.pk %}">{{ course.course.title }} </a></h2>
+      </div>
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+>>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
        <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
 
         <ul >
@@ -64,20 +74,34 @@ background-color:#FE642E;
         </div>
     </div>
     <div class="col-sm-8">
+<<<<<<< HEAD
+=======
+    <div >
+      <ul  id = "list" class="nav nav-tabs">
+
+
+
+      </ul>
+
+    </div>
+>>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
     <div id= "collection" class="tab-content">
 
       <div class="card">
         <div class="card-body">
+<<<<<<< HEAD
           <h2 class="card-title">{{ course.course.title }}</h2>
+=======
+>>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
           <blockquote class="blockquote mb-0">
                 <p>{{ course.course.body | safe }}</p>
-                <footer class="blockquote-footer">Created by: {{course.course.created_by}} </footer>
+                <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' course.course.created_by %}">{{course.course.created_by}} </a> </h4>
+                <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
               </blockquote>
         </div>
       </div>
     </div>
     <br />
-   
   </div>
 </div>
 </div>
@@ -97,15 +121,15 @@ background-color:#FE642E;
 }); 
         </script>
         <script  type="text/javascript">
-
-                $(".btn-link").click(function(){
-
+            $(".btn-link").click(function(){
                   var id = $(this).attr('id');
                   var url = "/api/course/topics/links/" + id;
-                  //var url = "{% url 'home' %}" + "api/course/topics/links" +links; 
+                  var url_articles = "/api/course/topics/articles/" + id;
+                  var countResources = 0;
                   $("#list").empty();
                   $("#collection").empty();
                   $.ajax({
+<<<<<<< HEAD
                           url: url,
                           type: 'get',
                           cache: false,
@@ -117,13 +141,13 @@ background-color:#FE642E;
 
                                     if (count == 1){
                                       var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
                                       count++;
                                     } else {
 
                                       var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
 
-                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>'
+                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
 
                                     }
 
@@ -137,7 +161,7 @@ background-color:#FE642E;
 
                                       var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
                                  
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
                                       count++;
                                     }
                                       else
@@ -146,7 +170,7 @@ background-color:#FE642E;
 
                                     var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
                                  
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe></div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
 
                                     }
 
@@ -164,9 +188,66 @@ background-color:#FE642E;
 
                         });
     
+=======
+                      url: url,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                         var icon= ''
+                          for(i in data){
+                              countResources++;
+                              links = data[i];
+                              if(links['types'] == 'Youtube'){
+                                icon = '<i  class="fa fa-youtube" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+                              }
+                              if(links['types'] == 'External'){
+                                icon = '<i  class="fa fa-link" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'"></iframe>'
+                              }
+                              if (countResources == 1){ //active frame
+                                  var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div></div>'
+                              }
+                              else { //inactive frames
+                                  var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div></div>'
+                              }
+                              $("#list").append(list);
+                              $("#collection").append(listcollection);
+                          } //end of for
+                      }
+                  });
+                  $.ajax({
+                      url: url_articles,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                          for(i in data){
+                              countResources++;
+                              articles = data[i];
+                              articleid = articles['article']
+                              articleurl = '{% url "article_view" 0 %}'.replace('0', articleid)
+                              title = articles['title']
+                              body = articles['body']
+                              created_by = articles['created_by']
+                              created_at = articles['created_at']
+                              if(countResources == 1){
+                                var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
+                                var listcollection = '<div class="tab-pane row fade in active" id="tabArt'+articles['id'] +  '">'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   </div>'
+                              }
+                              else {
+                                var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
+                                var listcollection = '<div class="tab-pane row fade in " id="tabArt'+articles['id'] +  '">'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   </div>'
+                              }
+                              $("#list").append(list);
+                              $("#collection").append(listcollection);
+                          } //end of for
+                      } // end of success function
+                  }); // end of ajax-article
+>>>>>>> 6c0c52422390eab1e9f369f5d7a07eefa3e42ace
             });
-                
-
-
         </script>
 {% endblock %}

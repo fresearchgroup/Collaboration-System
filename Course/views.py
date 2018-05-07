@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
-from .models import Course, Topics, Links
-from Community.models import CommunityCourses
+from .models import Course, Topics, Links, TopicArticle
+from Community.models import CommunityCourses, Community, CommunityMembership
 from .forms import TopicForm
+from workflow.models import States
 from django.http import Http404, HttpResponse
+from BasicArticle.models import Articles
+from django.contrib.auth.models import User
 
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
-	course = Course.objects.create(title=title, body=body)
+	course = Course.objects.create(title=title, body=body, created_by=request.user)
 	return course
 
 def create_topics(request, pk):
@@ -91,14 +94,48 @@ def manage_resource(request, pk):
 				link = Links.objects.create(link = topic_link, desc= topic_description, topics = topic, types=topic_type)
 				return redirect('course_view',pk=pk)
 			elif topic_type=='PublishedArticle':
-				article_chosen=request.POST[article_chosen]
+				article_id=request.POST['article_id']
+				article = Articles.objects.get(pk=article_id)
+				topicarticle = TopicArticle.objects.create(topics=topic, article=article)
 				return redirect('course_view',pk=pk)
 		else:
 			try:
 				course = CommunityCourses.objects.get(course=pk)
 				topics = Topics.objects.filter(course=pk)
+				articles = Articles.objects.filter(state__name='publish')
 			except CommunityCourses.DoesNotExist:
 				raise Http404
-			return render(request, 'manage_resource.html', {'course':course, 'topics':topics})
+			return render(request, 'manage_resource.html', {'course':course, 'topics':topics, 'articles':articles})
 	else:
+<<<<<<< HEAD
 		return redirect('course_view',pk=pk)
+=======
+		return redirect('course_view',pk=pk)
+
+
+def update_course_info(request,pk):
+	if request.user.is_authenticated:
+		course = Course.objects.get(pk=pk)
+		community = CommunityCourses.objects.get(course=pk)
+		uid = request.user.id
+		membership = None
+		comm = Community.objects.get(pk=community.community.id)
+		try:
+			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
+			if membership:
+				if request.method == 'POST':
+					title = request.POST['name']
+					body = request.POST['desc']
+					course.title = title
+					course.body = body
+					course.save()
+					return redirect('course_view',pk=pk)
+				else:
+					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm})
+			else:
+				return redirect('course_view',pk=pk)
+		except CommunityMembership.DoesNotExist:
+			return redirect('login')
+	else:
+		return redirect('login')
+>>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
