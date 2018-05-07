@@ -2,10 +2,17 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 from BasicArticle.models import Articles
+import os, uuid
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('course', filename)
 
 class Course(models.Model):
 	title = models.CharField(max_length=100)
 	body = models.TextField()
+	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True,null=True)
 	created_by = models.ForeignKey(User,null=True,related_name='community_createdby')
 
@@ -37,4 +44,3 @@ class Videos(models.Model):
 class TopicArticle(models.Model):
 	article = models.ForeignKey(Articles, related_name='topics_articles')
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_articles')
-    
