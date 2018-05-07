@@ -30,10 +30,11 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
+		
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course, 'topics':topics,'links':links})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
@@ -140,3 +141,4 @@ def update_course_info(request,pk):
 			return redirect('login')
 	else:
 		return redirect('login')
+

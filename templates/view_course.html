@@ -20,11 +20,11 @@ background-color:#FE642E;
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.course.title }} </li>
+  <li class="breadcrumb-item active">{{ course.course.title }}</li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
-  <div class="row">
+  
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item active">
@@ -43,7 +43,8 @@ background-color:#FE642E;
         {% endif %}
       </ul>
       </div>
-      <br/>
+    <div class="alert alert-success" role="alert"><center> <h5>{{ course.course.title }}</h5></center></div>
+    <div class="row">
     <div class="col-sm-4">
       <div class="blog-item">
         <h2><a href="{% url 'course_view' course.course.pk %}">{{ course.course.title }} </a></h2>
@@ -98,7 +99,6 @@ background-color:#FE642E;
           </blockquote>
         </div>
       </div>
-
     </div>
     <br />
   </div>
@@ -112,6 +112,12 @@ background-color:#FE642E;
             $(document).ready(function() {
                 $('.demo').ntm();
             });
+
+
+
+    $("#id2").click(function(){
+    $("#collection").show();
+}); 
         </script>
         <script  type="text/javascript">
             $(".btn-link").click(function(){
@@ -182,5 +188,4 @@ background-color:#FE642E;
                   }); // end of ajax-article
             });
         </script>
-
 {% endblock %}

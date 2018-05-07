@@ -47,3 +47,4 @@ class LinksDetailsApiView(generics.RetrieveUpdateDestroyAPIView):
 	def get_queryset(self):
 		pk = self.kwargs['pk']
 		return Links.objects.filter(pk=pk)
+
