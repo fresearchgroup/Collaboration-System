@@ -116,6 +116,7 @@ def update_course_info(request,pk):
 		uid = request.user.id
 		membership = None
 		comm = Community.objects.get(pk=community.community.id)
+		errormessage = ''
 		try:
 			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
 			if membership:
@@ -124,6 +125,11 @@ def update_course_info(request,pk):
 					body = request.POST['desc']
 					course.title = title
 					course.body = body
+					try:
+						image = request.FILES['course_image']
+						course.image = image
+					except:
+						errormessage = 'image not uploaded'
 					course.save()
 					return redirect('course_view',pk=pk)
 				else:
