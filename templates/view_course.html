@@ -58,6 +58,8 @@ background-color:#FE642E;
             {% recursetree topics %}
                 <li><a class = "topics" href="#" >
                   <input type="button" value="{{node.name}}" id="{{node.id}}" class="btn-link"/>
+                  <span id="cnt{{node.id}}" style="margin-left:-7px;"></span>
+                  <input type="hidden" value="" id="res{{node.id}}" />
                     </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
@@ -190,4 +192,43 @@ background-color:#FE642E;
                   }); // end of ajax-article
             });
         </script>
+
+        <script  type="text/javascript">
+          function getLinks(id) {
+            var url = "/api/course/topics/links/" + id;
+            var url_articles = "/api/course/topics/articles/" + id;
+            countLinks = 0;
+            $.ajax({
+              url: url,
+              type: 'get',
+              cache: false,
+              success: function(data){
+                $("#res"+id).val(data.length);
+
+                $.ajax({
+                  url: url_articles,
+                  type: 'get',
+                  cache: false,
+                  success: function(data){
+                    total = parseInt($("#res"+id).val()) + parseInt(data.length);
+                    if (total > 0) {
+                      count = '<span class="fa-stack"><span class="fa fa-certificate fa-stack-2x" style="color:red"></span><strong class="fa-stack-1x" style="color:white; margin-left:8px;"> ' + total + '</strong></span>'
+                      $("#cnt"+id).append(count);
+                    } //end of if
+                  } //sucess ends for articles
+                }); // ajax ends for articles
+
+              } //success end for links
+            }); //ajax end for links
+          } // getLinks function ends
+        </script>
+
+        <script  type="text/javascript">
+          $(window).load(function() {
+            {% for topic in topics %}
+              getLinks({{topic.id}});
+            {% endfor %}
+          }); //window load function
+        </script>
+
 {% endblock %}
