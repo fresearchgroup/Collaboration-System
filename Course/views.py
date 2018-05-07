@@ -107,9 +107,6 @@ def manage_resource(request, pk):
 				raise Http404
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics, 'articles':articles})
 	else:
-<<<<<<< HEAD
-		return redirect('course_view',pk=pk)
-=======
 		return redirect('course_view',pk=pk)
 
 
@@ -138,4 +135,4 @@ def update_course_info(request,pk):
 			return redirect('login')
 	else:
 		return redirect('login')
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
+

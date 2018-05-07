@@ -28,9 +28,6 @@ class TopicsLinksApiView(generics.ListAPIView):
 
 	def get_queryset(self):
 		topics = self.kwargs['pk']
-<<<<<<< HEAD
-		return Links.objects.filter(topics=topics)
-=======
 		return Links.objects.filter(topics=topics)
 
 class TopicArticleApiView(generics.ListAPIView):
@@ -50,4 +47,4 @@ class LinksDetailsApiView(generics.RetrieveUpdateDestroyAPIView):
 	def get_queryset(self):
 		pk = self.kwargs['pk']
 		return Links.objects.filter(pk=pk)
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
+

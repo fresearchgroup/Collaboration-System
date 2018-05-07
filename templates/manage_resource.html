@@ -39,20 +39,6 @@ background-color:#FE642E;
         {% endif %}
       </ul>
       </div>
-<<<<<<< HEAD
-      <div class="alert alert-success" role="alert"><center> <h5>Topics for {{ course.course.title }} </h5></center></div>
-      <div class="row">
-        <div class="col-sm-4">
-           <div style="margin-right: 0px;height:450px; overflow: scroll; ">
-       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
-
-        <ul >
-            {% recursetree topics %}
-                <li><a class = "topics" href="#" >
-                  <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#myModal4" data-whatever="@mdo"></i>
-                  <i class="fa fa-edit DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#myModal3" data-whatever="@mdo"></i>
-                  <input type="button" value="{{node.name}}" id="{{node.id}}" class="btn-link"/>
-=======
       <br/> 
 
       <div class="col-sm-4">
@@ -74,9 +60,7 @@ background-color:#FE642E;
                  <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
                   {%endif%}
                 </form> 
-               
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
-                    </a>
+                              </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
                             {{ children }}
@@ -87,12 +71,8 @@ background-color:#FE642E;
         </ul>
           </div>
         </div>
-<<<<<<< HEAD
-        </div>
-=======
     </div>
 
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
     <div class="col-sm-8">
       <form id="managetopic" method="post" action="{% url 'manage_resource' course.course.pk %}">
                         {% csrf_token %}
@@ -243,26 +223,16 @@ background-color:#FE642E;
 
 {% endblock %}
 {% block javascript %}
-<<<<<<< HEAD
   <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
-=======
-        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
         <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
  <script type="text/javascript">
             $(document).ready(function() {
                 $('.demo').ntm();
             });
-<<<<<<< HEAD
-
-
-     </script>
-=======
         </script>
         <script type="text/javascript">
           window.onload = function(){
   document.forms[''].submit();
 }</script>
 
->>>>>>> 5dce2dcfad96450479f4070c26e5483472125058
 {% endblock %}
