@@ -134,3 +134,26 @@ def update_course_info(request,pk):
 			return redirect('login')
 	else:
 		return redirect('login')
+
+
+
+def resource_edit(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			courseid =request.POST['courseid']
+			if status == 'delete':
+				delete_link(request)
+			return redirect('manage_resource', pk=courseid)
+		#else:
+#			except CommunityCourses.DoesNotExist:
+#				raise Http404
+			#return redirect('manage_resource', pk=topicid)
+	else:
+		return redirect('login')
+
+
+def delete_link(request):
+	deletelink = request.POST['deletelink']
+	link = Links.objects.filter(pk=deletelink).delete()
+		

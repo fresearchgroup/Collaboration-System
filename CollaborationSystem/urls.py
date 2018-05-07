@@ -134,7 +134,8 @@ urlpatterns = [
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
-
+    url(r'^edit-resource/$', courseview.resource_edit, name='resource_edit'),
+    
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
 
 ]

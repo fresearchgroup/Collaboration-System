@@ -31,6 +31,7 @@ class TopicsLinksSerializer(serializers.ModelSerializer):
 		model = Links
 		fields = [
 			'id',
+			'title',
 			'link',
 			'desc',
 			'types'
