@@ -10,7 +10,11 @@ from django.contrib.auth.models import User
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
-	course = Course.objects.create(title=title, body=body, created_by=request.user)
+	try:
+		course_image = request.FILES['course_image']
+	except:
+		course_image = None
+	course = Course.objects.create(title=title, body=body, created_by=request.user, image=course_image)
 	return course
 
 def create_topics(request, pk):
@@ -30,10 +34,11 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
+
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course, 'topics':topics,'links':links})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
@@ -116,6 +121,7 @@ def update_course_info(request,pk):
 		uid = request.user.id
 		membership = None
 		comm = Community.objects.get(pk=community.community.id)
+		errormessage = ''
 		try:
 			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
 			if membership:
@@ -124,6 +130,11 @@ def update_course_info(request,pk):
 					body = request.POST['desc']
 					course.title = title
 					course.body = body
+					try:
+						image = request.FILES['course_image']
+						course.image = image
+					except:
+						errormessage = 'image not uploaded'
 					course.save()
 					return redirect('course_view',pk=pk)
 				else:

@@ -20,11 +20,10 @@ background-color:#FE642E;
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.course.title }} </li>
+  <li class="breadcrumb-item active">{{ course.course.title }}</li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
-  <div class="row">
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item active">
@@ -43,11 +42,15 @@ background-color:#FE642E;
         {% endif %}
       </ul>
       </div>
-      <br/>
+    <div class="">
+      <h2 style="text-align:center; margin-top:10px;">
+        <a href="{% url 'course_view' course.course.pk %}">
+          {{ course.course.title }}
+        </a>
+      </h2>
+    </div>
+    <div class="row">
     <div class="col-sm-4">
-      <div class="blog-item">
-        <h2><a href="{% url 'course_view' course.course.pk %}">{{ course.course.title }} </a></h2>
-      </div>
       <div style="margin-right: 0px;height:450px; overflow: scroll; ">
        <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
 
@@ -81,13 +84,23 @@ background-color:#FE642E;
       <div class="card">
         <div class="card-body">
           <blockquote class="blockquote mb-0">
+            <div class="row">
+              <div class="col-md-3 col-sm-3">
+                {% if course.course.image %}
+                  <img src="{{ MEDIA_URL }}{{ course.course.image}}" alt="image" class="img-responsive">
+                {% else %}
+                  <img src="{{ MEDIA_URL }}default/course_image_default.png" alt="default" class="img-responsive">
+                {%endif%}<br />
+              </div>
+              <div class="col-md-9 col-sm-9">
                 <p>{{ course.course.body | safe }}</p>
                 <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' course.course.created_by %}">{{course.course.created_by}} </a> </h4>
                 <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
-              </blockquote>
+              </div>
+            </div>
+          </blockquote>
         </div>
       </div>
-
     </div>
     <br />
   </div>
@@ -101,6 +114,12 @@ background-color:#FE642E;
             $(document).ready(function() {
                 $('.demo').ntm();
             });
+
+
+
+    $("#id2").click(function(){
+    $("#collection").show();
+});
         </script>
         <script  type="text/javascript">
             $(".btn-link").click(function(){
@@ -111,66 +130,6 @@ background-color:#FE642E;
                   $("#list").empty();
                   $("#collection").empty();
                   $.ajax({
-<<<<<<< HEAD
-                          url: url,
-                          type: 'get',
-                          cache: false,
-                          success: function(data){
-                             var count = 1;
-                              for(i in data){
-                                  links = data[i];
-                                  if(links['types'] == 'Youtube'){
-
-                                    if (count == 1){
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-                                      var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
-                                      count++;
-                                    } else {
-
-                                      var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-youtube" style="font-size: 20px;"></i></a></li>'
-
-                                     var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="560" height="315" src=" ' + links['link'] +'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><p>'+ links['desc'] +'</p></div>'
-
-                                    }
-
-                                  $("#list").append(list);
-                                  $("#collection").append(listcollection);
-                                  }
-
-                                  if(links['types'] == 'External'){
-
-                                    if (count ==1){
-
-                                      var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
-                                      count++;
-                                    }
-                                      else
-
-                                    {
-
-                                    var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> <i  class="fa fa-link" style="font-size: 20px;"></i></a></li>'
-                                 
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><iframe width="800" height="400" src=" ' + links['link'] +'"></iframe><p>'+ links['desc'] +'</p></div>'
-
-                                    }
-
-                                   $("#list").append(list);
-                                  $("#collection").append(listcollection);
-
-
-                                  }
-                                  //for loop ends here
-                                  }
-
-                          }
-
-                        
-
-                        });
-    
-=======
                       url: url,
                       type: 'get',
                       cache: false,
@@ -229,8 +188,6 @@ background-color:#FE642E;
                           } //end of for
                       } // end of success function
                   }); // end of ajax-article
->>>>>>> 6c0c52422390eab1e9f369f5d7a07eefa3e42ace
             });
         </script>
-
 {% endblock %}

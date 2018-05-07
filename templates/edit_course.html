@@ -46,11 +46,10 @@ background-color:#FE642E;
       </ul>
       </div>
     </div>
-
+</div>
+<div class="alert alert-success" role="alert"><center> <h5>Topics for {{ course.course.title }} </h5></center></div>
+<div class="row">
     <div class="col-sm-4">
-      <br/>
-      <div class="blog-item">
-        <h3><a href="#">Topics for {{ course.course.title }} </a></h3>
 
       <div style="margin-right: 0px;height:450px; overflow: scroll; ">
        <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
@@ -106,9 +105,7 @@ background-color:#FE642E;
                 </div>
               </div>
             </div>
-
       </div>
-    </div>
     <div class="col-sm-4"><br />
       <h3><a href="#">Add Topic </a></h3>
       <form id="newtopic" method="post" novalidate>
@@ -148,6 +145,7 @@ background-color:#FE642E;
     </div>
   </div>
 </div>
+
 {% endblock %}
 
 {% block javascript %}
