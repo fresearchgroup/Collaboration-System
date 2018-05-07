@@ -10,7 +10,11 @@ from django.contrib.auth.models import User
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
-	course = Course.objects.create(title=title, body=body, created_by=request.user)
+	try:
+		course_image = request.FILES['course_image']
+	except:
+		course_image = None
+	course = Course.objects.create(title=title, body=body, created_by=request.user, image=course_image)
 	return course
 
 def create_topics(request, pk):
@@ -30,7 +34,7 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
-		
+
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
@@ -141,4 +145,3 @@ def update_course_info(request,pk):
 			return redirect('login')
 	else:
 		return redirect('login')
-

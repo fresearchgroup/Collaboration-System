@@ -33,6 +33,10 @@
       {% endif %}
     <input type="hidden" name="status" value={{status}}>
   </div>
+  <div class="form-group custom-file">
+    <label for="image">Upload Image</label>
+    <input type="file"   name ="course_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload...">
+  </div>
   {% if status == 1 %}
   <button type="submit" class="btn btn-primary">Create</button>
   {% endif %}
@@ -54,5 +58,8 @@
         } );
     </script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
-</script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
 {% endblock %}
