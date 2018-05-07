@@ -54,13 +54,10 @@ background-color:#FE642E;
                   {% csrf_token %}
                   <span>{{node.name}}</span>
                  <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} >
-                 <input type="submit" class="btn btn-link" value =" {{node.id}} ">
-                  {% if  node.is_leaf_node %}
-                 <i class="fa fa-edit EditTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalEditTopic" data-whatever="@mdo"></i>
-                 <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
-                  {%endif%}
+                 <div id="links{{node.id}}">
+                 </div>                                   
                 </form> 
-                              </a>
+                  </a>
                     {% if not node.is_leaf_node %}
                         <ul class="children">
                             {{ children }}
@@ -72,6 +69,67 @@ background-color:#FE642E;
           </div>
         </div>
     </div>
+       
+<div class="modal fade" id="modalEditTopic" tabindex="-1" role="dialog" aria-labelledby="EditTopicmodal" aria-hidden="true">
+              <div class="modal-dialog text-left" role="document">
+                 <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Link And Description</h4>
+      </div>
+      <div class="modal-body">
+
+       <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="topic_title" name="topic_title">
+      </div>
+       <div class="form-group">
+    <label for="link">link</label>
+    <input type="link" class="form-control" id="topic_link" name="topic_link"  placeholder="Input Link here">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" rows="3" id="topic_description" name="topic_description"></textarea>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+ </div>
+</div>
+</form>
+
+<div class="modal fade" id="modalDeleteResource" tabindex="-1" role="dialog" aria-labelledby="DeleteResoursemodal" aria-hidden="true">
+              <div class="modal-dialog text-left" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Delete Resource</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5><b>Are you sure you want to delete this resource?</b></h5>
+                    <form id="deleteresource" method = "post" action ="{% url 'resource_edit' %}">
+                      <div class="form-group">
+                        {% csrf_token %}
+                        <input type='hidden' id='status' name='status' value='delete'>
+
+                        <input type='hidden' id='courseid' name='courseid' value="">
+                        <input type="hidden" id="deletelink" name="deletelink" value = "">
+                        
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                  </div>
+                </div>aria-labelledby="DeleteResoursemodal"
+              </div>
+            </div>
+       
 
     <div class="col-sm-8">
       <form id="managetopic" method="post" action="{% url 'manage_resource' course.course.pk %}">
@@ -89,13 +147,16 @@ background-color:#FE642E;
     <label>Type</label></br>
     <div class="radio">
   <label>
-    <input type="radio" name="topic_type" id="topic_type" value="Youtube" data-toggle="modal" data-target="#myModal1">Youtube
+    <input type="radio" name="topic_type" id="topic_type" value="Youtube" data-toggle="modal" data-target="#myModal1" >
+    <span>Youtube</span>
   </label>
     <label>
-    <input type="radio" name="topic_type" id="topic_type" value="External" data-toggle="modal" data-target="#myModal1">External
+    <input type="radio" name="topic_type" id="topic_type" value="External" data-toggle="modal" data-target="#myModal1" >
+    <span>External</span>
   </label>
     <label>
-    <input type="radio" name="topic_type" id="topic_type" value="PublishedArticle" data-toggle="modal" data-target="#myModal" >published Article
+    <input type="radio" name="topic_type" id="topic_type" value="PublishedArticle" data-toggle="modal" data-target="#myModal" >
+    <span>published Article</span>
   </label>
 </div>
   </div>
@@ -115,9 +176,8 @@ background-color:#FE642E;
   <label>
 
 
-
     {% for articles in articles %}
-  <input type="radio" name="article_id" id="article_id" value="{{articles.id}}" data-toggle="modal" data-target="#myModal2" checked > <a href="{% url 'article_view' articles.pk %}"> {{articles.title}} by {{articles.created_by}}</a><br>
+  <input type="radio" name="article_id" id="article_id" value="{{articles.id}}" data-toggle="modal" data-target="#myModal2" > <a href="{% url 'article_view' articles.pk %}"> {{articles.title}} by {{articles.created_by}}</a><br>
     {% endfor %}
 
   </label>
@@ -125,8 +185,6 @@ background-color:#FE642E;
       </div>
      
           
-
-
       <div class="modal-footer">
         <button type="submit" class="btn btn-default" >submit</button>
       </div>
@@ -134,6 +192,8 @@ background-color:#FE642E;
 
   </div>
 </div>
+
+
 <!-- Modal -->
 <div id="myModal1" class="modal fade" role="dialog" >
   <div class="modal-dialog">
@@ -145,6 +205,11 @@ background-color:#FE642E;
         <h4 class="modal-title">Add Link And Description</h4>
       </div>
       <div class="modal-body">
+
+       <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="topic_title" name="topic_title">
+  </div>
        <div class="form-group">
     <label for="link">link</label>
     <input type="link" class="form-control" id="topic_link" name="topic_link"  placeholder="Input Link here">
@@ -220,7 +285,6 @@ background-color:#FE642E;
 </div>
 </div>
 
-
 {% endblock %}
 {% block javascript %}
   <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
@@ -230,9 +294,57 @@ background-color:#FE642E;
                 $('.demo').ntm();
             });
         </script>
+
         <script type="text/javascript">
           window.onload = function(){
   document.forms[''].submit();
 }</script>
+
+<script  type="text/javascript">
+  function getLinks(id) {
+    var url = "/api/course/topics/links/" + id;
+    $.ajax({
+      url: url,
+      type: 'get',
+      cache: false,
+      success: function(data){
+        for(i in data){
+          links = data[i];
+          var listids = links['title'] + '<br />'
+
+            display = ''
+
+            display += '<i class="fa fa-edit EditTopicDialog" style="color: red;" data-toggle="modal" data-id = ' + links['id'] + ' data-target="#modalEditTopic" data-whatever="@mdo"></i>'
+
+            display += '<i class="fa fa-trash DeleteResourceDialog" style="color: red;" data-toggle="modal" data-id = ' + links['id'] + ' data-target="#modalDeleteResource" data-whatever="@mdo"></i>'
+            
+          $("#links"+id).append(display);
+
+
+          $("#links"+id).append(listids);
+        } //end for
+      } //success end
+    }); //ajax end
+  } //function end
+</script>
+
+<script type="text/javascript">
+
+  $(document).on("click", ".DeleteResourceDialog", function () {
+     var nodeid = $(this).data('id');
+     $(".modal-body #deletelink").val( nodeid );
+    
+      $(".modal-body #courseid").val( {{course.course.pk}} );
+});
+
+</script>
+
+<script  type="text/javascript">
+$(window).load(function() {
+  {% for topic in topics %}
+    getLinks({{topic.id}});
+  {% endfor %}
+ }); //window load function
+</script>
 
 {% endblock %}

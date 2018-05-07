@@ -31,6 +31,7 @@ class Topics(MPTTModel):
 		return self.name
 
 class Links(models.Model):
+	title = models.CharField(null=True, max_length=100)
 	link = models.CharField(max_length=300)
 	desc = models.TextField()
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_links')
