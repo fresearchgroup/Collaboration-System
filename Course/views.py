@@ -35,11 +35,14 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
-		token, created = Token.objects.get_or_create(user=request.user)
+		token =""
+		if request.user.is_authenticated:
+			token, created = Token.objects.get_or_create(user=request.user)
+			token = token.key
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course, 'topics':topics, 'token':token.key})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics, 'token':token})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
