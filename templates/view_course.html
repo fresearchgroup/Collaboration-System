@@ -150,11 +150,11 @@ background-color:#FE642E;
                               }
                               if (countResources == 1){ //active frame
                                   var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div>{% if user.is_authenticated %}<input type="button"  value="Edit" id="'+links['id']+'" class="edit" ><input type="button" class="delete" value="Delete" id="'+links['id']+'" ></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning active"><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger active"><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
                               }
                               else { //inactive frames
                                   var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div>{% if user.is_authenticated %}<input type="button"  value="Edit" id="'+links['id']+'" class="edit"><input type="button" class="delete" value="Delete" id="'+links['id']+'"></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning active"><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger active"><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -223,7 +223,7 @@ background-color:#FE642E;
           } // getLinks function ends
         </script>
         <script  type="text/javascript">
-          $(document).on('click',".edit", function(){
+          $(document).on('change',".edit", function(){
 
                 var id = $(this).attr('id');
                 var csrf = "{{csrf_token}}";
@@ -232,7 +232,7 @@ background-color:#FE642E;
 
             });
 
-          $(document).on('click',".delete", function(){
+          $(document).on('change',".delete", function(){
 
                 var id = $(this).attr('id');
                 var url = "/api/course/topics/link/" + id;
