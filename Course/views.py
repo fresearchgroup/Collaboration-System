@@ -6,6 +6,7 @@ from workflow.models import States
 from django.http import Http404, HttpResponse
 from BasicArticle.models import Articles
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 def create_course(request):
 	title = request.POST['name']
@@ -34,11 +35,11 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
-
+		token, created = Token.objects.get_or_create(user=request.user)
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course, 'topics':topics})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics, 'token':token.key})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
