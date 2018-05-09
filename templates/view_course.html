@@ -150,11 +150,11 @@ background-color:#FE642E;
                               }
                               if (countResources == 1){ //active frame
                                   var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div></div><br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio" class ="edit" name="options" id="'+links['id']+'" autocomplete="off" checked> Edit</label><label class="btn btn-danger"><input type="radio" class = "delete" name="options" id="'+links['id']+'" autocomplete="off"> Delete</label></div>{% endif %}'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div>{% if user.is_authenticated %}<input type="button"  value="Edit" id="'+links['id']+'" class="edit" ><input type="button" class="delete" value="Delete" id="'+links['id']+'" ></div>{% endif %}</div>'
                               }
                               else { //inactive frames
                                   var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div></div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div>{% if user.is_authenticated %}<input type="button"  value="Edit" id="'+links['id']+'" class="edit"><input type="button" class="delete" value="Delete" id="'+links['id']+'"></div>{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -221,6 +221,19 @@ background-color:#FE642E;
               } //success end for links
             }); //ajax end for links
           } // getLinks function ends
+        </script>
+        <script  type="text/javascript">
+          $(document).on('click',".edit", function(){
+
+                var id = $(this).attr('id');
+
+            });
+
+          $(document).on('click',".delete", function(){
+
+                var id = $(this).attr('id');
+
+            });
         </script>
 
         <script  type="text/javascript">
