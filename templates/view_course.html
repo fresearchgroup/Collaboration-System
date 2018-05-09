@@ -20,7 +20,7 @@ background-color:#FE642E;
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ course.course.title }}</li>
+  <li class="breadcrumb-item active">{{ course.course.title }} </li>
 {% endblock %}
 {% block content %}
 <div class="container-fluid ">
@@ -226,12 +226,31 @@ background-color:#FE642E;
           $(document).on('click',".edit", function(){
 
                 var id = $(this).attr('id');
+                var csrf = "{{csrf_token}}";
+                var token = "{{token}}";
+                alert(token)
 
             });
 
           $(document).on('click',".delete", function(){
 
                 var id = $(this).attr('id');
+                var url = "/api/course/topics/link/" + id;
+                var auth_token = "{{token}}";
+                var auth_headers = {
+                            Authorization: 'Token ' + auth_token
+                          } ;
+                $.ajax({
+                          url: url,
+                          dataType : 'json',
+                          headers: auth_headers,
+                          type: 'DELETE',
+                          cache: false,
+                          success: function(data){
+                              
+                              alert('deleted');
+                          }
+                        });
 
             });
         </script>
