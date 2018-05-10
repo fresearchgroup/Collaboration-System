@@ -1,5 +1,8 @@
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
+[![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=develop)](https://travis-ci.org/fresearchgroup/Collaboration-System)
 
-                                    COLLABORATION SYSTEM
+COLLABORATION SYSTEM
 
         Requiremnets -
 
@@ -21,6 +24,7 @@
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+
 
 
 For insatalltion -- https://fresearchgroup.github.io/docs-collaboration-system/

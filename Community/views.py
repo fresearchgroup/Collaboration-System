@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from Course.views import course_view, create_course
 # Create your views here.
 
 
@@ -359,10 +360,12 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username from Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.id=ccourses.course_id and ccourses.community_id=%s;', [community.pk])
+			lstfinal = list(carticles) + list(ccourse)
 
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(carticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				commarticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -394,3 +397,20 @@ def community_group_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
+
+def community_course_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				course = create_course(request)
+				obj = CommunityCourses.objects.create(course=course, user=request.user, community=community)
+				return redirect('course_view', course.pk)
+			else:
+				return render(request, 'new_course.html', {'community':community, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')

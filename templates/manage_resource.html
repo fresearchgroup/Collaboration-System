@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{%load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr{
+background-color:#FE642E;
+
+  }
+  #clr{
+    color:black;
+  }
+</style>
+{% endblock %}
+
+{% load mptt_tags %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
+  <li class="breadcrumb-item active">{{ course.course.title }} </li>
+{% endblock %}
+{% block content %}
+<div class="container-fluid ">
+    <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+      <br/>
+      <div class="col-sm-4">
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
+        <ul >
+            {% recursetree topics %}
+                <li><a href="#"> <form id="manageresources" name="nodeidform" method="post" >
+                  {% csrf_token %}
+                  <span>{{node.name}}</span>
+                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} >
+                 <input type="submit" class="btn btn-link" value =" {{node.id}} ">
+                  {% if  node.is_leaf_node %}
+                 <i class="fa fa-edit EditTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalEditTopic" data-whatever="@mdo"></i>
+                 <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
+                  {%endif%}
+                </form>
+                              </a>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-sm-8">
+      <form id="managetopic" method="post" action="{% url 'manage_resource' course.course.pk %}">
+                        {% csrf_token %}
+                         <div class="form-group">
+    <label>Topics</label>
+    <select class="form-control" id="topic" name="topic" required="">
+  <option value="">Select One</option>
+   {% for topics in topics %}
+  <option value="{{topics.id}}">{{topics.name}}</option>
+  {% endfor %}
+  </select>
+</div></br>
+  <div class="form-group">
+    <label>Type</label></br>
+    <div class="radio">
+  <label>
+    <input type="radio" name="topic_type" id="topic_type" value="Youtube" data-toggle="modal" data-target="#myModal1">Youtube
+  </label>
+    <label>
+    <input type="radio" name="topic_type" id="topic_type" value="External" data-toggle="modal" data-target="#myModal1">External
+  </label>
+    <label>
+    <input type="radio" name="topic_type" id="topic_type" value="PublishedArticle" data-toggle="modal" data-target="#myModal" >published Article
+  </label>
+</div>
+  </div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ADD Articles</h4>
+      </div>
+      <div class="modal-body">
+        <label>Articles Title</label>
+  <div class="radio">
+  <label>
+
+
+
+    {% for articles in articles %}
+  <input type="radio" name="article_id" id="article_id" value="{{articles.id}}" data-toggle="modal" data-target="#myModal2" checked > <a href="{% url 'article_view' articles.pk %}"> {{articles.title}} by {{articles.created_by}}</a><br>
+    {% endfor %}
+
+  </label>
+</div>
+      </div>
+
+
+
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default" >submit</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Modal -->
+<div id="myModal1" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Link And Description</h4>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+    <label for="link">link</label>
+    <input type="link" class="form-control" id="topic_link" name="topic_link"  placeholder="Input Link here">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" rows="3" id="topic_description" name="topic_description"></textarea>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+ </div>
+</div>
+</form>
+<!-- Modal -->
+<div id="myModal4" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Link And Description</h4>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+    <label for="link">link</label>
+    <input type="link" class="form-control" id="topic_link" name="topic_link"  placeholder="Input Link here">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" rows="3" id="topic_description" name="topic_description"></textarea>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+ </div>
+</div>
+<!-- Modal -->
+<div id="myModal3" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Link And Description</h4>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+    <label for="link">link</label>
+    <input type="link" class="form-control" id="topic_link" name="topic_link"  placeholder="Input Link here">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" rows="3" id="topic_description" name="topic_description"></textarea>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+ </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+  <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
+ <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+        </script>
+        <script type="text/javascript">
+          window.onload = function(){
+  document.forms[''].submit();
+}</script>
+
+{% endblock %}
