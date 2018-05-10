@@ -123,6 +123,12 @@ background-color:#FE642E;
             <textarea class="form-control" id="desc"></textarea>
           </div>
 
+          <div class="form-group">
+            <label for="sel1">Select Topic:</label>
+            <select class="form-control" id="topics">
+            </select>
+          </div>
+
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-danger active">
               <input type="radio" name="types" id="option1" value="Youtube" autocomplete="off" checked> Youtube 
@@ -265,6 +271,7 @@ background-color:#FE642E;
 
                 var id = $(this).attr('id');
                 var url = "/api/course/topics/link/" + id;
+                var url_topics = "api/course/topics/" + "{{course.course.id}}";
 
                  $.ajax({
                       url: url,
@@ -274,10 +281,29 @@ background-color:#FE642E;
                         $("#link_id").val(id);
                         $("#link").val(data['link']);
                         $("#desc").val(data['desc']);
+
+                        $.ajax({
+                          url: url_topics,
+                          type: 'get',
+                          cache: false,
+                          success: function(data){
+
+                                  $.each(data, function (i, item) {
+                                      $('#topics').append($('<option>', { 
+                                          value: item.id,
+                                          text : item.name 
+                                      }));
+                                  });
+                                
+
+                             }
+
+                          });
+
                       }
                     });
 
-                $('#resourceModal').modal('show')
+                $('#resourceModal').modal('show');
 
             });
           $(document).on('click',"#edit_submit", function(){
@@ -288,6 +314,7 @@ background-color:#FE642E;
                 var link = $('#link').val();
                 var desc = $('#desc').val();
                 var types = $('input[name=types]:checked').val();
+                var topic = $('#topics').val();
 
                 var csrf = "{{csrf_token}}";
 
@@ -307,7 +334,8 @@ background-color:#FE642E;
                           data: {
                             'link' : link,
                             'desc' : desc,
-                            'types' : types
+                            'types' : types, 
+                            'topic' : topic
                           },
                           success: function(data){
                               
