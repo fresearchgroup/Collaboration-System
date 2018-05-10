@@ -150,11 +150,11 @@ background-color:#FE642E;
                               }
                               if (countResources == 1){ //active frame
                                   var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning active"><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger active"><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
                               }
                               else { //inactive frames
                                   var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning active"><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger active"><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -240,7 +240,10 @@ background-color:#FE642E;
                 var auth_headers = {
                             Authorization: 'Token ' + auth_token
                           } ;
-                $.ajax({
+
+                if (confirm('Are you sure you want to delete this resource?')) {
+                    
+                     $.ajax({
                           url: url,
                           dataType : 'json',
                           headers: auth_headers,
@@ -248,9 +251,14 @@ background-color:#FE642E;
                           cache: false,
                           success: function(data){
                               
-                              alert('deleted');
+                              alert('Successfully deleted');
                           }
                         });
+
+                } else {
+                    // Do nothing!
+                }
+               
 
             });
         </script>
