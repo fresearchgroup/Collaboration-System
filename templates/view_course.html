@@ -107,6 +107,40 @@ background-color:#FE642E;
     <br />
   </div>
 </div>
+
+<div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" aria-labelledby="resourceModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" value ="link"id="link">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="desc">Hello</textarea>
+          </div>
+
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+              <input type="radio" name="options" id="option1" value="Youtube" autocomplete="off" checked> Youtube 
+            </label>
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="option2" value="External" autocomplete="off"> External
+            </label>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" id= "edit_submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 {% endblock %}
 {% block javascript %}
@@ -226,9 +260,19 @@ background-color:#FE642E;
           $(document).on('change',".edit", function(){
 
                 var id = $(this).attr('id');
-                var csrf = "{{csrf_token}}";
-                var token = "{{token}}";
-                alert(token)
+                var url = "/api/course/topics/link/" + id;
+
+                 $.ajax({
+                      url: url,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                        $("#link").val(data['link']);
+                        $("#desc").val(data['desc']);
+                      }
+                    });
+
+                $('#resourceModal').modal('show')
 
             });
 
