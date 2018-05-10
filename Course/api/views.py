@@ -1,6 +1,6 @@
 from rest_framework import generics
-from Course.models import Course, Links, TopicArticle
-from .serializers import CourseSerializer, TopicsLinksSerializer, TopicArticleSerializer
+from Course.models import Course, Links, TopicArticle, Topics
+from .serializers import CourseSerializer, TopicsLinksSerializer, TopicArticleSerializer , TopicsSerializer
 from Community.models import Community
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -48,3 +48,11 @@ class LinksDetailsApiView(generics.RetrieveUpdateDestroyAPIView):
 		pk = self.kwargs['pk']
 		return Links.objects.filter(pk=pk)
 
+class TopicsApiView(generics.ListAPIView):
+	lookup_field = 'pk'
+	serializer_class = TopicsSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
+
+	def get_queryset(self):
+		course = self.kwargs['pk']
+		return Topics.objects.filter(course=course)

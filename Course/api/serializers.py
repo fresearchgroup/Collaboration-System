@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Course.models import Course, Links, TopicArticle
+from Course.models import Course, Links, TopicArticle, Topics
 from Community.models import CommunityCourses, Community
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -53,3 +53,12 @@ class TopicArticleSerializer(serializers.ModelSerializer):
 						'created_by',
 						'created_at'
                ]
+
+
+class TopicsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Topics
+		fields = [
+			'id',
+			'name',
+		]
