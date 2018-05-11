@@ -63,3 +63,12 @@ class TopicsSerializer(serializers.ModelSerializer):
 			'id',
 			'name',
 		]
+
+
+class DestoryTopicArticleSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = TopicArticle
+		fields = [
+			'article',
+			'topics'
+		]
