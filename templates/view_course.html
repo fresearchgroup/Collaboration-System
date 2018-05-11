@@ -197,11 +197,11 @@ background-color:#FE642E;
                               }
                               if (countResources == 1){ //active frame
                                   var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete" >{% endif %}</div>'
                               }
                               else { //inactive frames
                                   var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+links['id']+'" class="edit" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+links['id']+'" class="delete" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete">{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -225,12 +225,12 @@ background-color:#FE642E;
                               if(countResources == 1){
                                 var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
                                 var listcollection = '<div class="tab-pane row fade in active" id="tabArt'+articles['id'] +  '">'
-                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   {% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+articles['id']+'" class="edit_topic_article" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+articles['id']+'" class="delete_topic_article" autocomplete="off" checked>Delete</label></div>{% endif %}</div>'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %}</div>'
                               }
                               else {
                                 var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
                                 var listcollection = '<div class="tab-pane row fade in " id="tabArt'+articles['id'] +  '">'
-                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>  {% if user.is_authenticated %}<div class="btn-group btn-group-toggle" data-toggle="buttons"><label class="btn btn-warning "><input type="radio"  name="options" id="'+articles['id']+'" class="edit_topic_article" autocomplete="off" checked>Edit</label><label class="btn btn-danger "><input type="radio"  name="options" id="'+articles['id']+'" class="delete_topic_article" autocomplete="off" checked>Delete</label></div>{% endif %} </div>'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>  {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %} </div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -272,7 +272,7 @@ background-color:#FE642E;
 
 {% if request.user.is_authenticated %}
         <script  type="text/javascript">
-          $(document).on('change',".edit", function(){
+          $(document).on('click',".edit", function(){
 
                 var id = $(this).attr('id');
                 var url = "/api/course/topics/link/" + id;
@@ -352,7 +352,7 @@ background-color:#FE642E;
 
             });
 
-          $(document).on('change',".delete", function(){
+          $(document).on('click',".delete", function(){
 
                 var id = $(this).attr('id');
                 var url = "/api/course/topics/link/" + id;
@@ -381,6 +381,36 @@ background-color:#FE642E;
                
 
             });
+
+          $(document).on('click',".delete_topic_article", function(){
+
+            var id = $(this).attr('id');
+            var url = "/api/course/topics/articles/delete/" + id+ "/";
+
+            var auth_token = "{{token}}";
+                var auth_headers = {
+                            Authorization: 'Token ' + auth_token
+                          } ;
+
+                if (confirm('Are you sure you want to delete this resource?')) {
+                    
+                     $.ajax({
+                          url: url,
+                          dataType : 'json',
+                          headers: auth_headers,
+                          type: 'DELETE',
+                          cache: false,
+                          success: function(data){
+                              
+                              alert('Successfully deleted');
+                          }
+                        });
+
+                } else {
+                    // Do nothing!
+                }
+
+             });
         </script>
 {% endif %}
 
