@@ -25,7 +25,35 @@ COLLABORATION SYSTEM
                 Django_comments_xtd
                 Django_comments
 
+For development installation - 
 
+        1. Install virtualenv 
 
-For insatalltion -- https://fresearchgroup.github.io/docs-collaboration-system/
+                ``` sudo pip3 install virtualenv ```
+
+        2. Clone the project from github
+
+                ``` git clone https://github.com/fresearchgroup/Collaboration-System.git ```
+
+        3. Create a virtual env --- 
+
+        ``` virtualenv collab -p python3 ```
+
+        4. Activate the virtual environment -- 
+
+        ``` source collab/bin/activate ```
+
+        5. Install the requirements.txt -- 
+
+        ``` pip3 install -r Collaboration-System/requirements.txt ```
+
+        6. Install mysql server -- 
+
+         ``` https://fresearchgroup.github.io/docs-collaboration-system/docs/mysql.html ```
+
+        7. Provide the Database details at Collaboration-System/Collaboration-System/settings.py
+
+For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
+
+For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
 
