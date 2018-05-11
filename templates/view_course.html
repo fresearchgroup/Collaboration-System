@@ -108,6 +108,7 @@ background-color:#FE642E;
   </div>
 </div>
 
+{% if user.is_authenticated %}
 <div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" aria-labelledby="resourceModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -150,6 +151,8 @@ background-color:#FE642E;
     </div>
   </div>
 </div>
+
+{% endif %}
 
 </div>
 {% endblock %}
@@ -266,6 +269,8 @@ background-color:#FE642E;
             }); //ajax end for links
           } // getLinks function ends
         </script>
+
+{% if request.user.is_authenticated %}
         <script  type="text/javascript">
           $(document).on('change',".edit", function(){
 
@@ -377,6 +382,7 @@ background-color:#FE642E;
 
             });
         </script>
+{% endif %}
 
         <script  type="text/javascript">
           $(window).load(function() {
