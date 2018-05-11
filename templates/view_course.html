@@ -281,7 +281,7 @@ background-color:#FE642E;
                         $("#link_id").val(id);
                         $("#link").val(data['link']);
                         $("#desc").val(data['desc']);
-
+                        $("#topics").empty();
                         $.ajax({
                           url: url_topics,
                           type: 'get',
@@ -334,8 +334,8 @@ background-color:#FE642E;
                           data: {
                             'link' : link,
                             'desc' : desc,
-                            'types' : types, 
-                            'topic' : topic
+                            'topics' : topic,
+                            'types' : types 
                           },
                           success: function(data){
                               
