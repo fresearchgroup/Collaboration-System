@@ -53,7 +53,12 @@ def course_edit(request, pk):
 			if status == 'update':
 				update_topic_name(request)
 			if status == 'movetopic':
-				move_topic(request)
+				isMoved = move_topic(request)
+				if isMoved == False:
+					message = 'A topic cannot be made a child of itself or any of its descendants.'
+					url = 'course_edit'
+					argument = pk
+					return render(request, 'error.html', {'message':message, 'url':url, 'argument':argument})
 			if status == 'deletetopic':
 				delete_topic(request)
 			return redirect('course_edit',pk=pk)
@@ -83,8 +88,22 @@ def move_topic(request):
 		parent = Topics.objects.get(pk=parent)
 	topic = request.POST['topic']
 	topic = Topics.objects.get(pk=topic)
-	topic.parent = parent
-	topic.save()
+	if canMove(parent, topic):
+		topic.parent = parent
+		topic.save()
+		return True
+	else:
+		return False
+
+def canMove(parent, topic):
+	cpyParent = parent
+	if parent == None: #Root node
+		return True
+	while cpyParent.parent is not None:
+		if cpyParent.parent == topic:
+			return False
+		cpyParent = cpyParent.parent
+	return True
 
 def delete_topic(request):
 	deletenodeid = request.POST['deletenodeid']

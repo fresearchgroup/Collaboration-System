@@ -1,1 +1,25 @@
-{{message}}
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>{{message}}</h3>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+  window.setTimeout(function(){
+    // {{url}} is course_edit and {{argument}} is pk
+    redirectto = '{% url "course_edit" 0 %}'.replace('0', {{argument}})
+    window.location.href = redirectto;
+  }, 2000);
+</script>
+{% endblock %}
