@@ -31,8 +31,8 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 router = routers.DefaultRouter()
-#router.register(r'articleapi', viewsets.ArticleViewSet)
-#router.register(r'communityapi', communityviewsets.CommunityViewSet)
+router.register(r'articleapi', viewsets.ArticleViewSet)
+router.register(r'communityapi', communityviewsets.CommunityViewSet)
 
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),

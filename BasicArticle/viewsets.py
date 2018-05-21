@@ -8,5 +8,5 @@ from .serializers import ArticleSerializer
 
 #this is a rest api serializer class for accessing article models
 class ArticleViewSet(viewsets.ModelViewSet):
-	queryset = Articles.objects.all().order_by('title')
+	queryset = Articles.objects.all().order_by('-title')
 	serializer_class = ArticleSerializer

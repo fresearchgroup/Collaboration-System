@@ -47,11 +47,58 @@ For development installation -
 
         ``` pip3 install -r Collaboration-System/requirements.txt ```
 
-        6. Install mysql server -- 
+        6. Install mysql server --
 
-         ``` https://fresearchgroup.github.io/docs-collaboration-system/docs/mysql.html ```
+            ```sudo apt-get update```
 
-        7. Provide the Database details at Collaboration-System/Collaboration-System/settings.py
+
+            ```$ sudo apt-get install mysql-server```
+ 
+
+            ```sudo apt-get install libmysqlclient-dev```
+
+            ```$ mysql -u root -p```
+
+                Enter password=root
+
+            ```mysql> create database collaboration;
+               mysql> use collaboration;
+               mysql> source collab.sql   
+            ```
+
+        7. Create a .env inside CollaborationSystem and paste the following -
+
+            sudo nano .env
+
+            ```
+                SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
+                DEBUG=True
+                DB_NAME=collaboration
+                DB_USER=root
+                DB_PASSWORD=root
+                DB_HOST=localhost
+                DB_PORT=3306
+                ALLOWED_HOSTS= localhost
+                GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
+                EMAIL_HOST=localhost
+                EMAIL_HOST_USER=
+                EMAIL_HOST_PASSWORD=
+                EMAIL_PORT=25
+                EMAIL_USE_TLS=False
+                DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
+                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
+                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+
+            ```
+
+            8. Do all the migrations --
+
+                ``` python3 manage.py migrate ```
+
+            9. Runserver --
+
+                ``` python3 manage.py runserver ``` 
+                
 
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
