@@ -305,8 +305,7 @@ $(document).ready(function() {
   $(window).load(function() {
 		temp = '<li><a href="">how are you</a></li>'
  		var url = "{% url 'group_invitations' %}";
-		var userid = "{{request.user.id}}";
-
+		var userid = {{request.user.id}};
 		$.ajax({
 	    url: url,
 	    type: 'get',
