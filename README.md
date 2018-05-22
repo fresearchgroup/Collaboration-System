@@ -73,10 +73,10 @@ For development installation -
             ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
-                DB_NAME=django
+                DB_NAME=collaboration
                 DB_USER=root
                 DB_PASSWORD=root
-                DB_HOST=db
+                DB_HOST=localhost
                 DB_PORT=3306
                 ALLOWED_HOSTS= localhost
                 GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
@@ -113,7 +113,7 @@ Steps for Docker --
     
     Docker Compose -- https://docs.docker.com/compose/install/
 
-1. Clone the repository and create a .env file with ---
+1. Clone the repository and create a file name .env  with ---
 
         
         ```
