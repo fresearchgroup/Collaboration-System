@@ -73,10 +73,10 @@ For development installation -
             ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
-                DB_NAME=collaboration
+                DB_NAME=django
                 DB_USER=root
                 DB_PASSWORD=root
-                DB_HOST=localhost
+                DB_HOST=db
                 DB_PORT=3306
                 ALLOWED_HOSTS= localhost
                 GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK

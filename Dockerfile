@@ -6,3 +6,4 @@ ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 RUN apt-get install libmysqlclient-dev
 ADD . /code/
+RUN cp temp/patch_for_reversion_compare.py /usr/local/lib/python3.6/site-packages/reversion_compare/views.py
