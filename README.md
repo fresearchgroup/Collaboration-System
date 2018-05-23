@@ -113,34 +113,19 @@ Steps for Docker --
     
     Docker Compose -- https://docs.docker.com/compose/install/
 
-1. Clone the repository and create a file name .env  with ---
+1. Clone the repository --
 
-        
-        ```
-        SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
-        DEBUG=True
-        DB_NAME=django
-        DB_USER=root
-        DB_PASSWORD=root
-        DB_HOST=db
-        DB_PORT=3306
-        ALLOWED_HOSTS= localhost, 10.129.132.103
-        GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
-        EMAIL_HOST=localhost
-        EMAIL_HOST_USER=
-        EMAIL_HOST_PASSWORD=
-        EMAIL_PORT=25
-        EMAIL_USE_TLS=False
-        DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
-        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
-        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+   git clone https://github.com/fresearchgroup/Collaboration-System.git
 
-        ```
 2. The run the following commands inside the repository --
  
 ```
 
  docker-compose build
+
+ docker-compose up db
+
+ docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
  docker-compose run web python manage.py migrate
 
