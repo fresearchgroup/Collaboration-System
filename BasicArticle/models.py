@@ -15,6 +15,7 @@ class Articles(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
 	views = models.PositiveIntegerField(default=0)
+	userview = models.ManyToManyField(User)
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
 
 	def __str__(self):
