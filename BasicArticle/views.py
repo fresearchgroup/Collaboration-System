@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -115,6 +115,14 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
+							feed = CommunityFeeds()
+							feed.article=article
+							comm = CommunityArticles.objects.get(article=article)
+							feed.community = comm.community
+							feed.url_type = "article_edit"
+							feed.description = " is available for editing."
+
+							feed.save()
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 						else:

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{%load static %}
+{% block css %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}" xmlns:base="http://www.w3.org/1999/xhtml"
+        xmlns:base="http://www.w3.org/1999/xhtml" xmlns:base="http://www.w3.org/1999/xhtml"
+        xmlns:base="http://www.w3.org/1999/xhtml"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
+
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item ">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
+  {%endif%}
+  {% if  membership.role.name != '' %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+    <li class="nav-item active">
+    <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+
+  <li class="nav-item">
+	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
+  </li>
+
+</ul>
+<br /><br />
+
+<h1>News Feed</h1>
+{% if not feed %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there is no news feed to this community.
+      </p>
+   </div>
+</div>
+{% endif %}
+
+<div class="infinite-container">
+{{myhtml|safe}}{% autoescape off%}
+{% for f in feed reversed %}
+    {% if f.is_valid %}
+        <div class="infinite-item">
+          <div class="row margin-bottom-15">
+            <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                <a href="{% url f.url_type f.id %}">
+                <div class="alert alert-success" role="alert">
+                    <p>{{ f.article }} {{ f.description }}</p>
+                </div>
+                </a>
+            </div>
+          </div>
+          <hr class="blog-post-sep">
+        </div>
+    {% endif %}
+{% endfor %}
+{% endautoescape%}
+</div>
+
+{% if feed.has_next %}
+  <a class="infinite-more-link" href="?page={{ feed.next_page_number }}">More</a>
+{% endif %}
+
+<div class="loading" style="display: none;">
+  Loading...
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script>
+{% endblock %}

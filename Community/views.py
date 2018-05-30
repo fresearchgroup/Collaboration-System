@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityFeeds
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -414,3 +414,26 @@ def community_course_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+
+def feed_content(request, pk):
+	commfeed = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			feed = CommunityFeeds.objects.filter(community=community)
+			page = request.GET.get('page', 1)
+			paginator = Paginator(feed, 5)
+			try:
+				commfeed = paginator.page(page)
+			except PageNotAnInteger:
+				commfeed = paginator.page(1)
+			except EmptyPage:
+				commfeed = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feed':commfeed})
+	'''return render(request, 'communityfeed.html', {'community': community,'membership':membership, 'feed':feed})'''
