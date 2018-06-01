@@ -18,6 +18,10 @@ class Middleware:
         data['view_func'] = view_func
         data['view_args'] = view_args
         data['view_kwargs'] = view_kwargs
+        print('*************************')
+        print(data['request'].META['PATH_INFO'])
+        print(data['request'].method)
+        print('*************************')
         self.eventlogger.sendRequestData(data)
         return None
 

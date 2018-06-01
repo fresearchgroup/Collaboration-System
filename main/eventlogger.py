@@ -32,8 +32,6 @@ class StoreLog:
                 fp.flush()
         except IOError as io:
             print(io)
-        print("[INFO] WRITTING TO FILE")
-        print("sdfjsbdfkjbsdfkjbskjdfbskjfbskjbfkjsdbsdfksds", file=open('logs/temp.txt', 'w'))
 
             
 def create_log(event_name, data):
@@ -49,8 +47,9 @@ def create_log(event_name, data):
         f = settings.CONTEXT_SPECIFIC_FIELDS[event_name][key]
         #print(f.__name__)
         event_specific[key] = f(data)
+    dic['event_name'] =event_name
+    dic["event"] = event_specific   
 
-    dic["event"] = event_specific
-    print(dic)
-    
+    print('####################')
+    print(event_name) 
     return dic

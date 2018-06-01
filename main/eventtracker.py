@@ -22,6 +22,8 @@ class EventTracker(object):
                 print("[EventTracker.processRequest INFO]: {!s}".format(data))
 
                 event_name = eventNameMapping.get_eventName_from_request(data['request'])
+                print('***********************************')
+                print(event_name)
                 if event_name != None:
                     logVal = eventlogger.create_log(event_name, data)
                     print("[EventTracker INFO]: log sent for storage")

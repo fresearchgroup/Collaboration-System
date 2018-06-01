@@ -27,4 +27,18 @@ EVENT_NAME_DICT={
               'article_published' : 'event.article.published'
         }
     },
+
+    #handles  login event
+    r'^login/$':{
+        'POST':{
+             'event_name' : 'event.user.login',
+        }
+    },
+
+    #handles logout event
+    r'^logout/$':{
+        'GET':{
+             'event_name' : 'event.user.logout'
+        }
+    },
 }

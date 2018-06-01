@@ -122,3 +122,12 @@ def process_gid(data):
     except KeyError:
         return ""
 
+def process_get_username(data):
+    request = data['request']
+    try:
+        username=request.POST.__getitem__('username')
+        return username
+    except KeyError:
+        return ""
+     
+
