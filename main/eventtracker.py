@@ -28,8 +28,8 @@ class EventTracker(object):
                 #add function for adding the log to file or pass through http as needed
                 event_name = eventNameMapping.get_eventName_from_request(data['request'])
                 if event_name != None:
-                    eventlogger.create_log(event_name, data)
-                    self.logstore.run(logval)
+                    logVal = eventlogger.create_log(event_name, data)
+                    self.logstore.run(logVal)
             #break
             #else:
                #print("[EventTracker.processRequest INFO]: Empty bucket")
