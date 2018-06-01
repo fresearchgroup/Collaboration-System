@@ -19,27 +19,25 @@ class StoreLog:
 
 
     def _store_file(self, logVal):
-        print('*********************************************')
-        print(logVal)
-        with open(self.conf['filename'], 'w') as fp:
-            json.dump(logVal, fp)
+        with open(self.conf['filename'], 'a') as fp:
+             fp.write(json.dumps(logVal))
             
 
 def create_log(event_name, data):
     dic = {}
-    print('#######################################')
-    print(event_name)
+    
     # APPENDING COMMON FIELDS
     for key in list(settings.COMMON_FIELDS.keys()):
         f = settings.COMMON_FIELDS[key]
         dic[key] = f(data)
- 
+
     event_specific = {}
     for key in list(settings.CONTEXT_SPECIFIC_FIELDS[event_name].keys()):
         f = settings.CONTEXT_SPECIFIC_FIELDS[event_name][key]
         print(f.__name__)
         event_specific[key] = f(data)
 
-    div["event"] = event_specific
+    dic["event"] = event_specific
+    print(dic)
     
     return dic
