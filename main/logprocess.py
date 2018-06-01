@@ -95,8 +95,8 @@ def process_time_stamp(data):
     st = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
     return st 
 
-def proces_attach_event_source(val = 1):
-    return val
+def proces_attach_event_source(data): 
+    return 'server'
 
 def process_article_state(data):
     request = data['request']

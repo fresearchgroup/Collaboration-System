@@ -1,6 +1,6 @@
 import re
 
-from . import settings
+from . import urls
 
 """
 Different events occurs with the POST request on 
@@ -10,13 +10,13 @@ event type this function is utilized
 
 def article_event_type(object):
     print(object)
-    if    object['state'][0] == 'save':
+    if object['state'][0] == 'save':
         return 'article_edited'
-    elif  object['state'][0] == 'visible':
+    elif object['state'][0] == 'visible':
         return 'article_visible'
-    elif  object['state'][0] == 'publishable':
+    elif object['state'][0] == 'publishable':
         return 'article_publishable'
-    elif  object['state'][0] == 'published':
+    elif object['state'][0] == 'published':
         return 'article_published'
     else:
         return None
@@ -30,7 +30,7 @@ def get_eventName_from_request(request):
     
     url = request.META['PATH_INFO']
     method = request.method
-    EVENTS_DICT = getattr(settings, 'EVENT_NAME_DICT', {})
+    EVENTS_DICT = getattr(urls, 'EVENT_NAME_DICT', {})
 
     if url[0] is '/':
         url = url[1:]

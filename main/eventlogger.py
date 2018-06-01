@@ -5,22 +5,16 @@ import urllib3
 from . import logprocess
 from . import settings
 
-STORE = 1
-TOSERVER = 2
 class StoreLog:
 
-    def __init__(self, method = 'store', conf = {}):
-        self.method = method
-        self.conf = conf
+    def __init__(self):
+        self.LOG_CLASS = "StoreLog"
+        self.method = settings.LOG_TYPE
         if self.method == STORE:
-            if "filename" not in list(self.conf.keys()):
-                self.conf['filename'] = 'debug.log'
+             self.conf = settings.STORE_CONF
         elif self.method == TOSERVER:
-            if 'address' not in list(self.conf.keys()):
-                self.conf['address'] = '127.0.0.1'
-            if 'port' not in list(self.conf.keys()):
-                self.conf['port'] = 8080
-
+            self.conf = settings.SERVER_CONF
+            
     def run(self, logVal):
         if self.method == STORE:
             self._store_file(logVal)
@@ -34,7 +28,6 @@ class StoreLog:
         with open(self.conf['filename'], 'a') as fp:
              fp.write(json.dumps(logVal))
             
-
 def create_log(event_name, data):
     dic = {}
     
@@ -46,7 +39,7 @@ def create_log(event_name, data):
     event_specific = {}
     for key in list(settings.CONTEXT_SPECIFIC_FIELDS[event_name].keys()):
         f = settings.CONTEXT_SPECIFIC_FIELDS[event_name][key]
-        print(f.__name__)
+        #print(f.__name__)
         event_specific[key] = f(data)
 
     dic["event"] = event_specific
