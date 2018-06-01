@@ -1,4 +1,5 @@
-import logprocess
+from . import logprocess
+from . import eventNameMapping
 
 COMMON_FIELDS = {
             "user-agent": logprocess.process_user_agent,
@@ -37,7 +38,7 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.article.published": {
             "article-id": logprocess.process_article_info,
             "publisher-id": logprocess.process_user_info
-            }
+            },
         "event.article.deleted": {
             "article-id": logprocess.process_article_info,
             "user-id": logprocess.process_user_info
@@ -55,5 +56,34 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.community.subscribe":{
             "community-id": logprocess.process_community_info,
             "user-id": logprocess.process_user_info
-            }
+            },
         }
+
+# This dictionary is used to map the url to the event names
+EVENT_NAME_DICT={
+    
+    # handles community view event
+    r'^community-view/(?P<pk>\d+)/$':{
+        'GET':{
+               'event_name' : 'event.community.view'
+        }
+    },
+    
+    #handles article view event
+    r'^article-view/(?P<pk>\d*)/$':{
+        'GET':{
+              'event_name' : 'event.article.view'
+        }
+    },
+    
+    #handles article edited, visible, publishable, published events 
+    r'^article-edit/(?P<pk>\d*)/$':{
+        'POST':{
+              'function'   : eventNameMapping.article_event_type,
+              'article_edited' : 'event.article.edited',
+              'article_visible' : 'event.article.statusChanged',
+              'article_publishable' :'event.article.statusChanged',
+              'article_published' : 'event.article.published'
+        }
+    },
+}

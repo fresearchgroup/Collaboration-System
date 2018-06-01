@@ -1,5 +1,5 @@
-import time.time
-import datetime.datetime
+import time
+import datetime
 
 def process_user_agent(data):
     request = data['request']
@@ -90,7 +90,7 @@ def process_article_info(data):
     else:
         return ""
 
-def process_time_stamp(): 
+def process_time_stamp(data): 
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
     return st 
@@ -103,7 +103,7 @@ def process_article_state(data):
     try:
         state = request.POST.__getitem__("state")
         return state
-    catch KeyError:
+    except KeyError:
         return ""
 
 def process_cid(data):
@@ -111,7 +111,7 @@ def process_cid(data):
     try:
         cid = request.POST.__getitem__('cid')
         return cid
-    catch KeyError:
+    except KeyError:
         return ""
 
 def process_gid(data):
@@ -119,6 +119,6 @@ def process_gid(data):
     try:
         gid = request.POST.__getitem__('gid')
         return gid
-    catch KeyError:
+    except KeyError:
         return ""
 

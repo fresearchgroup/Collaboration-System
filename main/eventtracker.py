@@ -1,12 +1,13 @@
 import threading
-import logger
+from . import eventlogger
+from . import eventNameMapping
 
 class EventTracker(object):
 
     def __init__(self):
         #self.lock = threading.Lock()
         self.bucket = []
-        self.logstore = logger.StoreLog()
+        self.logstore = eventlogger.StoreLog()
 
     def sendRequestData(self, data):
         self.bucket.append(data)
@@ -25,9 +26,9 @@ class EventTracker(object):
                 #add function for getting the name of the event
                 #add function for creating the logs for event
                 #add function for adding the log to file or pass through http as needed
-                event_name = None
+                event_name = eventNameMapping.get_eventName_from_request(data['request'])
                 if event_name != None:
-                    logger.create_log(event_name, data)
+                    eventlogger.create_log(event_name, data)
                     self.logstore.run(logval)
             #break
             #else:
