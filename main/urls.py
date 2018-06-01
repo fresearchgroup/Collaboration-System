@@ -1,4 +1,4 @@
-from . import eventNameMapping
+from . import handlers
 
 # This dictionary is used to map the url to the event names
 EVENT_NAME_DICT={
@@ -20,7 +20,7 @@ EVENT_NAME_DICT={
     #handles article edited, visible, publishable, published events 
     r'^article-edit/(?P<pk>\d*)/$':{
         'POST':{
-              'function'   : eventNameMapping.article_event_type,
+              'function' : handlers.article_event_type,
               'article_edited' : 'event.article.edited',
               'article_visible' : 'event.article.statusChanged',
               'article_publishable' :'event.article.statusChanged',

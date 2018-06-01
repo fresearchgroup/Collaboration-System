@@ -27,13 +27,12 @@ class StoreLog:
     def _store_file(self, logVal):
         try:
             with open(self.conf['filename'], 'a') as fp:
-                fp.flush()
                 fp.write(json.dumps(logVal))
-                fp.flush()
         except IOError as io:
             print(io)
-        print("[INFO] WRITTING TO FILE")
-        print("sdfjsbdfkjbsdfkjbskjdfbskjfbskjbfkjsdbsdfksds", file=open('logs/temp.txt', 'w'))
+		print("[INFO] WRITTING TO FILE")
+        with open("temp.txt", 'w') as fp:
+            fp.write("sdfjsbdfkjbsdfkjbskjdfbskjfbskjbfkjsdbsdfksds")
 
             
 def create_log(event_name, data):

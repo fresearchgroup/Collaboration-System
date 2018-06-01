@@ -6,7 +6,7 @@ TOSERVER = 2
 LOG_TYPE = STORE
 
 STORE_CONF = {
-            "filename": "debug.log"
+            "filename": "logs/debug.log"
         }
 
 SERVER_CONF = {
