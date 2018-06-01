@@ -21,6 +21,8 @@ class Middleware:
         print('*************************')
         print(data['request'].META['PATH_INFO'])
         print(data['request'].method)
+        print(dict(data['request'].POST))
+        print(data['request'].GET)
         print('*************************')
         self.eventlogger.sendRequestData(data)
         return None

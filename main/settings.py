@@ -35,6 +35,7 @@ CONTEXT_SPECIFIC_FIELDS = {
             "community-id": logprocess.process_cid,
             "group-id": logprocess.process_gid
         },
+
         "event.article.view": {
             "article-id": logprocess.process_article_info,
             "user-id": logprocess.process_user_info
@@ -66,18 +67,42 @@ CONTEXT_SPECIFIC_FIELDS = {
             "community-id": logprocess.process_community_info,
             "user-id": logprocess.process_user_info
         },
+
+        #community subscribe event
         "event.community.subscribe":{
-            "community-id": logprocess.process_community_info,
+            "community-id": logprocess.process_get_community_id_from_request,
+            "user-id": logprocess.process_user_info
+        },
+
+        #community unsubscribe event
+        "event.community.unsubscribe":{
+            "community-id": logprocess.process_get_community_id_from_request,
             "user-id": logprocess.process_user_info
         },
 
         #login event
         "event.user.login":{
-            "username": logprocess.process_get_username
+            "username": logprocess.process_get_username_from_request
         },
 
         #logout event
         "event.user.logout":{
              "user-id": logprocess.process_user_info
         },
+
+        #profile view event
+        "event.profile.view":{
+             "user_visited": logprocess.process_username_info
+        },
+
+        #group view event
+        "event.group.view":{
+             "group-id": logprocess.process_group_info
+        },
+
+        "event.group.unsubscribe":{
+             "group-id": logprocess.process_group_id_from_post_request
+        }
+
+
 }
