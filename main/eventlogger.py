@@ -1,22 +1,34 @@
 import time
 import datetime
 import json
+import urllib3
 from . import logprocess
 from . import settings
 
+STORE = 1
+TOSERVER = 2
 class StoreLog:
 
     def __init__(self, method = 'store', conf = {}):
         self.method = method
         self.conf = conf
-        if self.method == "store":
+        if self.method == STORE:
             if "filename" not in list(self.conf.keys()):
-                self.conf['filename'] = 'debug.log' 
+                self.conf['filename'] = 'debug.log'
+        elif self.method == TOSERVER:
+            if 'address' not in list(self.conf.keys()):
+                self.conf['address'] = '127.0.0.1'
+            if 'port' not in list(self.conf.keys()):
+                self.conf['port'] = 8080
 
     def run(self, logVal):
-        if self.method == "store":
+        if self.method == STORE:
             self._store_file(logVal)
+        elif self.moethod == TOSERVER:
+            self._to_server(logVal)
 
+    def _to_server(self, logVal):
+        pass
 
     def _store_file(self, logVal):
         with open(self.conf['filename'], 'a') as fp:

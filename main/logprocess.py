@@ -65,17 +65,17 @@ def process_user_info(data):
     if request.user.is_authenticated():
         return request.user.id
     else:
-        return ""
+        return "null"
 
 def process_community_info(data):
-    request = data['view_kwargs']
+    args = data['view_kwargs']
     if 'pk' in list(args.keys()):
         return args['pk']
     else:
         return ""
     
 def process_group_info(data):
-    request = data['view_kwargs']
+    args = data['view_kwargs']
     dic = {}
     if 'pk' in list(args.keys()):
         return args['pk']
@@ -83,7 +83,7 @@ def process_group_info(data):
         return ""
 
 def process_article_info(data):
-    request = data['request']
+    args = data['view_kwargs']
     dic = {}
     if 'pk' in list(args.keys()):
         return args['pk']
