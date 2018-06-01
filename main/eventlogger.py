@@ -24,7 +24,7 @@ class StoreLog:
     def run(self, logVal):
         if self.method == STORE:
             self._store_file(logVal)
-        elif self.moethod == TOSERVER:
+        elif self.method == TOSERVER:
             self._to_server(logVal)
 
     def _to_server(self, logVal):
