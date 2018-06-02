@@ -24,7 +24,7 @@ class StoreLog:
         elif self.method == settings.TOSERVER:
             self._to_server(logVal)
 
-     def _to_server(self, logVal):
+    def _to_server(self, logVal):
         if self.conf['protocol'] != None:
             c_url = self.conf['protocol'] + "://" + self.conf['address'] + ":" + str(self.conf['port'])
         else:

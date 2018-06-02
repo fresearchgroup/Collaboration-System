@@ -1,6 +1,6 @@
 import time
 import datetime
-from main import settings as ms
+from .main import settings as ms
 
 RED = 1
 GREEN = 2
