@@ -4,6 +4,9 @@ import json
 import urllib3
 from . import logprocess
 from . import settings
+import requests
+from requests.auth import HTTPProxyAuth
+import os
 
 class StoreLog:
 
@@ -64,6 +67,6 @@ def create_log(event_name, data):
     dic['event_name'] =event_name
     dic["event"] = event_specific   
 
-    print('####################')
-    print(event_name) 
+    #print('####################')
+    #print(event_name) 
     return dic

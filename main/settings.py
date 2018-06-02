@@ -9,6 +9,8 @@ STORE_CONF = {
             "filename": "debug.log"
 }
 
+DEBUG = False
+
 SERVER_CONF = {
         "protocol": "http",
         "address": "127.0.0.1",
