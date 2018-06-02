@@ -17,7 +17,7 @@ LEVEL_COLOR = {
 
 COLOR_SEQ = {
          RED: (206, 60, 47),
-         GREEN: (115, 206, 47),
+         GREEN: (66, 244, 200),
          BLUE: (33, 28, 188),
          YELLOW: (175, 132, 22),
          MAGENTA: (255, 0, 255)
@@ -38,8 +38,9 @@ def __formatter(level, msg, logclass):
     fstring = str(color_str) + "[{!s}-[{!s}]:{!s}: ".format(timestamp, level, logclass) + str(msg) + "\033[0m"
     return fstring
 
-def ilog(logclass, msg, mode = "INFO"):
-    if ms.DEBUG == True:
+def ilog(logclass, msg, mode = "INFO", imp = False):
+    if ms.DEBUG == True or imp == True:
         print(__formatter(mode, msg, logclass)) 
+
 
     

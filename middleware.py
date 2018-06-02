@@ -1,9 +1,11 @@
 from .main.eventtracker import EventTracker
 from .parsecustom import ParseCustom
+from . import utils
 
 class Middleware:
     
     def __init__(self, get_response):
+        self.LOG_CLASS = "MIDDLEWARE"
         self.get_response = get_response
         self.eventlogger = EventTracker()
         self.cparser = ParseCustom()
@@ -18,12 +20,10 @@ class Middleware:
         data['view_func'] = view_func
         data['view_args'] = view_args
         data['view_kwargs'] = view_kwargs
-        print('*************************')
-        print(data['request'].META['PATH_INFO'])
-        print(data['request'].method)
-        print(dict(data['request'].POST))
-        print(data['request'].GET)
-        print('*************************')
+        utils.ilog(self.LOG_CLASS, data['request'].META['PATH_INFO'])
+        utils.ilog(self.LOG_CLASS, data['request'].method)
+        utils.ilog(self.LOG_CLASS, selfdict(data['request'].POST))
+        utils.ilog(self.LOG_CLASS, data['request'].GET))
         self.eventlogger.sendRequestData(data)
         return None
 
