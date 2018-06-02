@@ -70,19 +70,19 @@ CONTEXT_SPECIFIC_FIELDS = {
 
         #community subscribe event
         "event.community.subscribe":{
-            "community-id": logprocess.process_get_community_id_from_request,
+            "community-id": logprocess.process_cid,
             "user-id": logprocess.process_user_info
         },
 
         #community unsubscribe event
         "event.community.unsubscribe":{
-            "community-id": logprocess.process_get_community_id_from_request,
+            "community-id": logprocess.process_cid
             "user-id": logprocess.process_user_info
         },
 
         #login event
         "event.user.login":{
-            "username": logprocess.process_get_username_from_request
+            "username": logprocess.process_username_from_request
         },
 
         #logout event
@@ -99,9 +99,10 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.group.view":{
              "group-id": logprocess.process_group_info
         },
-
+        
+        #group unsubscibe event
         "event.group.unsubscribe":{
-             "group-id": logprocess.process_group_id_from_post_request
+             "group-id": logprocess.process_gid
         }
 
 

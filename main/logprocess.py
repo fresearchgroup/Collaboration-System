@@ -122,7 +122,7 @@ def process_gid(data):
     except KeyError:
         return ""
 
-def process_get_username_from_request(data):
+def process_username_from_request(data):
     request = data['request']
     try:
         username=request.POST.__getitem__('username')
@@ -130,27 +130,12 @@ def process_get_username_from_request(data):
     except KeyError:
         return ""
 
-def process_get_community_id_from_request(data):
-    request = data['request']
-    try:
-        username=request.POST.__getitem__('cid')
-        return username
-    except KeyError:
-        return ""
 
 def  process_username_info(data):
     args = data['view_kwargs']
     if 'username' in list(args.keys()):
         return args['username']
     else:
-        return ""
-
-def process_group_id_from_post_request(data):
-    request = data['request']
-    try:
-        group_id=request.POST.__getitem__('gid')
-        return group_id
-    except KeyError:
         return ""
 
 
