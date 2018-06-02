@@ -10,10 +10,20 @@ STORE_CONF = {
 }
 
 SERVER_CONF = {
+        "protocol": "http",
         "address": "127.0.0.1",
-        "port": 8080
-}
-
+        "port": 8090,
+        "proxies": {
+            "http": "http://proxy.cse.iitb.ac.in:80",
+            "https": "https://proxy.cse.iitb.ac.in:80",
+            "ftp": "ftp://proxy.cse.iitb.ac.in:80",
+        },
+        "proxy_auth": {
+            "username": "",
+            "password": ""
+            }
+    }
+    
 COMMON_FIELDS = {
             "user-agent": logprocess.process_user_agent,
             "ip-addres": logprocess.process_host_ip,
