@@ -76,7 +76,7 @@ CONTEXT_SPECIFIC_FIELDS = {
 
         #community unsubscribe event
         "event.community.unsubscribe":{
-            "community-id": logprocess.process_cid
+            "community-id": logprocess.process_cid,
             "user-id": logprocess.process_user_info
         },
 
@@ -92,7 +92,7 @@ CONTEXT_SPECIFIC_FIELDS = {
 
         #profile view event
         "event.profile.view":{
-             "user_visited": logprocess.process_username_info
+             "user-visited": logprocess.process_username_info
         },
 
         #group view event
@@ -104,6 +104,4 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.group.unsubscribe":{
              "group-id": logprocess.process_gid
         }
-
-
 }
