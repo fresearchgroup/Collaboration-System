@@ -43,7 +43,7 @@ def __formatter(level, msg, logclass, color_spec_dic = None):
         color_code = LEVEL_COLOR[level]
     else:
         color_code = color_spec_dic['color_code']
-    color_str = __appendColor(color_code)
+    color_str = __appendColor(color_code, True if color_spec_dic != None else False)
     timestamp = __attach_time_stamp()
     fstring = str(color_str) + "[{!s}-{!s}]:{!s}: ".format(timestamp, level, logclass) + str(msg) + "\033[0m"
     return fstring 

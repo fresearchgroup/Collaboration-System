@@ -3,13 +3,13 @@ import re
 from . import urls
 from . import handlers
 
-"""
-This is a function which is used to map the specific url
-type to the event name using the EVENTS_DICT importing
-from settings file
-"""
 def get_eventName_from_request(request):
     
+    """
+        This is a function which is used to map the specific url
+        type to the event name using the EVENTS_DICT importing
+        from settings file
+    """
     url = request.META['PATH_INFO']
     method = request.method
     EVENTS_DICT = getattr(urls, 'EVENT_NAME_DICT', {})

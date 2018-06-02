@@ -1,10 +1,10 @@
-"""
-Different events occurs with the POST request on 
-the same url to differentiate between different
-event type this function is utilized
-"""
-
 def article_event_type(object):
+
+    """
+        Different events occurs with the POST request on 
+        the same url to differentiate between different
+        event type this function is utilized
+    """
     print(object)
     if object['state'][0] == 'save':
         return 'article_edited'

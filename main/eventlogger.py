@@ -7,7 +7,7 @@ from . import settings
 import requests
 from requests.auth import HTTPProxyAuth
 import os
-
+from .. import utils
 class StoreLog:
 
     def __init__(self):
@@ -29,7 +29,7 @@ class StoreLog:
             c_url = self.conf['protocol'] + "://" + self.conf['address'] + ":" + str(self.conf['port'])
         else:
             c_url = self.conf['address'] + ":" + str(self.conf['port'])
-        print("[" + self.LOG_CLASS + " INFO]: Sending json to: " + c_url)
+        utils.ilog(self.LOG_CLASS, "Sending json to: " + c_url)
         headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"}
         if 'proxies' in list(self.conf.keys()):
             if "proxy_auth" in list(self.conf.keys()):
@@ -39,7 +39,7 @@ class StoreLog:
                 r = requests.put(c_url, json=logVal, proxies=self.conf['proxies'], headers = headers)
         else:
             r = request.put(c_url, json=logVal, headers = headers)
-        print("[" + self.LOG_CLASS + " INFO]: Status Code: " + str(r.status_code))
+        utils.ilog(self.LOG_CLASS, "Status Code: " + str(r.status_code), imp = True)
 
     def _store_file(self, logVal):
         try:
@@ -62,11 +62,9 @@ def create_log(event_name, data):
     event_specific = {}
     for key in list(settings.CONTEXT_SPECIFIC_FIELDS[event_name].keys()):
         f = settings.CONTEXT_SPECIFIC_FIELDS[event_name][key]
-        #print(f.__name__)
         event_specific[key] = f(data)
+
     dic['event_name'] =event_name
     dic["event"] = event_specific   
 
-    #print('####################')
-    #print(event_name) 
     return dic
