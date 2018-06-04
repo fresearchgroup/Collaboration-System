@@ -15,6 +15,7 @@ SERVER_CONF = {
         "protocol": "http",
         "address": "127.0.0.1",
         "port": 8090,
+        "use_proxy": True,
         "proxies": {
             "http": "http://proxy.cse.iitb.ac.in:80",
             "https": "https://proxy.cse.iitb.ac.in:80",
