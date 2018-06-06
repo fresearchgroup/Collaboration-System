@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage community</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link " href="#">Update community Info</a>
+  </li>
+  {% endif %}
+  {% if membership %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+
+  <li class="nav-item">
+	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
+  </li>
+
+</ul>
+<br/>
+
+<div class="container-fluid alert alert-primary" role="alert">
+  <div class="row">
+    <div class="col-sm-12">
+      {% if user.is_authenticated %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group" >
+          <label for="desc">Description</label>
+          <textarea  class="form-control" name="desc" rows="6">{{community.desc}}</textarea>
+          <input type="hidden" name="status" value={{status}}>
+          <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" class="form-control" id="category" name="category" value="{{community.category}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group">
+          <label for="tag_line">Tag Line</label>
+          <input type="text" class="form-control" id="tag_line" name="tag_line" value="{{community.tag_line}}" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        {% if community.image %}
+        <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" width=150>
+        {% else %}
+        <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" width=150>
+        {%endif%}<br />
+        <div class="form-group custom-file">
+          <label for="image">Community Image</label>
+          <input type="file"   id="community_image" name ="community_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}

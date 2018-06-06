@@ -1,0 +1,31 @@
+[
+
+{"model": "auth.group",
+ "pk": 1,
+  "fields": {
+  			"name": "author", "permissions": []
+  			}
+ },
+
+ {"model": "auth.group",
+ "pk": 2,
+  "fields": {
+  			"name": "publisher", "permissions": []
+  			}
+ },
+
+ {"model": "auth.group",
+ "pk": 3,
+  "fields": {
+  			"name": "community_admin", "permissions": []
+  			}
+ },
+
+ {"model": "auth.group",
+ "pk": 4,
+  "fields": {
+  			"name": "group_admin", "permissions": []
+  			}
+ }
+
+]

@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{%load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr{
+background-color:#FE642E;
+
+  }
+  #clr{
+    color:black;
+  }
+</style>
+{% endblock %}
+
+{% load mptt_tags %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
+  <li class="breadcrumb-item active">{{ course.course.title }} </li>
+{% endblock %}
+{% block content %}
+<div class="container-fluid ">
+      <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item active">
+          <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'course_edit' course.course.pk %}">Edit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource </a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+    <div class="">
+      <h2 style="text-align:center; margin-top:10px;">
+        <a href="{% url 'course_view' course.course.pk %}">
+          {{ course.course.title }}
+        </a>
+      </h2>
+    </div>
+    <div class="row">
+    <div class="col-sm-4">
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
+
+        <ul >
+            {% recursetree topics %}
+                <li><a class = "topics" href="#" >
+                  <input type="button" value="{{node.name}}" id="{{node.id}}" class="btn-link"/>
+                  <span id="cnt{{node.id}}" style="margin-left:-7px;"></span>
+                  <input type="hidden" value="" id="res{{node.id}}" />
+                    </a>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+          </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+    <div >
+      <ul  id = "list" class="nav nav-tabs">
+
+
+
+      </ul>
+
+    </div>
+    <div id= "collection" class="tab-content">
+
+      <div class="card">
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <div class="row">
+              <div class="col-md-3 col-sm-3">
+                {% if course.course.image %}
+                  <img src="{{ MEDIA_URL }}{{ course.course.image}}" alt="image" class="img-responsive">
+                {% else %}
+                  <img src="{{ MEDIA_URL }}default/course_image_default.png" alt="default" class="img-responsive">
+                {%endif%}<br />
+              </div>
+              <div class="col-md-9 col-sm-9">
+                <p>{{ course.course.body | safe }}</p>
+                <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' course.course.created_by %}">{{course.course.created_by}} </a> </h4>
+                <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
+              </div>
+            </div>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" aria-labelledby="resourceModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="hidden" value ="" id="link_id">
+            <input type="text" class="form-control" value =""id="link">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="desc"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="sel1">Select Topic:</label>
+            <select class="form-control" id="topics">
+            </select>
+          </div>
+
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-danger active">
+              <input type="radio" name="types" id="option1" value="Youtube" autocomplete="off" checked> Youtube 
+            </label>
+            <label class="btn btn-warning">
+              <input type="radio" name="types" id="option2" value="External" autocomplete="off"> External
+            </label>
+            <label class="btn btn-success">
+              <input type="radio" name="types" id="option3" value="PublishedArticle" autocomplete="off"> Published Articles
+            </label>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" id= "edit_submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+</div>
+{% endblock %}
+{% block javascript %}
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
+ <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+
+
+
+    $("#id2").click(function(){
+    $("#collection").show();
+});
+        </script>
+        <script  type="text/javascript">
+            $(".btn-link").click(function(){
+                  var id = $(this).attr('id');
+                  var url = "/api/course/topics/links/" + id;
+                  var url_articles = "/api/course/topics/articles/" + id;
+                  var countResources = 0;
+                  $("#list").empty();
+                  $("#collection").empty();
+                  $.ajax({
+                      url: url,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                         var icon= ''
+                          for(i in data){
+                              countResources++;
+                              links = data[i];
+                              if(links['types'] == 'Youtube'){
+                                icon = '<i  class="fa fa-youtube" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+                              }
+                              if(links['types'] == 'External'){
+                                icon = '<i  class="fa fa-link" style="font-size: 20px;"></i>';
+                                myiframe = '<iframe class="embed-responsive-item" src=" ' + links['link'] +'"></iframe>'
+                              }
+                              if (countResources == 1){ //active frame
+                                  var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete" >{% endif %}</div>'
+                              }
+                              else { //inactive frames
+                                  var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete">{% endif %}</div>'
+                              }
+                              $("#list").append(list);
+                              $("#collection").append(listcollection);
+                          } //end of for
+                      }
+                  });
+                  $.ajax({
+                      url: url_articles,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                          for(i in data){
+                              countResources++;
+                              articles = data[i];
+                              articleid = articles['article']
+                              articleurl = '{% url "article_view" 0 %}'.replace('0', articleid)
+                              title = articles['title']
+                              body = articles['body']
+                              created_by = articles['created_by']
+                              created_at = articles['created_at']
+                              if(countResources == 1){
+                                var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
+                                var listcollection = '<div class="tab-pane row fade in active" id="tabArt'+articles['id'] +  '">'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %}</div>'
+                              }
+                              else {
+                                var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
+                                var listcollection = '<div class="tab-pane row fade in " id="tabArt'+articles['id'] +  '">'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>  {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %} </div>'
+                              }
+                              $("#list").append(list);
+                              $("#collection").append(listcollection);
+                          } //end of for
+                      } // end of success function
+                  }); // end of ajax-article
+            });
+        </script>
+
+        <script  type="text/javascript">
+          function getLinks(id) {
+            var url = "/api/course/topics/links/" + id;
+            var url_articles = "/api/course/topics/articles/" + id;
+            countLinks = 0;
+            $.ajax({
+              url: url,
+              type: 'get',
+              cache: false,
+              success: function(data){
+                $("#res"+id).val(data.length);
+
+                $.ajax({
+                  url: url_articles,
+                  type: 'get',
+                  cache: false,
+                  success: function(data){
+                    total = parseInt($("#res"+id).val()) + parseInt(data.length);
+                    if (total > 0) {
+                      count = '<span class="fa-stack"><span class="fa fa-certificate fa-stack-2x" style="color:red"></span><strong class="fa-stack-1x" style="color:white; margin-left:8px;"> ' + total + '</strong></span>'
+                      $("#cnt"+id).append(count);
+                    } //end of if
+                  } //sucess ends for articles
+                }); // ajax ends for articles
+
+              } //success end for links
+            }); //ajax end for links
+          } // getLinks function ends
+        </script>
+
+{% if request.user.is_authenticated %}
+        <script  type="text/javascript">
+          $(document).on('click',".edit", function(){
+
+                var id = $(this).attr('id');
+                var url = "/api/course/topics/link/" + id;
+                var url_topics = "api/course/topics/" + "{{course.course.id}}";
+
+                 $.ajax({
+                      url: url,
+                      type: 'get',
+                      cache: false,
+                      success: function(data){
+                        $("#link_id").val(id);
+                        $("#link").val(data['link']);
+                        $("#desc").val(data['desc']);
+                        $("#topics").empty();
+                        $.ajax({
+                          url: url_topics,
+                          type: 'get',
+                          cache: false,
+                          success: function(data){
+
+                                  $.each(data, function (i, item) {
+                                      $('#topics').append($('<option>', { 
+                                          value: item.id,
+                                          text : item.name 
+                                      }));
+                                  });
+                                
+
+                             }
+
+                          });
+
+                      }
+                    });
+
+                $('#resourceModal').modal('show');
+
+            });
+          $(document).on('click',"#edit_submit", function(){
+
+                var id = $('#link_id').val();
+                var url = "/api/course/topics/link/" + id + "/";
+
+                var link = $('#link').val();
+                var desc = $('#desc').val();
+                var types = $('input[name=types]:checked').val();
+                var topic = $('#topics').val();
+
+                var csrf = "{{csrf_token}}";
+
+                var auth_token = "{{token}}";
+                var auth_headers = {
+                            Authorization: 'Token ' + auth_token
+                          } ;
+
+
+                $.ajax({
+                          url: url,
+                          dataType : 'json',
+                          headers: auth_headers,
+                          type: 'PUT',
+                          cache: false,
+                          data: { 'csrfmiddlewaretoken': csrf },
+                          data: {
+                            'link' : link,
+                            'desc' : desc,
+                            'topics' : topic,
+                            'types' : types 
+                          },
+                          success: function(data){
+                              
+                              $('#resourceModal').modal('hide');
+                          }
+                        });
+
+                
+
+            });
+
+          $(document).on('click',".delete", function(){
+
+                var id = $(this).attr('id');
+                var url = "/api/course/topics/link/" + id;
+                var auth_token = "{{token}}";
+                var auth_headers = {
+                            Authorization: 'Token ' + auth_token
+                          } ;
+
+                if (confirm('Are you sure you want to delete this resource?')) {
+                    
+                     $.ajax({
+                          url: url,
+                          dataType : 'json',
+                          headers: auth_headers,
+                          type: 'DELETE',
+                          cache: false,
+                          success: function(data){
+                              
+                              alert('Successfully deleted');
+                          }
+                        });
+
+                } else {
+                    // Do nothing!
+                }
+               
+
+            });
+
+          $(document).on('click',".delete_topic_article", function(){
+
+            var id = $(this).attr('id');
+            var url = "/api/course/topics/articles/delete/" + id+ "/";
+
+            var auth_token = "{{token}}";
+                var auth_headers = {
+                            Authorization: 'Token ' + auth_token
+                          } ;
+
+                if (confirm('Are you sure you want to delete this resource?')) {
+                    
+                     $.ajax({
+                          url: url,
+                          dataType : 'json',
+                          headers: auth_headers,
+                          type: 'DELETE',
+                          cache: false,
+                          success: function(data){
+                              
+                              alert('Successfully deleted');
+                          }
+                        });
+
+                } else {
+                    // Do nothing!
+                }
+
+             });
+        </script>
+{% endif %}
+
+        <script  type="text/javascript">
+          $(window).load(function() {
+            {% for topic in topics %}
+              getLinks({{topic.id}});
+            {% endfor %}
+          }); //window load function
+        </script>
+
+{% endblock %}

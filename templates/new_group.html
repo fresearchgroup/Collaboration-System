@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+  <li class="breadcrumb-item active">Create a Group in {{ community.name }} Community</li>
+
+
+
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="title" name="name" placeholder="Give a name to your group" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="desc">Description</label>
+    <textarea  class="form-control" name="desc" rows="6"></textarea>
+    <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+    <input type="hidden" name="status" value={{status}}>
+    <small id="bodyhelp" class="form-text text-muted">Let people know what this group is about</small>
+  </div>
+  <div class="form-group">
+  <label for="visibility">Visibility</label>
+    <select name="visibility">
+      <option value="1">Public</option>
+      <option value="0">Private</option>
+    </select>
+  </div>
+   <div class="form-group custom-file">
+    <label for="image">Group Image</label>
+    <input type="file"   id="group_image" name ="group_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload...">
+  </div>
+
+  {% if status == 1 %}
+  <button type="submit" class="btn btn-primary">Create</button>
+  {% endif %}
+</form>
+<br />
+{% endif %}
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}

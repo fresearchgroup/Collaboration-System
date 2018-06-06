@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+  <div class="row justify-content-center margin-bottom-40">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title">Sign up</h1>
+          {% if error %}
+                  <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+          <form method="post" name="form" action = "{% url 'signup' %}" data-validate-username-url="{% url 'check_user' %}">
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" class="form-control" id="username" name = "username" ng-model="username" required>
+              <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+              <span style="color:red" ng-show="form.username.$dirty && form.username.$invalid">Not valid</span>
+              <span style="color:red" id ='check2'></span>
+              <span style="color:green" id ='check'></span>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <ul class="list-inline">
+                <li class="list-inline-item col-sm-12">
+              <input type="email" class="form-control" id="email" name = "email" ng-model ="email" required>
+              </li>
+              <li class="list-inline-item">
+              <span class="label" style="color:red" ng-show="form.email.$dirty && form.email.$invalid && form.email.$error.email">NOT AN EMAIL!</span></h3>
+            </li>
+          </ul>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <ul class="list-inline">
+                <li class="list-inline-item col-sm-12">
+              <input type="password" class="form-control" id="password1" name ="password1" ng-model="password1" ng-pattern="password2" ng-minlength="8" required>
+            </li>
+            <li class="list-inline-item">
+                <span class="label" style="color:red" ng-show="form.password1.$error.minlength">Too Short</span>
+                <span class="label" style="color:red" ng-show="form.password1.$error.pattern">Mismatch Password</span>
+            </li>
+          </ul>
+              <small  class="form-text text-muted"><ul>
+                      <li>Your password can't be too similar to your other personal information.</li>
+                      <li>Your password must contain at least 8 characters.</li>
+                      <li>Your password can't be a commonly used password.</li>
+                      <li>Your password can't be entirely numeric.</li>
+                    </ul></small>
+            </div>
+            <div class="form-group">
+              <label for="passwd">Password confirmation:</label>
+              <input type="password" class="form-control" id="password2" name ="password2" ng-model="password2" required>
+              <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+            </div>
+            <script src='https://www.google.com/recaptcha/api.js'></script>
+            <div class="g-recaptcha" data-sitekey="6Lfsk0MUAAAAAGJsU7VEe9bxatoHDNT8ddo_Su13"></div>
+              <button type="submit" id="submit" class="btn btn-primary btn-block" ng-disabled="form.$invalid">Create an account</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted text-center"> <br />
+          Already have an account? <a href="{% url 'login' %}">Log in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/user_exist.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+  <li class="breadcrumb-item active">{{ article.article.title }}</li>
+{% endblock %}
+
+{% block content %}
+<div>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'article_view' article.article.pk %}">View</a>
+  </li>
+  {% if user.is_authenticated %}
+  {% if article.article.state.name != 'publish'%}
+        <li class="nav-item">
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+        </li>
+        <li class="nav-item active">
+    <a class="nav-link active " href="{% url 'article_delete' article.article.pk %}">Delete</a>
+  </li>
+        {%endif%}
+  
+  <li class="nav-item ">
+    <a class="nav-link" href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+  </li>
+  {% endif %}
+</ul>
+</div>
+<br/>
+<div class="panel panel-default">
+  {% if membership.role.name == 'community_admin' and article.article.state.name != 'publish' or membership.role.name == 'group_admin' and article.article.state.name != 'publish' %}
+
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>Are you sure you want to delete <h1 class="display-4">{{article.article}} ?</h1></samp></div>
+     <form method="post">
+          {% csrf_token %}
+
+          <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="radio" name ="status" value="0" class="btn btn-success">Keep</button>
+                <button type="radio" name ="status" value="1" class="btn btn-danger">Delete</button>
+          </div>
+
+
+    </form>
+  </div>
+{% elif article.article.state.name == 'draft' and article.article.created_by == request.user %}
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>Are you sure you want to delete <h1 class="display-4">{{article.article}} ?</h1></samp></div>
+<form method="post">
+          {% csrf_token %}
+
+          <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="radio" name ="status" value="0" class="btn btn-success">Keep</button>
+                <button type="radio" name ="status" value="1" class="btn btn-danger">Delete</button>
+          </div>
+
+
+    </form>
+
+{% else %}
+<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You cannot delete this article</samp></div></div>
+{% endif %}
+
+</div>
+{% endblock %}

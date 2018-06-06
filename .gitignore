@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.env
+venv/
+media/article
+media/community
+media/group
+media/profile
+media/course
+
+# SQLite database files
+
+*.sqlite3

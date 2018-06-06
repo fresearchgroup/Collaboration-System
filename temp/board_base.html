@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load forum_permission_tags %}
+
+{% block title %}{{ MACHINA_FORUM_NAME|default:"Forum" }} &mdash; {% block sub_title %}{% endblock sub_title %}{% endblock title %}
+
+{% block css %}
+{{ block.super }}
+<!-- <link rel="stylesheet" href="{% static 'css/machina.board_theme.vendor.min.css' %}" /> 
+<link rel="stylesheet" href="{% static 'css/machina.board_theme.min.css' %}" /> -->
+{% endblock css %}
+
+{% block body %}
+{% block header %}
+<!-- BEGIN TOP BAR -->
+<div class="pre-header">
+    <div class="container">
+        <div class="row">
+            <!-- BEGIN TOP BAR LEFT PART -->
+            <div class="col-md-6 col-sm-6 additional-shop-info">
+                <ul class="list-unstyled list-inline">
+                    <li><i class="fa fa-phone"></i><span>+91 2576 4914</span></li>
+                    <li><i class="fa fa-envelope-o"></i><span>frg@cse.iitb.ac.in</span></li>
+                </ul>
+            </div>
+            <!-- END TOP BAR LEFT PART -->
+            <!-- BEGIN TOP BAR MENU -->
+            <div class="col-md-6 col-sm-6 additional-nav">
+                <ul class="list-unstyled list-inline pull-right">
+                    {% if user.is_authenticated %}
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Log In</a></li>
+                    <li><a href="{% url 'signup' %}">Sign up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- END TOP BAR MENU -->
+        </div>
+    </div>
+</div>
+<!-- END TOP BAR -->
+
+
+<!-- BEGIN HEADER -->
+<div class="header">
+  <div class="container">
+    <a class="site-logo" href="{% url 'home' %}"><img src="{% static 'assets/corporate/img/logos/logo-corp-red.png' %}" alt="Metronic FrontEnd"></a>
+
+    <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
+
+    <!-- BEGIN NAVIGATION -->
+    <div class="header-navigation pull-right font-transform-inherit">
+      <ul>
+      <li><a href="#">About Us</a></li>
+      <li><a href="{% url 'display_communities' %}">Communities</a></li>
+      <li><a href="{% url 'display_articles' %}">Articles</a></li>
+      <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
+
+        {% if user.is_authenticated %}
+        <li class="dropdown active">
+         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+            {{ user.username }}
+          </a>
+
+          <ul class="dropdown-menu">
+            {% if request.user.is_superuser %}
+						<li><a href="{% url 'create_community' %}">Create Community</a></li>
+            <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
+						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
+            {% endif%}
+						{% if user.is_authenticated %}
+						  <li><a href="{% url 'request_community_creation' %}">Request Community Creation</a></li>
+						{%endif%}
+
+            <li><a href="{% url 'view_profile' %}">My Profile</a></li>
+            <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'logout' %}">Log out</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+        <!-- BEGIN TOP SEARCH -->
+        <li class="menu-search">
+          <span class="sep"></span>
+          <i class="fa fa-search search-btn"></i>
+          <div class="search-box">
+            <form method ='post' action="{% url 'search_articles' %}">
+              {% csrf_token %}
+              <div class="input-group">
+                <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit">Search</button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </li>
+        <!-- END TOP SEARCH -->
+      </ul>
+    </div>
+    <!-- END NAVIGATION -->
+  </div>
+</div>
+<!-- Header END -->
+
+{% endblock header %}
+<div class="container" id="main_container" style="min-height: 600px">
+  <div class="row">
+    <div class="col-xs-12">
+      {% block breadcrumb %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'community_view' forum.id|add:'-1' %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
+  {%endif%}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+  <li class="nav-item active">
+	  <a class="nav-link" href="">Forums</a>
+  </li>
+</ul>
+{% endblock breadcrumb %}
+      <div class="pull-right controls-link-wrapper">
+      {% if not request.user.is_anonymous %}
+        <a href="{% url 'forum_member:user_subscriptions' %}" class="btn btn-link"><i class="fa fa-bookmark-o ">&nbsp;</i>{% trans "Subscriptions" %}</a>
+        <a href="{% url 'forum_member:user_posts' request.user.id %}" class="btn btn-link"><i class="fa fa-comments-o ">&nbsp;</i>{% trans "View my messages" %}</a>
+      {% endif %}
+      {% get_permission 'can_access_moderation_queue' request.user as can_access_moderation_queue %}
+      {% if can_access_moderation_queue %}
+        <a href="{% url 'forum_moderation:queue' %}" class="btn btn-link"><i class="fa fa-gavel">&nbsp;</i>{% trans "Moderation queue" %}</a>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <br />
+      {% block messages %}{% include "partials/messages.html" %}{% endblock messages %}
+    </div>
+  </div>
+  {% block content %}
+  {% endblock content %}
+</div>
+{% endblock body %}
+
+{% block js %}
+{{ block.super }}
+<script src="{% static 'js/machina.packages.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/machina.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+  $(function() {
+    machina.init();
+    {% block onbodyload %}{% endblock onbodyload %}
+  });
+</script>
+{% endblock js %}

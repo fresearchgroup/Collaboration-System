@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+<li class="breadcrumb-item active">{{ group.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item ">
+    <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'group_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage group</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_group_info' group.pk %}">Update group Info</a>
+  </li>
+  {%endif%}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+</ul>
+<br /><br />
+
+<h1>Private and Visible Content</h1>
+{% if not grparticles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there is no content (private or visible) belonging to this group.
+      </p>
+   </div>
+</div>
+{% endif %}
+{{myhtml|safe}}{% autoescape off%}
+{% for article in grparticles %}
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      {% if article.image %}
+      <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+    </div>
+    <div class="col-md-10 col-sm-10">
+      <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} views </li>
+        <li><i class="fa fa-user"></i> {{ article.username }} </li>
+        {% if article.state == 'visible' %}
+        <li><i class="fa fa-bullhorn"></i> Visible </li>
+        {% endif %}
+        {% if article.state == 'private' %}
+        <li><i class="fa fa-eye-slash"></i> Private </li>
+        {% endif %}
+      </ul>
+      <p>
+        {{ article.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' article.id %}" class="more"> ... Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+  </div>
+  <hr class="blog-post-sep">
+
+{% endfor %}
+{% endautoescape%}
+
+{% if grparticles.has_other_pages %}
+<div class="row">
+  <div class="col-md-4 col-sm-4 items-info">{{grparticles}}</div>
+  <div class="col-md-8 col-sm-8">
+    <ul class="pagination pull-right">
+    {% if grparticles.has_previous %}
+      <li><a href="?page={{ grparticles.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in grparticles.paginator.page_range %}
+      {% if grparticles.number == i %}
+        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if grparticles.has_next %}
+      <li><a href="?page={{ grparticles.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+</div>
+</div>
+<br />
+{% endif %}
+{% endblock %}

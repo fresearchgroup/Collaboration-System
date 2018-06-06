@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
+  <li class="breadcrumb-item active">{{ group.name }}</li>
+  <li class="breadcrumb-item active">{{ errormessage}}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'group_admin' %}
+  <li class="nav-item active">
+    <a class="nav-link " href="#">Manage Group</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'update_group_info' group.pk %}">Update Group Info</a>
+  </li>
+  {% endif %}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
+  <li class="nav-item ">
+    <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+</ul>
+<br/>
+
+
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-6">
+          <table id="userlist" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+              <tr style="background-color:#E84D1C">
+                <th style="color:white">Username</th>
+                <th style="color:white">Role</th>
+              </tr>
+              </thead>
+            <tbody>
+              {{myhtml|safe}}{% autoescape off%}
+              {% for mem in members %}
+                <tr>
+                  <td>
+                    {{ mem.user.username }}
+                  </td>
+                  <td>
+                    {% if mem.role.name == 'group_admin'%}
+                      Group Admin
+                      {%else%}
+                      {{mem.role.name}}
+                     {%endif%}
+
+                  </td>
+                </tr>
+              {% endfor %}
+              {% endautoescape%}
+            </tbody>
+          </table>
+    </div>
+    <div class="col-sm-6">
+      {% if user.is_authenticated %}
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+              <select class="form-control" id="role" name = 'role'>
+                    <option value = 'author'>Author</option>
+                    <option value = 'publisher'>Publisher</option>
+                    <option value = 'group_admin'>Group Admin</option>
+              </select>
+        </div>
+        <div class="form-group">
+          <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
+          <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
+          <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
+      </div>
+      </form>
+      {% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+      {% endif %}
+      {% endif %}
+
+    </div>
+
+  </div>
+
+
+{% endblock %}

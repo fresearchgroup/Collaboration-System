@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pagecar %}
+    <!-- BEGIN SLIDER -->
+    <div class="page-slider">
+        <div id="carousel-example-generic" class="carousel slide carousel-slider">
+            <!-- Indicators -->
+            <ol class="carousel-indicators carousel-indicators-frontend">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+              <!-- First slide -->
+                              <div class="item carousel-item-eight active">
+                  <div class="container">
+                      <div class="carousel-position-six text-uppercase text-center">
+                          <h2 class="margin-bottom-20 animate-delay carousel-title-v5" data-animation="animated fadeInDown">
+                              Explore the power <br/>
+                              <span class="carousel-title-normal">of Collaborative Communities</span>
+                          </h2>
+                          <!--<p class="carousel-subtitle-v5 border-top-bottom margin-bottom-30" data-animation="animated fadeInDown">Join Us</p>-->
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Second slide -->
+              <div class="item carousel-item-nine">
+                  <div class="container">
+                      <div class="carousel-position-six">
+                          <h2 class="animate-delay carousel-title-v6 text-uppercase" data-animation="animated fadeInDown">
+                              Want to Contribute?
+                          </h2>
+                          <a href="{% url 'display_communities' %}"><p class="carousel-subtitle-v6 text-uppercase" data-animation="animated fadeInDown">
+                              Join our communities and groups
+                          </p></a>
+                          <p class="carousel-subtitle-v7 margin-bottom-30" data-animation="animated fadeInDown">
+                              and start collaborating with our collaborators
+                          </p>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Third slide -->
+              <div class="item carousel-item-ten">
+                  <div class="container">
+                      <div class="carousel-position-one text-center">
+                          <h2 class="animate-delay carousel-title-v6 text-uppercase" data-animation="animated fadeInDown">
+                              Want to Contribute?
+                          </h2>
+                          <p class="carousel-subtitle-v5 border-top-bottom margin-bottom-30" data-animation="animated fadeInDown">Join Us</p>
+                          <!--<p class="carousel-subtitle-v6 text-uppercase" data-animation="animated fadeInDown">
+                              Join our communities and groups
+                          </p>
+                          <p class="carousel-subtitle-v7 margin-bottom-30" data-animation="animated fadeInDown">
+                              and start collaborating with our collaborators
+                          </p>-->
+                      </div>
+                  </div>
+              </div>
+
+
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control carousel-control-shop carousel-control-frontend" href="#carousel-example-generic" role="button" data-slide="prev">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </a>
+            <a class="right carousel-control carousel-control-shop carousel-control-frontend" href="#carousel-example-generic" role="button" data-slide="next">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+    <!-- END SLIDER -->
+
+    <div class="row" style="background-color:#FFF5EE">
+    	<div class="col-md-3">
+    		<div class="service-box-v1">
+    			<div>
+    				<i class="fa fa-users" style="font-size: 70px;"></i><br />
+    				<h1 class="timer" id="item4" data-to="{{countcommunity}}" data-speed="5000"></h1>
+    				<h2>Communities</h2><p>Communities</p>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="col-md-3">
+    		<div class="service-box-v1">
+    			<div>
+    				<i class="fa fa-soccer-ball-o" style="font-size: 70px;"></i><br />
+    				<h1 class="timer" id="item4" data-to="{{countgroup}}" data-speed="5000"></h1>
+    				<h2>Groups</h2><p>Groups</p>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="col-md-3">
+    		<div class="service-box-v1">
+    			<div>
+    				<i class="fa fa-file-text" style="font-size: 70px;"></i><br />
+    				<h1 class="timer" id="item4" data-to="{{countarticles}}" data-speed="5000"></h1>
+    				<h2>Articles</h2><p>Articles</p>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="col-md-3">
+    		<div class="service-box-v1">
+    			<div>
+    				<i class="fa fa-user" style="font-size: 70px;"></i><br />
+    				<h1 class="timer" id="item4" data-to="{{countusers}}" data-speed="5000"></h1>
+    				<h2>Users</h2><p>Users</p>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+{% endblock %}
+
+{% block content %}
+  <br />
+
+  <div class="main ">
+    <div class="container">
+      <!-- BEGIN RECENT WORKS -->
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-12">
+    <div class="owl-carousel owl-carousel4" >
+      {{myhtml|safe}}{% autoescape off%}
+      {% for comm in community %}
+      <div class="recent-work-item">
+        <em>
+          {% if comm.image %}
+          <img src="{{ MEDIA_URL }}{{ comm.image}}" alt="image" class="img-responsive" style="height: 280px;">
+          {% else %}
+          <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px;">
+          {%endif%}
+          <a href="{% url 'community_view' comm.pk %}"><i class="fa fa-link"></i></a>
+          {% if comm.image %}
+          <a data-rel="fancybox-button" title="{{comm.name}}" href="{{ MEDIA_URL }}{{ comm.image}}" class="fancybox-button">
+          <i class="fa fa-search"></i>
+          </a>
+          {% else %}
+          <a data-rel="fancybox-button" title="{{comm.name}}" href="{{ MEDIA_URL }}default/community_image_default.png" class="fancybox-button">
+          <i class="fa fa-search"></i>
+          </a>
+          {% endif %}
+        </em>
+        <a class="recent-work-description" href="{% url 'community_view' comm.pk %}">
+          <strong>{{comm.name}}</strong>
+          <b>{{comm.category}}</b>
+        </a>
+      </div>
+      {% endfor %}
+      {% endautoescape%}
+    </div>
+  </div>
+</div>
+<!-- END RECENT WORKS -->
+    </div>
+  </div>
+
+<!-- BEGIN STEPS -->
+<div class="row margin-bottom-40 front-steps-wrapper front-steps-count-3">
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step1">
+      <h2>Join</h2>
+      <p>Join our communities and groups</p>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step2">
+      <h2>Collaborate</h2>
+      <p>Start collaborating by creating articles and groups</p>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 front-step-col">
+    <div class="front-step front-step3">
+      <h2>Publish</h2>
+      <p>Get your articles published and let all read them</p>
+    </div>
+  </div>
+</div>
+<!-- END STEPS -->
+
+<!-- TESTIMONIALS -->
+<div class="row margin-bottom-40">
+  <!-- BEGIN TESTIMONIALS -->
+  <div class="col-md-6 testimonials-v1 testimonials-v1-another-color">
+    <h2>Most Viewed Articles</h2>
+    <div id="myCarousel1" class="carousel slide">
+      <!-- Carousel items -->
+      <div class="carousel-inner">
+      {{myhtml|safe}}{% autoescape off%}
+        {% for article in articles %}
+        {% if forloop.counter == 1 %}
+          <div class="active item">
+        {% else %}
+          <div class="item">
+        {% endif %}
+          <blockquote><p> {{ article.body|striptags|truncatewords:30 }}<a href="{% url 'article_view' article.pk %}">See more</a></p></blockquote>
+          <div class="carousel-info">
+            {% if article.image %}
+            <img class="pull-left" src="{{ MEDIA_URL }}{{ article.image}}" alt="image">
+            {% else %}
+            <img class="pull-left" src="{{ MEDIA_URL }}default/article_image_default.png" alt="default">
+            {%endif%}
+            <div class="pull-left">
+              <span class="testimonials-name">{{article.created_by}}</span>
+              <span class="testimonials-post">{{article.title}}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+        {% endautoescape%}
+        <!-- Carousel nav -->
+      <a class="left-btn" href="#myCarousel1" data-slide="prev"></a>
+      <a class="right-btn" href="#myCarousel1" data-slide="next"></a>
+    </div>
+  </div>
+  <!-- END TESTIMONIALS -->
+
+<!-- BEGIN BLOG PHOTOS STREAM -->
+<div class="col-md-3 blog-photo-stream margin-bottom-20">
+  <h2>Contributors</h2>
+  <ul class="list-unstyled">
+    {{myhtml|safe}}{% autoescape off%}
+    {% for uphoto in userphoto %}
+      {% if uphoto.photo %}
+      <li><a href="{% url 'display_user_profile' uphoto.user.username %}"><img src="{{ MEDIA_URL }}{{ uphoto.photo}}" alt="photo" class="img-responsive"></a></li>
+      {%endif%}
+    {% endfor %}
+    {% endautoescape%}
+  </ul>
+</div>
+<!-- END BLOG PHOTOS STREAM -->
+
+<!-- BEGIN RECENT NEWS -->
+<div class="col-md-3 recent-news margin-bottom-10">
+  <h2>Recent Articles</h2>
+  {{myhtml|safe}}{% autoescape off%}
+    {% for articles in articlesdate %}
+  <div class="row margin-bottom-10">
+    <div class="col-md-3">
+      {% if articles.image %}
+      <img src="{{ MEDIA_URL }}{{ articles.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+    </div>
+    <div class="col-md-9 recent-news-inner">
+      <h3><a href="{% url 'article_view' articles.pk %}">{{articles.title}}</a></h3>
+      <p>{{ articles.body|striptags|truncatewords:10 }}</p>
+    </div>
+  </div>
+  {% endfor %}
+  {% endautoescape%}
+</div>
+<!-- END RECENT NEWS -->
+</div>
+
+{% endblock %}

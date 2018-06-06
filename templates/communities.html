@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{ message }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <form class="pull-right" method="post" >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="Sorting">Sort by</label>
+      <select id="select_community" name="sortby" class="btn btn-primary" onchange="this.form.submit()">
+        <option value="a_to_z">Name: A to Z</option>
+        <option value="z_to_a">Name: Z to A</option>
+        <option value="oldest">oldest</option>
+        <option value="latest">Latest</option>
+      </select>
+
+    </div>
+  </form>
+
+
+  <!-- BEGIN SIDEBAR & CONTENT -->
+  <div class="row margin-bottom-40">
+    <!-- BEGIN CONTENT -->
+    <div class="col-md-12 col-sm-12">
+      <div class="content-page">
+        <div class="row mix-grid thumbnails">
+          {{myhtml|safe}}{% autoescape off%}
+          {% for community in communities %}
+          <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
+            <div class="mix-inner">
+              {% if community.image %}
+              <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+              {% else %}
+              <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+              {%endif%}
+
+              <div class="mix-details">
+                <h4>{{community.name}}</h4>
+                <h5>{{community.tag_line|truncatewords:5}}</h5>
+                <p>{{ community.desc |striptags|truncatewords:20}}</p>
+                <a class="mix-link" href="{% url 'community_view' community.pk %}">
+                  <i class="fa fa-link"></i>View More
+                </a>
+
+                {% if community.image %}
+                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}{{ community.image}}" class="mix-preview fancybox-button">
+                  <i class="fa fa-search"></i>View Image
+                </a>
+                {% else %}
+                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}default/community_image_default.png" class="mix-preview fancybox-button">
+                  <i class="fa fa-search"></i>View Image
+                </a>
+                {% endif %}
+
+              </div>
+            <h3>{{community.name|truncatewords:2}}</h3>
+            {{community.category|truncatewords:2 }}
+          </div>
+          </div>
+          {% endfor %}
+          {% endautoescape%}
+        </div>
+      </div>
+    </div>
+    <!-- END CONTENT -->
+  </div>
+  <!-- BEGIN SIDEBAR & CONTENT -->
+</div>
+
+
+
+<br /><br />
+{% endblock %}
