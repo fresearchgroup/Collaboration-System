@@ -18,6 +18,8 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+from notifications.signals import notify
+
 # Create your views here.
 
 
@@ -65,6 +67,10 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+
+			notify.send(sender=request.user, actor=request.user, recipient=request.user, verb='Welcome to the community', target=community, url_name="community-view")
+
+
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
@@ -436,4 +442,3 @@ def feed_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feed':commfeed})
-	'''return render(request, 'communityfeed.html', {'community': community,'membership':membership, 'feed':feed})'''

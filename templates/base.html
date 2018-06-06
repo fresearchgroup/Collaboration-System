@@ -163,6 +163,10 @@ $(document).ready(function() {
             <li><a href="{% url 'logout' %}">Log out</a></li>
           </ul>
         </li>
+        <li>
+            <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}"></a>
+        </li>
+
         {% endif %}
 
         <!-- BEGIN TOP SEARCH -->

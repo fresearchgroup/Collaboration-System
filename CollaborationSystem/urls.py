@@ -30,6 +30,8 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
+import notifications.urls
+
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -139,8 +141,8 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

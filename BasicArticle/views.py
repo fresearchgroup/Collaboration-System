@@ -11,6 +11,9 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+from notifications.signals import notify
+from django.contrib.auth.models import User
+
 
 def display_articles(request):
 	"""
@@ -121,8 +124,18 @@ def edit_article(request, pk):
 							feed.community = comm.community
 							feed.url_type = "article_edit"
 							feed.description = " is available for editing."
-
 							feed.save()
+							'''comm = CommunityArticles.objects.get(article=article)
+							uid = request.user.id
+							membership=CommunityMembership.objects.filter(community=comm.community)
+							userlist=[]
+							for members in membership:
+								userlist.append(members.user)
+
+							notify.send(sender=request.user, actor_content_type=request.user, actor_object_id=uid,
+										 	actor=request.user, recipient=userlist, verb='you reached level 6666')'''
+
+
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 						else:

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<ul class="notifications">
+  {% load notifications_tags %}
+  {% for notice in notifications %}
+
+
+                        <div class="alert alert-block alert-{{ notice.level }}" >
+                          <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
+                            <i class="icon-close"></i>
+                          </a>
+                          <h4>
+                            <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
+                            {{ notice.actor }}
+                            {{ notice.verb }}
+                            {% if notice.target %}
+                              <div class="align-right">{{ notice.target_content_type }} : {{ notice.target }}</div>
+                            {% endif %}
+                          </h4>
+
+                          <p>{{ notice.timesince }} ago</p>
+
+                          <!-- <p>{{ notice.description|linebreaksbr }}</p> -->
+
+                          <div class="notice-actions">
+                            {% for action in notice.data.actions %}
+                              <a class="btn" href="{{ action.href }}">{{ action.title }}brzegae</a>
+                            {% endfor %}
+                          </div>
+                        </div>
+
+
+  {% endfor %}
+</ul>
+{% endblock %}
