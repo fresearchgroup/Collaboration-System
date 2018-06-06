@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load activity_tags %}
 {%load static %}
 {% block css %}
 <script src="{% static 'js/jquery-3.2.1.min.js' %}" xmlns:base="http://www.w3.org/1999/xhtml"
@@ -51,7 +52,7 @@
 <br /><br />
 
 <h1>News Feed</h1>
-{% if not feed %}
+{% if not feeds %}
 <div class="content-page page-404">
    <div class="number">
       Oops!
@@ -67,27 +68,25 @@
 
 <div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
-{% for f in feed reversed %}
-    {% if f.is_valid %}
-        <div class="infinite-item">
+{% for feed in feeds %}
+    <div class="infinite-item">
           <div class="row margin-bottom-15">
             <div class="col-md-offset-1 col-md-10 col-md-offset-1">
-                <a href="{% url f.url_type f.id %}">
+                
                 <div class="alert alert-success" role="alert">
-                    <p>{{ f.article }} {{ f.description }}</p>
+                    {% display_action feed %}
                 </div>
                 </a>
             </div>
           </div>
           <hr class="blog-post-sep">
         </div>
-    {% endif %}
 {% endfor %}
 {% endautoescape%}
 </div>
 
-{% if feed.has_next %}
-  <a class="infinite-more-link" href="?page={{ feed.next_page_number }}">More</a>
+{% if feeds.has_next %}
+  <a class="infinite-more-link" href="?page={{ feeds.next_page_number }}">More</a>
 {% endif %}
 
 <div class="loading" style="display: none;">
