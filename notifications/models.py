@@ -76,7 +76,7 @@ class NotificationQuerySet(models.query.QuerySet):
         if recipient:
             qset = qset.filter(recipient=recipient)
 
-        return qset.update(unread=False)
+        return qset.update(unread=False, level="warning")
 
     def mark_all_as_unread(self, recipient=None):
         """Mark as unread any read messages in the current queryset.
@@ -88,7 +88,7 @@ class NotificationQuerySet(models.query.QuerySet):
         if recipient:
             qset = qset.filter(recipient=recipient)
 
-        return qset.update(unread=True)
+        return qset.update(unread=True, level="info")
 
     def deleted(self):
         """Return only deleted items in the current queryset"""
@@ -243,11 +243,13 @@ class Notification(models.Model):
     def mark_as_read(self):
         if self.unread:
             self.unread = False
+            self.level = "warning"
             self.save()
 
     def mark_as_unread(self):
         if not self.unread:
             self.unread = True
+            self.level = "info"
             self.save()
 
 

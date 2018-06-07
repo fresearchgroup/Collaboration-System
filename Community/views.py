@@ -68,11 +68,16 @@ def community_subscribe(request):
 			role = Roles.objects.get(name='author')
 			user = request.user
 
-			notify.send(sender=request.user, actor=request.user, recipient=request.user, verb='Welcome to the community', target=community, url_name="community-view")
-
-
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
+
+			notify.send(sender=request.user, actor=request.user, recipient=request.user,
+						verb='Welcome to the ', target=community, description="community_view")
+			###############################################################
+			#ISSUE: data field not working
+			# , data={'url_name':'community_view'}
+			################################################################
+
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
@@ -87,6 +92,10 @@ def community_unsubscribe(request):
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+
+			notify.send(sender=request.user, actor=request.user, recipient=request.user,
+						verb='You left the ', target=community, description="community_view")
+
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:

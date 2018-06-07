@@ -66,6 +66,9 @@ INSTALLED_APPS = [
     'notifications',
 ] + get_machina_apps()
 
+SITE_ID = 1
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -206,7 +209,6 @@ HAYSTACK_CONNECTIONS = {
     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
   },
 }
-SITE_ID=1
 
 COMMENTS_APP='django_comments_xtd'
 
@@ -249,3 +251,4 @@ GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 SESSION_COOKIE_AGE = 7200
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+

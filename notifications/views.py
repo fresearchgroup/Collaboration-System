@@ -66,7 +66,19 @@ def mark_all_as_read(request):
 
     if _next:
         return redirect(_next)
-    return redirect('notifications:unread')
+    return redirect('notifications:all')
+
+
+
+@login_required
+def mark_all_as_unread(request):
+    request.user.notifications.mark_all_as_unread()
+
+    _next = request.GET.get('next')
+
+    if _next:
+        return redirect(_next)
+    return redirect('notifications:all')
 
 
 @login_required
@@ -82,7 +94,7 @@ def mark_as_read(request, slug=None):
     if _next:
         return redirect(_next)
 
-    return redirect('notifications:unread')
+    return redirect('notifications:all')
 
 
 @login_required

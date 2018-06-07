@@ -17,5 +17,3 @@ def get_config():
     config.update(user_config)
 
     return config
-
-DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
