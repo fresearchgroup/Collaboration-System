@@ -1,44 +1,40 @@
 from django.shortcuts import render
+from rest_framework.decorators import api_view, schema
+from rest_framework.response import Response
+from rest_framework.views import APIView
+import requests
+# Create your views here.
 
-from django_elasticsearch_dsl_drf.filter_backends import (
-    FilteringFilterBackend,
-    OrderingFilterBackend,
-    SearchFilterBackend,
-)
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+@api_view(['GET', 'POST'])
+@schema(None)
+def get_user_id(request, id):
+    data = {'id': id}
+    return Response('{"method": "get_user_id", "data": ' + str(data) + "}")
 
-from .document import EventDoc
-from .serializers import EventSerializer
+@api_view(['GET', 'POST'])
+@schema(None)
+def get_event(request, param1, param2):
+    data = {'event_name': ".".join(["event", param1, param2])}
+    return Response('{"method": "get_event", "data": ' + str(data) + "}")
 
-class EventDocView(DocumentViewSet):
-	document = EventDoc
-	serializer_class = EventSerializer
-	filter_backends = [
-        FilteringFilterBackend,
-        OrderingFilterBackend,
-        DefaultOrderingFilterBackend,
-        SearchFilterBackend,
-    ]
+@api_view(['GET', 'POST'])
+@schema(None)
+def get_event_id(request, param1, param2, eid):
+    data = {'event_name': ".".join(["event", param1, param2]), "eid": eid}
+    return Response('{"method": "get_event_id"}, "data": ' + str(data) + "}")
 
-    search_fields = (
-		'event-source',
-		'event.community-id',
-		'event.user-id',
-		'event_name',
-		'host',
-		'ip-address',
-		'path-info',
-		'referer',
-		'session-id',
-	)
-    filter_fields = {
-    	'event-source': 'event-source.raw'
-		'event.community-id',
-		'event.user-id',
-		'event_name',
-		'host',
-		'ip-address',
-		'path-info',
-		'referer',
-		'session-id',
-    }
+@api_view(['GET', 'POST'])
+@schema(None)
+def get_user_id_event(request, id, param1, param2):
+    data = {'user_id': id, "event_name": ".".join(["event", param1, param2])}
+    return Response('{"method": "get_user_id_event"}, "data": ' + str(data) + "}")
+
+@api_view(['GET', 'POST'])
+@schema(None)
+def get_user_id_event_id(request, id, param1, param2, eid):
+    data = {
+            'user_id': id,
+            "event_name": ".".join(["event", param1, param2]),
+            "eid": eid
+            }
+    return Response('{"method": "get_user_id_event_id"}, "data": ' + str(data) + "}")
