@@ -18,7 +18,7 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-from reputation.models import CommunityRep,SystemRep
+from reputation.models import CommunityRep,SystemRep,DefaultValues
 # Create your views here.
 
 
@@ -103,7 +103,8 @@ def community_article_create(request):
 			crep =commrep.rep
 			sysrep = SystemRep.objects.get(user=request.user)
 			srep = sysrep.sysrep
-			if (crep>80) and (srep>70):
+			defaultval = DefaultValues.objects.get(pk=1)
+			if (crep>defaultval.crep_for_art) and (srep>defaultval.srep_for_art):
 				if status=='1':
 					article = create_article(request)
 					obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
@@ -157,8 +158,9 @@ def request_community_creation(request):
 			return redirect('user_dashboard')
 		else:
 			sysrep = SystemRep.objects.get(user=request.user)
+			defaultval = DefaultValues.objects.get(pk=1)
 			srep = sysrep.sysrep
-			if(srep > 110):
+			if(srep > defaultval.srep_for_comm):
 				return render(request, 'request_community_creation.html')
 			else:
 				return render(request,'lowrepcom.html')
@@ -217,7 +219,8 @@ def handle_community_creation_requests(request):
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
 				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
-				sysrep.sysrep+=25
+				defaultval = DefaultValues.objects.get(pk=1)
+				sysrep.sysrep+=defaultval.srep_for_comm_creation
 				sysrep.save()
 				commrep.save()
 			if status=='reject' and rcommunity.status!='rejected':

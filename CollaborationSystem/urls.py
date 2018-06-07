@@ -31,6 +31,7 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 from voting.views import updown
+from reputation.views import defaultval
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -140,7 +141,8 @@ urlpatterns = [
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'',include('voting.urls')), 
-    url(r'^vote/', updown, name='updown')
+    url(r'^vote/', updown, name='updown'),
+    url(r'^defaultvalues/' , defaultval , name='defaultval'),
 ]
 
 if settings.DEBUG:

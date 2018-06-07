@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from reputation.models import CommunityRep,SystemRep
+from reputation.models import CommunityRep,SystemRep,DefaultValues
 
 def create_group(request):
 	if request.method == 'POST':
@@ -103,7 +103,8 @@ def group_article_create(request):
 			crep =commrep.rep
 			sysrep = SystemRep.objects.get(user=request.user)
 			srep = sysrep.sysrep
-			if (crep>80) and (srep>70):
+			defaultval = DefaultValues.objects.get(pk=1)
+			if (crep>defaultval.crep_for_art) and (srep>defaultval.srep_for_art):
 				if status=='1':
 					article = create_article(request)
 					obj = GroupArticles.objects.create(article=article, user=request.user, group=group)

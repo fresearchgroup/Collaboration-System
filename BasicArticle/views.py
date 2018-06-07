@@ -12,6 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
 from voting.models import Voting,Law
+from reputation.models import DefaultValues,SystemRep,CommunityRep
 
 def display_articles(request):
 	"""
@@ -89,7 +90,7 @@ def view_article(request, pk):
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
-			article = GroupArticles.objects.get(article_id=pk)
+			article = GroupArticles.objects.get(article_id=pk) 	
 			law = Law.objects.filter(article_id=pk)
 			if(law.count() == 0):
 				law = Law(article_id = pk)
@@ -174,7 +175,32 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					commart = CommunityArticles.objects.filter(article_id=pk).exists()
+					art = Articles.objects.get(pk=pk)
+					author = art.created_by
+					publisher = request.user
+					if(commart == False):
+						grpart = GroupArticles.objects.get(article_id=pk)
+						grp = grpart.group
+						community = CommunityGroups.objects.get(group_id=grp.id)
+					else:
+						commart = CommunityArticles.objects.get(article_id=pk)
+						community = commart.community
+
+					author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
+					author_srep = SystemRep.objects.get(user_id=author.id)
+					publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
+					publisher_srep = SystemRep.objects.get(user_id=publisher.id)
+					defaultval = DefaultValues.objects.get(pk=1)
+					author_srep.sysrep+=defaultval.published_author
+					author_crep.rep+=defaultval.published_author
+					publisher_crep.rep+=defaultval.published_publisher
+					publisher_srep.sysrep+=defaultval.published_publisher
+					author_srep.save()
+					author_crep.save()
+					publisher_crep.save()
+					publisher_srep.save()
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""

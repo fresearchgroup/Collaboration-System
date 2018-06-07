@@ -13,7 +13,22 @@ class CommunityRep(models.Model):
 
 class SystemRep(models.Model):
 	user = models.OneToOneField(User,on_delete = models.CASCADE)
-	sysrep = models.IntegerField(default = 0)
+	sysrep = models.IntegerField(default = 100)
 
 	def __str__(self):
 		return self.user.username
+
+class DefaultValues(models.Model):
+	upvote = models.PositiveIntegerField(default=1)
+	downvote = models.PositiveIntegerField(default=1)
+	published_author = models.PositiveIntegerField()
+	published_publisher = models.PositiveIntegerField()
+	comment_flag = models.PositiveIntegerField()
+	reply = models.PositiveIntegerField()
+	crep_for_art = models.PositiveIntegerField()
+	srep_for_art = models.PositiveIntegerField()
+	srep_for_comm = models.PositiveIntegerField()
+	srep_for_comm_creation = models.PositiveIntegerField()
+
+	def __str__(self):
+		return "Default Values"
