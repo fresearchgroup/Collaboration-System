@@ -110,7 +110,7 @@ def mark_as_unread(request, slug=None):
     if _next:
         return redirect(_next)
 
-    return redirect('notifications:unread')
+    return redirect('notifications:all')
 
 
 @login_required
