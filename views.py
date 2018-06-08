@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view, schema
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import requests
@@ -12,7 +12,6 @@ def id_match(name):
     pass
 
 @api_view(['GET', 'POST'])
-@schema(None)
 def get_user_id(request, id):
     data = {'user-id': id}
     obj=SearchElasticSearch()
@@ -26,7 +25,6 @@ def get_user_id(request, id):
         return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
 
 @api_view(['GET', 'POST'])
-@schema(None)
 def get_event(request, param1, param2):
     data = {'event_name': ".".join(["event", param1, param2])}
     obj=SearchElasticSearch()
@@ -36,7 +34,7 @@ def get_event(request, param1, param2):
         return Response({"Status Code": 200, "total hits": length, "result": result })
     else:
         return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
-@schema(None)
+
 def get_event_id(request, param1, param2, eid):
     id_name=id_match(param1)
     data = {
@@ -53,7 +51,6 @@ def get_event_id(request, param1, param2, eid):
         return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
 
 @api_view(['GET', 'POST'])
-@schema(None)
 def get_user_id_event(request, id, param1, param2):
     data = {
                 'user-id': id,
@@ -68,7 +65,6 @@ def get_user_id_event(request, id, param1, param2):
         return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
 
 @api_view(['GET', 'POST'])
-@schema(None)
 def get_user_id_event_id(request, id, param1, param2, eid):
     id_name=id_match(param1)
     data = {
