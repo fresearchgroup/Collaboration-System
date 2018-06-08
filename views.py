@@ -18,9 +18,9 @@ def get_user_id(request, id):
     result = obj.search_elasticsearch(data)
     length=len(result)
     if(length>0):
-        return Response('{"method": "get_user_id", "total hits":' + str(length) + ', result": ' + str(result) + "}")
+        return Response('{"Status Code": 200, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
     else:
-        return Response('No Item found')
+        return Response('{"Status Code": 200, "total hits": 0, "result": "No Data Found"}')
 
 @api_view(['GET', 'POST'])
 @schema(None)
@@ -30,10 +30,9 @@ def get_event(request, param1, param2):
     result = obj.search_elasticsearch(data)
     length=len(result)
     if(length>0):
-        return Response('{"method": "get_event", "total hits":' + str(length) + ', result": ' + str(result) + "}")
+        return Response('{"Status Code": 200, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
     else:
-        return Response('No Item found')
-
+        return Response('{"Status Code": 200, "total hits": 0, "result": "No Data Found"}')
 @api_view(['GET', 'POST'])
 @schema(None)
 def get_event_id(request, param1, param2, eid):
@@ -46,9 +45,9 @@ def get_event_id(request, param1, param2, eid):
     result = obj.search_elasticsearch(data)
     length=len(result)
     if(length>0):
-        return Response('{"method": "get_event_id"}, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
+        return Response('{"Status Code": 200, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
     else:
-        return Response('No Item found')
+        return Response('{"Status Code": 200, "total hits": 0, "result": "No Data Found"}')
 
 @api_view(['GET', 'POST'])
 @schema(None)
@@ -61,9 +60,9 @@ def get_user_id_event(request, id, param1, param2):
     result = obj.search_elasticsearch(data)
     length=len(result)
     if(length>0):
-        return Response('{"method": "get_user_id_event"}, "total hits":' + str(length) + ', result": ' + str(result) + "}")
+        return Response('{"Status Code": 200, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
     else:
-        return Response('No Item found')
+        return Response('{"Status Code": 200, "total hits": 0, "result": "No Data Found"}')
 
 @api_view(['GET', 'POST'])
 @schema(None)
@@ -78,6 +77,6 @@ def get_user_id_event_id(request, id, param1, param2, eid):
     result = obj.search_elasticsearch(data)
     length=len(result)
     if(length>0):
-        return Response('{"method": "get_user_id_event_id"}, "total hits":' + str(length) + ', result": ' + str(result) + "}")
+        return Response('{"Status Code": 200, "total hits":' + str(length) + ', "result": ' + str(result) + "}")
     else:
-        return Response('No Item found')
+        return Response('{"Status Code": 200, "total hits": 0, "result": "No Data Found"}')
