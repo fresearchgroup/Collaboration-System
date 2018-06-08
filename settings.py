@@ -15,4 +15,4 @@ OUTTER_KEYS = [
         '@timestamp'
     ]
     
-ES_INDEX = 'logstash-2018.06.06'
+ES_INDEX = 'trial2'

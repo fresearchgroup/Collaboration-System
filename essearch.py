@@ -8,7 +8,7 @@ class SearchElasticSearch:
         self.es = Elasticsearch()
         self.outter_keys = settings.OUTTER_KEYS
       
-    def build_search_body(search_key_dic):
+    def build_search_body(self,search_key_dic):
         
         search_keys = search_key_dic.keys()
         
@@ -30,9 +30,9 @@ class SearchElasticSearch:
 
         return body    
                 
-    def search_elasticsearch(search_key_dic):
+    def search_elasticsearch(self,search_key_dic):
             body = self.build_search_body(search_key_dic)
-            res =  es.search(index=self.index,body=body)
+            res =  self.es.search(index=self.index,body=body)
             response = []
             for hit in res['hits']['hits']:
                 response.append(hit['_source'])
