@@ -11,6 +11,9 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
 
 def display_articles(request):
 	"""
@@ -115,14 +118,15 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
-							feed = CommunityFeeds()
-							feed.article=article
+							#feed = CommunityFeeds()
+							#feed.article=article
 							comm = CommunityArticles.objects.get(article=article)
-							feed.community = comm.community
-							feed.url_type = "article_edit"
-							feed.description = " is available for editing."
+							#feed.community = comm.community
+							#feed.url_type = "article_edit"
+							#feed.description = " is available for editing."
 
-							feed.save()
+							#feed.save()
+							action.send(article,verb=': article is available for editing - by ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 						else:
