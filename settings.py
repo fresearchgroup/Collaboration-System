@@ -15,4 +15,4 @@ OUTTER_KEYS = [
         '@timestamp'
     ]
     
-ES_INDEX = 'trial2'
+ES_INDEX = 'Log'
