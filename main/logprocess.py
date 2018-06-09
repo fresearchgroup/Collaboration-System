@@ -141,7 +141,7 @@ def  process_username_info(data):
 def process_coursename_info(data):
     request = data['request']
     try:
-        coursename = request.POST.__getitem__('name')[0]
+        coursename = request.POST.__getitem__('name')
         return coursename
     except:
         return ""
@@ -156,7 +156,7 @@ def process_course_info(data):
 def process_post_community_name(data):
     request = data['request']
     try:
-        communityname = request.POST.__getitem__('name')[0]
+        communityname = request.POST.__getitem__('name')
         return communityname
     except:
         return ""
@@ -164,7 +164,7 @@ def process_post_community_name(data):
 def process_comment_reply_to(data):
     request = data['request']
     try:
-        reply_to = request.POST.__getitem__('reply_to')[0]
+        reply_to = request.POST.__getitem__('reply_to')
         return reply_to
     except:
         return ""
@@ -172,7 +172,7 @@ def process_comment_reply_to(data):
 def process_comment_object_pk(data):
     request = data['request']
     try:
-        objectpk = request.POST.__getitem__('object_pk')[0]
+        objectpk = request.POST.__getitem__('object_pk')
         return objectpk
     except:
         return ""
@@ -180,7 +180,7 @@ def process_comment_object_pk(data):
 def process_post_group_name(data):
     request = data['request']
     try:
-        group_name = request.POST.__getitem__('name')[0]
+        group_name = request.POST.__getitem__('name')
         return group_name
     except:
         return ""
@@ -188,7 +188,7 @@ def process_post_group_name(data):
 def process_manage_group_role(data):
     request = data['request']
     try:
-        role = request.POST.__getitem__('role')[0]
+        role = request.POST.__getitem__('role')
         return role
     except:
         return ""
@@ -196,10 +196,7 @@ def process_manage_group_role(data):
 def process_manage_group_status(data):
     request = data['request']
     try:
-        status = request.POST.__getitem__('status')[0]
+        status = request.POST.__getitem__('status')
         return status
     except:
         return ""
-
-
-
