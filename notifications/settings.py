@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 CONFIG_DEFAULTS = {
-    'PAGINATE_BY': 20,
+    'PAGINATE_BY': 5,
     'USE_JSONFIELD': False,
     'SOFT_DELETE': False
 }

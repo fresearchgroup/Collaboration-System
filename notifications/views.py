@@ -105,12 +105,11 @@ def mark_as_read_and_redirect(request, slug=None):
     notification = get_object_or_404(
         Notification, recipient=request.user, id=notification_id)
     notification.mark_as_read()
-
+    pk=notification.target_object_id
     _next = request.GET.get('next')
-
     if _next:
         return redirect(_next)
-    return redirect(communityviews.community_view, pk = notification.target_object_id)
+    return redirect('/community-view/%d' % int(pk) )
 
 
 @login_required
