@@ -42,7 +42,7 @@
                                          <div class="modal fade" id="modal1">
                                             <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4>Delete</h4></div>
+                                                <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete</h4></div>
                                                 <div class="modal-body">
                                                     <form method = "post" action ="{% url 'notifications:delete' notice.slug %}">
                                                         {% csrf_token %}
