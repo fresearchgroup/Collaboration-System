@@ -17,7 +17,7 @@ class StoreLog:
              self.conf = settings.STORE_CONF
         elif self.method == settings.TOSERVER:
             self.conf = settings.SERVER_CONF
-            
+
     def run(self, logVal):
         if self.method == settings.STORE:
             self._store_file(logVal)
@@ -38,7 +38,7 @@ class StoreLog:
             else:
                 r = requests.put(c_url, json=logVal, proxies=self.conf['proxies'], headers = headers)
         else:
-            r = request.put(c_url, json=logVal, headers = headers)
+            r = requests.put(c_url, json=logVal, headers = headers)
         utils.ilog(self.LOG_CLASS, "Status Code: " + str(r.status_code), imp = True)
 
     def _store_file(self, logVal):
@@ -50,10 +50,10 @@ class StoreLog:
         except IOError as io:
             print(io)
 
-            
+
 def create_log(event_name, data):
     dic = {}
-    
+
     # APPENDING COMMON FIELDS
     for key in list(settings.COMMON_FIELDS.keys()):
         f = settings.COMMON_FIELDS[key]
@@ -65,6 +65,6 @@ def create_log(event_name, data):
         event_specific[key] = f(data)
 
     dic['event_name'] =event_name
-    dic["event"] = event_specific   
+    dic["event"] = event_specific
 
     return dic
