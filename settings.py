@@ -12,7 +12,8 @@ OUTTER_KEYS = [
         'host',
         '@version',
         'headers',
-        '@timestamp'
+        '@timestamp',
+        'user-id'
     ]
 
 ES_INDEX = 'Logs'
