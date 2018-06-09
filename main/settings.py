@@ -55,7 +55,7 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.article.edit": {
             "article-id": logprocess.process_article_info,
         },
-        "event.article.statusChange": {
+        "event.article.statusChanged": {
             "article-id": logprocess.process_article_info,
             "status": logprocess.process_article_state
         },
