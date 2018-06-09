@@ -72,7 +72,8 @@ def community_subscribe(request):
 				return redirect('community_view',pk=cid)
 
 			notify.send(sender=request.user, actor=request.user, recipient=request.user,
-						verb='Welcome to the ', target=community, description="community_view")
+						verb='Welcome to the Community ', target=community, description="community_view")
+
 
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
@@ -90,7 +91,7 @@ def community_unsubscribe(request):
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 
 			notify.send(sender=request.user, actor=request.user, recipient=request.user,
-						verb='You left the ', target=community, description="community_view")
+						verb='You left the Community ', target=community,  description="community_view")
 
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
