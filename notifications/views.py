@@ -11,6 +11,8 @@ from django.views.generic import ListView
 from notifications import settings
 from notifications.models import Notification
 from notifications.utils import id2slug, slug2id
+from django.http import HttpResponse
+from Community import views as communityviews
 
 if StrictVersion(get_version()) >= StrictVersion('1.7.0'):
     from django.http import JsonResponse  # noqa
@@ -95,6 +97,20 @@ def mark_as_read(request, slug=None):
         return redirect(_next)
 
     return redirect('notifications:all')
+
+@login_required
+def mark_as_read_and_redirect(request, slug=None):
+    notification_id = slug2id(slug)
+
+    notification = get_object_or_404(
+        Notification, recipient=request.user, id=notification_id)
+    notification.mark_as_read()
+
+    _next = request.GET.get('next')
+
+    if _next:
+        return redirect(_next)
+    return redirect(communityviews.community_view, pk = notification.target_object_id)
 
 
 @login_required

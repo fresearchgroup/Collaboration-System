@@ -73,10 +73,6 @@ def community_subscribe(request):
 
 			notify.send(sender=request.user, actor=request.user, recipient=request.user,
 						verb='Welcome to the ', target=community, description="community_view")
-			###############################################################
-			#ISSUE: data field not working
-			# , data={'url_name':'community_view'}
-			################################################################
 
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)

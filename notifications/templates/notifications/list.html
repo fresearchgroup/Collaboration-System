@@ -21,21 +21,19 @@
 
                          <div class="alert alert-block alert-{{ notice.level }}" style=" margin:1px !important;" >
 
-                         <!-- <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
-                            <i class="icon-close"></i>
-                          </a> -->
                            <div class="row" style="padding-left:5px; padding-right:5px;">
                           <h4 class="col-md-10 text-left">
                             <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
                             {{ notice.actor }} :
-                            {{ notice.verb }} <a class="alert-link" href="{% url notice.description notice.target_object_id %}">{{ notice.target }} {{ notice.target_content_type }} </a>
+                            {{ notice.verb }} <a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a>
+                              <!-- url notice.description notice.target_object_id -->
                           </h4>
 
                             {% if notice.unread %}
-                             <p class="text-right col-md-2"><a class="alert-link" href="{% url 'notifications:mark_as_read' notice.slug %}"><span class="glyphicon glyphicon-unchecked"></span></a> Unread</p>
-                             {% else %}
-                             <p class="text-right col-md-2"><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
-                               {% endif %}
+                                <p class="text-right col-md-2"><a class="alert-link" href="{% url 'notifications:mark_as_read' notice.slug %}"><span class="glyphicon glyphicon-unchecked"></span></a> Unread</p>
+                            {% else %}
+                                <p class="text-right col-md-2"><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
+                            {% endif %}
                            </div>
 
                              <div class="row" style="padding-left:5px; padding-right:5px;">
