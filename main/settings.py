@@ -9,7 +9,7 @@ STORE_CONF = {
             "filename": "debug.log"
 }
 
-DEBUG = False
+DEBUG = True
 
 SERVER_CONF = {
         "protocol": "http",
@@ -108,5 +108,63 @@ CONTEXT_SPECIFIC_FIELDS = {
         #group unsubscibe event
         "event.group.unsubscribe":{
              "group-id": logprocess.process_gid
+        },
+
+        #community create event
+        "event.community.create":{
+            "community-name": logprocess.process_post_community_name,
+            "admin-username":logprocess.process_username_from_request
+        },
+
+        #group create event
+        "event.group.create":{
+            "community-id": logprocess.process_cid,
+            "group-name": logprocess.process_post_group_name
+        },
+
+        #group manage event
+        "event.group.manage":{
+            "invitation-username":logprocess.process_username_from_request,
+            "role": logprocess.process_manage_group_role ,
+            "status": logprocess.process_manage_group_status
+        },
+
+
+        #community content view event
+        "event.content.view": {
+            "community-id": logprocess.process_cid
+        },
+
+        #course create event
+        "event.course.create": {
+            "community-id": logprocess.process_cid,
+            "course-name": logprocess.process_coursename_info
+        },
+
+        #course view event
+        "event.course.view": {
+            "course-id": logprocess.process_course_info
+        },
+
+        #course edit event
+        "event.course.edit":{
+            "user-id":logprocess.process_user_info
+        },
+
+        #course manage-resource event
+        "event.course.manage":{
+            "user-id":logprocess.process_user_info
+        },
+
+        #update course-info event
+        "event.course.update":{
+            "course-name": logprocess.process_coursename_info
+        },
+
+        #comment post event
+        "event.comment.post":{
+            "reply-to-user-id":logprocess.process_comment_reply_to,
+            "object-pk":logprocess.process_comment_object_pk
         }
+
 }
