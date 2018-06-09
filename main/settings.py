@@ -26,7 +26,7 @@ SERVER_CONF = {
             "password": ""
             }
     }
-    
+
 COMMON_FIELDS = {
             "user-agent": logprocess.process_user_agent,
             "ip-addres": logprocess.process_host_ip,
@@ -36,7 +36,8 @@ COMMON_FIELDS = {
             "session-id": logprocess.process_session_id,
             "path-info": logprocess.process_path_info,
             "time-stamp": logprocess.process_time_stamp,
-            "event-source": logprocess.proces_attach_event_source
+            "event-source": logprocess.proces_attach_event_source,
+            "user-id": logprocess.process_user_info,
 }
 
 CONTEXT_SPECIFIC_FIELDS = {
@@ -44,22 +45,18 @@ CONTEXT_SPECIFIC_FIELDS = {
         #article specific events
         "event.article.create":{
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info,
             "community-id": logprocess.process_cid,
             "group-id": logprocess.process_gid
         },
 
         "event.article.view": {
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info
         },
         "event.article.edit": {
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info
         },
         "event.article.statusChange": {
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info,
             "status": logprocess.process_article_state
         },
         "event.article.published": {
@@ -68,29 +65,24 @@ CONTEXT_SPECIFIC_FIELDS = {
         },
         "event.article.deleted": {
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info
         },
         "event.article.reported": {
             "article-id": logprocess.process_article_info,
-            "user-id": logprocess.process_user_info
         },
 
         #community specific events
         "event.community.view": {
             "community-id": logprocess.process_community_info,
-            "user-id": logprocess.process_user_info
         },
 
         #community subscribe event
         "event.community.subscribe":{
             "community-id": logprocess.process_cid,
-            "user-id": logprocess.process_user_info
         },
 
         #community unsubscribe event
         "event.community.unsubscribe":{
             "community-id": logprocess.process_cid,
-            "user-id": logprocess.process_user_info
         },
 
         #login event
@@ -112,7 +104,7 @@ CONTEXT_SPECIFIC_FIELDS = {
         "event.group.view":{
              "group-id": logprocess.process_group_info
         },
-        
+
         #group unsubscibe event
         "event.group.unsubscribe":{
              "group-id": logprocess.process_gid

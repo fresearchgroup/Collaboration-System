@@ -73,7 +73,7 @@ def process_community_info(data):
         return args['pk']
     else:
         return ""
-    
+
 def process_group_info(data):
     args = data['view_kwargs']
     dic = {}
@@ -90,12 +90,12 @@ def process_article_info(data):
     else:
         return ""
 
-def process_time_stamp(data): 
+def process_time_stamp(data):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-    return st 
+    return st
 
-def proces_attach_event_source(data): 
+def proces_attach_event_source(data):
     return 'server'
 
 def process_article_state(data):
@@ -137,5 +137,69 @@ def  process_username_info(data):
         return args['username']
     else:
         return ""
+
+def process_coursename_info(data):
+    request = data['request']
+    try:
+        coursename = request.POST.__getitem__('name')[0]
+        return coursename
+    except:
+        return ""
+
+def process_course_info(data):
+    args = data['view_kwargs']
+    if 'pk' in list(args.keys()):
+        return args['pk']
+    else:
+        return ""
+
+def process_post_community_name(data):
+    request = data['request']
+    try:
+        communityname = request.POST.__getitem__('name')[0]
+        return communityname
+    except:
+        return ""
+
+def process_comment_reply_to(data):
+    request = data['request']
+    try:
+        reply_to = request.POST.__getitem__('reply_to')[0]
+        return reply_to
+    except:
+        return ""
+
+def process_comment_object_pk(data):
+    request = data['request']
+    try:
+        objectpk = request.POST.__getitem__('object_pk')[0]
+        return objectpk
+    except:
+        return ""
+
+def process_post_group_name(data):
+    request = data['request']
+    try:
+        group_name = request.POST.__getitem__('name')[0]
+        return group_name
+    except:
+        return ""
+
+def process_manage_group_role(data):
+    request = data['request']
+    try:
+        role = request.POST.__getitem__('role')[0]
+        return role
+    except:
+        return ""
+
+def process_manage_group_status(data):
+    request = data['request']
+    try:
+        status = request.POST.__getitem__('status')[0]
+        return status
+    except:
+        return ""
+
 
 
