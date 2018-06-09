@@ -15,4 +15,6 @@ OUTTER_KEYS = [
         '@timestamp'
     ]
     
-ES_INDEX = 'Log'
+ES_INDEX = 'Logs'
+
+SERVER_CONF = [ "elasticsearch" ]
