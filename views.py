@@ -35,10 +35,11 @@ def get_event(request, param1, param2):
     else:
         return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
 
+@api_view(['GET', 'POST'])
 def get_event_id(request, param1, param2, eid):
     id_name=id_match(param1)
     data = {
-                'event_name': ".".join(["event", param1, param2]), 
+                'event_name': ".".join(["event", param1, param2]),
                 id_name: eid
             }
     obj=SearchElasticSearch()
