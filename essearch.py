@@ -5,7 +5,7 @@ class SearchElasticSearch:
     
     def __init__(self):
         self.index = settings.ES_INDEX
-        self.es = Elasticsearch()
+        self.es = Elasticsearch(settings.SERVER_CONF)
         self.outter_keys = settings.OUTTER_KEYS
       
     def build_search_body(self,search_key_dic):
