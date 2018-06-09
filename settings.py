@@ -16,6 +16,6 @@ OUTTER_KEYS = [
         'user-id'
     ]
 
-ES_INDEX = 'Logs'
+ES_INDEX = 'logs'
 
 SERVER_CONF = [ "elasticsearch" ]
