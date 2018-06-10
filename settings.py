@@ -1,6 +1,6 @@
 OUTTER_KEYS = [
         'server-host',
-        'ip-addres',
+        'ip-address',
         'session-id',
         'path-info',
         'accept-language',
