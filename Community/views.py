@@ -70,7 +70,7 @@ def community_subscribe(request):
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
-			action.send(user,verb='joined community - ',target=community)
+			#action.send(user,verb='joined community - ',target=community)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')

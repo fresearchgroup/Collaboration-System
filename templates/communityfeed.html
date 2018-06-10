@@ -73,11 +73,12 @@
           <div class="row margin-bottom-15">
             <div class="col-md-12 col-md-8 col-md-offset-2">
                 
-                <div class="alert alert-success" role="alert" style="margin:1px;">
+                <div class="alert alert-success" role="alert" style="margin:1px; padding-bottom:2px;">
                     <!--{% display_action feed %}-->
+                    <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
+                     <h5>{{feed.verb}}</h5>
+                      <div class="row" style="padding-left:5px; padding-right:5px;"><div class="col-sm-6 text-left"><i class="fa fa-user"></i> <a href="{% url feed.data.action_object_href feed.data.action_object_href_id %}">{{feed.action_object}}</a></div><div class="text-right col-sm-6"><p class="text-right">{{feed.timesince}} ago</p></div></div>
                     
-                    <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a> {{feed.verb}} <a href="{% url feed.data.action_object_href feed.data.action_object_href_id %}">{{feed.action_object}}</a>
-                    <p class="text-right">{{feed.timesince}} ago</p>
                 </div>
                 </a>
             </div>
