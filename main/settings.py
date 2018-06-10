@@ -29,7 +29,7 @@ SERVER_CONF = {
 
 COMMON_FIELDS = {
             "user-agent": logprocess.process_user_agent,
-            "ip-addres": logprocess.process_host_ip,
+            "ip-address": logprocess.process_host_ip,
             "server-host": logprocess.process_server_host,
             "referer": logprocess.process_referer,
             "accept-language": logprocess.process_accept_language,

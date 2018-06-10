@@ -147,4 +147,16 @@ EVENT_NAME_DICT={
         }
     },
 
+    #article create events
+    r'^community-article-create/$': {
+        'POST':{
+            'event_name': 'event.article.create'
+        }
+    },
+    r'^group-article-create/$': {
+        'POST':{
+            'event_name': 'event.article.create'
+        }
+    },
+
 }
