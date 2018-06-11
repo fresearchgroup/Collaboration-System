@@ -122,12 +122,12 @@ def edit_article(request, pk):
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
 							comm = CommunityArticles.objects.get(article=article)
-							action.send(article,verb='Article is available for editing - by ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
+							action.send(article,verb='Article is available for editing ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 							comm = CommunityArticles.objects.get(article=article)
 							Action.objects.filter(actor_object_id=article,actor_content_type=ContentType.objects.get_for_model(article)).delete()
-							action.send(article,verb=': article has been published - by ',action_object =request.user,target=comm.community,actor_href='article_view',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
+							action.send(article,verb=': article has been published ',action_object =request.user,target=comm.community,actor_href='article_view',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
