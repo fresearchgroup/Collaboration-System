@@ -135,7 +135,6 @@ urlpatterns = [
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
-    # url(r'^community-wiki-create/(?P<pk>\d+)/$', communityview.community_wiki_create, name='community_wiki_create'),
     url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
