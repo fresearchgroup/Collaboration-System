@@ -104,7 +104,7 @@ def community_article_create(request):
 			sysrep = SystemRep.objects.get(user=request.user)
 			srep = sysrep.sysrep
 			defaultval = DefaultValues.objects.get(pk=1)
-			if (crep>defaultval.crep_for_art) and (srep>defaultval.srep_for_art):
+			if (crep>defaultval.min_crep_for_art):
 				if status=='1':
 					article = create_article(request)
 					obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )

@@ -25,10 +25,11 @@ class DefaultValues(models.Model):
 	published_publisher = models.PositiveIntegerField()
 	comment_flag = models.PositiveIntegerField()
 	reply = models.PositiveIntegerField()
-	crep_for_art = models.PositiveIntegerField()
-	srep_for_art = models.PositiveIntegerField()
-	srep_for_comm = models.PositiveIntegerField()
+	min_crep_for_art = models.PositiveIntegerField()
+	min_srep_for_comm = models.PositiveIntegerField()
 	srep_for_comm_creation = models.PositiveIntegerField()
+	threshold_publisher = models.PositiveIntegerField(default=0)
+	threshold_cadmin = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
 		return "Default Values"
