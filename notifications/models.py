@@ -76,7 +76,7 @@ class NotificationQuerySet(models.query.QuerySet):
         if recipient:
             qset = qset.filter(recipient=recipient)
 
-        return qset.update(unread=False, level="warning")
+        return qset.update(unread=False, level="error")
 
     def mark_all_as_unread(self, recipient=None):
         """Mark as unread any read messages in the current queryset.
@@ -88,7 +88,7 @@ class NotificationQuerySet(models.query.QuerySet):
         if recipient:
             qset = qset.filter(recipient=recipient)
 
-        return qset.update(unread=True, level="info")
+        return qset.update(unread=True, level="danger")
 
     def deleted(self):
         """Return only deleted items in the current queryset"""
@@ -164,8 +164,8 @@ class Notification(models.Model):
         <a href="http://oebfare.com/">brosner</a> commented on <a href="http://github.com/pinax/pinax">pinax/pinax</a> 2 hours ago # noqa
 
     """
-    LEVELS = Choices('success', 'info', 'warning', 'error')
-    level = models.CharField(choices=LEVELS, default=LEVELS.info, max_length=20)
+    LEVELS = Choices('success', 'info', 'warning', 'error','danger')
+    level = models.CharField(choices=LEVELS, default=LEVELS.danger, max_length=20)
 
     recipient = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -243,13 +243,13 @@ class Notification(models.Model):
     def mark_as_read(self):
         if self.unread:
             self.unread = False
-            self.level = "warning"
+            self.level = "error"
             self.save()
 
     def mark_as_unread(self):
         if not self.unread:
             self.unread = True
-            self.level = "info"
+            self.level = "danger"
             self.save()
 
 
@@ -269,7 +269,7 @@ def notify_handler(verb, **kwargs):
     public = bool(kwargs.pop('public', True))
     description = kwargs.pop('description', None)
     timestamp = kwargs.pop('timestamp', timezone.now())
-    level = kwargs.pop('level', Notification.LEVELS.info)
+    level = kwargs.pop('level', Notification.LEVELS.danger)
 
     # Check if User or Group
     if isinstance(recipient, Group):
