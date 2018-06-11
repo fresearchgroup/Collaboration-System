@@ -18,3 +18,6 @@ pysolr==3.7.0
 social-auth-app-django==2.1.0
 python-decouple==3.1
 django-notifications-hq
+django-activity-stream
+django-jsonfield
+django-jsonfield-compat
