@@ -64,10 +64,18 @@ INSTALLED_APPS = [
     'webcontent',
     'Course',
     'notifications',
+    'actstream',
 ] + get_machina_apps()
 
 SITE_ID = 1
 
+ACTSTREAM_SETTINGS = {
+    #'MANAGER': 'Community.managers.MyActionManager',
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

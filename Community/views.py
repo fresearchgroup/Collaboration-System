@@ -19,7 +19,9 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
 from notifications.signals import notify
-
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
 # Create your views here.
 
 
@@ -74,12 +76,13 @@ def community_subscribe(request):
 			notify.send(sender=request.user, actor=request.user, recipient=request.user,
 						verb='Welcome to the Community ', target=community, description="community_view")
 
-
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
 		return redirect('/login/?next=/community-view/%d' % int(cid) )
+		
+      
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -429,22 +432,23 @@ def community_course_create(request):
 
 
 def feed_content(request, pk):
-	commfeed = ''
+	communityfeed = ''
 	try:
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			feed = CommunityFeeds.objects.filter(community=community)
+			feeds = community.target_actions.all()
 			page = request.GET.get('page', 1)
-			paginator = Paginator(feed, 5)
+			paginator = Paginator(feeds, 5)
 			try:
-				commfeed = paginator.page(page)
+				communityfeed = paginator.page(page)
 			except PageNotAnInteger:
-				commfeed = paginator.page(1)
+				communityfeed = paginator.page(1)
 			except EmptyPage:
-				commfeed = paginator.page(paginator.num_pages)
+				communityfeed = paginator.page(paginator.num_pages)
 
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
-	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feed':commfeed})
+
+	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feeds':communityfeed})

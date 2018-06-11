@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
-
+    url(r'^activity/', include('actstream.urls')),
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -54,7 +54,7 @@ urlpatterns = [
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
     url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
-
+    
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
