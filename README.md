@@ -51,14 +51,14 @@ For development installation -
 
             $sudo apt-get update
             $sudo apt-get install mysql-server
-            $ sudo apt-get install libmysqlclient-dev
-            $ mysql -u root -p
+            $sudo apt-get install libmysqlclient-dev
+            $mysql -u root -p
             
             Enter password=root
 
-		     mysql> create database collaboration;
-             mysql> use collaboration;
-             mysql> source collab.sql   
+	    mysql> create database collaboration;
+            mysql> use collaboration;
+            mysql> source collab.sql   
             
 
 6. Create a .env inside CollaborationSystem and paste the following -
@@ -130,7 +130,7 @@ Steps for Docker --
  
 
 
-		 docker-compose build
+		docker-compose build
 
 		 docker-compose up db
 
