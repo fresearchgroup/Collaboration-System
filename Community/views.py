@@ -20,7 +20,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
 # Create your views here.
 
-
 def display_communities(request):
 	if request.method == 'POST':
 		sortby = request.POST['sortby']
@@ -94,8 +93,8 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				article = create_article(request)
-				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-				return redirect('article_view', article.pk)
+				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				return redirect('article_edit', article.pk)
 			else:
 				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:

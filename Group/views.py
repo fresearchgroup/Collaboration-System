@@ -99,7 +99,7 @@ def group_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
-				return redirect('article_view', article.pk)
+				return redirect('article_edit', article.pk)
 			else:
 				return render(request, 'new_article.html', {'group':group, 'status':1})
 		else:
