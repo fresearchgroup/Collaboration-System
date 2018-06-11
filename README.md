@@ -92,7 +92,7 @@ For development installation -
 			git clone http://github.com/dhanushsr/etherpad-lite
 			cd etherpad-lite/
 			./bin/run.sh
-			cd ..
+			
 8. Install PyEtherLite--
 			
 			git clone http://github.com/dhanushsr/PyEtherpadLite
