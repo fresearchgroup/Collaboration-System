@@ -536,7 +536,7 @@ def community_group_content(request, pk):
 
 
 
-def h5p_view(request,pk):
+def h5p_view(pk):
 	return redirect("http://localhost:8000/h5p/content/?contentId=%s" % pk)
 
 def community_h5p_content(request, pk):
@@ -550,24 +550,24 @@ def community_h5p_content(request, pk):
 			json_data = json.loads(response.text)
 			print(json_data)
 
-			cgarticles = []
+			ch5p = []
 
 			for obj in json_data:
 				if obj['community_name'] == community.name:
-					cgarticles.append(obj)		
+					ch5p.append(obj)		
 	
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(cgarticles), 5)
+			paginator = Paginator(list(ch5p), 5)
 			try:
-				commgrparticles = paginator.page(page)
+				commgrph5p = paginator.page(page)
 			except PageNotAnInteger:
-				commgrparticles = paginator.page(1)
+				commgrph5p = paginator.page(1)
 			except EmptyPage:
-				commgrparticles = paginator.page(paginator.num_pages)
+				commgrph5p = paginator.page(paginator.num_pages)
 
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
-	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
+	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrph5p':commgrparticles})
 
  
 	
@@ -598,4 +598,3 @@ def community_h5p_create(request):
 			return redirect('http://localhost:8000/h5p/create/')
 		return redirect('home')
 	return redirect('login')
-
