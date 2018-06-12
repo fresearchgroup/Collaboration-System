@@ -29,8 +29,8 @@
     <div class="invalid-feedback"></div>
   </div>
   <div class="form-group">
-    <label for="body">Body</label>
-    <textarea id ="editor" class="form-control" name="body" ></textarea>
+    <!-- <label for="body">Body</label>
+    <textarea id ="editor" class="form-control" name="body" ></textarea> -->
       {% if request.POST.articleof == 'group' %}
         <input type = 'hidden' name = 'gid' value = {{group.pk}}>
         {% endif %}
@@ -52,16 +52,15 @@
 {% endblock %}
 {% block javascript %}
 
-<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
 <script>
-      ClassicEditor
-        .create( document.querySelector( '#editor' ) )
-        .then( editor => {
-          console.log( editor );
-        } )
-        .catch( error => {
-          console.error( error );
-        } );
+      // ClassicEditor
+      //   .create( document.querySelector( '#editor' ) )
+      //   .then( editor => {
+      //     console.log( editor );
+      //   } )
+      //   .catch( error => {
+      //     console.error( error );
+      //   } );
     </script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
