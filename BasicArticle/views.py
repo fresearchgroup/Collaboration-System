@@ -129,6 +129,8 @@ def edit_article(request, pk):
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
+							Action.objects.filter(actor_object_id=article.id,
+										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
 					article.title = title
 					article.body = body
 					try:
@@ -143,8 +145,7 @@ def edit_article(request, pk):
 				if to_state.name == 'publish':
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 					comm = CommunityArticles.objects.get(article=article)
-					Action.objects.filter(actor_object_id=article.id,
-										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
+					
 					action.send(article, verb='Article has been published ', action_object=article.created_by,
 								target=comm.community, actor_href='article_view', actor_href_id=article.id,
 								action_object_href='display_user_profile', action_object_href_id=article.created_by.username)

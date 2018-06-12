@@ -36,7 +36,9 @@
                                  {% else %}
                                  <p><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
                                    {% endif %}</div>
+
                                    <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
+
                                          <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
                                             <div class="modal-dialog">
                                             <div class="modal-content">
@@ -64,8 +66,6 @@
                                       -by {{ notice.actor }}
                                       {% endifnotequal %}
                                   </h5>
-
-
                                    </div>
                                      <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago</p></div>
                                  </div>
@@ -113,15 +113,5 @@
 
 </ul>
 
-<script type="text/javascript">
-$(function(){
-		$('.col-lg-3 li a').filter(function(){
-				return this.href==location.href}).parent().addClass('active').siblings().removeClass('active');
-
-		$('.col-lg-3 li a').click(function(){
-				$(this).parent().addClass('active').siblings().removeClass('active')
-				});
-		});
-</script>
-
 {% endblock %}
+

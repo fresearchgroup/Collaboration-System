@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7d43b96-511c-4ebf-a3f7-315171d5cfdb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/CollaborationSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/CollaborationSystem/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/notifications/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BasicArticle/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/BasicArticle/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notifications/templates/notifications/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/notifications/templates/notifications/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/communityfeed.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/communityfeed.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -61,6 +59,19 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="list.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/notifications/templates/notifications/list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -100,11 +111,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="communityfeed.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="communityfeed.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/communityfeed.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="73" column="45" selection-start-line="73" selection-start-column="45" selection-end-line="73" selection-end-column="45" />
+            <state relative-caret-position="211">
+              <caret line="61" column="10" lean-forward="true" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
               <folding>
                 <element signature="e#2366#2405#0" expanded="true" />
                 <element signature="e#2478#2522#0" expanded="true" />
@@ -144,8 +155,8 @@
         <option value="$PROJECT_DIR$/notifications/models.py" />
         <option value="$PROJECT_DIR$/notifications/settings.py" />
         <option value="$PROJECT_DIR$/CollaborationSystem/settings.py" />
-        <option value="$PROJECT_DIR$/notifications/templates/notifications/list.html" />
         <option value="$PROJECT_DIR$/templates/communityfeed.html" />
+        <option value="$PROJECT_DIR$/notifications/templates/notifications/list.html" />
       </list>
     </option>
   </component>
@@ -503,20 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notifications/templates/notifications/list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="50" column="75" selection-start-line="50" selection-start-column="75" selection-end-line="50" selection-end-column="75" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#li#2;n#ul#0;n#ul#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="721">
@@ -529,13 +526,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/communityfeed.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="73" column="45" selection-start-line="73" selection-start-column="45" selection-end-line="73" selection-end-column="45" />
+        <state relative-caret-position="211">
+          <caret line="61" column="10" lean-forward="true" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
           <folding>
             <element signature="e#2366#2405#0" expanded="true" />
             <element signature="e#2478#2522#0" expanded="true" />
             <element signature="e#2511#2529#0" expanded="true" />
             <element signature="e#2642#2686#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notifications/templates/notifications/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#ul#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
