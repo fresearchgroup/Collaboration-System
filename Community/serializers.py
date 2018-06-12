@@ -5,3 +5,4 @@ class CommunitySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Community
 		fields = ('name', 'desc','category')
+

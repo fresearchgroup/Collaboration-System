@@ -4,7 +4,7 @@ from BasicArticle.views import create_article, view_article
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityFeeds
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -18,6 +18,10 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+from notifications.signals import notify
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
 # Create your views here.
 
 
@@ -65,13 +69,20 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
+
+			notify.send(sender=request.user, actor=request.user, recipient=request.user,
+						verb='Welcome to the Community ', target=community, description="community_view")
+
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
 		return redirect('/login/?next=/community-view/%d' % int(cid) )
+		
+      
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -81,6 +92,10 @@ def community_unsubscribe(request):
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+
+			notify.send(sender=request.user, actor=request.user, recipient=request.user,
+						verb='You left the Community ', target=community,  description="community_view")
+
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
@@ -414,3 +429,26 @@ def community_course_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+
+def feed_content(request, pk):
+	communityfeed = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			feeds = community.target_actions.all()
+			page = request.GET.get('page', 1)
+			paginator = Paginator(feeds, 5)
+			try:
+				communityfeed = paginator.page(page)
+			except PageNotAnInteger:
+				communityfeed = paginator.page(1)
+			except EmptyPage:
+				communityfeed = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+
+	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feeds':communityfeed})

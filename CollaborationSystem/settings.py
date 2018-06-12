@@ -63,7 +63,19 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
+    'notifications',
+    'actstream',
 ] + get_machina_apps()
+
+SITE_ID = 1
+
+ACTSTREAM_SETTINGS = {
+    #'MANAGER': 'Community.managers.MyActionManager',
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -205,7 +217,6 @@ HAYSTACK_CONNECTIONS = {
     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
   },
 }
-SITE_ID=1
 
 COMMENTS_APP='django_comments_xtd'
 
@@ -248,3 +259,7 @@ GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 SESSION_COOKIE_AGE = 7200
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+DJANGO_NOTIFICATIONS_CONFIG = {
+'PAGINATE_BY': 10
+}

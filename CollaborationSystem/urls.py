@@ -30,6 +30,8 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
+import notifications.urls
+
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -43,7 +45,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
-
+    url(r'^activity/', include('actstream.urls')),
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -52,7 +54,7 @@ urlpatterns = [
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
     url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
-
+    
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
@@ -93,6 +95,7 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+    url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 
     url(r'^reset/$',
     auth_views.PasswordResetView.as_view(
@@ -138,8 +141,8 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

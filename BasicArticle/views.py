@@ -4,13 +4,19 @@ from django.http import Http404, HttpResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+from notifications.signals import notify
+from django.contrib.auth.models import User
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from django.contrib.contenttypes.models import ContentType      
 
 def display_articles(request):
 	"""
@@ -115,11 +121,16 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
+							comm = CommunityArticles.objects.get(article=article)
+							action.send(article,verb='Article is available for editing ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
+
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
+							Action.objects.filter(actor_object_id=article.id,
+										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
 					article.title = title
 					article.body = body
 					try:
@@ -132,7 +143,12 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					comm = CommunityArticles.objects.get(article=article)
+					
+					action.send(article, verb='Article has been published ', action_object=article.created_by,
+								target=comm.community, actor_href='article_view', actor_href_id=article.id,
+								action_object_href='display_user_profile', action_object_href_id=article.created_by.username)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
