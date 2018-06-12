@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from reputation.models import CommunityRep,SystemRep,DefaultValues
 
 def create_group(request):
 	if request.method == 'POST':
@@ -96,12 +97,19 @@ def group_article_create(request):
 			status = request.POST['status']
 			gid = request.POST['gid']
 			group = Group.objects.get(pk=gid)
-			if status=='1':
-				article = create_article(request)
-				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
-				return redirect('article_view', article.pk)
-			else:
-				return render(request, 'new_article.html', {'group':group, 'status':1})
+			community = CommunityGroups.objects.get(group=group)
+			community = community.community
+			commrep = CommunityRep.objects.get(community = community, user=request.user)
+			crep =commrep.rep
+			defaultval = DefaultValues.objects.get(pk=1)
+			if (crep>defaultval.min_crep_for_art):
+				if status=='1':
+					article = create_article(request)
+					obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
+					return redirect('article_view', article.pk)
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1})
+			return render(request,'lowrep.html')
 		else:
 			return redirect('home')
 	else:

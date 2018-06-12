@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
@@ -136,3 +138,11 @@ Steps for Docker --
  docker-compose up
 
 ```
+=======
+# Community-Reputation
+Reputation of a user in a community or group
+>>>>>>> 5528324bed5a6659735c4ebb6cf784b3794d3f85
+=======
+# Community-Reputation
+Reputation of a user in a community or group
+>>>>>>> 5528324bed5a6659735c4ebb6cf784b3794d3f85
