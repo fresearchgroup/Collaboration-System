@@ -81,7 +81,11 @@ $(document).ready(function() {
 {% block extra_css %}
     {% endblock extra_css %}
 </head>
+<<<<<<< HEAD
+<body onLoad="document.location.history.go(0);">
+=======
 <body>
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 {% block js %}
     {% endblock js %}
@@ -151,6 +155,10 @@ $(document).ready(function() {
           <ul class="dropdown-menu">
             {% if request.user.is_superuser %}
 						<li><a href="{% url 'create_community' %}">Create Community</a></li>
+<<<<<<< HEAD
+            <li><a href="{% url 'defaultval' %}">Reputation Model Values</a></li>
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
 						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             {% endif%}

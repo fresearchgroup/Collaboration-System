@@ -14,4 +14,8 @@ def IndexDocuments(id,title,body,date):
     conn=pysolr.Solr(path)
     docs = [{'id': id,  'title': title, 'body': body ,'created_at' : str(date) }]
     conn.add(docs)
+<<<<<<< HEAD
     return
+=======
+    return
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
