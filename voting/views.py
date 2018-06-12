@@ -83,8 +83,7 @@ def updown(request):
 				return render(request,'cantvote.html')
 		else:
 			return redirect('login')
-	
-	return redirect('article_view',a_id)
+		return redirect('article_view',a_id)
 	# try:
 	# 	article = CommunityArticles.objects.get(article=thread_id)
 	# 	law = Law.objects.get(article_id=thread_id)
