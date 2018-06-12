@@ -1,3 +1,5 @@
+from .. import utils
+
 def article_event_type(object):
 
     """
