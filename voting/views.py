@@ -84,22 +84,4 @@ def updown(request):
 		else:
 			return redirect('login')
 		return redirect('article_view',a_id)
-	# try:
-	# 	article = CommunityArticles.objects.get(article=thread_id)
-	# 	law = Law.objects.get(article_id=thread_id)
-	# 	voting = Voting.objects.get(article_id=thread_id,user_id=request.user.id)
-	# 	if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-	# 		return redirect('home')
-	# 	count = article_watch(request, article.article)
-	# except CommunityArticles.DoesNotExist:
-	# 	try:
-	# 		article = GroupArticles.objects.get(article=thread_id)
-	# 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-	# 			return redirect('home')
-	# 		count = article_watch(request, article.article)
-	# 	except GroupArticles.DoesNotExist:
-	# 		raise Http404
-	# is_fav =''
-	# if request.user.is_authenticated:
-	# 	is_fav = favourite.objects.filter(user = request.user, resource = thread_id, category= 'article').exists()
-	# return redirect('article_view', pk=thread_id)
+	
