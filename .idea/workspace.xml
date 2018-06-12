@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7d43b96-511c-4ebf-a3f7-315171d5cfdb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollaborationSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/CollaborationSystem/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Community/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/Community/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Community/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Community/managers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Community/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Community/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notifications/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/notifications/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notifications/tests/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/notifications/tests/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/notifications/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/temp/notifications/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +23,7 @@
         <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="721">
-              <caret line="263" column="17" lean-forward="true" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
+              <caret line="263" column="17" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
               <folding>
                 <element signature="e#323#332#0" expanded="true" />
               </folding>
@@ -25,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <file leaf-file-name="admin.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/notifications/admin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+            <state relative-caret-position="119">
+              <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -91,27 +97,12 @@
             <path>
               <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
               <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="BasicArticle" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="CollaborationSystem" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="Community" type="462c0819:PsiDirectoryNode" />
+              <item name="notifications" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
               <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
               <item name="temp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -228,7 +219,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Desktop/notifications/templates/notifications/list.html" />
     <entry file="file://$USER_HOME$/Desktop/notifications/settings.py" />
     <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -411,20 +401,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="721">
-          <caret line="263" column="17" lean-forward="true" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
+          <caret line="263" column="17" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
           <folding>
             <element signature="e#323#332#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
+    <entry file="file://$PROJECT_DIR$/notifications/admin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+        <state relative-caret-position="119">
+          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
         </state>
       </provider>
     </entry>
