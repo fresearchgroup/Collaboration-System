@@ -63,6 +63,23 @@ def view_article(request, pk):
 	community before displaying it. It displays whether the article belongs
 	to group or community
 	"""
+	
+	try:
+		article = CommunityArticles.objects.get(article_id=pk)
+		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+			return redirect('home')
+		count = article_watch(request, article.article)
+	except CommunityArticles.DoesNotExist:
+		try:
+			article = GroupArticles.objects.get(article_id=pk) 	
+			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+				return redirect('home')
+			count = article_watch(request, article.article)	
+		except GroupArticles.DoesNotExist:
+			raise Http404
+	is_fav =''
+	if request.user.is_authenticated:
+		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
 	law = Law.objects.filter(article_id=pk)
 	if(law.count() == 0):
 		law = Law(article_id = pk)
@@ -82,24 +99,7 @@ def view_article(request, pk):
 		voting = Voting()
 		voting.article_id = pk
 		voting.upflag = False
-		voting.downflag = False
-	try:
-		article = CommunityArticles.objects.get(article_id=pk)
-		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-			return redirect('home')
-		count = article_watch(request, article.article)
-	except CommunityArticles.DoesNotExist:
-		try:
-			article = GroupArticles.objects.get(article_id=pk) 	
-			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-				return redirect('home')
-			count = article_watch(request, article.article)	
-		except GroupArticles.DoesNotExist:
-			raise Http404
-	is_fav =''
-	if request.user.is_authenticated:
-		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
-
+		voting.downflag = False	
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav, 'art':voting, 'law':law})
 
 
@@ -154,6 +154,7 @@ def edit_article(request, pk):
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
 					message = "state doesn' exist"
+
 				if to_state.name == 'publish':
 					commart = CommunityArticles.objects.filter(article_id=pk).exists()
 					art = Articles.objects.get(pk=pk)
