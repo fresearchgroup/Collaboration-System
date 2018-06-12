@@ -38,6 +38,7 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
+<<<<<<< HEAD
             <li><form id="my_form" method="POST" action="{% url 'updown' %}">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{article.article.id}}">
@@ -73,6 +74,10 @@
             {% endif %}
             </form></li>
             <li><i class="fa fa-eye"></i> {{count}} views </li>
+=======
+            <li><i class="fa fa-eye"></i> {{count}} views </li>
+
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
             {% if article.community.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
             {% endif %}
@@ -117,9 +122,13 @@
     </div>
   </div>
 </div>
+<<<<<<< HEAD
 {% if errormessage %}
         <div class="alert alert-danger">{{ errormessage }}</div>
  {% endif %}
+=======
+
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 <h2>Comments</h2>
 
 {% if comment_count %}
@@ -136,7 +145,11 @@
 <div class="post-comment padding-top-40">
   <h3>Leave a Comment</h3>
   <label>Message</label>
+<<<<<<< HEAD
    {% render_comment_form for article %}  
+=======
+   {% render_comment_form for article %}
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 </div>
 
 {% endblock %}

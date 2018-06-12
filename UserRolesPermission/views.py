@@ -20,7 +20,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
+<<<<<<< HEAD
 from reputation.models import SystemRep
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 def signup(request):
     """
@@ -48,10 +51,13 @@ def signup(request):
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+<<<<<<< HEAD
                 sysrep = Systemrep()
                 sysrep.user = user
                 sysrep.sysrep = 0
                 sysrep.save()
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
                 return redirect('user_dashboard')
             else:
                 error = 'Captcha not verified'
@@ -151,11 +157,17 @@ def view_profile(request):
     if request.user.is_authenticated:
         try:
             user_profile = ProfileImage.objects.get(user=request.user)
+<<<<<<< HEAD
             sysrep = SystemRep.objects.get(user_id=request.user.id)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
             sysrep = SystemRep.objects.get(user_id=request.user.id)
         return render(request, 'myprofile.html', {'user_profile':user_profile,'sysrep':sysrep})
+=======
+        except ProfileImage.DoesNotExist:
+            user_profile = "No Image available"
+        return render(request, 'myprofile.html', {'user_profile':user_profile})
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
     else:
         return redirect('login')
 

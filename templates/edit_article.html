@@ -155,7 +155,11 @@
                   </div>    
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+<<<<<<< HEAD
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+=======
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}</button>
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
             {%endif%}
            {%endif%}
             {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
@@ -165,7 +169,11 @@
                   <label for="title">Title</label>
                   <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
                   <div class="invalid-feedback"></div>
+<<<<<<< HEAD
                 </div>z
+=======
+                </div>
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
                 <div class="form-group">
                   <label for="body">Body</label>
                   <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>

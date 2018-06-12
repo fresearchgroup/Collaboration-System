@@ -18,7 +18,10 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+<<<<<<< HEAD
 from reputation.models import CommunityRep,SystemRep,DefaultValues
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 # Create your views here.
 
 
@@ -66,11 +69,14 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+<<<<<<< HEAD
 			commrep = CommunityRep()
 			commrep.user=user
 			commrep.community = community
 			commrep.rep = 0
 			commrep.save()
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
@@ -85,7 +91,10 @@ def community_unsubscribe(request):
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			user = request.user
+<<<<<<< HEAD
 			com = CommunityRep.objects.get(community=community,user=user).delete()
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 			return redirect('community_view',pk=cid)
@@ -99,6 +108,7 @@ def community_article_create(request):
 			status = request.POST['status']
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
+<<<<<<< HEAD
 			commrep = CommunityRep.objects.get(community = community, user=request.user)
 			crep =commrep.rep
 			sysrep = SystemRep.objects.get(user=request.user)
@@ -113,6 +123,14 @@ def community_article_create(request):
 					return render(request, 'new_article.html', {'community':community, 'status':1})
 			else:
 				return render(request,'lowrep.html')
+=======
+			if status=='1':
+				article = create_article(request)
+				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				return redirect('article_view', article.pk)
+			else:
+				return render(request, 'new_article.html', {'community':community, 'status':1})
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 		else:
 			return redirect('home')
 	else:
@@ -157,6 +175,7 @@ def request_community_creation(request):
 				)
 			return redirect('user_dashboard')
 		else:
+<<<<<<< HEAD
 			sysrep = SystemRep.objects.get(user=request.user)
 			defaultval = DefaultValues.objects.get(pk=1)
 			srep = sysrep.sysrep
@@ -164,6 +183,9 @@ def request_community_creation(request):
 				return render(request, 'request_community_creation.html')
 			else:
 				return render(request,'lowrepcom.html')
+=======
+			return render(request, 'request_community_creation.html')
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 	else:
 		return redirect('login')
 
@@ -215,6 +237,7 @@ def handle_community_creation_requests(request):
 					)
 				rcommunity.status = 'approved'
 				rcommunity.save()
+<<<<<<< HEAD
 				commrep = CommunityRep()
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
@@ -223,6 +246,9 @@ def handle_community_creation_requests(request):
 				sysrep.sysrep+=defaultval.srep_for_comm_creation
 				sysrep.save()
 				commrep.save()
+=======
+
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 			if status=='reject' and rcommunity.status!='rejected':
 				rcommunity.status = 'rejected'
 				rcommunity.save()
@@ -257,7 +283,10 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+<<<<<<< HEAD
 								commrep = CommunityRep.objects.create(user=user,community=community)
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
@@ -274,7 +303,10 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+<<<<<<< HEAD
 									commrep = CommunityRep.objects.get(user=user,community=community).delete()
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
