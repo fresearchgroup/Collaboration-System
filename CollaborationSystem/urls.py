@@ -30,6 +30,11 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
+<<<<<<< HEAD
+from voting.views import updown
+from reputation.views import defaultval
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)
@@ -43,7 +48,11 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
+<<<<<<< HEAD
+       
+=======
 
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -138,7 +147,13 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+<<<<<<< HEAD
+    url(r'',include('voting.urls')), 
+    url(r'^vote/', updown, name='updown'),
+    url(r'^reputationmodel/' , defaultval , name='defaultval'),
+=======
 
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 ]
 
 if settings.DEBUG:

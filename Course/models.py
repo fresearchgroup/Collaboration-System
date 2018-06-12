@@ -42,5 +42,9 @@ class Videos(models.Model):
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_videos')
 
 class TopicArticle(models.Model):
+<<<<<<< HEAD
+	article = models.ForeignKey(Articles, related_name='topics_artic')
+=======
 	article = models.ForeignKey(Articles, related_name='topics_articles')
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_articles')

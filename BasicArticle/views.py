@@ -11,6 +11,11 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+<<<<<<< HEAD
+from voting.models import Voting,Law
+from reputation.models import DefaultValues,SystemRep,CommunityRep
+=======
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 def display_articles(request):
 	"""
@@ -62,22 +67,78 @@ def view_article(request, pk):
 	to group or community
 	"""
 	try:
+<<<<<<< HEAD
+		article = CommunityArticles.objects.get(article_id=pk)
+		law = Law.objects.filter(article_id=pk)
+		if(law.count() == 0):
+			law = Law(article_id = pk)
+			law.save()
+		law = Law.objects.get(article_id=pk)
+		if request.user.is_authenticated:
+			voting = Voting.objects.filter(article_id=pk,user_id=request.user.id)
+			if(voting.count() == 0):
+				voting = Voting()
+				voting.article_id = pk
+				voting.user = request.user
+				voting.upflag = False
+				voting.downflag = False
+				voting.save()
+			voting = Voting.objects.get(article_id=pk,user_id=request.user.id)
+		else:
+			voting = Voting()
+			voting.article_id = pk
+			voting.upflag = False
+			voting.downflag = False
+=======
 		article = CommunityArticles.objects.get(article=pk)
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
+<<<<<<< HEAD
+			article = GroupArticles.objects.get(article_id=pk) 	
+			law = Law.objects.filter(article_id=pk)
+			if(law.count() == 0):
+				law = Law(article_id = pk)
+				law.save()
+			law = Law.objects.get(article_id=pk)
+			if request.user.is_authenticated:
+				voting = Voting.objects.filter(article_id=pk,user_id=request.user.id)
+				if(voting.count() == 0):
+					voting = Voting()
+					voting.article_id = pk
+					voting.user = request.user
+					voting.upflag = False
+					voting.downflag = False
+					voting.save()
+				voting = Voting.objects.get(article_id=pk,user_id=request.user.id)
+			else:
+				voting = Voting()
+				voting.article_id = pk
+				voting.upflag = False
+				voting.downflag = False
+			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+				return redirect('home')
+			count = article_watch(request, article.article)	
+=======
 			article = GroupArticles.objects.get(article=pk)
 			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 				return redirect('home')
 			count = article_watch(request, article.article)
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 		except GroupArticles.DoesNotExist:
 			raise Http404
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
+<<<<<<< HEAD
+
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav, 'art':voting, 'law':law})
+=======
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 
 def edit_article(request, pk):
@@ -132,7 +193,49 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
+<<<<<<< HEAD
+					commart = CommunityArticles.objects.filter(article_id=pk).exists()
+					art = Articles.objects.get(pk=pk)
+					author = art.created_by
+					publisher = request.user
+					if(commart == False):
+						grpart = GroupArticles.objects.get(article_id=pk)
+						grp = grpart.group
+						community = CommunityGroups.objects.get(group_id=grp.id)
+					else:
+						commart = CommunityArticles.objects.get(article_id=pk)
+						community = commart.community
+
+					author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
+					author_srep = SystemRep.objects.get(user_id=author.id)
+					publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
+					publisher_srep = SystemRep.objects.get(user_id=publisher.id)
+					defaultval = DefaultValues.objects.get(pk=1)
+					author_srep.sysrep+=defaultval.published_author
+					author_crep.rep+=defaultval.published_author
+					publisher_crep.rep+=defaultval.published_publisher
+					publisher_srep.sysrep+=defaultval.published_publisher
+					if(author_crep.rep >= defaultval.threshold_cadmin):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
+					elif(author_crep >= defaultval.threshold_publisher):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
+
+					if(publisher_crep.rep >= defaultval.threshold_cadmin):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
+					author_srep.save()
+					author_crep.save()
+					publisher_crep.save()
+					publisher_srep.save()
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
+=======
 					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
@@ -244,6 +347,7 @@ def delete_article(request, pk):
 
 
 def article_watch(request, article):
+<<<<<<< HEAD
     if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
     	view = ArticleViewLogs(
     		article=article,ip=request.META['REMOTE_ADDR'],
@@ -255,6 +359,20 @@ def article_watch(request, article):
     	article.save()
 
     return article.views
+=======
+	userviews=article.userview.all()
+	f=0
+	for i in userviews:
+		if(i.id==request.user.id):
+			f=1
+			break
+	if(f==0):
+		article = Articles.objects.get(pk=article.pk)
+		article.userview.add(request.user)
+		article.views += 1
+		article.save()
+	return article.views
+>>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
