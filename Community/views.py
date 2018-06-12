@@ -567,7 +567,7 @@ def community_h5p_content(request, pk):
 
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
-	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrph5p':commgrparticles})
+	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrph5p':commgrph5p})
 
  
 	
