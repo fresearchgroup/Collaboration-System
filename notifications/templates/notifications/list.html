@@ -1,44 +1,42 @@
 {% extends 'base.html' %}
-
+{% block css %}
+{% endblock %}
 {% block content %}
 
 <ul class="notifications">
  {% load notifications_tags %}
-    {% if notifications %}
-<div class="row">
-  <div class="col-sm-6 alert alert-success" style="background:white !important;">
-    <a href="{% url 'notifications:mark_all_as_read' %}">Mark All as Read</a>
-  </div>
-    <div class="col-sm-6 text-right alert alert-success" style="background:white !important;">
-    <a href="{% url 'notifications:mark_all_as_unread' %}">Mark All as Unread</a>
-  </div>
-</div>
 
 
+        <div class="col-lg-3">
+             <ul class="nav nav-pills nav-stacked" role="tablist">
+                <li><a href="{% url 'notifications:all' %}">All notifications</a></li>
+                 <li><a href="{% url 'notifications:unread' %}">Unread notifications</a></li>
+                 <hr>
+                <li><a href="{% url 'notifications:mark_all_as_read' %}">Mark all as read</a></li>
+                <li><a href="{% url 'notifications:mark_all_as_unread' %}">Mark all as unread</a></li>
+              </ul>
+        </div>
 
+
+        <div class="col-lg-9">
+            {% if notifications %}
       {% for notice in notifications %}
-      <div class="row">
-        <div class="col-sm-12 col-sm-8 col-sm-offset-2">
 
-                             <div class="alert alert-block alert-{{ notice.level }}" style=" margin:1px !important;" >
+
+          <div class="row">
+                             <div class="alert alert-block alert-{{ notice.level }}" style=" margin:1px !important; padding-bottom:2px;" >
 
                              <!-- <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
                                 <i class="icon-close"></i>
                               </a> -->
-                               <div class="row" style="padding-left:5px; padding-right:5px;">
-                                   <div class="col-md-8"><h4><span class="glyphicon glyphicon-stop"></span> <a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a></h4></div>
-                                   <div class="col-md-4 text-right">{% if notice.unread %}
+                               <div class="row" style="padding-left:3px; padding-right:3px;">
+                                   <div class="col-md-9"><h4><a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a></h4></div>
+                                   <div class="col-md-2 text-right">{% if notice.unread %}
                                  <p><a class="alert-link" href="{% url 'notifications:mark_as_read' notice.slug %}"><span class="glyphicon glyphicon-unchecked"></span></a> Unread</p>
                                  {% else %}
                                  <p><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
                                    {% endif %}</div>
-                               </div>
-                                 <div class="row" style="padding-left:5px; padding-right:5px;">
-                                  <div class="col-md-9 text-left"><h5>
-                                    <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
-                                    {{ notice.recipient }} : {{ notice.verb }}
-                                  </h5></div>
-                                   <div class="col-md-3 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button>Delete</p>
+                                   <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
                                          <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
                                             <div class="modal-dialog">
                                             <div class="modal-content">
@@ -56,15 +54,21 @@
                                             </div>
                                             </div>
                                         </div></div>
-                                 </div>
-                                 <div class="row" style="padding-left:5px; padding-right:5px;">
-                                   <div class="col-sm-6">
-                                       {% ifnotequal notice.actor notice.recipient %}
-                                       <h6><span class="glyphicon glyphicon-user"></span> {{ notice.actor }}</h6>
-                                       {% endifnotequal %}
-                                   </div>
-                                   <div class="col-sm-6 text-right"><p>{{ notice.timesince }} ago</p></div>
+
                                </div>
+                                 <div class="row" style="padding-left:7px; padding-right:3px;">
+                                  <div class="col-md-9 text-left"><h5>
+                                    <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
+                                    {{ notice.verb }}
+                                      {% ifnotequal notice.actor notice.recipient %}
+                                      -by {{ notice.actor }}
+                                      {% endifnotequal %}
+                                  </h5>
+
+
+                                   </div>
+                                     <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago</p></div>
+                                 </div>
 
                                   <!-- <p>{{ notice.description|linebreaksbr }}</p> -->
 
@@ -76,9 +80,13 @@
 
                              </div>
 
-        </div>
       </div>
+
       {% endfor %}
+             {% else %}
+    <div class="alert alert-error text-center"><strong><h4>No notifications to show!</h4></strong></div>
+    {% endif %}
+            </div>
     {% if is_paginated %}
       <ul class="pagination pull-right">
         {% if page_obj.has_previous %}
@@ -101,9 +109,19 @@
       </ul>
     {% endif %}
 
-    {% else %}
-    <div class="col-md-12 col-md-8 col-md-offset-2 alert alert-warning text-center"><strong><h4>No notifications to show!</h4></strong></div>
-    {% endif %}
+
 
 </ul>
+
+<script type="text/javascript">
+$(function(){
+		$('.col-lg-3 li a').filter(function(){
+				return this.href==location.href}).parent().addClass('active').siblings().removeClass('active');
+
+		$('.col-lg-3 li a').click(function(){
+				$(this).parent().addClass('active').siblings().removeClass('active')
+				});
+		});
+</script>
+
 {% endblock %}
