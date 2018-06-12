@@ -7,7 +7,6 @@ class Middleware:
         self.LOG_CLASS = "MIDDLEWARE"
         self.get_response = get_response
         self.eventlogger = EventTracker()
-        self.cparser = ParseCustom()
         self.eventlogger.run()
 
     def __call__(self, request):
