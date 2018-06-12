@@ -42,8 +42,6 @@
             {% csrf_token %}
             <input type="hidden" name="id" value="{{article.article.id}}">
             {% if art.upflag == False %}
-            <!-- <input type="hidden" name="type" value="up">
-            <input type="hidden" name="action" value="vote"> -->
             {{law.upvote}}<button onclick="this.form.submit()" name="type" value="upvote" style="background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
