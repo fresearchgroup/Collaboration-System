@@ -85,7 +85,7 @@ def community_unsubscribe(request):
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			user = request.user
-			com = CommunityRep.objects.get(community=community,user=user).delete()
+			CommunityRep.objects.get(community=community,user=user).delete()
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 			return redirect('community_view',pk=cid)
@@ -101,8 +101,6 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			commrep = CommunityRep.objects.get(community = community, user=request.user)
 			crep =commrep.rep
-			sysrep = SystemRep.objects.get(user=request.user)
-			srep = sysrep.sysrep
 			defaultval = DefaultValues.objects.get(pk=1)
 			if (crep>defaultval.min_crep_for_art):
 				if status=='1':
@@ -111,8 +109,7 @@ def community_article_create(request):
 					return redirect('article_view', article.pk)
 				else:
 					return render(request, 'new_article.html', {'community':community, 'status':1})
-			else:
-				return render(request,'lowrep.html')
+			return render(request,'lowrep.html')
 		else:
 			return redirect('home')
 	else:
@@ -162,8 +159,7 @@ def request_community_creation(request):
 			srep = sysrep.sysrep
 			if(srep > defaultval.min_srep_for_comm):
 				return render(request, 'request_community_creation.html')
-			else:
-				return render(request,'lowrepcom.html')
+			return render(request,'lowrepcom.html')
 	else:
 		return redirect('login')
 
@@ -257,7 +253,7 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-								commrep = CommunityRep.objects.create(user=user,community=community)
+								CommunityRep.objects.create(user=user,community=community)
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
