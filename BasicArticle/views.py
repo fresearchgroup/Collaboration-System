@@ -19,6 +19,10 @@ def getHTML(article):
 	result =  epclient.getHtml(article.id)
 	return result['html']
 
+def deletePad(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	epclient.deletePad(article.id)
+
 def display_articles(request):
 	"""
 	display list of articles in  article list page.
@@ -218,6 +222,7 @@ def delete_article(request, pk):
 				if status == '0':
 					return redirect('article_view',pk=pk)
 				elif status == '1':
+					deletePad(article)
 					article.delete()
 					return redirect('display_articles')
 			else:
