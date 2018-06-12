@@ -540,7 +540,7 @@ def h5p_view(pk):
 	return redirect("http://localhost:8000/h5p/content/?contentId=%s" % pk)
 
 def community_h5p_content(request, pk):
-	commgrparticles = ''
+	commgrph5p = ''
 	try:
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
