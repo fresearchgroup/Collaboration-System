@@ -21,7 +21,7 @@ EVENT_NAME_DICT={
     r'^article-edit/(?P<pk>\d*)/$':{
         'POST':{
               'function' : handlers.article_event_type,
-              'article_edited' : 'event.article.edited',
+              'article_edited' : 'event.article.edit',
               'article_visible' : 'event.article.statusChanged',
               'article_publishable' :'event.article.statusChanged',
               'article_published' : 'event.article.published',

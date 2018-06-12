@@ -1,24 +1,26 @@
 from .. import utils
 
-def article_event_type(object):
+LOG_CLASS = "Handlers"
+
+def article_event_type(obj):
 
     """
         Different events occurs with the POST request on 
         the same url to differentiate between different
         event type this function is utilized
     """
-    print(object)
-    if object['state'][0] == 'save':
+    print(obj)
+    if obj['state'][0] == 'save':
         return 'article_edited'
-    elif object['state'][0] == 'visible':
+    elif obj['state'][0] == 'visible':
         return 'article_visible'
-    elif object['state'][0] == 'publishable':
+    elif obj['state'][0] == 'publishable':
         return 'article_publishable'
-    elif object['state'][0] == 'published':
+    elif obj['state'][0] == 'published':
         return 'article_published'
-    elif object['state'][0] == 'private':
+    elif obj['state'][0] == 'private':
         return 'article_private'
-    elif object['state'][0] == 'public':
+    elif obj['state'][0] == 'public':
         return 'article_public'
     else:
         return None
