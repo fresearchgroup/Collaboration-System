@@ -369,7 +369,6 @@ class NotificationTestPages(TestCase):
 
         render(request, 'notifications/test_tags.html', {'request': request})
 
-        # TODO: Add more tests to check what is being output.
 
     def test_anon_user_gets_nothing(self):
         response = self.client.post(reverse('notifications:live_unread_notification_count'))
