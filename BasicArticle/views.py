@@ -145,9 +145,9 @@ def edit_article(request, pk):
 					comm = CommunityArticles.objects.get(article=article)
 					Action.objects.filter(actor_object_id=article.id,
 										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
-					action.send(article, verb='Article has been published ', action_object=request.user,
+					action.send(article, verb='Article has been published ', action_object=article.created_by,
 								target=comm.community, actor_href='article_view', actor_href_id=article.id,
-								action_object_href='display_user_profile', action_object_href_id=request.user.username)
+								action_object_href='display_user_profile', action_object_href_id=article.created_by.username)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
