@@ -154,6 +154,7 @@ def edit_article(request, pk):
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
 					message = "state doesn' exist"
+<<<<<<< HEAD
 				if to_state.name == 'publish':
 					commart = CommunityArticles.objects.filter(article_id=pk).exists()
 					art = Articles.objects.get(pk=pk)
@@ -193,6 +194,9 @@ def edit_article(request, pk):
 					author_crep.save()
 					publisher_crep.save()
 					publisher_srep.save()
+=======
+				#if to_state.name == 'publish':
+>>>>>>> 4c5ef98fe3bee10fee505460804fe922f141aecc
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:
