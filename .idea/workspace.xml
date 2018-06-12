@@ -2,39 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7d43b96-511c-4ebf-a3f7-315171d5cfdb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0002_auto_20150224_1134.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0003_notification_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0004_auto_20150826_1508.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0005_auto_20160504_1520.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0006_indexes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0007_notification_url_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0008_auto_20180606_1958.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0009_remove_notification_url_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/0010_auto_20180611_0525.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/signals.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/static/notifications/notify.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/templates/notifications/list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/templates/notifications/test_tags.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/templatetags/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/templatetags/notifications_tags.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/static/notifications/live-test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/templates/test_live.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/tests/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notifications/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -45,14 +13,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="721">
-              <caret line="263" column="17" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
+              <caret line="263" column="17" lean-forward="true" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
               <folding>
                 <element signature="e#323#332#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -88,10 +65,11 @@
         <option value="$PROJECT_DIR$/templates/communityfeed.html" />
         <option value="$PROJECT_DIR$/notifications/templates/notifications/list.html" />
         <option value="$PROJECT_DIR$/CollaborationSystem/settings.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="67" />
     <option name="y" value="25" />
     <option name="width" value="927" />
@@ -209,7 +187,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="7" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22185792" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -249,13 +228,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CollaborationSystem/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1091">
-          <caret line="143" column="73" lean-forward="true" selection-start-line="143" selection-start-column="73" selection-end-line="143" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/notifications/templates/notifications/list.html" />
     <entry file="file://$USER_HOME$/Desktop/notifications/settings.py" />
     <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
@@ -442,10 +414,17 @@
     <entry file="file://$PROJECT_DIR$/CollaborationSystem/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="721">
-          <caret line="263" column="17" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
+          <caret line="263" column="17" lean-forward="true" selection-start-line="263" selection-start-column="17" selection-end-line="263" selection-end-column="17" />
           <folding>
             <element signature="e#323#332#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
         </state>
       </provider>
     </entry>
