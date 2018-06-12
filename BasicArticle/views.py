@@ -131,8 +131,8 @@ def edit_article(request, pk):
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
 					message = "state doesn' exist"
-				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+				#if to_state.name == 'publish':
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
