@@ -15,11 +15,11 @@ SERVER_CONF = {
         "protocol": "http",
         "address": "127.0.0.1",
         "port": 8090,
-        "use_proxy": True,
+        "use_proxy": False,
         "proxies": {
-            "http": "http://proxy.cse.iitb.ac.in:80",
-            "https": "https://proxy.cse.iitb.ac.in:80",
-            "ftp": "ftp://proxy.cse.iitb.ac.in:80",
+            "http": "http://address:port",
+            "https": "https://address:port",
+            "ftp": "ftp://address:port",
         },
         "proxy_auth": {
             "username": "",
