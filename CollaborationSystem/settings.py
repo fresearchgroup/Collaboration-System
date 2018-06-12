@@ -29,11 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost' , '127.0.0.1']
-=======
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
->>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 
 
 # Application definition
@@ -67,11 +63,8 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
-<<<<<<< HEAD
     'voting',
     'reputation',
-=======
->>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -132,15 +125,9 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
         'NAME': 'collaboration',
         'USER': 'root',
         'PASSWORD': '',
-=======
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
->>>>>>> 4e9d5cfe150a17592b3168794230d17099aa2ed2
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
     }
