@@ -125,9 +125,7 @@ def edit_article(request, pk):
 							action.send(article,verb='Article is available for editing ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
-							comm = CommunityArticles.objects.get(article=article)
-							Action.objects.filter(actor_object_id=article,actor_content_type=ContentType.objects.get_for_model(article)).delete()
-							action.send(article,verb=': article has been published ',action_object =request.user,target=comm.community,actor_href='article_view',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
+
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
@@ -143,7 +141,13 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					comm = CommunityArticles.objects.get(article=article)
+					Action.objects.filter(actor_object_id=article.id,
+										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
+					action.send(article, verb='Article has been published ', action_object=request.user,
+								target=comm.community, actor_href='article_view', actor_href_id=article.id,
+								action_object_href='display_user_profile', action_object_href_id=request.user.username)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
