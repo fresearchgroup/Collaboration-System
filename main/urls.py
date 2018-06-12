@@ -24,7 +24,9 @@ EVENT_NAME_DICT={
               'article_edited' : 'event.article.edited',
               'article_visible' : 'event.article.statusChanged',
               'article_publishable' :'event.article.statusChanged',
-              'article_published' : 'event.article.published'
+              'article_published' : 'event.article.published',
+              'article_private': 'event.article.statusChanged',
+              'article_public': 'event.article.statusChanged',
         }
     },
 
@@ -150,12 +152,14 @@ EVENT_NAME_DICT={
     #article create events
     r'^community-article-create/$': {
         'POST':{
-            'event_name': 'event.article.create'
+            'function': handlers.article_create_handler,
+            'article_create': 'event.article.create'
         }
     },
     r'^group-article-create/$': {
         'POST':{
-            'event_name': 'event.article.create'
+            'function': handlers.article_create_handler,
+            'article_create': 'event.article.create'
         }
     },
 

@@ -65,7 +65,7 @@ def process_user_info(data):
     if request.user.is_authenticated():
         return request.user.id
     else:
-        return "null"
+        return ""
 
 def process_community_info(data):
     args = data['view_kwargs']
