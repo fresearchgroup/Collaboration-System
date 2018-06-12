@@ -27,8 +27,6 @@ mysqlclient==1.3.12
 oauthlib==2.1.0
 olefile==0.45.1
 Pillow==4.3.0
-pkg-resources==0.0.0
-pyetherpadlite==0.1
 PyJWT==1.6.4
 pysolr==3.7.0
 python-decouple==3.1
