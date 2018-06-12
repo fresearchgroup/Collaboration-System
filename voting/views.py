@@ -1,21 +1,11 @@
-from django.shortcuts import render, redirect
-from .forms import NewArticleForm
+from BasicArticle.models import Articles
 from django.http import Http404, HttpResponse
-from .models import Articles, ArticleViewLogs
-from django.views.generic.edit import UpdateView
-from reversion_compare.views import HistoryCompareDetailView
 from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
-from workflow.models import States, Transitions
 from django.shortcuts import render,get_object_or_404,redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from search.views import IndexDocuments
-from UserRolesPermission.models import favourite
 from BasicArticle.views import display_articles,create_article,view_article,edit_article,delete_article,article_watch,SimpleModelHistoryCompareView
 from .models import Voting,Law
-from django.http import JsonResponse
-from django.views.generic import View
 from reputation.views import CommunityReputation
 
 def updown(request):
@@ -47,48 +37,48 @@ def updown(request):
 				downflag = voting.downflag
 				if (vote_action == 'vote'):
 					if (vote_type == 'up'):
-						if (upflag == False) and (downflag == False):
+						if (upflag is False) and (downflag is False):
 							voting.upflag=True
 							law.upvote += 1
 							law.save()
 							voting.save()
-							CommunityReputation(request,a_id,1)
-						elif (downflag == True):
+							CommunityReputation(a_id,1)
+						elif (downflag is True):
 							voting.upflag=True
 							voting.downflag =False
 							law.upvote +=1
 							law.downvote -=1
 							law.save()
 							voting.save()
-							CommunityReputation(request,a_id,2)
+							CommunityReputation(a_id,2)
 					elif (vote_type == 'down'):
-						if (upflag == False) and (downflag == False):
+						if (upflag is False) and (downflag is False):
 							voting.downflag=True
 							law.downvote += 1
 							law.save()
 							voting.save()
-							CommunityReputation(request,a_id,3)
-						elif (upflag == True):
+							CommunityReputation(a_id,3)
+						elif (upflag is True):
 							voting.downflag=True
 							voting.upflag =False
 							law.upvote -=1
 							law.downvote +=1
 							law.save()
 							voting.save()
-							CommunityReputation(request,a_id,4)
+							CommunityReputation(a_id,4)
 				elif (vote_action == 'recall-vote'):
-					if (upflag == True) and (vote_type == 'up'):
+					if (upflag is True) and (vote_type == 'up'):
 						voting.upflag=False
 						law.upvote-=1
 						law.save()
 						voting.save()
-						CommunityReputation(request,a_id,5)
-					elif (downflag == True) and (vote_type == 'down'):
+						CommunityReputation(a_id,5)
+					elif (downflag is True) and (vote_type == 'down'):
 						voting.downflag=False
 						law.downvote-=1
 						law.save()
 						voting.save()
-						CommunityReputation(request,a_id,6)
+						CommunityReputation(a_id,6)
 			else:
 				return render(request,'cantvote.html')
 		else:

@@ -101,8 +101,6 @@ def group_article_create(request):
 			community = community.community
 			commrep = CommunityRep.objects.get(community = community, user=request.user)
 			crep =commrep.rep
-			sysrep = SystemRep.objects.get(user=request.user)
-			srep = sysrep.sysrep
 			defaultval = DefaultValues.objects.get(pk=1)
 			if (crep>defaultval.min_crep_for_art):
 				if status=='1':
@@ -111,8 +109,7 @@ def group_article_create(request):
 					return redirect('article_view', article.pk)
 				else:
 					return render(request, 'new_article.html', {'group':group, 'status':1})
-			else:
-				return render(request,'lowrep.html')
+			return render(request,'lowrep.html')
 		else:
 			return redirect('home')
 	else:

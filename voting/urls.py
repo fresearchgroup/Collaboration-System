@@ -9,4 +9,3 @@ urlpatterns = [
 	#url(r'^upvote/(?P<a_id>[0-9]+)/' , upvote , name='upvote'),
 	#url(r'^downvote/(?P<a_id>[0-9]+)/' , downvote , name='downvote'),
 ]
-

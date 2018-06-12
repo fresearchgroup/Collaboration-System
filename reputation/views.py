@@ -8,11 +8,11 @@ from django.contrib.auth.models import Group as Roles
 
 # Create your views here.
 
-def CommunityReputation(request,a_id,type):
+def CommunityReputation(a_id,votetype):
 	commart = CommunityArticles.objects.filter(article_id=a_id).exists()
 	art = Articles.objects.get(pk = a_id)
 	author = art.created_by
-	if(commart == False):
+	if(commart is False):
 		grpart = GroupArticles.objects.get(article_id=a_id)
 		grp = grpart.group
 		community = CommunityGroups.objects.get(group_id=grp.id)
@@ -25,19 +25,19 @@ def CommunityReputation(request,a_id,type):
 	defaultval = DefaultValues.objects.get(pk=1)
 	up=defaultval.upvote
 	down=defaultval.downvote
-	if(type==1):
+	if(votetype==1):
 		commrep.rep+=up
 		sysrep.sysrep+=up
-	elif(type==3):
+	elif(votetype==3):
 		commrep.rep-=down
 		sysrep.sysrep-=down
-	elif(type==2):
+	elif(votetype==2):
 		commrep.rep+=down+up
 		sysrep.sysrep+=down+up
-	elif(type==4):
+	elif(votetype==4):
 		commrep.rep=commrep.rep-down-up
 		sysrep.sysrep=sysrep.sysrep-down-up
-	elif(type==5):
+	elif(votetype==5):
 		commrep.rep-=up
 		sysrep.sysrep-=up
 	else:
@@ -68,8 +68,8 @@ def defaultval(request):
 		downvote = int(request.POST.get('downvote'))
 		published_author = int(request.POST.get('published_author'))
 		published_publisher = int(request.POST.get('published_publisher'))
-		comment_flag = int(request.POST.get('comment_flag'))
-		reply = int(request.POST.get('reply'))
+		#comment_flag = int(request.POST.get('comment_flag'))
+		#reply = int(request.POST.get('reply'))
 		new_min_crep_for_art = int(request.POST.get('min_crep_for_art'))
 		new_min_srep_for_comm = int(request.POST.get('min_srep_for_comm'))
 		srep_for_comm_creation = int(request.POST.get('srep_for_comm_creation'))
@@ -94,16 +94,16 @@ def defaultval(request):
 		defaultval.min_srep_for_comm = new_min_srep_for_comm
 		old_min_crep_for_art = defaultval.min_crep_for_art
 		if(old_min_crep_for_art != new_min_crep_for_art):
-			change(request,new_min_crep_for_art,old_min_crep_for_art)
+			change(new_min_crep_for_art,old_min_crep_for_art)
 		defaultval.min_crep_for_art = new_min_crep_for_art
 		defaultval.srep_for_comm_creation = srep_for_comm_creation
 		old_threshold_publisher = defaultval.threshold_publisher
 		if(old_threshold_publisher != new_threshold_publisher):
-			change(request,new_threshold_publisher,old_threshold_publisher)
+			change(new_threshold_publisher,old_threshold_publisher)
 		defaultval.threshold_publisher = new_threshold_publisher
 		old_threshold_cadmin = defaultval.threshold_cadmin
 		if(old_threshold_cadmin != new_threshold_cadmin):
-			change(request,new_threshold_cadmin,old_threshold_cadmin)
+			change(new_threshold_cadmin,old_threshold_cadmin)
 		defaultval.threshold_cadmin = new_threshold_cadmin
 		defaultval.save()
 		return redirect('home')
@@ -111,10 +111,9 @@ def defaultval(request):
 		if request.user.is_superuser:
 			defaultval = DefaultValues.objects.get(pk=1)
 			return render(request,'defaultval.html',{'defaultval':defaultval})
-		else:
-			return redirect('home')
+		return redirect('home')
 
-def change(request,new,old):
+def change(new,old):
 	users = User.objects.all()
 	for user in users:
 		commreps = CommunityRep.objects.filter(user=user)

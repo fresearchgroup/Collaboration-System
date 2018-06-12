@@ -63,54 +63,34 @@ def view_article(request, pk):
 	community before displaying it. It displays whether the article belongs
 	to group or community
 	"""
-	try:
-		article = CommunityArticles.objects.get(article_id=pk)
-		law = Law.objects.filter(article_id=pk)
-		if(law.count() == 0):
-			law = Law(article_id = pk)
-			law.save()
-		law = Law.objects.get(article_id=pk)
-		if request.user.is_authenticated:
-			voting = Voting.objects.filter(article_id=pk,user_id=request.user.id)
-			if(voting.count() == 0):
-				voting = Voting()
-				voting.article_id = pk
-				voting.user = request.user
-				voting.upflag = False
-				voting.downflag = False
-				voting.save()
-			voting = Voting.objects.get(article_id=pk,user_id=request.user.id)
-		else:
+	law = Law.objects.filter(article_id=pk)
+	if(law.count() == 0):
+		law = Law(article_id = pk)
+		law.save()
+	law = Law.objects.get(article_id=pk)
+	if request.user.is_authenticated:
+		voting = Voting.objects.filter(article_id=pk,user_id=request.user.id)
+		if(voting.count() == 0):
 			voting = Voting()
 			voting.article_id = pk
+			voting.user = request.user
 			voting.upflag = False
 			voting.downflag = False
+			voting.save()
+		voting = Voting.objects.get(article_id=pk,user_id=request.user.id)
+	else:
+		voting = Voting()
+		voting.article_id = pk
+		voting.upflag = False
+		voting.downflag = False
+	try:
+		article = CommunityArticles.objects.get(article_id=pk)
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
 			article = GroupArticles.objects.get(article_id=pk) 	
-			law = Law.objects.filter(article_id=pk)
-			if(law.count() == 0):
-				law = Law(article_id = pk)
-				law.save()
-			law = Law.objects.get(article_id=pk)
-			if request.user.is_authenticated:
-				voting = Voting.objects.filter(article_id=pk,user_id=request.user.id)
-				if(voting.count() == 0):
-					voting = Voting()
-					voting.article_id = pk
-					voting.user = request.user
-					voting.upflag = False
-					voting.downflag = False
-					voting.save()
-				voting = Voting.objects.get(article_id=pk,user_id=request.user.id)
-			else:
-				voting = Voting()
-				voting.article_id = pk
-				voting.upflag = False
-				voting.downflag = False
 			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 				return redirect('home')
 			count = article_watch(request, article.article)	
@@ -179,7 +159,7 @@ def edit_article(request, pk):
 					art = Articles.objects.get(pk=pk)
 					author = art.created_by
 					publisher = request.user
-					if(commart == False):
+					if(commart is False):
 						grpart = GroupArticles.objects.get(article_id=pk)
 						grp = grpart.group
 						community = CommunityGroups.objects.get(group_id=grp.id)
