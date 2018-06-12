@@ -142,7 +142,7 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'',include('voting.urls')), 
     url(r'^vote/', updown, name='updown'),
-    url(r'^defaultvalues/' , defaultval , name='defaultval'),
+    url(r'^reputationmodel/' , defaultval , name='defaultval'),
 ]
 
 if settings.DEBUG:

@@ -119,7 +119,9 @@
     </div>
   </div>
 </div>
-
+{% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+ {% endif %}
 <h2>Comments</h2>
 
 {% if comment_count %}

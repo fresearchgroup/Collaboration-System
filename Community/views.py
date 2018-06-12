@@ -160,7 +160,7 @@ def request_community_creation(request):
 			sysrep = SystemRep.objects.get(user=request.user)
 			defaultval = DefaultValues.objects.get(pk=1)
 			srep = sysrep.sysrep
-			if(srep > defaultval.srep_for_comm):
+			if(srep > defaultval.min_srep_for_comm):
 				return render(request, 'request_community_creation.html')
 			else:
 				return render(request,'lowrepcom.html')

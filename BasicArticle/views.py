@@ -196,6 +196,19 @@ def edit_article(request, pk):
 					author_crep.rep+=defaultval.published_author
 					publisher_crep.rep+=defaultval.published_publisher
 					publisher_srep.sysrep+=defaultval.published_publisher
+					if(author_crep.rep >= defaultval.threshold_cadmin):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
+					elif(author_crep >= defaultval.threshold_publisher):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
+
+					if(publisher_crep.rep >= defaultval.threshold_cadmin):
+						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
+						community_membership.role = Roles.objects.get(name='community_admin')
+						community_membership.save()
 					author_srep.save()
 					author_crep.save()
 					publisher_crep.save()
