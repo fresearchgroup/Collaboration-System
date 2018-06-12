@@ -13,15 +13,15 @@ class Articles(models.Model):
 	body = models.TextField(null=True)
 	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True)
-	created_by = models.ForeignKey(User,null=True,related_name='article_author')
+	created_by = models.ForeignKey(User,null=True)
 	views = models.PositiveIntegerField(default=0)
-	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
+	state = models.ForeignKey(States, null=True)
 
 	def __str__(self):
 		return self.title
 
 class ArticleViewLogs(models.Model):
-    article = models.ForeignKey(Articles, related_name='articleviews')
+    article = models.ForeignKey(Articles)
     ip = models.CharField(max_length=40)
     session = models.CharField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)

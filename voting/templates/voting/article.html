@@ -2,8 +2,11 @@
 {% load comments %}
 {% load comments_xtd %}
 {% load static %}
+{% url "path.to.some.view" %} 
 
 {% block breadcrumb %}
+
+
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
      <li class="breadcrumb-item active">{{ article.article.title }} </li>
     {% endblock %}
@@ -38,41 +41,10 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
-            <li><form id="my_form" method="POST" action="{% url 'updown' %}">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{article.article.id}}">
-            {% if art.upflag == False %}
-            {{law.upvote}}<button onclick="this.form.submit()" name="type" value="upvote" style="background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;"><i class="fa fa-thumbs-o-up"></i></button>
-            {% else %}
-            {{law.upvote}}<button onclick="this.form.submit()" name="type" value="uprecall" style="background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;"><i class="fa fa-thumbs-up"></i></button>
-            {% endif %}
-            {% if art.downflag == False %}
-            {{law.downvote}}<button onclick="this.form.submit()" name="type" value="downvote" style="background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;"><i class="fa fa-thumbs-o-down"></i></button> 
-            {% else %}
-            {{law.downvote}}<button onclick="this.form.submit()" name="type" value="downrecall" style="background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;"><i class="fa fa-thumbs-down"></i></button> 
-            {% endif %}
-            </form></li>
+            <li><i class="fa fa-thumbs-up"></i></a>{{article.upvote }} Upvote</li>
+            <li><i class="fa fa-thumbs-down"></i></a>{{article.downvote }} Downvote</li>
             <li><i class="fa fa-eye"></i> {{count}} views </li>
+
             {% if article.community.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
             {% endif %}
@@ -117,9 +89,7 @@
     </div>
   </div>
 </div>
-{% if errormessage %}
-        <div class="alert alert-danger">{{ errormessage }}</div>
- {% endif %}
+
 <h2>Comments</h2>
 
 {% if comment_count %}
@@ -136,7 +106,7 @@
 <div class="post-comment padding-top-40">
   <h3>Leave a Comment</h3>
   <label>Message</label>
-   {% render_comment_form for article %}  
+   {% render_comment_form for article %}
 </div>
 
 {% endblock %}
