@@ -189,72 +189,7 @@ def handle_community_creation_requests(request):
 					forum_link = forum_link
 
 					)
-				wiki_slug = str(name) + str(communitycreation.id)
-				
-				#Create wiki for this community
-				cursor.execute('''SET FOREIGN_KEY_CHECKS=0''')
-				insert_stmt_urlpath = (
-						"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
-						"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-			 		)
-				
-				cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
-				url_rght = cursor.fetchone()[0]
-
-				cursor.execute(''' select id from wiki_urlpath order by id DESC limit 1''')
-				urlpath_id = cursor.fetchone()[0] + 1
-
-				cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
-				new_id = cursor.fetchone()[0] + 1
-								
-				data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
-
-				cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
-
-				cursor.execute(insert_stmt_urlpath, data_urlpath)
-
-				cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
-				cur_rev_id =  cursor.fetchone()[0] + 1
-
-				insert_stmt_article = (
-								"INSERT INTO wiki_article (id, created, modified, group_read, group_write, other_read, other_write,current_revision_id, group_id, owner_id)"
-								"VALUES (%s, NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s)"
-							)
-
-				data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
-				cursor.execute(insert_stmt_article, data_article) 
-
-				cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
-				con_type_id = cursor.fetchone()[0]
-
-				cursor.execute(''' select id from wiki_articleforobject order by id DESC limit 1''')
-				forobject_id = cursor.fetchone()[0] + 1
-
-				insert_stmt_articleforobject = (
-								"INSERT INTO wiki_articleforobject (id, object_id, is_mptt, article_id, content_type_id)"
-								"VALUES (%s, %s, %s, %s, %s)"
-							)
-
-				data_articleforobject = (forobject_id, new_id, 1, new_id, con_type_id)
-
-				cursor.execute(insert_stmt_articleforobject, data_articleforobject)
-
-				cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
-				articlerev_id = cursor.fetchone()[0] + 1
-
-				insert_stmt_wikiarticlerevision = (
-								"INSERT INTO wiki_articlerevision (id, revision_number, user_message, automatic_log, ip_address, modified, created, deleted, locked, content, title, article_id, user_id)"
-								"VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s, %s, %s, %s, %s, %s)"
-							)
-
-				data_wikiarticlerevision = (articlerev_id ,1, "Write your summary here.", "", "", 0, 0, "Write your content here", str(communitycreation.name) , new_id, 2)
-
-
-				cursor.execute(insert_stmt_wikiarticlerevision, data_wikiarticlerevision)
-
-
-				cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
-				
+				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = rcommunity.requestedby,
@@ -412,71 +347,7 @@ def create_community(request):
 					role = role
 					)
 				
-				wiki_slug = str(community.name) + str(community.pk)
-				
-				#Create wiki for this community
-				cursor.execute('''SET FOREIGN_KEY_CHECKS=0''')
-				insert_stmt_urlpath = (
-						"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
-						"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-			 		)
-				
-				cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
-				url_rght = cursor.fetchone()[0]
-
-				cursor.execute(''' select id from wiki_urlpath order by id DESC limit 1''')
-				urlpath_id = cursor.fetchone()[0] + 1
-
-				cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
-				new_id = cursor.fetchone()[0] + 1
-								
-				data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
-
-				cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
-
-				cursor.execute(insert_stmt_urlpath, data_urlpath)
-
-				cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
-				cur_rev_id =  cursor.fetchone()[0] + 1
-
-				insert_stmt_article = (
-								"INSERT INTO wiki_article (id, created, modified, group_read, group_write, other_read, other_write,current_revision_id, group_id, owner_id)"
-								"VALUES (%s, NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s)"
-							)
-
-				data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
-				cursor.execute(insert_stmt_article, data_article) 
-
-				cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
-				con_type_id = cursor.fetchone()[0]
-
-				cursor.execute(''' select id from wiki_articleforobject order by id DESC limit 1''')
-				forobject_id = cursor.fetchone()[0] + 1
-
-				insert_stmt_articleforobject = (
-								"INSERT INTO wiki_articleforobject (id, object_id, is_mptt, article_id, content_type_id)"
-								"VALUES (%s, %s, %s, %s, %s)"
-							)
-
-				data_articleforobject = (forobject_id, new_id, 1, new_id, con_type_id)
-
-				cursor.execute(insert_stmt_articleforobject, data_articleforobject)
-
-				cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
-				articlerev_id = cursor.fetchone()[0] + 1
-
-				insert_stmt_wikiarticlerevision = (
-								"INSERT INTO wiki_articlerevision (id, revision_number, user_message, automatic_log, ip_address, modified, created, deleted, locked, content, title, article_id, user_id)"
-								"VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s, %s, %s, %s, %s, %s)"
-							)
-
-				data_wikiarticlerevision = (articlerev_id ,1, "Write your summary here.", "", "", 0, 0, "Write your content here", str(community.name) , new_id, 2)
-
-
-				cursor.execute(insert_stmt_wikiarticlerevision, data_wikiarticlerevision)
-
-
-				cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
+				create_wiki_for_community(community)
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
@@ -598,3 +469,72 @@ def community_h5p_create(request):
 			return redirect('http://localhost:8000/h5p/create/')
 		return redirect('home')
 	return redirect('login')
+
+def create_wiki_for_community(community):
+
+	from django.db import connection
+	cursor = connection.cursor()
+	wiki_slug = str(community.name) + str(community.pk)
+	#Create wiki for this community
+	cursor.execute('''SET FOREIGN_KEY_CHECKS=0''')
+	insert_stmt_urlpath = (
+			"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
+			"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+		)
+
+	cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
+	url_rght = cursor.fetchone()[0]
+
+	cursor.execute(''' select id from wiki_urlpath order by id DESC limit 1''')
+	urlpath_id = cursor.fetchone()[0] + 1
+
+	cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
+	new_id = cursor.fetchone()[0] + 1
+					
+	data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
+
+	cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
+
+	cursor.execute(insert_stmt_urlpath, data_urlpath)
+
+	cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
+	cur_rev_id =  cursor.fetchone()[0] + 1
+
+	insert_stmt_article = (
+					"INSERT INTO wiki_article (id, created, modified, group_read, group_write, other_read, other_write,current_revision_id, group_id, owner_id)"
+					"VALUES (%s, NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s)"
+				)
+
+	data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
+	cursor.execute(insert_stmt_article, data_article) 
+
+	cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
+	con_type_id = cursor.fetchone()[0]
+
+	cursor.execute(''' select id from wiki_articleforobject order by id DESC limit 1''')
+	forobject_id = cursor.fetchone()[0] + 1
+
+	insert_stmt_articleforobject = (
+					"INSERT INTO wiki_articleforobject (id, object_id, is_mptt, article_id, content_type_id)"
+					"VALUES (%s, %s, %s, %s, %s)"
+				)
+
+	data_articleforobject = (forobject_id, new_id, 1, new_id, con_type_id)
+
+	cursor.execute(insert_stmt_articleforobject, data_articleforobject)
+
+	cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
+	articlerev_id = cursor.fetchone()[0] + 1
+
+	insert_stmt_wikiarticlerevision = (
+					"INSERT INTO wiki_articlerevision (id, revision_number, user_message, automatic_log, ip_address, modified, created, deleted, locked, content, title, article_id, user_id)"
+					"VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s, %s, %s, %s, %s, %s)"
+				)
+
+	data_wikiarticlerevision = (articlerev_id ,1, "Write your summary here.", "", "", 0, 0, "Write your content here", str(community.name) , new_id, 2)
+
+
+	cursor.execute(insert_stmt_wikiarticlerevision, data_wikiarticlerevision)
+
+
+	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
