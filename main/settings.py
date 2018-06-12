@@ -63,13 +63,7 @@ CONTEXT_SPECIFIC_FIELDS = {
             "article-id": logprocess.process_article_info,
             "publisher-id": logprocess.process_user_info
         },
-        "event.article.deleted": {
-            "article-id": logprocess.process_article_info,
-        },
-        "event.article.reported": {
-            "article-id": logprocess.process_article_info,
-        },
-
+            
         #community specific events
         "event.community.view": {
             "community-id": logprocess.process_community_info,
