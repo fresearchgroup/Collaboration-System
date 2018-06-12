@@ -591,25 +591,11 @@ def community_course_create(request):
 def community_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			status = request.POST['status']
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
 			request.session['cid'] = cid
 			request.session['cname'] = community.name
 			return redirect('http://localhost:8000/h5p/create/')
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
+		return redirect('home')
+	return redirect('login')
 
-# from wiki.forms import CreateForm
-# from wiki.views import article as art
-
-# def community_wiki_create(request, pk):
-# 	if request.user.is_authenticated:
-# 		community = Community.objects.get(pk=pk)
-# 		request.session['wiki_title'] = community.name
-# 		request.session['wiki_slug'] = community.name
-# 		return redirect('http://localhost:8000/wiki/_create')
-# 	else:
-# 		return redirect('login')
