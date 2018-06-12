@@ -1,5 +1,4 @@
 from .main.eventtracker import EventTracker
-from .parsecustom import ParseCustom
 from . import utils
 
 class Middleware:
