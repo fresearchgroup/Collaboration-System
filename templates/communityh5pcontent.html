@@ -26,10 +26,10 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
-  <li class="nav-item active">
+  <li class="nav-item">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
-  <li class="nav-item">
+  <li class="nav-item active">
     <a class="nav-link" href="{% url 'community_h5p_content' community.pk %}">H5P Content</a>
   </li>
   {%endif%}
@@ -44,7 +44,7 @@
 </ul>
 <br /><br />
 
-<h1>Visible Content of our Groups</h1>
+<h1>H5P Contents of our Community</h1>
 {% if not commgrparticles %}
 <div class="content-page page-404">
    <div class="number">
@@ -69,17 +69,17 @@
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
-      <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+      <h3><a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
       <ul class="blog-info">
-        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <!-- <li><i class="fa fa-calendar"></i> {{article.created_at}} </li> -->
         <li><i class="fa fa-eye"></i> {{article.views}} views </li>
         <li><i class="fa fa-comments"></i> {{ article.username }} </li>
         <li><i class="fa fa-soccer-ball-o"></i>{{article.name}} Group</li>
       </ul>
-      <p>
+      <!-- <p>
         {{ article.body|striptags|truncatewords:50 }}
         <a href="{% url 'article_view' article.id %}" class="more"> ... Read more <i class="icon-angle-right"></i></a>
-      </p>
+      </p> -->
     </div>
   </div>
   <hr class="blog-post-sep">
