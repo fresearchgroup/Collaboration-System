@@ -131,6 +131,18 @@ def edit_article(request, pk):
 							article.state = to_state
 							Action.objects.filter(actor_object_id=article.id,
 										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
+							comm = CommunityArticles.objects.get(article=article)
+							role=Roles.objects.get(name='publisher')
+							publishers=CommunityMembership.objects.filter(community=comm.community, role=role)
+							list=[]
+							for publisher in publishers:
+								list.append(publisher.user)
+
+
+							notify.send(sender=request.user, actor=request.user, recipient=list,
+										verb='This article is publishable', target=article,
+										description="article_view")
+
 					article.title = title
 					article.body = body
 					try:
@@ -200,6 +212,9 @@ def edit_article(request, pk):
 							if transition.from_state == state1 and transition.to_state ==state2:
 								transition.to_state = States.objects.get(name='publish')
 								private = States.objects.get(name='private')
+
+
+
 						except Transitions.DoesNotExist:
 							message = "transition doesn't exist"
 					except CommunityMembership.DoesNotExist:
