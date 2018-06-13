@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'Course',
     'notifications',
     'actstream',
+    'feeds',
 ] + get_machina_apps()
 
 SITE_ID = 1

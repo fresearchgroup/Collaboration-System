@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
-from django.contrib.contenttypes.models import ContentType      
+from django.contrib.contenttypes.models import ContentType 
+from feeds.views import *     
 
 def display_articles(request):
 	"""
@@ -121,16 +122,15 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
-							comm = CommunityArticles.objects.get(article=article)
-							action.send(article,verb='Article is available for editing ',action_object =request.user,target=comm.community,actor_href='article_edit',actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=request.user.username)
+							create_article_feed(article,'Article is available for editing',request.user)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
-							Action.objects.filter(actor_object_id=article.id,
-										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
+							delete_feeds(article,"Article is available for editing")
+							
 							comm = CommunityArticles.objects.get(article=article)
 							role=Roles.objects.get(name='publisher')
 							publishers=CommunityMembership.objects.filter(community=comm.community, role=role)
@@ -156,11 +156,8 @@ def edit_article(request, pk):
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
-					comm = CommunityArticles.objects.get(article=article)
+					create_article_feed(article,'Article has been published',article.created_by)
 					
-					action.send(article, verb='Article has been published ', action_object=article.created_by,
-								target=comm.community, actor_href='article_view', actor_href_id=article.id,
-								action_object_href='display_user_profile', action_object_href_id=article.created_by.username)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""

@@ -23,6 +23,7 @@ from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
+from feeds.views import *
 # Create your views here.
 
 
@@ -246,7 +247,8 @@ def manage_community(request,pk):
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 								if rolename=='publisher':
-								        action.send(user, verb='New Publisher has been added',target=community, actor_href='display_user_profile', actor_href_id=user.username)
+								        create_community_feed(user,'New Publisher has been added',community)
+								        
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
@@ -256,8 +258,8 @@ def manage_community(request,pk):
 									is_member.role = role
 									is_member.save()
 									if rolename=='publisher':
-								                action.send(user, verb='New Publisher has been added',target=community, actor_href='display_user_profile', actor_href_id=user.username)
-									
+									        create_community_feed(user,'New Publisher has been added',community)
+								                
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -266,7 +268,8 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-									Action.objects.filter(actor_object_id=user.id,actor_content_type=ContentType.objects.get_for_model(user),verb="New Publisher has been added").delete()
+									delete_feeds(user,"New Publisher has been added")
+									
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
