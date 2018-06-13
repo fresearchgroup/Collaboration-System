@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
-from django.contrib.contenttypes.models import ContentType      
+from django.contrib.contenttypes.models import ContentType
+from notification.views import *
 
 def display_articles(request):
 	"""
@@ -131,25 +132,7 @@ def edit_article(request, pk):
 							article.state = to_state
 							Action.objects.filter(actor_object_id=article.id,
 										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
-							comm = CommunityArticles.objects.get(article=article)
-							publisher_role=Roles.objects.get(name='publisher')
-							publishers=CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
-							list=[]
-							for publisher in publishers:
-								if article.created_by != publisher.user:
-									list.append(publisher.user)
-
-							admin_role = Roles.objects.get(name='community_admin')
-							admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
-
-							for admin in admins:
-								if article.created_by != admin.user:
-									list.append(admin.user)
-
-
-							notify.send(sender=request.user, actor=request.user, recipient=list,
-										verb='This article is publishable', target=article,
-										description="article_edit")
+							notif_publishable_article(request,article)
 
 					article.title = title
 					article.body = body
