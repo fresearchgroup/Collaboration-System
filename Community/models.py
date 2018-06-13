@@ -62,3 +62,11 @@ class CommunityCourses(models.Model):
 	course = models.ForeignKey(Course, null=True, related_name='communitycourses')
 	user = models.ForeignKey(User, null=True, related_name='communitycourses')
 	community = models.ForeignKey(Community, null=True, related_name='communitycourses')
+
+
+class CommunityFeeds(models.Model):
+	article = models.ForeignKey(Articles, related_name='communityfeeds')
+	community = models.ForeignKey(Community, related_name='communityfeeds')
+	description = models.CharField(max_length=255)
+	is_valid = models.BooleanField(default=True)
+	url_type = models.CharField(max_length=25)

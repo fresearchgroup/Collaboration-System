@@ -4,13 +4,21 @@ from django.http import Http404, HttpResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+from notifications.signals import notify
+from django.contrib.auth.models import User
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from django.contrib.contenttypes.models import ContentType 
+from feeds.views import *     
+from notification.views import *
 
 def display_articles(request):
 	"""
@@ -115,11 +123,15 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
+							create_article_feed(article,'Article is available for editing',request.user)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
+
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
+							delete_feeds(article,"Article is available for editing")
+							notif_publishable_article(request,article)
 					article.title = title
 					article.body = body
 					try:
@@ -132,7 +144,9 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					create_article_feed(article,'Article has been published',article.created_by)
+					
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
@@ -184,6 +198,9 @@ def edit_article(request, pk):
 							if transition.from_state == state1 and transition.to_state ==state2:
 								transition.to_state = States.objects.get(name='publish')
 								private = States.objects.get(name='private')
+
+
+
 						except Transitions.DoesNotExist:
 							message = "transition doesn't exist"
 					except CommunityMembership.DoesNotExist:
