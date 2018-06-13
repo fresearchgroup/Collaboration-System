@@ -63,6 +63,15 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
+    'django.contrib.humanize.apps.HumanizeConfig',
+    'django_nyt.apps.DjangoNytConfig',
+    'sekizai',
+    'sorl.thumbnail',
+    'wiki.apps.WikiConfig',
+    'wiki.plugins.attachments.apps.AttachmentsConfig',
+    'wiki.plugins.notifications.apps.NotificationsConfig',
+    'wiki.plugins.images.apps.ImagesConfig',
+    'wiki.plugins.macros.apps.MacrosConfig',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -96,6 +105,10 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                "sekizai.context_processors.sekizai",
             ],
         },
     },
@@ -251,3 +264,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SERVERURL = config('NODESERVERURL')+":"+config('NODESERVERPORT')
 APIKEY = config('APIKEY')
 APIURL = SERVERURL+"/api"
+WIKI_ACCOUNT_HANDLING = True
+WIKI_ACCOUNT_SIGNUP_ALLOWED = True
