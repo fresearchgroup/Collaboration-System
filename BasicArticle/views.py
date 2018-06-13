@@ -132,14 +132,15 @@ def edit_article(request, pk):
 							Action.objects.filter(actor_object_id=article.id,
 										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
 							comm = CommunityArticles.objects.get(article=article)
-							pub=Roles.objects.get(name='publisher')
-							publishers=CommunityMembership.objects.filter(community=comm.community, role=pub)
+							publisher_role=Roles.objects.get(name='publisher')
+							publishers=CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
 							list=[]
 							for publisher in publishers:
-								list.append(publisher.user)
+								if article.created_by != publisher.user:
+									list.append(publisher.user)
 
-							adm = Roles.objects.get(name='community_admin')
-							admins = CommunityMembership.objects.filter(community=comm.community, role=adm)
+							admin_role = Roles.objects.get(name='community_admin')
+							admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
 
 							for admin in admins:
 								if article.created_by != admin.user:
