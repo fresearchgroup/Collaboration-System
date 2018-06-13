@@ -125,9 +125,9 @@ WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'collaboration',
-        #'USER': 'root',
-        #'PASSWORD': '',
+        # 'NAME': 'collaboration',
+        # 'USER': 'root',
+        # 'PASSWORD': '',
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
