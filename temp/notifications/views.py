@@ -113,7 +113,7 @@ def mark_as_read_and_redirect(request, slug=None):
     if _next:
         return redirect(_next)
 
-    return HttpResponseRedirect(reverse(notification.description,args=(pk)))
+    return HttpResponseRedirect(reverse(notification.description,kwargs={'pk':pk}))
 
 
 @login_required
