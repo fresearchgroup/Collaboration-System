@@ -24,6 +24,7 @@ from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
 from feeds.views import *
+from notification.views import *
 # Create your views here.
 
 
@@ -74,9 +75,7 @@ def community_subscribe(request):
 
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
-
-			notify.send(sender=request.user, actor=request.user, recipient=request.user,
-						verb='Welcome to the Community ', target=community, description="community_view")
+			notif_community_subscribe_unsubscribe(request,community, 'Welcome to the Community ')
 
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
@@ -95,8 +94,7 @@ def community_unsubscribe(request):
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 
-			notify.send(sender=request.user, actor=request.user, recipient=request.user,
-						verb='You left the Community ', target=community,  description="community_view")
+			notif_community_subscribe_unsubscribe(request,community, 'You left the Community ')
 
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
