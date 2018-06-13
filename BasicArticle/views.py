@@ -201,7 +201,7 @@ def edit_article(request, pk):
 						message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'uname':request.user})
+			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'uname':request.user,'url':settings.SERVERURL})
 	else:
 		return redirect('login')
 

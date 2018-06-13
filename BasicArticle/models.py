@@ -17,7 +17,7 @@ class Articles(models.Model):
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
 	views = models.PositiveIntegerField(default=0)
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
-	serverurl = models.URLField(max_length=256, default=settings.SERVERURL)
+	
 	def __str__(self):
 		return self.title
 
