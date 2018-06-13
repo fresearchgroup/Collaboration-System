@@ -3,25 +3,25 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
-  <li class="breadcrumb-item active">{{ article.title }}</li>
+  <li class="breadcrumb-item active">{{ articles.title }}</li>
 {% endblock %}
 
 {% block content %}
 <div>
 <ul class="nav nav-tabs">
    <li class="nav-item">
-    <a class="nav-link " href="{% url 'article_view' article.pk %}">View</a>
+    <a class="nav-link " href="{% url 'article_view' articles.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
 
-  {% if article.state.name != 'publish'%}
+  {% if articles.state.name != 'publish'%}
         <li class="nav-item">
-          <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
+          <a class="nav-link " href="{% url 'article_edit' articles.pk %}">Edit</a>
         </li>
         {%endif%}
   
   <li class="nav-item active">
-    <a class="nav-link active " href="{% url 'article_revision' article.pk %}">Revisions</a>
+    <a class="nav-link active " href="{% url 'article_revision' articles.pk %}">Revisions</a>
   </li>
   {% endif %}
 </ul>

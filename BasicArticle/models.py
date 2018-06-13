@@ -21,7 +21,7 @@ class Articles(models.Model):
 		return self.title
 
 class ArticleViewLogs(models.Model):
-    article = models.ForeignKey(Articles, related_name='articleviews')
+    article = models.ForeignKey(Articles,related_name='articleviews')
     ip = models.CharField(max_length=40)
     session = models.CharField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)

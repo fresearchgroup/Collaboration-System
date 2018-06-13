@@ -42,5 +42,5 @@ class Videos(models.Model):
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_videos')
 
 class TopicArticle(models.Model):
-	article = models.ForeignKey(Articles, related_name='topics_articles')
+	article = models.ForeignKey(Articles, related_name='topics_artic')
 	topics = models.ForeignKey(Topics,null=True, related_name='topics_articles')
