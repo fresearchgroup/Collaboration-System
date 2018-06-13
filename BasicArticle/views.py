@@ -132,16 +132,23 @@ def edit_article(request, pk):
 							Action.objects.filter(actor_object_id=article.id,
 										  actor_content_type=ContentType.objects.get_for_model(article)).delete()
 							comm = CommunityArticles.objects.get(article=article)
-							role=Roles.objects.get(name='publisher')
-							publishers=CommunityMembership.objects.filter(community=comm.community, role=role)
+							pub=Roles.objects.get(name='publisher')
+							publishers=CommunityMembership.objects.filter(community=comm.community, role=pub)
 							list=[]
 							for publisher in publishers:
 								list.append(publisher.user)
 
+							adm = Roles.objects.get(name='community_admin')
+							admins = CommunityMembership.objects.filter(community=comm.community, role=adm)
+
+							for admin in admins:
+								if article.created_by != admin.user:
+									list.append(admin.user)
+
 
 							notify.send(sender=request.user, actor=request.user, recipient=list,
 										verb='This article is publishable', target=article,
-										description="article_view")
+										description="article_edit")
 
 					article.title = title
 					article.body = body
