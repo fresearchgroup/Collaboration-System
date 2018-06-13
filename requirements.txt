@@ -39,3 +39,4 @@ social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 urllib3==1.22
 wrapt==1.10.11
+-e git+git://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
