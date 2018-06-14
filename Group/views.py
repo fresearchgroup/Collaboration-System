@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
+import json
+import requests
 
 def create_group(request):
 	if request.method == 'POST':
@@ -106,6 +109,17 @@ def group_article_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+def group_h5p_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
+			request.session['cid'] = 0
+			request.session['gid'] = gid
+			return redirect(settings.H5P_ROOT + '/create/')
+		return redirect('home')
+	return redirect('login')		
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:
@@ -222,10 +236,23 @@ def group_content(request, pk):
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
-			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+			garticles = GroupArticles.objects.raw('select "article" as type , ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
 
+			gh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				for obj in json_data:
+					if obj['group_id'] == group.pk:
+						gh5p.append(obj)
+			except ConnectionError:
+				print("H5P server down...Sorry!! We will be back soon")
+			
+			lstfinal = list(garticles) + list(gh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(garticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				grparticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -253,3 +280,4 @@ def handle_group_invitations(request):
 			grpinivtation.save()
 
 		return redirect('user_dashboard')
+	
