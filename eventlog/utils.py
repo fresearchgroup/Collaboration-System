@@ -29,9 +29,9 @@ COLOR_SEQ = {
         } 
 
 def __appendColor(color, custom = False):
-    if custom == False:
+    if custom is False:
         return "\033[38;2;" + str(COLOR_SEQ[color][0]) + ";" + str(COLOR_SEQ[color][1]) + ";" + str(COLOR_SEQ[color][2]) + "m"
-    elif custom == True:
+    elif custom is True:
         return "\033[38;2;" + str(color[0]) + ";" + str(color[1]) + ";" + str(color[2]) + "m"
 
 def __attach_time_stamp():
@@ -41,7 +41,7 @@ def __attach_time_stamp():
 
 def __formatter(level, msg, logclass, color_spec_dic = None):
     color_code = None
-    if color_spec_dic == None:
+    if color_spec_dic is None:
         color_code = LEVEL_COLOR[level]
     else:
         color_code = color_spec_dic['color_code']
@@ -52,8 +52,8 @@ def __formatter(level, msg, logclass, color_spec_dic = None):
     return fstring 
         
 def ilog(logclass, msg, mode = "INFO", imp = False, color_spec_dic = None):
-    if settings.DEBUG == True or imp == True:
-        if imp == True:
+    if settings.DEBUG is True or imp is True:
+        if imp is True:
             mode = "IMP"
             color_spec_dic = None
         print(__formatter(mode, msg, logclass, color_spec_dic))

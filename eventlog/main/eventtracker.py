@@ -17,7 +17,7 @@ class EventTracker(object):
 
     def processRequest(self):
         while True:
-            if len(self.bucket) > 0:
+            if self.bucket:
                 utils.ilog(self.LOG_CLASS, "SIZE OF BUCKET: {!s}".format(len(self.bucket)))
                 data = self.bucket[0]
                 self.bucket.pop(0)

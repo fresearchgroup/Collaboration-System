@@ -32,7 +32,7 @@ class StoreLog:
             c_url = self.conf['address'] + ":" + str(self.conf['port'])
         utils.ilog(self.LOG_CLASS, "Sending json to: " + c_url)
         headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"}
-        if 'use_proxy' in list(self.conf.keys()) and self.conf['use_proxy'] == True:
+        if 'use_proxy' in list(self.conf.keys()) and self.conf['use_proxy'] is True:
             if "proxy_auth" in list(self.conf.keys()):
                 cauth = HTTPProxyAuth(self.conf['proxy_auth']['username'], self.conf['proxy_auth']['password'])
                 r = requests.put(c_url, json=logVal, proxies=self.conf['proxies'], auth = cauth, headers = headers)
