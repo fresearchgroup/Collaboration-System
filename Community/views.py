@@ -24,7 +24,7 @@ from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
 from feeds.views import update_role_feed,remove_or_add_user_feed
-from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article
+from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article, notify_update_role, notify_remove_or_add_user
 # Create your views here.
 
 
@@ -256,6 +256,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									update_role_feed(user,community,rolename)
+									notify_update_role(request.user, user,community,rolename)
 									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 									is_member.role = role
 									is_member.save()
@@ -269,6 +270,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									remove_or_add_user_feed(user,community,'removed')
+									notify_remove_or_add_user(request.user, user,community,'removed')
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 									
 
@@ -371,6 +373,7 @@ def create_community(request):
 					role = role
 					)
 				remove_or_add_user_feed(usr,community,'community_created')
+				notify_remove_or_add_user(request.user, usr,community,'community_created')
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
