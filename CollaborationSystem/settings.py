@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'webcontent',
     'Course',
     'notifications',
-    'notification',
     'actstream',
     'feeds',
 ] + get_machina_apps()

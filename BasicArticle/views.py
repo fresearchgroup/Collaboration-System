@@ -123,14 +123,15 @@ def edit_article(request, pk):
 						to_state = States.objects.get(name=to_state)
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
-							create_article_feed(article,'Article is available for editing',request.user)
+							create_resource_feed(article,'Article is available for editing',request.user)
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
-							delete_feeds(article,"Article is available for editing")
+						        
+							create_resource_feed(article,'This article is no more available for editing',request.user)
 							notif_publishable_article(request,article)
 					article.title = title
 					article.body = body
@@ -145,7 +146,7 @@ def edit_article(request, pk):
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
-					create_article_feed(article,'Article has been published',article.created_by)
+					create_resource_feed(article,'Article has been published',article.created_by)
 					
 				return redirect('article_view',pk=pk)
 		else:

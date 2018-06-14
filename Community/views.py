@@ -266,7 +266,6 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-									delete_feeds(user,"New Publisher has been added")
 									
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
