@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -17,8 +17,8 @@ from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType 
-from feeds.views import *     
-from notification.views import *
+from feeds.views import create_article_feed, create_community_feed, delete_feeds
+from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article, notify_published_article
 
 def display_articles(request):
 	"""
@@ -130,9 +130,12 @@ def edit_article(request, pk):
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
-						        
-							create_resource_feed(article,'This article is no more available for editing',request.user)
-							notif_publishable_article(request,article)
+
+							if(to_state.name=='publishable'):
+								notif_publishable_article(request.user,article)
+								create_resource_feed(article,"This article is no more available for editing",request.user)
+
+
 					article.title = title
 					article.body = body
 					try:
@@ -146,8 +149,10 @@ def edit_article(request, pk):
 					message = "state doesn' exist"
 				if to_state.name == 'publish':
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
+
 					create_resource_feed(article,'Article has been published',article.created_by)
-					
+					notify_published_article(request.user, article)
+
 				return redirect('article_view',pk=pk)
 		else:
 			message=""
@@ -173,7 +178,7 @@ def edit_article(request, pk):
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
 					except States.DoesNotExist:
-						message = "state does n't exist"
+						message = "state doesn't exist"
 				except CommunityMembership.DoesNotExist:
 					cmember = 'FALSE'
 			except CommunityArticles.DoesNotExist:

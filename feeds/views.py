@@ -7,6 +7,7 @@ from BasicArticle.models import Articles
 
 # Create your views here.
 
+
 def create_resource_feed(actor,verb,action_object):
         if isinstance(actor, Articles):
                 target = CommunityArticles.objects.get(article=actor).community
