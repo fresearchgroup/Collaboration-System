@@ -26,3 +26,8 @@ def notif_publishable_article(user,article):
     notify.send(sender=user, actor=user, recipient=list,
                 verb='This article is publishable', target=article,
                 description="article_edit")
+
+def notify_published_article(request, article):
+    notify.send(sender=request.user, actor=request.user, recipient=article.created_by,
+                verb='Your article is published', target=article,
+                description="article_view")
