@@ -267,5 +267,5 @@ APIURL = SERVERURL+"/api"
 WIKI_ACCOUNT_HANDLING = True
 WIKI_ACCOUNT_SIGNUP_ALLOWED = True
 
-COLLAB_ROOT = http://localhost:7000/
-H5P_ROOT = http://localhost:8000/h5p
+COLLAB_ROOT = 'http://localhost:7000/'
+H5P_ROOT = 'http://localhost:8000/h5p'
