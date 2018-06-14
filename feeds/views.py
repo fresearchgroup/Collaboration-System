@@ -58,6 +58,3 @@ def remove_or_add_user_feed(user,target,action_type):
 				action.send(user, verb='Admin has been removed from community',target=target, actor_href='display_user_profile', actor_href_id=user.username)
 			elif action_type=='left':
 				action.send(user, verb='Admin has left the community',target=target, actor_href='display_user_profile', actor_href_id=user.username)
-
-        
-
