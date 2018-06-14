@@ -17,8 +17,8 @@ from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType 
-from feeds.views import *     
-from notification.views import *
+from feeds.views import create_article_feed, create_community_feed, delete_feeds
+from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article
 
 def display_articles(request):
 	"""
@@ -131,7 +131,7 @@ def edit_article(request, pk):
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
 							delete_feeds(article,"Article is available for editing")
-							notif_publishable_article(request,article)
+							notif_publishable_article(request.user,article)
 					article.title = title
 					article.body = body
 					try:
