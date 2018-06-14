@@ -38,8 +38,41 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
+            <li><form id="my_form" method="POST" action="{% url 'updown' %}">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{article.article.id}}">
+            {% if art.upflag == False %} <!--if the user has not upvoted -->
+            {{article_votes.upvote}}{% if user.is_authenticated %}<button onclick="this.form.submit()" name="type" value="upvote" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endif %}<i class="fa fa-thumbs-o-up"></i></button>
+            {% else %} <!--if the user has upvoted -->
+            {{article_votes.upvote}}{% if user.is_authenticated %}<button onclick="this.form.submit()" name="type" value="uprecall" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endif %}<i class="fa fa-thumbs-up"></i></button>
+            {% endif %}
+            {% if art.downflag == False %} <!--if the user has not downvoted -->
+            {{article_votes.downvote}}{% if user.is_authenticated %}<button onclick="this.form.submit()" name="type" value="downvote" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endif %}<i class="fa fa-thumbs-o-down"></i></button> 
+            {% else %} <!--if the user has downvoted -->
+            {{article_votes.downvote}}{% if user.is_authenticated %}<button onclick="this.form.submit()" name="type" value="downrecall" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endif %}<i class="fa fa-thumbs-down"></i></button> 
+            {% endif %}
+            </form></li>
             <li><i class="fa fa-eye"></i> {{count}} views </li>
-
             {% if article.community.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
             {% endif %}
@@ -52,6 +85,12 @@
             {% else %}
             <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
             {%endif%}
+            <!-- {% if is_repo %}
+            
+            <li><i id="report_submit" class="fa fa-flag"></i>Report</li>
+            {% else %}
+            <li><i id="report_submit" class="fa fa-star-o"></i>Report</li>
+            {% endif %} -->
             <form methd = "post">
                 <input id="username" type="hidden" value="{{request.user.username}}"/>
                 <input id="rid" type="hidden" value="{{article.article.pk}}"/>
@@ -84,7 +123,9 @@
     </div>
   </div>
 </div>
-
+{% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+ {% endif %}
 <h2>Comments</h2>
 
 {% if comment_count %}
@@ -101,7 +142,7 @@
 <div class="post-comment padding-top-40">
   <h3>Leave a Comment</h3>
   <label>Message</label>
-   {% render_comment_form for article %}
+   {% render_comment_form for article %}  
 </div>
 
 {% endblock %}

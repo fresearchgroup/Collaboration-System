@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block breadcrumb %}
+<H1>
+Form for Reputation Model Values
+<style>
+input[type=text]{
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 10%;
+    background-color: #ff4000;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #cc3300;
+}
+
+</style>
+</H1>
+{% endblock %}
+{% block content %}
+
+<form action="{% url 'defaultval' %}" method="POST">
+{% csrf_token %}
+<h4>Reputation increase of author for upvotes:<input type="text" name="upvote" value="{{defaultval.upvote}}"/><br>
+Reputation decrease of author for downvotes: <input type="text" name="downvote" value="{{defaultval.downvote}}"/><br>
+Reputation increase for publishing a article (Author): <input type="text" name="published_author" value="{{defaultval.published_author}}"/><br>
+Reputation increase for publishing a article (Publisher): <input type="text" name="published_publisher" value="{{defaultval.published_publisher}}"/><br>
+Reputation decrease for comment flag: <input type="text" name="comment_flag" value="{{defaultval.comment_flag}}"/><br>
+Reputation increase for Reply: <input type="text" name="reply" value="{{defaultval.reply}}"/><br>
+Minimum Community Reputation for creating a article: <input type="text" name="min_crep_for_art" value="{{defaultval.min_crep_for_art}}"/><br>
+Minimum System Reputation for creating a community: <input type="text" name="min_srep_for_comm" value="{{defaultval.min_srep_for_comm}}"/><br>
+System Reputation increase for creating a community: <input type="text" name="srep_for_comm_creation" value="{{defaultval.srep_for_comm_creation}}"/><br>
+Threshold to become a publisher: <input type="text" name="threshold_publisher" value="{{defaultval.threshold_publisher}}"><br>
+Threshold to become a community admin: <input type="text" name="threshold_cadmin" value="{{defaultval.threshold_cadmin}}"><br>
+</h4>
+<input type="submit" name="Submit" value="Submit"/>
+</form>
+{% endblock %}
