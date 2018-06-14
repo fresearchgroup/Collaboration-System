@@ -148,7 +148,7 @@ def edit_article(request, pk):
 				if to_state.name == 'publish':
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 					create_article_feed(article,'Article has been published',article.created_by)
-					notify_published_article(request, article)
+					notify_published_article(request.user, article)
 					
 				return redirect('article_view',pk=pk)
 		else:
@@ -175,7 +175,7 @@ def edit_article(request, pk):
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
 					except States.DoesNotExist:
-						message = "state does n't exist"
+						message = "state doesn't exist"
 				except CommunityMembership.DoesNotExist:
 					cmember = 'FALSE'
 			except CommunityArticles.DoesNotExist:

@@ -245,7 +245,7 @@ def manage_community(request,pk):
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 								if rolename=='publisher':
-								        create_community_feed(user,'New Publisher has been added',community)
+									create_community_feed(user,'New Publisher has been added',community)
 								        
 							else:
 								errormessage = 'user exists in community'
@@ -256,7 +256,7 @@ def manage_community(request,pk):
 									is_member.role = role
 									is_member.save()
 									if rolename=='publisher':
-									        create_community_feed(user,'New Publisher has been added',community)
+										create_community_feed(user,'New Publisher has been added',community)
 								                
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
@@ -266,7 +266,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-									delete_feeds(user,"New Publisher has been added")
+									#delete_feeds(user,"New Publisher has been added")
 									
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
