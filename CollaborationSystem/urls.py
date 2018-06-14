@@ -128,7 +128,7 @@ urlpatterns = [
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
     url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
-    url(r'^community_h5p_content/(?P<pk>\d+)/$', communityview.community_h5p_content, name='community_h5p_content'),
+    # url(r'^community_h5p_content/(?P<pk>\d+)/$', communityview.community_h5p_content, name='community_h5p_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
 
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
@@ -137,6 +137,7 @@ urlpatterns = [
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
+    url(r'^group-h5p-create/$', group_views.group_h5p_create, name='group_h5p_create'),
     url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
