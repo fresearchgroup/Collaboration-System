@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from BasicArticle.views import create_article, view_article
+from requests.exceptions import ConnectionError
+
 # Create your views here.
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -18,7 +20,7 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-
+from django.conf import settings
 import json
 import requests
 # Create your views here.
@@ -367,8 +369,18 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username from Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.id=ccourses.course_id and ccourses.community_id=%s;', [community.pk])
+			ch5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
 
-			lstfinal = list(carticles) + list(ccourse)
+				for obj in json_data:
+					if obj['community_id'] == community.pk:
+						ch5p.append(obj)
+			except ConnectionError:
+				print("H5P server down...Sorry!! We will be back soon")
+			lstfinal = list(carticles) + list(ccourse) + list(ch5p)
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -390,9 +402,29 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				from django.db import connection
+				cursor = connection.cursor()
+				stmt = "select group_id from Community_communitygroups where community_id=%s"
+				cursor.execute(stmt, [community.pk])
+				groups_in_this_community = cursor.fetchall()
+				groups_in_this_community = list(sum(groups_in_this_community, ()))
+
+				for obj in json_data:
+					if obj['group_id'] in groups_in_this_community:
+						cgh5p.append(obj)
+			except ConnectionError:
+				print("H5P server down...Sorry!! We will be back soon")
+			
+			lstfinal = list(cgarticles) + list(cgh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(cgarticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				commgrparticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -406,40 +438,11 @@ def community_group_content(request, pk):
 
 
 
-def h5p_view(pk):
-	return redirect("http://localhost:8000/h5p/content/?contentId=%s" % pk)
-
-def community_h5p_content(request, pk):
-	commgrph5p = ''
+def h5p_view(request, pk):
 	try:
-		community = Community.objects.get(pk=pk)
-		uid = request.user.id
-		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-		if membership:
-			response = requests.get('http://localhost:8000/h5p/h5papi/?format=json')
-			json_data = json.loads(response.text)
-			print(json_data)
-
-			ch5p = []
-
-			for obj in json_data:
-				if obj['community_name'] == community.name:
-					ch5p.append(obj)		
-	
-			page = request.GET.get('page', 1)
-			paginator = Paginator(list(ch5p), 5)
-			try:
-				commgrph5p = paginator.page(page)
-			except PageNotAnInteger:
-				commgrph5p = paginator.page(1)
-			except EmptyPage:
-				commgrph5p = paginator.page(paginator.num_pages)
-
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view', community.pk)
-	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrph5p':commgrph5p})
-
- 
+		return redirect( settings.H5P_ROOT + "/content/?contentId=%s" % pk)
+	except ConnectionError:
+		return render(request, 'h5pserverdown', {})
 	
 def community_course_create(request):
 	if request.user.is_authenticated:
@@ -464,8 +467,8 @@ def community_h5p_create(request):
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
 			request.session['cid'] = cid
-			request.session['cname'] = community.name
-			return redirect('http://localhost:8000/h5p/create/')
+			request.session['gid'] = 0
+			return redirect(settings.H5P_ROOT + '/create/')
 		return redirect('home')
 	return redirect('login')
 
