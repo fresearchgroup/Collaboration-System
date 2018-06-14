@@ -7,7 +7,7 @@ def notif_community_subscribe_unsubscribe(user, community, verb):
     notify.send(sender=user, recipient=user,
                 verb=verb, target=community, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
 
-def notif_publishable_article(user,article):
+def notif_publishable_published_article(user, article, action):
     comm = CommunityArticles.objects.get(article=article)
     publisher_role = Roles.objects.get(name='publisher')
     publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
@@ -23,33 +23,19 @@ def notif_publishable_article(user,article):
         if article.created_by != admin.user:
             list.append(admin.user)
 
-    notify.send(sender=user, recipient=list,
-                verb='This article is publishable', target=article,
-                target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
+    if action == 'publishable':
+        notify.send(sender=user, recipient=list,
+                    verb='This article is publishable', target=article,
+                    target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
-def notify_published_article(user, article):
-    comm = CommunityArticles.objects.get(article=article)
-    publisher_role = Roles.objects.get(name='publisher')
-    publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
-    list = []
-    for publisher in publishers:
-        if article.created_by != publisher.user:
-            list.append(publisher.user)
+    elif action == 'published':
+        notify.send(sender=user, recipient=list,
+                    verb='This article is published', target=article,
+                    target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
-    admin_role = Roles.objects.get(name='community_admin')
-    admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
-
-    for admin in admins:
-        if article.created_by != admin.user:
-            list.append(admin.user)
-
-    notify.send(sender=user, recipient=list,
-                verb='This article is published', target=article,
-                target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
-
-    notify.send(sender=user, recipient=article.created_by,
-                verb='Your article is published', target=article,
-                target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+        notify.send(sender=user, recipient=article.created_by,
+                    verb='Your article is published', target=article,
+                    target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
 
 def notify_update_role(sender, user, target, current_role):

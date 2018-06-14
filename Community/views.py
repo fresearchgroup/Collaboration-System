@@ -24,7 +24,7 @@ from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
 from feeds.views import update_role_feed,remove_or_add_user_feed
-from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article, notify_update_role, notify_remove_or_add_user
+from notification.views import notif_community_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
 # Create your views here.
 
 
