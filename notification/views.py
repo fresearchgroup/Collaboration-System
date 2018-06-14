@@ -1,4 +1,4 @@
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from notifications.signals import notify

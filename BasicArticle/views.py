@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, CommunityFeeds
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
