@@ -102,7 +102,7 @@ def group_article_create(request):
 			commrep = CommunityRep.objects.get(community = community, user=request.user)
 			crep =commrep.rep
 			defaultval = DefaultValues.objects.get(pk=1)
-			if (crep>defaultval.min_crep_for_art):
+			if (crep>defaultval.min_crep_for_art): #checking if the user community reputation is greater than the minimum reputation required to create an article
 				if status=='1':
 					article = create_article(request)
 					obj = GroupArticles.objects.create(article=article, user=request.user, group=group)

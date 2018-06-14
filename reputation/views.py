@@ -9,22 +9,26 @@ from django.contrib.auth.models import Group as Roles
 # Create your views here.
 
 def CommunityReputation(a_id,votetype):
+	# This method is called from the voting-views.py file 
+	# It is used to change the reputation of the author based on the type of vote
 	commart = CommunityArticles.objects.filter(article_id=a_id).exists()
 	art = Articles.objects.get(pk = a_id)
 	author = art.created_by
-	if(commart is False):
+	if(commart is False): #it is not a community article
 		grpart = GroupArticles.objects.get(article_id=a_id)
 		grp = grpart.group
 		community = CommunityGroups.objects.get(group_id=grp.id)
-	else:
+	else: #it is a community article
 		commart = CommunityArticles.objects.get(article_id=a_id)
 		community = commart.community
 
+	#community variable stores the community
 	commrep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
 	sysrep = SystemRep.objects.get(user_id=author.id)
 	defaultval = DefaultValues.objects.get(pk=1)
 	up=defaultval.upvote
 	down=defaultval.downvote
+	# Votetype contains the type of vote made which is passed as a parameter to the function
 	if(votetype==1):
 		commrep.rep+=up
 		sysrep.sysrep+=up
@@ -43,26 +47,30 @@ def CommunityReputation(a_id,votetype):
 	else:
 		commrep.rep+=down
 		sysrep.sysrep+=down
-	if(commrep.rep >= defaultval.threshold_cadmin):
+
+	#once the user reputation has changed we need to compare with the threshold to become a publisher or community admin in order to change his role in that community
+
+	if(commrep.rep >= defaultval.threshold_cadmin): #if user reputation is greater than community admin threshold then change his role to community admin
 		community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
 		community_membership.role = Roles.objects.get(name='community_admin')
 		community_membership.save()
-	elif(commrep.rep >= defaultval.threshold_publisher):
+	elif(commrep.rep >= defaultval.threshold_publisher): #if user reputation is greater than publisher threshold then change his role to publisher
 		community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
 		role = Roles.objects.get(name='community_admin')
 		count_community_admin = CommunityMembership.objects.filter(role=role,community_id=community.id).count()
-		if(count_community_admin > 1) or (community_membership.role != role):
+		if(count_community_admin > 1) or (community_membership.role != role): #checking if there is only one community admin in the community so that, that admin is not changed to publisher when is reputation falls below the threshold of community admin
 			community_membership.role = Roles.objects.get(name='publisher')
 		community_membership.save()
-	else:
+	else: # else change his role to author
 		community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
 		community_membership.role = Roles.objects.get(name='author')
-		community_membership.save()
+		community_membership.save() 
 	commrep.save()
 	sysrep.save()
 
 
 def defaultval(request):
+	# this function is called when the sysadmin change the values of the reputation model 
 	if request.method == 'POST':
 		upvote = int(request.POST.get('upvote'))
 		downvote = int(request.POST.get('downvote'))
@@ -75,15 +83,17 @@ def defaultval(request):
 		srep_for_comm_creation = int(request.POST.get('srep_for_comm_creation'))
 		new_threshold_publisher = int(request.POST.get('threshold_publisher'))
 		new_threshold_cadmin = int(request.POST.get('threshold_cadmin'))
+		if(new_min_crep_for_art == 0) or (new_min_crep_for_art == 0) or (new_threshold_publisher == 0) or (new_threshold_cadmin == 0): #can't make some of the values to zero
+			return render(request,'cantset.html')
 		defaultval = DefaultValues.objects.get(pk=1)
 		defaultval.upvote = upvote
 		defaultval.downvote = downvote
 		defaultval.published_author = published_author
 		defaultval.published_publisher = published_publisher
-		defaultval.comment_flag = defaultval.comment_flag
-		defaultval.reply =reply
+		#defaultval.comment_flag = comment_flag
+		#defaultval.reply =reply
 		old_min_srep_for_comm = defaultval.min_srep_for_comm
-		if(old_min_srep_for_comm != new_min_srep_for_comm):
+		if(old_min_srep_for_comm != new_min_srep_for_comm): #checking if old is not equal to new ,if yes then change the user reputation accordigly
 			users = User.objects.all()
 			for user in users:
 				sysrep = SystemRep.objects.get(user=user)
@@ -93,27 +103,28 @@ def defaultval(request):
 				sysrep.save()
 		defaultval.min_srep_for_comm = new_min_srep_for_comm
 		old_min_crep_for_art = defaultval.min_crep_for_art
-		if(old_min_crep_for_art != new_min_crep_for_art):
+		if(old_min_crep_for_art != new_min_crep_for_art): #checking if old is not equal to new ,if yes then change the user reputation accordigly
 			change(new_min_crep_for_art,old_min_crep_for_art)
 		defaultval.min_crep_for_art = new_min_crep_for_art
 		defaultval.srep_for_comm_creation = srep_for_comm_creation
 		old_threshold_publisher = defaultval.threshold_publisher
-		if(old_threshold_publisher != new_threshold_publisher):
+		if(old_threshold_publisher != new_threshold_publisher): #checking if old is not equal to new ,if yes then change the user reputation accordigly
 			change(new_threshold_publisher,old_threshold_publisher)
 		defaultval.threshold_publisher = new_threshold_publisher
 		old_threshold_cadmin = defaultval.threshold_cadmin
-		if(old_threshold_cadmin != new_threshold_cadmin):
+		if(old_threshold_cadmin != new_threshold_cadmin): #checking if old is not equal to new ,if yes then change the user reputation accordigly
 			change(new_threshold_cadmin,old_threshold_cadmin)
 		defaultval.threshold_cadmin = new_threshold_cadmin
 		defaultval.save()
 		return redirect('home')
 	else:
-		if request.user.is_superuser:
+		if request.user.is_superuser: 
 			defaultval = DefaultValues.objects.get(pk=1)
 			return render(request,'defaultval.html',{'defaultval':defaultval})
-		return redirect('home')
+		return redirect('home') #if user is not superuser redirect to home
 
 def change(new,old):
+	#this function is called by the above function in order to change all the user values accordingly
 	users = User.objects.all()
 	for user in users:
 		commreps = CommunityRep.objects.filter(user=user)

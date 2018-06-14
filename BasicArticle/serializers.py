@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from .models import Articles
-from voting.models import Voting
+from voting.models import VotingFlag
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Articles
 		fields = ('id','title', 'body')
 
-class VotingSerializer(serializers.HyperlinkedModelSerializer):
+class VotingFlagSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = Voting
+		model = VotingFlag
 		fields = ('upvote', 'downvote')

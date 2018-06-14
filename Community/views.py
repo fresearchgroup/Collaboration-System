@@ -66,8 +66,8 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
-			commrep = CommunityRep()
-			commrep.user=user
+			commrep = CommunityRep() #creating a CommunityRep row has a user has joined the community
+			commrep.user=user 
 			commrep.community = community
 			commrep.rep = 0
 			commrep.save()
@@ -85,7 +85,7 @@ def community_unsubscribe(request):
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			user = request.user
-			CommunityRep.objects.get(community=community,user=user).delete()
+			CommunityRep.objects.get(community=community,user=user).delete() #deleting the a CommunityRep row has the user has left the community
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 			return redirect('community_view',pk=cid)
@@ -102,7 +102,7 @@ def community_article_create(request):
 			commrep = CommunityRep.objects.get(community = community, user=request.user)
 			crep =commrep.rep
 			defaultval = DefaultValues.objects.get(pk=1)
-			if (crep>defaultval.min_crep_for_art):
+			if (crep>defaultval.min_crep_for_art): #checking if user community reputation is greater than the minimum reputation required to create an article
 				if status=='1':
 					article = create_article(request)
 					obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
@@ -157,7 +157,7 @@ def request_community_creation(request):
 			sysrep = SystemRep.objects.get(user=request.user)
 			defaultval = DefaultValues.objects.get(pk=1)
 			srep = sysrep.sysrep
-			if(srep > defaultval.min_srep_for_comm):
+			if(srep > defaultval.min_srep_for_comm): #checking if the user system reputation is greater than the minimum reputation required to create a community
 				return render(request, 'request_community_creation.html')
 			return render(request,'lowrepcom.html')
 	else:
@@ -211,12 +211,12 @@ def handle_community_creation_requests(request):
 					)
 				rcommunity.status = 'approved'
 				rcommunity.save()
-				commrep = CommunityRep()
+				commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
 				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
 				defaultval = DefaultValues.objects.get(pk=1)
-				sysrep.sysrep+=defaultval.srep_for_comm_creation
+				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
 				sysrep.save()
 				commrep.save()
 			if status=='reject' and rcommunity.status!='rejected':
@@ -253,7 +253,7 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-								CommunityRep.objects.create(user=user,community=community)
+								CommunityRep.objects.create(user=user,community=community) # creating a new communityRep row has a user has been added to the community by the communtiy admin
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
@@ -270,7 +270,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-									CommunityRep.objects.get(user=user,community=community).delete()
+									CommunityRep.objects.get(user=user,community=community).delete() # creating a new CommunityRep row has a user has been removed from the community by the community admin
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:

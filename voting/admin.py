@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Voting,Law
+from .models import VotingFlag,ArticleVotes
 
 # Register your models here.
 
-admin.site.register(Voting)
-admin.site.register(Law)
+admin.site.register(VotingFlag)
+admin.site.register(ArticleVotes)

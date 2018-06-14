@@ -44,11 +44,11 @@ def signup(request):
             result = json.loads(response.read().decode())
             ''' End reCAPTCHA validation '''
 
-            if result['success']:
+            if result['success']: 
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                sysrep = Systemrep()
+                sysrep = Systemrep() #creating a new SystemRep row has a new user has signed up
                 sysrep.user = user
                 sysrep.sysrep = 0
                 sysrep.save()
