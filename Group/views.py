@@ -114,7 +114,6 @@ def group_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			gid = request.POST['gid']
-			group = Group.objects.get(pk=gid)
 			request.session['cid'] = 0
 			request.session['gid'] = gid
 			return redirect(settings.H5P_ROOT + '/create/')

@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from BasicArticle.views import create_article, view_article
-from requests.exceptions import ConnectionError
 
 # Create your views here.
 from django.http import Http404, HttpResponse
@@ -465,7 +464,6 @@ def community_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
 			request.session['cid'] = cid
 			request.session['gid'] = 0
 			return redirect(settings.H5P_ROOT + '/create/')
