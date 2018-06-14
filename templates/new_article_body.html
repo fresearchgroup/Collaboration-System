@@ -8,14 +8,14 @@
 {% endblock %}
 {% block breadcrumb %}
 <ul style="list-style-type: none;margin: 0;padding: 0;overflow: hidden;border: 1px solid #e7e7e7;background-color: #f3f3f3;">
-    <li style = "display: block;color: white;background-color: #4CAF50;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 1:</b> Provide Title and Article Image</a></li>
-    <li style = "display: block;color: #666;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 2:</b> Provide Body of the Image</a></li>
-</ul>
-<br>
-{% if request.POST.articleof == "group" %}
+      <li style = "display: block;color: #666;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 1</b>: Provide Title and Article Image</a></li>
+      <li style = "display: block;color: white;background-color: #4CAF50;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 2:</b>Provide Body of the Image</a></li>
+  </ul>
+  <br>
+{% if articleof == "group" %}
   <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
 {% endif %}
-{% if request.POST.articleof == "community" %}
+{% if articleof == "community" %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
 {% endif %}
   <li class="breadcrumb-item active">Create an Article</li>
@@ -26,30 +26,21 @@
 
 
 {% if user.is_authenticated %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" >
   {% csrf_token %}
   <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" required>
-    <div class="invalid-feedback"></div>
-  </div>
-  <div class="form-group">
-    <!-- <label for="body">Body</label>
-    <textarea id ="editor" class="form-control" name="body" ></textarea> -->
-      {% if request.POST.articleof == 'group' %}
+      <iframe src="{{url}}/p/{{article.id}}?userName={{request.user}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+      {% if articleof == 'group' %}
         <input type = 'hidden' name = 'gid' value = {{group.pk}}>
         {% endif %}
-        {% if request.POST.articleof == "community" %}
+        {% if articleof == "community" %}
         <input type = 'hidden' name = 'cid' value = {{community.pk}}>
       {% endif %}
     <input type="hidden" name="status" value={{status}}>
+    <input type="hidden" name="pk" value={{article.id}}>
   </div>
-  <div class="form-group custom-file">
-    <label for="image">Upload Image</label>
-    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload...">
-  </div>
-  {% if status == 1 %}
-  <button id="create" type="submit" class="btn btn-primary">Create Article and Go to Next Step</button>
+  {% if status == 2 %}
+  <button id="save" type="submit" class="btn btn-primary">Save</button>
   {% endif %}
 </form>
 <br />

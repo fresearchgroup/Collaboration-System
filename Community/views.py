@@ -18,7 +18,8 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-
+from django.conf import settings
+from BasicArticle.views import getHTML
 import json
 import requests
 # Create your views here.
@@ -88,6 +89,22 @@ def community_unsubscribe(request):
 	else:
 		return redirect('login')
 
+def community_article_create_body(request, article, community):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			if article.creation_complete:
+				article.body = getHTML(article)
+				article.save()
+				return redirect('article_view', article.pk)
+			else:
+				article.creation_complete = True
+				article.save()
+				return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
+
 def community_article_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -97,7 +114,12 @@ def community_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				CommunityArticles.objects.create(article=article, user = request.user , community =community )
-				return redirect('article_edit', article.pk)
+				return community_article_create_body(request, article, community)
+				# return redirect('article_edit', article.pk)
+			elif status == '2':
+				pk = request.POST['pk']
+				article = Articles.objects.get(pk=pk)
+				return community_article_create_body(request, article, community)
 			else:
 				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:
