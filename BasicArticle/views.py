@@ -130,9 +130,10 @@ def edit_article(request, pk):
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
-							delete_feeds(article,"Article is available for editing")
 							if(to_state.name=='publishable'):
+								delete_feeds(article, "Article is available for editing")
 								notif_publishable_article(request.user,article)
+
 					article.title = title
 					article.body = body
 					try:
