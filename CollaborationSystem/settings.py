@@ -77,6 +77,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'eventlog.middleware.Middleware',
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'

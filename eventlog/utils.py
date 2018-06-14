@@ -1,6 +1,8 @@
 import time
 import datetime
-from .main import settings as ms
+#from .main import settings as ms
+from CollaborationSystem import settings
+import threading
 
 RED = 1
 GREEN = 2
@@ -45,11 +47,12 @@ def __formatter(level, msg, logclass, color_spec_dic = None):
         color_code = color_spec_dic['color_code']
     color_str = __appendColor(color_code, True if color_spec_dic != None else False)
     timestamp = __attach_time_stamp()
-    fstring = str(color_str) + "[{!s}-{!s}]:{!s}: ".format(timestamp, level, logclass) + str(msg) + "\033[0m"
+    threadName = threading.currentThread().getName()
+    fstring = str(color_str) + "[{!s}-{!s}-{!s}]:{!s}: ".format(threadName, timestamp, level, logclass) + str(msg) + "\033[0m"
     return fstring 
         
 def ilog(logclass, msg, mode = "INFO", imp = False, color_spec_dic = None):
-    if ms.DEBUG == True or imp == True:
+    if settings.DEBUG == True or imp == True:
         if imp == True:
             mode = "IMP"
             color_spec_dic = None

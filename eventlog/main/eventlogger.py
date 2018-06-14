@@ -19,6 +19,7 @@ class StoreLog:
             self.conf = settings.SERVER_CONF
 
     def run(self, logVal):
+        utils.ilog(self.LOG_CLASS, "Log is: {!s}".format(logVal), mode = "DEBUG")
         if self.method == settings.STORE:
             self._store_file(logVal)
         elif self.method == settings.TOSERVER:

@@ -32,6 +32,6 @@ class EventTracker(object):
 
     def run(self):
         utils.ilog(self.LOG_CLASS, 'Event tracker module is up', imp = True)
-        processingThread = threading.Thread(target = self.processRequest)
+        processingThread = threading.Thread(target = self.processRequest, name="process request thread")
         processingThread.setDaemon(True)
         processingThread.start()
