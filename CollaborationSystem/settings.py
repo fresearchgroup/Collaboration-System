@@ -63,6 +63,15 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
+    'django.contrib.humanize.apps.HumanizeConfig',
+    'django_nyt.apps.DjangoNytConfig',
+    'sekizai',
+    'sorl.thumbnail',
+    'wiki.apps.WikiConfig',
+    'wiki.plugins.attachments.apps.AttachmentsConfig',
+    'wiki.plugins.notifications.apps.NotificationsConfig',
+    'wiki.plugins.images.apps.ImagesConfig',
+    'wiki.plugins.macros.apps.MacrosConfig',
 ] + get_machina_apps()
 
 MIDDLEWARE = [
@@ -96,6 +105,10 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                "sekizai.context_processors.sekizai",
             ],
         },
     },
@@ -181,12 +194,12 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  #Paste C
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET') #Paste Secret Key
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST =config('EMAIL_HOST'),
-EMAIL_HOST_USER = config('EMAIL_HOST_USER'),
-EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD'),
-EMAIL_PORT = config('EMAIL_PORT', cast=int),
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool),
-DEFAULT_FROM_EMAIL=config('DEFAULT_FROM_EMAIL'),
+EMAIL_HOST =config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+DEFAULT_FROM_EMAIL=config('DEFAULT_FROM_EMAIL') 
 
 
 
@@ -248,3 +261,8 @@ GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 SESSION_COOKIE_AGE = 7200
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SERVERURL = config('NODESERVERURL')+":"+config('NODESERVERPORT')
+APIKEY = config('APIKEY')
+APIURL = SERVERURL+"/api"
+WIKI_ACCOUNT_HANDLING = True
+WIKI_ACCOUNT_SIGNUP_ALLOWED = True
