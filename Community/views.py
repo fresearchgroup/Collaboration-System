@@ -23,7 +23,7 @@ from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
-from feeds.views import create_article_feed,create_community_feed, delete_feeds
+from feeds.views import create_resource_feed,create_community_feed
 from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_article
 # Create your views here.
 
