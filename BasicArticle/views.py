@@ -131,8 +131,9 @@ def edit_article(request, pk):
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
 							article.state = to_state
 							if(to_state.name=='publishable'):
-								delete_feeds(article, "Article is available for editing")
+								# delete_feeds(article, "Article is available for editing")
 								notif_publishable_article(request.user,article)
+								create_article_feed(article,"This article is no more available for editing",request.user)
 
 					article.title = title
 					article.body = body

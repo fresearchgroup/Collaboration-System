@@ -12,7 +12,7 @@ def create_article_feed(actor,verb,action_object):
         #actor_href = ""
         if verb=="Article is available for editing":
                 actor_href='article_edit'
-        elif verb=="Article has been published":
+        elif verb=="Article has been published" or verb=="This article is no more available for editing":
                 actor_href='article_view'
         action.send(article,verb=verb,action_object=action_object,target=article_community.community,actor_href=actor_href,actor_href_id=article.id,action_object_href='display_user_profile',action_object_href_id=action_object.username)
 
