@@ -12,8 +12,11 @@
                 <li><a href="{% url 'notifications:all' %}">All notifications</a></li>
                  <li><a href="{% url 'notifications:unread' %}">Unread notifications</a></li>
                  <hr>
-                <li><a href="{% url 'notifications:mark_all_as_read' %}">Mark all as read</a></li>
+               	<li><a href="{% url 'notifications:mark_all_as_read' %}">Mark all as read</a></li>
                 <li><a href="{% url 'notifications:mark_all_as_unread' %}">Mark all as unread</a></li>
+                <li><a href="{% url 'notifications:mark_all_as_deleted' %}">Delete all</a></li>
+                <li><a href="{% url 'notifications:mark_all_read_as_deleted' %}">Delete all read notifications</a></li>
+                <li><a href="{% url 'notifications:mark_all_unread_as_deleted' %}">Delete all unread notifications</a></li>
               </ul>
         </div>
 
@@ -37,7 +40,7 @@
                                  <p><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
                                    {% endif %}</div>
 
-                                   <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
+                                  <!-- <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
 
                                          <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
                                             <div class="modal-dialog">
@@ -55,7 +58,10 @@
                                                   </div>
                                             </div>
                                             </div>
-                                        </div></div>
+                                        </div></div> -->
+
+				<div class="col-md-1 text-right"> <p><a href="{% url 'notifications:delete' notice.slug %}"><span class="glyphicon glyphicon-trash"></span></a></p></div>
+
 
                                </div>
                                  <div class="row" style="padding-left:7px; padding-right:3px;">
@@ -63,7 +69,7 @@
                                     <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
                                     {{ notice.verb }}
                                       {% ifnotequal notice.actor notice.recipient %}
-                                      -by {{ notice.actor }}
+                                      -by <a href="{% url notice.data.sender_url notice.data.sender_url_name %}">{{ notice.actor }}</a>
                                       {% endifnotequal %}
                                   </h5>
                                    </div>
@@ -114,4 +120,3 @@
 </ul>
 
 {% endblock %}
-

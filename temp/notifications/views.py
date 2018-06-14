@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 ''' Django Notifications exemple views '''
 from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
-
 from django import get_version
 from django.contrib.auth.decorators import login_required
 from django.forms import model_to_dict
@@ -12,7 +11,6 @@ from notifications import settings
 from notifications.models import Notification
 from notifications.utils import id2slug, slug2id
 from django.http import HttpResponse
-from Community import views as communityviews
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -84,6 +82,36 @@ def mark_all_as_unread(request):
         return redirect(_next)
     return redirect('notifications:all')
 
+@login_required
+def mark_all_as_deleted(request):
+    request.user.notifications.mark_all_as_deleted()
+
+    _next = request.GET.get('next')
+
+    if _next:
+        return redirect(_next)
+    return redirect('notifications:all')
+
+@login_required
+def mark_all_read_as_deleted(request):
+    request.user.notifications.mark_all_read_as_deleted()
+
+    _next = request.GET.get('next')
+
+    if _next:
+        return redirect(_next)
+    return redirect('notifications:all')
+
+@login_required
+def mark_all_unread_as_deleted(request):
+    request.user.notifications.mark_all_unread_as_deleted()
+
+    _next = request.GET.get('next')
+
+    if _next:
+        return redirect(_next)
+    return redirect('notifications:all')
+
 
 @login_required
 def mark_as_read(request, slug=None):
@@ -113,7 +141,7 @@ def mark_as_read_and_redirect(request, slug=None):
     if _next:
         return redirect(_next)
 
-    return HttpResponseRedirect(reverse(notification.description,kwargs={'pk':pk}))
+    return HttpResponseRedirect(reverse(notification.data['target_url'],kwargs={'pk':pk}))
 
 
 @login_required

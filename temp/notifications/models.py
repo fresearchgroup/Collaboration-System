@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-lines
 from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
-
 from django import get_version
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -108,6 +107,30 @@ class NotificationQuerySet(models.query.QuerySet):
         qset = self.active()
         if recipient:
             qset = qset.filter(recipient=recipient)
+
+        return qset.update(deleted=True)
+
+    def mark_all_read_as_deleted(self, recipient=None):
+        """Mark current queryset as deleted.
+        Optionally, filter by recipient first.
+        """
+        assert_soft_delete()
+        qset = self.active()
+        if recipient:
+            qset = qset.filter(recipient=recipient)
+        qset = qset.filter(unread=False)
+
+        return qset.update(deleted=True)
+
+    def mark_all_unread_as_deleted(self, recipient=None):
+        """Mark current queryset as deleted.
+        Optionally, filter by recipient first.
+        """
+        assert_soft_delete()
+        qset = self.active()
+        if recipient:
+            qset = qset.filter(recipient=recipient)
+        qset = qset.filter(unread=True)
 
         return qset.update(deleted=True)
 
