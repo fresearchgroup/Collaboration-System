@@ -85,7 +85,6 @@ class TestLogprocess(TestCase):
         self.assertEqual(logprocess.process_method(self.data1),'POST')
         self.assertEqual(logprocess.process_method(self.data2),'POST')
 
-    ##
     def test_process_user_info(self):
         factory = RequestFactory()
         request1 = factory.get('/user/details')
