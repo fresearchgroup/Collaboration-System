@@ -24,6 +24,7 @@ COLLABORATION SYSTEM
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+		Django_wiki
 
 For development installation - 
 
