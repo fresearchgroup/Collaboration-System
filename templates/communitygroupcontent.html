@@ -29,9 +29,6 @@
   <li class="nav-item active">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_h5p_content' community.pk %}">H5P Content</a>
-  </li>
   {%endif%}
 
   <li class="nav-item">
@@ -69,7 +66,11 @@
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
+      {% if article.type == 'article' %}
       <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+      {% else %}
+      <h3><i class="fa fa-camera-retro" style="color:red;"></i><a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
+      {% endif %}
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
         <li><i class="fa fa-eye"></i> {{article.views}} views </li>
