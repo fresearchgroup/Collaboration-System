@@ -1,31 +1,34 @@
 from . import logprocess
+from decouple import config
 
-STORE = 1
-TOSERVER = 2
+STORE = 'STORE'
+TOSERVER = 'TOSERVER'
 
-LOG_TYPE = STORE
+LOG_TYPE = config('LOG_TYPE')
 
 STORE_CONF = {
-            "filename": "debug.log"
-}
+            "filename": config('LOG_STORE')
+} 
 
-DEBUG = True
 
 SERVER_CONF = {
-        "protocol": "http",
-        "address": "127.0.0.1",
-        "port": 8090,
-        "use_proxy": False,
-        "proxies": {
-            "http": "http://address:port",
-            "https": "https://address:port",
-            "ftp": "ftp://address:port",
-        },
-        "proxy_auth": {
-            "username": "",
-            "password": ""
-            }
-    }
+        "protocol": config('LOG_PROTOCOL'),
+        "address": config('LOG_ADDRESS'),
+        "port": config('LOG_PORT'),
+        "use_proxy": config('LOG_USE_PROXY', cast=bool),
+    } 
+
+
+SERVER_CONF["proxies"] = {
+            "http": config('http_proxy'),
+            "https": config('https_proxy'),
+            "ftp": config("ftp://address:port"),
+         } if SERVER_CONF['use_proxy' ] is True else {}
+
+SERVER_CONF["proxy_auth"] = {
+            "username": config("PROXY_USER"),
+            "password": config("PROXY_PASS")
+            } if SERVER_CONF['use_proxy'] is True else {}
 
 COMMON_FIELDS = {
             "user-agent": logprocess.process_user_agent,
@@ -34,6 +37,7 @@ COMMON_FIELDS = {
             "referer": logprocess.process_referer,
             "accept-language": logprocess.process_accept_language,
             "session-id": logprocess.process_session_id,
+
             "path-info": logprocess.process_path_info,
             "time-stamp": logprocess.process_time_stamp,
             "event-source": logprocess.proces_attach_event_source,
