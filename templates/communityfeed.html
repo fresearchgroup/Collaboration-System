@@ -75,7 +75,11 @@
                     
                     <div class="row" style="padding-left:3px; padding-right:3px;">
                     <div class="col-md-9">
+                    {% if feed.action_object is None %}
+                    <h3><i class="fa fa-user" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
+                    {% else %}
                     <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
+                    {% endif %}
                     </div>
                         {% if feed.action_object is not None %}
                         <div class="col-md-3 text-right">

@@ -1,5 +1,7 @@
 {% load static %}<!DOCTYPE html>
 {% load i18n %}
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 <html  ng-app>
 <head>
 	<title></title>
@@ -78,8 +80,8 @@ $(document).ready(function() {
 } );
 </script>-->
 {% block css %}{% endblock %}
-{% block extra_css %}
-    {% endblock extra_css %}
+{% block extra_css %} {% endblock extra_css %}
+
 </head>
 <body>
 
@@ -164,7 +166,7 @@ $(document).ready(function() {
           </ul>
         </li>
         <li>
-            <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}"></a>
+            <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% if unread_count %}<span class="badge" style="border-radius:20px !important; margin-top:-15px; margin-left:-7px;">{{ unread_count }}</span>{% endif %}</a>
         </li>
 
         {% endif %}
