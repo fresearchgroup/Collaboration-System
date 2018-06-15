@@ -70,7 +70,7 @@ For development installation -
 
             sudo nano .env
 
-            ```bash
+            ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
                 DB_NAME=collaboration
@@ -88,12 +88,12 @@ For development installation -
                 DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
                 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
                 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
-				LOG_TYPE=TOSERVER
-				LOG_PROTOCOL=http
-				LOG_ADDRESS=logstash
-				LOG_PORT=5000
-				LOG_STORE=debug.log
-				LOG_USE_PROXY=False
+		LOG_TYPE=TOSERVER
+		LOG_PROTOCOL=http
+		LOG_ADDRESS=logstash
+		LOG_PORT=5000
+		LOG_STORE=debug.log
+		LOG_USE_PROXY=False
 
             ```
 
