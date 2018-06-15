@@ -3,13 +3,15 @@
 '''
 
 from ..main import logprocess
-import unittest
-from django.test import RequestFactory
+from django.test import RequestFactory,TestCase
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import AnonymousUser, User
 
-class TestLogprocess(unittest.TestCase):
+class TestLogprocess(TestCase):
 
     def setUp(self):
         factory=RequestFactory()
+
         request1=factory.post('/community-article-create/',
             {
             'title': ['hello23'],
@@ -24,20 +26,24 @@ class TestLogprocess(unittest.TestCase):
             'role':['author'],
             'status':['add']
             })
+
         request1.META['HTTP_USER_AGENT']='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'
         request1.META['SERVER_NAME']='fbbc375ca6a1'
         request1.META['HTTP_REFERER']='http://localhost:8000/community-article-create/'
         request1.META['HTTP_ACCEPT_LANGUAGE']='en-GB,en;q=0.5'
         request1.META['REMOTE_ADDR']='172.19.0.1'
         request1.COOKIES['sessionid']='mcle7sile4a6dhfdcxtyampo0kjo0c0e'
+
         self.data1={}
         self.data1['request']=request1
         self.data1['view_func']=None
         self.data1['view_args']=None
         self.data1['view_kwargs']={'pk':1, 'username':'tester'}
+
         request2=factory.post('/comment/post',{})
         request2.META['SERVER_NAME']=None
         request2.META['REMOTE_ADDR']=None
+
         self.data2={}
         self.data2['request']=request2
         self.data2['view_func']=None
@@ -79,11 +85,37 @@ class TestLogprocess(unittest.TestCase):
         self.assertEqual(logprocess.process_method(self.data1),'POST')
         self.assertEqual(logprocess.process_method(self.data2),'POST')
 
-    '''
+    ##
     def test_process_user_info(self):
-        self.assertEqual(logprocess.process_user_info(self.data1),--)
-        self.assertEqual(logprocess.process_user_info(self.data2),--)
-   '''
+        factory = RequestFactory()
+        request1 = factory.get('/user/details')
+
+        user1 = User.objects.create_user(username='tester', email='tester@gmail.com', password='tester@123')
+        user1.save()
+        user1 = authenticate(username='tester', password='tester@123')
+        request1.user = user1
+        request1.user.id=1
+
+        data1={}
+        data1['request']=request1
+        data1['view_func']=None
+        data1['view_args']=None
+        data1['view_kwargs']={'username':'tester'}
+
+        request2 = factory.get('')
+
+        user2=AnonymousUser()
+        request2.user =user2
+
+        data2={}
+        data2['request']=request2
+        data2['view_func']=None
+        data2['view_args']=None
+        data2['view_kwargs']={}
+
+        self.assertEqual(logprocess.process_user_info(data1),1)
+        self.assertEqual(logprocess.process_user_info(data2),"")
+
 
     def test_process_community_info(self):
         self.assertEqual(logprocess.process_community_info(self.data1),1)
@@ -96,11 +128,6 @@ class TestLogprocess(unittest.TestCase):
     def test_process_article_info(self):
         self.assertEqual(logprocess.process_article_info(self.data1),1)
         self.assertEqual(logprocess.process_article_info(self.data2),"")
-    '''
-    def test_process_time_stamp(self):
-        self.assertEqual(logprocess.process_time_stamp(self.data1),--)
-        self.assertEqual(logprocess.process_time_stamp(self.data2),--)
-    '''
 
     def test_proces_attach_event_source(self):
         self.assertEqual(logprocess.proces_attach_event_source(self.data1),'server')
@@ -157,7 +184,3 @@ class TestLogprocess(unittest.TestCase):
     def test_process_manage_group_status(self):
         self.assertEqual(logprocess.process_manage_group_status(self.data1),'add')
         self.assertEqual(logprocess.process_manage_group_status(self.data2),"")
-'''
-if __name__ == '__main__':
-    unittest.main()
-'''
