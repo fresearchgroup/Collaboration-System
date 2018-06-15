@@ -31,9 +31,17 @@ class SearchElasticSearch:
         return body    
                 
     def search_elasticsearch(self,search_key_dic):
-            body = self.build_search_body(search_key_dic)
-            res =  self.es.search(index=self.index,body=body)
-            response = []
-            for hit in res['hits']['hits']:
-                response.append(hit['_source'])
+            response = {}          
+            try:
+                body = self.build_search_body(search_key_dic)
+                res =  self.es.search(index=self.index,body=body)
+                response = {}
+                status = 200
+                logs = []
+                for hit in res['hits']['hits']:
+                        logs.append(hit['_source'])
+                response.update({'status':status})
+                response.update({'logs':logs})
+            except Exception as e:
+                response.update({'error': e.args})
             return response

@@ -9,30 +9,31 @@ import json
 
 def id_match(name):
     return name+"-id"
+    pass
 
 @api_view(['GET', 'POST'])
 def get_user_id(request, id):
     data = {'user-id': id}
     obj=SearchElasticSearch()
     result = obj.search_elasticsearch(data)
-    length=len(result)
-
-    if(length>0):
-        res= {"Status Code": 200, "total hits": length, "result": result }
+    if 'status' in result.keys():
+        res= {"Status Code": result['status'], "total hits": len(result['logs']), "result": result['logs'] }
         return Response(res)
     else:
-        return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
+        return Response({"error":result['error']})
+
 
 @api_view(['GET', 'POST'])
 def get_event(request, param1, param2):
     data = {'event_name': ".".join(["event", param1, param2])}
     obj=SearchElasticSearch()
     result = obj.search_elasticsearch(data)
-    length=len(result)
-    if(length>0):
-        return Response({"Status Code": 200, "total hits": length, "result": result })
+    if 'status' in result.keys():
+        res= {"Status Code": result['status'], "total hits": len(result['logs']), "result": result['logs'] }
+        return Response(res)
     else:
-        return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
+        return Response({"error":result['error']})
+    
 
 @api_view(['GET', 'POST'])
 def get_event_id(request, param1, param2, eid):
@@ -43,12 +44,12 @@ def get_event_id(request, param1, param2, eid):
             }
     obj=SearchElasticSearch()
     result = obj.search_elasticsearch(data)
-    length=len(result)
-
-    if(length>0):
-        return Response({"Status Code": 200, "total hits": length, "result": result })
+    if 'status' in result.keys():
+        res= {"Status Code": result['status'], "total hits": len(result['logs']), "result": result['logs'] }
+        return Response(res)
     else:
-        return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
+        return Response({"error":result['error']})
+
 
 @api_view(['GET', 'POST'])
 def get_user_id_event(request, id, param1, param2):
@@ -58,11 +59,11 @@ def get_user_id_event(request, id, param1, param2):
             }
     obj=SearchElasticSearch()
     result = obj.search_elasticsearch(data)
-    length=len(result)
-    if(length>0):
-        return Response({"Status Code": 200, "total hits": length, "result": result })
+    if 'status' in result.keys():
+        res= {"Status Code": result['status'], "total hits": len(result['logs']), "result": result['logs'] }
+        return Response(res)
     else:
-        return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
+        return Response({"error":result['error']})
 
 @api_view(['GET', 'POST'])
 def get_user_id_event_id(request, id, param1, param2, eid):
@@ -74,8 +75,8 @@ def get_user_id_event_id(request, id, param1, param2, eid):
             }
     obj=SearchElasticSearch()
     result = obj.search_elasticsearch(data)
-    length=len(result)
-    if(length>0):
-        return Response({"Status Code": 200, "total hits": length, "result": result })
+    if 'status' in result.keys():
+        res= {"Status Code": result['status'], "total hits": len(result['logs']), "result": result['logs'] }
+        return Response(res)
     else:
-        return Response({"Status Code": 200, "total hits": 0, "result": "No Data Found"})
+        return Response({"error":result['error']})
