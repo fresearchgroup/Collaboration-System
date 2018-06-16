@@ -121,9 +121,11 @@ def edit_article(request, pk):
 					else:
 						to_state = request.POST['state']
 						to_state = States.objects.get(name=to_state)
+
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
 							create_resource_feed(article,'Article is available for editing',request.user)
+
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 
@@ -135,6 +137,8 @@ def edit_article(request, pk):
 								notif_publishable_published_article(request.user,article,'publishable')
 								create_resource_feed(article,"This article is no more available for editing",request.user)
 
+							if(to_state.name=='private'):
+								create_resource_feed(article, "Article is available for editing",request.user)
 
 					article.title = title
 					article.body = body
@@ -175,6 +179,7 @@ def edit_article(request, pk):
 						state2 = States.objects.get(name='private')
 						if transition.from_state == state1 and transition.to_state ==state2:
 							transition.to_state = States.objects.get(name='visible')
+
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
 					except States.DoesNotExist:

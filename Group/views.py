@@ -13,7 +13,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
-from django.contrib.contenttypes.models import ContentType
 
 
 def create_group(request):
@@ -261,14 +260,13 @@ def handle_group_invitations(request):
 		return redirect('user_dashboard')
 
 def feed_content(request, pk):
-	grpfeed = ''
+	grpfeeds = ''
 	try:
 		group = Group.objects.get(pk=pk)
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
-			#gfeeds = group.target_actions.all()
-			gfeeds = target_stream(group)
+			gfeeds = group.target_actions.all()
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(gfeeds), 5)
 			try:
