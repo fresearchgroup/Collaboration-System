@@ -71,7 +71,7 @@ def live_notify_badge(context, badge_class='live_notify_badge'):
     if not user:
         return ''
 
-    html = "<span class='{badge_class}'>{unread}</span>".format(
+    html = '<span class="{badge_class}" style="border-radius:20px !important; margin-top:-15px; margin-left:-6px;">{unread}</span>'.format(
         badge_class=badge_class, unread=user.notifications.unread().count()
     )
     return format_html(html)
