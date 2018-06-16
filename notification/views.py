@@ -3,11 +3,11 @@ from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from notifications.signals import notify
 
-def notif_community_subscribe_unsubscribe(user, community, verb):
+def notify_community_subscribe_unsubscribe(user, community, verb):
     notify.send(sender=user, recipient=user,
                 verb=verb, target=community, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
 
-def notif_publishable_published_article(user, article, action):
+def notify_publishable_published_article(user, article, action):
     comm = CommunityArticles.objects.get(article=article)
     publisher_role = Roles.objects.get(name='publisher')
     publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
@@ -111,3 +111,20 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             target=target,
                             target_url="community_view", sender_url='display_user_profile',
                             sender_url_name=sender.username)
+
+def notify_edit_article(user, article):
+    comm = CommunityArticles.objects.get(article=article)
+    membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
+    role = membership.role.name
+    verb=''
+    if role == 'publisher':
+        verb="Publisher edited your article"
+    elif role =='community_admin':
+        verb="Admin edited your article"
+    elif role == 'author':
+        verb="Your article got edited"
+
+    notify.send(sender=user, verb=verb, recipient=article.created_by,
+                target=article,
+                target_url="article_view", sender_url='display_user_profile',
+                sender_url_name=user.username)
