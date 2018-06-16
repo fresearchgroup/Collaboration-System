@@ -91,26 +91,6 @@ def group_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def group_article_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			gid = request.POST['gid']
-			request.session['gid'] = gid
-			request.session['status'] = status
-			group = Group.objects.get(pk=gid)
-			if status=='1':
-				article = create_article(request)
-				GroupArticles.objects.create(article=article, user=request.user, group=group)
-				return redirect('group_article_create_body',article.pk)	
-			else:
-				return render(request, 'new_article.html', {'group':group, 'status':1})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
-
 def group_article_create_body(request, pk):
 	if request.user.is_authenticated:
 		try:
@@ -139,6 +119,44 @@ def group_article_create_body(request, pk):
 			
 	else:
 		return redirect('login')
+
+def group_article_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			gid = request.POST['gid']
+			new = request.POST['new']
+			request.session['gid'] = gid
+			request.session['status'] = status
+			group = Group.objects.get(pk=gid)
+			if new == '0':			
+				if status=='1':
+					article = create_article(request)
+					GroupArticles.objects.create(article=article, user = request.user , group = group )
+					return redirect('group_article_create_body',article.pk)				
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1})
+			elif new == '1':
+				pk = request.POST['pk']
+				article = Articles.objects.get(pk=pk)
+				if status == '1':
+					article.title = request.POST['title']
+					try:
+						article.image = request.FILES['article_image']
+						article.save(update_fields=["title","body","image"])
+					except:
+						article.save(update_fields=["title","body"])
+					return redirect('group_article_create_body', article.pk)
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
+				
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
+
+
+
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:

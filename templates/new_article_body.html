@@ -50,11 +50,22 @@
   {% endif %}
 </form>
 <div>
+    {% if articleof == "community" %}    
     <form method = "post" action ="{% url 'community_article_create' %}">
+    {% endif %}
+    {% if articleof == "group" %}    
+    <form method = "post" action ="{% url 'group_article_create' %}">
+    {% endif %}
           {% csrf_token %}
-          <input type="hidden" name="cid" value={{ community.pk }}>
           <input type="hidden" name="status" value='0'>
+          {% if articleof == "community" %}
           <input type="hidden" name="articleof" value='community'>
+          <input type="hidden" name="cid" value={{ community.pk }}>
+          {% endif %}
+          {% if articleof == "group" %}
+          <input type="hidden" name="articleof" value='group'>
+          <input type="hidden" name="gid" value={{ group.pk }}>
+          {% endif %}
           <input type="hidden" name="new" value='1'>
           <input type="hidden" name="pk" value={{ article.pk }}>
       <button type="submit" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" style ="float: left">Prev</button>
