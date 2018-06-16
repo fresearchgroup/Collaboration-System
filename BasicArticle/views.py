@@ -18,7 +18,7 @@ from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType 
 from feeds.views import create_resource_feed
-from notification.views import notif_community_subscribe_unsubscribe, notif_publishable_published_article
+from notification.views import notify_publishable_published_article, notify_edit_article
 
 def display_articles(request):
 	"""
@@ -107,6 +107,7 @@ def edit_article(request, pk):
 					article.save(update_fields=["title","body","image"])
 				except:
 					article.save(update_fields=["title","body"])
+				notify_edit_article(request.user,article)
 				return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)
@@ -121,9 +122,11 @@ def edit_article(request, pk):
 					else:
 						to_state = request.POST['state']
 						to_state = States.objects.get(name=to_state)
+
 						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
 							create_resource_feed(article,'Article is available for editing',request.user)
+
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
 
@@ -132,9 +135,11 @@ def edit_article(request, pk):
 							article.state = to_state
 
 							if(to_state.name=='publishable'):
-								notif_publishable_published_article(request.user,article,'publishable')
+								notify_publishable_published_article(request.user,article,'publishable')
 								create_resource_feed(article,"This article is no more available for editing",request.user)
 
+							if(to_state.name=='private'):
+								create_resource_feed(article, "Article is available for editing",request.user)
 
 					article.title = title
 					article.body = body
@@ -151,7 +156,7 @@ def edit_article(request, pk):
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 
 					create_resource_feed(article,'Article has been published',article.created_by)
-					notif_publishable_published_article(request.user, article,'published')
+					notify_publishable_published_article(request.user, article,'published')
 
 				return redirect('article_view',pk=pk)
 		else:
@@ -175,6 +180,7 @@ def edit_article(request, pk):
 						state2 = States.objects.get(name='private')
 						if transition.from_state == state1 and transition.to_state ==state2:
 							transition.to_state = States.objects.get(name='visible')
+
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
 					except States.DoesNotExist:
