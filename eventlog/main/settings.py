@@ -37,7 +37,6 @@ COMMON_FIELDS = {
             "referer": logprocess.process_referer,
             "accept-language": logprocess.process_accept_language,
             "session-id": logprocess.process_session_id,
-
             "path-info": logprocess.process_path_info,
             "time-stamp": logprocess.process_time_stamp,
             "event-source": logprocess.proces_attach_event_source,

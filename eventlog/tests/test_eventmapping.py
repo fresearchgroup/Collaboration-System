@@ -1,12 +1,12 @@
-'''
-    Unit testing of eventNameMapping Module
-'''
-
 from django.test import TestCase, RequestFactory
 from ..main import eventNameMapping
 
 class SimpleTest(TestCase):
    
+    '''
+        Unit testing of eventNameMapping Module
+    '''
+
     def setUp(self):
         self.factory = RequestFactory()
         self.data_get = {

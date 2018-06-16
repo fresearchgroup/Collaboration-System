@@ -9,7 +9,6 @@ import json
 
 def id_match(name):
     return name+"-id"
-    pass
 
 @api_view(['GET', 'POST'])
 def get_user_id(request, id):

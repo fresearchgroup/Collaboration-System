@@ -1,9 +1,11 @@
 from elasticsearch import Elasticsearch
 from . import settings
+from .. import utils
 
 class SearchElasticSearch:
     
     def __init__(self):
+        self.LOG_CLASS = "SearchElasticSearch"
         self.index = settings.ES_INDEX
         self.es = Elasticsearch(settings.SERVER_CONF)
         self.outter_keys = settings.OUTTER_KEYS
