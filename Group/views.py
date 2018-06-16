@@ -10,6 +10,12 @@ from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from django.contrib.contenttypes.models import ContentType
+
+
 def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
@@ -253,3 +259,26 @@ def handle_group_invitations(request):
 			grpinivtation.save()
 
 		return redirect('user_dashboard')
+
+def feed_content(request, pk):
+	grpfeed = ''
+	try:
+		group = Group.objects.get(pk=pk)
+		uid = request.user.id
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership:
+			#gfeeds = group.target_actions.all()
+			gfeeds = target_stream(group)
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(gfeeds), 5)
+			try:
+				grpfeeds = paginator.page(page)
+			except PageNotAnInteger:
+				grpfeeds = paginator.page(1)
+			except EmptyPage:
+				grpfeeds = paginator.page(paginator.num_pages)
+
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view', group.pk)
+	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
+

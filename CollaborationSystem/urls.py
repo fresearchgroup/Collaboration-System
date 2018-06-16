@@ -72,6 +72,8 @@ urlpatterns = [
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
     url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
 
+    url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),
+
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 

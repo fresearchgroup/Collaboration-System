@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load activity_tags %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+<li class="breadcrumb-item active">{{ group.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item ">
+    <a class="nav-link " href="{% url 'group_view' group.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'group_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_group' group.pk %}">Manage group</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_group_info' group.pk %}">Update group Info</a>
+  </li>
+  {%endif%}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
+
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'group_feed' group.pk %}">Feeds</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+</ul>
+<br /><br />
+
+<h1>Group Feeds</h1>
+{% if not grpfeeds %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there are no news feeds belonging to this group.
+      </p>
+   </div>
+</div>
+{% endif %}
+{{myhtml|safe}}{% autoescape off%}
+{% for feed in grpfeeds %}
+    <div class="infinite-item">
+          <div class="row margin-bottom-15">
+            <div class="col-md-12 col-md-10 col-md-offset-1">
+
+                <div class="alert alert-error" role="alert" style="margin:1px; padding-bottom:2px;">
+
+                    <div class="row" style="padding-left:3px; padding-right:3px;">
+                    <div class="col-md-9">
+                    {% if feed.action_object is None %}
+                    <h3><i class="fa fa-user" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
+                    {% else %}
+                    <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
+                    {% endif %}
+                    </div>
+                        {% if feed.action_object is not None %}
+                        <div class="col-md-3 text-right">
+                            <i class="fa fa-user"></i> <a href="{% url feed.data.action_object_href feed.data.action_object_href_id %}">{{feed.action_object}}</a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row" style="padding-left:7px; padding-right:3px;">
+                        <div class="col-md-9">
+                        <h5>{{feed.verb}} </h5>
+                      </div>
+                          <div class="text-right col-md-3"> {{feed.timesince}} ago</div>
+                      </div>
+
+                </div>
+                </a>
+            </div>
+          </div>
+        </div>
+{% endfor %}
+{% endautoescape%}
+
+{% if grpfeeds.has_other_pages %}
+<div class="row">
+  <div class="col-md-4 col-sm-4 items-info">{{grpfeeds}}</div>
+  <div class="col-md-8 col-sm-8">
+    <ul class="pagination pull-right">
+    {% if grpfeeds.has_previous %}
+      <li><a href="?page={{ grpfeeds.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in grpfeeds.paginator.page_range %}
+      {% if grpfeeds.number == i %}
+        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if grpfeeds.has_next %}
+      <li><a href="?page={{ grpfeeds.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+</div>
+</div>
+<br />
+{% endif %}
+{% endblock %}
