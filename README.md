@@ -24,6 +24,7 @@ COLLABORATION SYSTEM
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+		Django_wiki
 
 For development installation - 
 
@@ -121,18 +122,20 @@ Steps for Docker --
  
 ```
 
- docker-compose build
+ sudo docker-compose build
 
- docker-compose up db
+ sudo docker-compose up db
 
- docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+ sudo docker ps (find the <container-image-name> under NAMES column)
 
- docker-compose run web python manage.py migrate
+ sudo docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
- docker-compose run web python manage.py createsuperuser
+ sudo docker-compose run web python manage.py migrate
 
- docker-compose run web python manage.py loaddata workflow roles faq
+ sudo docker-compose run web python manage.py createsuperuser
 
- docker-compose up
+ sudo docker-compose run web python manage.py loaddata workflow roles faq
+
+ sudo docker-compose up
 
 ```
