@@ -137,6 +137,11 @@ urlpatterns = [
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
+    url(r'^community-dashboard/(?P<pk>\d+)/$',dashboardview.community_dashboard,name='community_dashboard'),
+    url(r'^article-dashboard/(?P<pk>\d+)/$',dashboardview.article_dashboard,name='article_dashboard'),
+    url(r'^user-insight-dashboard/(?P<pk>\d)/$',dashboardview.user_insight_dashboard,name='user_insight_dashboard'),
+
+
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
 ]
