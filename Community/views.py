@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from BasicArticle.views import create_article, view_article
+
 # Create your views here.
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -100,7 +101,7 @@ def community_article_create_body(request, pk):
 		except:
 			return redirect('home')
 		article = Articles.objects.get(pk=pk)
-		community = Community.objects.get(pk=cid)		
+		community = Community.objects.get(pk=cid)
 		if request.method == 'POST':
 			if article.creation_complete:
 				article.body = getHTML(article)
@@ -109,12 +110,12 @@ def community_article_create_body(request, pk):
 				del request.session['status']
 				return redirect('article_view', article.pk)
 			else:
-				return redirect('community_article_create_body',article.pk)								
+				return redirect('community_article_create_body',article.pk)
 		else:
 			article.creation_complete = True
 			article.save()
 			return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'community'})
-			
+
 	else:
 		return redirect('login')
 
@@ -127,11 +128,11 @@ def community_article_create(request):
 			request.session['cid'] = cid
 			request.session['status'] = status
 			community = Community.objects.get(pk=cid)
-			if new == '0':			
+			if new == '0':
 				if status=='1':
 					article = create_article(request)
 					CommunityArticles.objects.create(article=article, user = request.user , community =community )
-					return redirect('community_article_create_body',article.pk)				
+					return redirect('community_article_create_body',article.pk)
 				else:
 					return render(request, 'new_article.html', {'community':community, 'status':1})
 			elif new == '1':
@@ -147,7 +148,7 @@ def community_article_create(request):
 					return redirect('community_article_create_body', article.pk)
 				else:
 					return render(request, 'new_article.html', {'community':community, 'status':1, 'article':article})
-				
+
 		else:
 			return redirect('home')
 	else:
@@ -378,7 +379,7 @@ def create_community(request):
 				except:
 					errormessage = 'Can not create default forum for this community'
 					return render(request, 'new_community.html', {'errormessage':errormessage})
-				
+
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
@@ -393,7 +394,7 @@ def create_community(request):
 					community = community,
 					role = role
 					)
-				
+
 				create_wiki_for_community(community)
 
 				return redirect('community_view', community.pk)
@@ -414,8 +415,19 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username from Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.id=ccourses.course_id and ccourses.community_id=%s;', [community.pk])
+			ch5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
 
-			lstfinal = list(carticles) + list(ccourse)
+				for obj in json_data:
+					if obj['community_id'] == community.pk:
+						ch5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+			lstfinal = list(carticles) + list(ccourse) + list(ch5p)
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -437,9 +449,30 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				from django.db import connection
+				cursor = connection.cursor()
+				stmt = "select group_id from Community_communitygroups where community_id=%s"
+				cursor.execute(stmt, [community.pk])
+				groups_in_this_community = cursor.fetchall()
+				groups_in_this_community = list(sum(groups_in_this_community, ()))
+
+				for obj in json_data:
+					if obj['group_id'] in groups_in_this_community:
+						cgh5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+
+			lstfinal = list(cgarticles) + list(cgh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(cgarticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				commgrparticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -453,41 +486,12 @@ def community_group_content(request, pk):
 
 
 
-def h5p_view(pk):
-	return redirect("http://localhost:8000/h5p/content/?contentId=%s" % pk)
-
-def community_h5p_content(request, pk):
-	commgrph5p = ''
+def h5p_view(request, pk):
 	try:
-		community = Community.objects.get(pk=pk)
-		uid = request.user.id
-		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-		if membership:
-			response = requests.get('http://localhost:8000/h5p/h5papi/?format=json')
-			json_data = json.loads(response.text)
-			print(json_data)
+		return redirect( settings.H5P_ROOT + "/content/?contentId=%s" % pk)
+	except ConnectionError:
+		return render(request, 'h5pserverdown', {})
 
-			ch5p = []
-
-			for obj in json_data:
-				if obj['community_name'] == community.name:
-					ch5p.append(obj)		
-	
-			page = request.GET.get('page', 1)
-			paginator = Paginator(list(ch5p), 5)
-			try:
-				commgrph5p = paginator.page(page)
-			except PageNotAnInteger:
-				commgrph5p = paginator.page(1)
-			except EmptyPage:
-				commgrph5p = paginator.page(paginator.num_pages)
-
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view', community.pk)
-	return render(request, 'communityh5pcontent.html', {'community': community, 'membership':membership, 'commgrph5p':commgrph5p})
-
- 
-	
 def community_course_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -509,10 +513,14 @@ def community_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
 			request.session['cid'] = cid
-			request.session['cname'] = community.name
-			return redirect('http://localhost:8000/h5p/create/')
+			request.session['gid'] = 0
+			try:
+				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + '/create/')
+			except Exception as e:
+				print(e)
+				return render(request, 'h5pserverdown.html', {})
 		return redirect('home')
 	return redirect('login')
 
@@ -536,7 +544,7 @@ def create_wiki_for_community(community):
 
 	cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
 	new_id = cursor.fetchone()[0] + 1
-					
+
 	data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
 
 	cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
@@ -552,7 +560,7 @@ def create_wiki_for_community(community):
 				)
 
 	data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
-	cursor.execute(insert_stmt_article, data_article) 
+	cursor.execute(insert_stmt_article, data_article)
 
 	cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
 	con_type_id = cursor.fetchone()[0]

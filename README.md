@@ -11,7 +11,7 @@ COLLABORATION SYSTEM
                 Django Rest API
                 Mysql
 
-        Django pakages installed - 
+        Django pakages installed -
 
                 Django Rest Framework
                 Widget Tweaks
@@ -24,26 +24,27 @@ COLLABORATION SYSTEM
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+		Django_wiki
 
-For development installation - 
+For development installation -
 
-  1. Install virtualenv 
+  1. Install virtualenv
 
-	        sudo pip3 install virtualenv 
+	        sudo pip3 install virtualenv
 
   2. Clone the project from github
 
-           git clone https://github.com/fresearchgroup/Collaboration-System.git 
+           git clone https://github.com/fresearchgroup/Collaboration-System.git
 
-3. Create a virtual env --- 
+3. Create a virtual env ---
 
-		 virtualenv collab -p python3 
+		 virtualenv collab -p python3
 
-4. Activate the virtual environment -- 
+4. Activate the virtual environment --
 
-	      source collab/bin/activate 
+	      source collab/bin/activate
 
- 5. Install the requirements.txt -- 
+ 5. Install the requirements.txt --
 
 	       pip3 install -r Collaboration-System/requirements.txt
 
@@ -53,18 +54,18 @@ For development installation -
             $sudo apt-get install mysql-server
             $sudo apt-get install libmysqlclient-dev
             $mysql -u root -p
-            
+
             Enter password=root
 
 	    mysql> create database collaboration;
             mysql> use collaboration;
             mysql> source collab.sql   
-            
+
 
 6. Create a .env inside CollaborationSystem and paste the following -
 
             sudo nano .env
-            
+
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
                 DB_NAME=collaboration
@@ -86,40 +87,40 @@ For development installation -
 	            NODESERVERURL=Your IP address
 				 NODESERVERPORT=9001
 
-            
+
 7.  Clone the following directory:
 
 			git clone http://github.com/dhanushsr/etherpad-lite
 			cd etherpad-lite/
 			./bin/run.sh
-			
+
 8. Install PyEtherLite--
-			
+
 			git clone http://github.com/dhanushsr/PyEtherpadLite
 			cd PyEtherpadLite
 			python setup.py install
 			cd ..
-			
+
 9. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env file
 9. Do all the migrations going back to django directory--
 
-	      python3 manage.py migrate 
+	      python3 manage.py migrate
 
 10. Runserver --
 
 	      python3 manage.py runserver  
-                
+
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
 For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
 
 
-Steps for Docker -- 
+Steps for Docker --
 
  -- Install Docker and Docker-Compose from  --
 
 	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
-    
+
 	    Docker Compose -- https://docs.docker.com/compose/install/
 
 1. Clone the repository --
@@ -127,19 +128,21 @@ Steps for Docker --
    git clone https://github.com/fresearchgroup/Collaboration-System.git
 
 2. The run the following commands inside the repository --
- 
 
+```
 
-		docker-compose build
+ sudo docker-compose build
 
-		 docker-compose up db
+ sudo docker-compose up db
 
-		 docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+ sudo docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
-		 docker-compose run web python manage.py migrate
+ sudo docker-compose run web python manage.py migrate
 
-		 docker-compose run web python manage.py createsuperuser
+ sudo docker-compose run web python manage.py createsuperuser
 
-		 docker-compose run web python manage.py loaddata workflow roles faq
+ sudo docker-compose run web python manage.py loaddata workflow roles faq
+
+ sudo docker-compose up
 
 		 docker-compose up
