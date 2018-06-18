@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7d43b96-511c-4ebf-a3f7-315171d5cfdb" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/temp/notifications/notifications_tags.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp/notifications/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/temp/notifications/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templatetags/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templatetags/notifications_tags.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -129,42 +125,6 @@
               <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
               <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="BasicArticle" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="Community" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="feeds" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="Group" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="temp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="temp" type="462c0819:PsiDirectoryNode" />
-              <item name="notifications" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Collaboration-System" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Collaboration-System" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -240,8 +200,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="7" />
-    <editor active="true" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22185792" />
       <window_info anchor="bottom" id="TODO" order="6" />
