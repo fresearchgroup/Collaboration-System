@@ -51,7 +51,8 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
-    url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/1/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/2/(?P<pk>\d+)/$', communityview.community_article_create_body, name='community_article_create_body'),
 
     url(r'^comments/', include('django_comments_xtd.urls')),
 
@@ -68,7 +69,8 @@ urlpatterns = [
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
-    url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
+    url(r'^group-article-create/1$', group_views.group_article_create, name='group_article_create'),
+    url(r'^group-article-create/2/(?P<pk>\d+)/$', group_views.group_article_create_body, name='group_article_create_body'),
     url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
 
     url(r'^forum/', include(board.urls)),

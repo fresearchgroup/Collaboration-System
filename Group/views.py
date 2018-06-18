@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from BasicArticle.views import getHTML
+from django.conf import settings
 def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
@@ -90,22 +91,72 @@ def group_unsubscribe(request):
 	else:
 		return redirect('login')
 
+def group_article_create_body(request, pk):
+	if request.user.is_authenticated:
+		try:
+			gid = request.session['gid']
+		except:
+			return redirect('home')
+		try:
+			status = request.session['status']
+		except:
+			return redirect('home')
+		article = Articles.objects.get(pk=pk)
+		group = Group.objects.get(pk=gid)		
+		if request.method == 'POST':
+			if article.creation_complete:
+				article.body = getHTML(article)
+				article.save()
+				del request.session['gid']
+				del request.session['status']
+				return redirect('article_view', article.pk)
+			else:
+				return redirect('group_article_create_body',article.pk)								
+		else:
+			article.creation_complete = True
+			article.save()
+			return render(request, 'new_article_body.html', {'article':article,'group':group, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'group'})
+			
+	else:
+		return redirect('login')
+
 def group_article_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
 			gid = request.POST['gid']
+			new = request.POST['new']
+			request.session['gid'] = gid
+			request.session['status'] = status
 			group = Group.objects.get(pk=gid)
-			if status=='1':
-				article = create_article(request)
-				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
-				return redirect('article_view', article.pk)
-			else:
-				return render(request, 'new_article.html', {'group':group, 'status':1})
+			if new == '0':			
+				if status=='1':
+					article = create_article(request)
+					GroupArticles.objects.create(article=article, user = request.user , group = group )
+					return redirect('group_article_create_body',article.pk)				
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1})
+			elif new == '1':
+				pk = request.POST['pk']
+				article = Articles.objects.get(pk=pk)
+				if status == '1':
+					article.title = request.POST['title']
+					try:
+						article.image = request.FILES['article_image']
+						article.save(update_fields=["title","body","image"])
+					except:
+						article.save(update_fields=["title","body"])
+					return redirect('group_article_create_body', article.pk)
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
+				
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
+
+
+
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:

@@ -53,7 +53,7 @@
                       </div>
                       <div class="form-group">
                         <label for="body">Body</label>
-                        <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+                        <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                         <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                         </div>
                         {% if article.article.image %}
@@ -80,7 +80,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -111,7 +111,7 @@
             </div>
             <div class="form-group">
               <label for="body">Body</label>
-              <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+              <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
               <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
               </div>
               {% if article.article.image %}
@@ -141,7 +141,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -168,7 +168,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -195,7 +195,7 @@
               </div>
               <div class="form-group">
                 <label for="body">Body</label>
-                <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
+                <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                 <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                 </div>
                 {% if article.article.image %}
@@ -232,16 +232,16 @@
 {% endblock %}
 {% block javascript %}
 
-<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
+
 <script>
-      ClassicEditor
-        .create( document.querySelector( '#editor' ) )
-        .then( editor => {
-          console.log( editor );
-        } )
-        .catch( error => {
-          console.error( error );
-        } );
+      // ClassicEditor
+      //   .create( document.querySelector( '#editor' ) )
+      //   .then( editor => {
+      //     console.log( editor );
+      //   } )
+      //   .catch( error => {
+      //     console.error( error );
+      //   } );
     </script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>

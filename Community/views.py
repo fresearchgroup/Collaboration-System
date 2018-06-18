@@ -18,11 +18,11 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-
+from django.conf import settings
+from BasicArticle.views import getHTML
 import json
 import requests
 # Create your views here.
-
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -89,18 +89,65 @@ def community_unsubscribe(request):
 	else:
 		return redirect('login')
 
+def community_article_create_body(request, pk):
+	if request.user.is_authenticated:
+		try:
+			cid = request.session['cid']
+		except:
+			return redirect('home')
+		try:
+			status = request.session['status']
+		except:
+			return redirect('home')
+		article = Articles.objects.get(pk=pk)
+		community = Community.objects.get(pk=cid)		
+		if request.method == 'POST':
+			if article.creation_complete:
+				article.body = getHTML(article)
+				article.save()
+				del request.session['cid']
+				del request.session['status']
+				return redirect('article_view', article.pk)
+			else:
+				return redirect('community_article_create_body',article.pk)								
+		else:
+			article.creation_complete = True
+			article.save()
+			return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'community'})
+			
+	else:
+		return redirect('login')
+
 def community_article_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
 			cid = request.POST['cid']
+			new = request.POST['new']
+			request.session['cid'] = cid
+			request.session['status'] = status
 			community = Community.objects.get(pk=cid)
-			if status=='1':
-				article = create_article(request)
-				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-				return redirect('article_view', article.pk)
-			else:
-				return render(request, 'new_article.html', {'community':community, 'status':1})
+			if new == '0':			
+				if status=='1':
+					article = create_article(request)
+					CommunityArticles.objects.create(article=article, user = request.user , community =community )
+					return redirect('community_article_create_body',article.pk)				
+				else:
+					return render(request, 'new_article.html', {'community':community, 'status':1})
+			elif new == '1':
+				pk = request.POST['pk']
+				article = Articles.objects.get(pk=pk)
+				if status == '1':
+					article.title = request.POST['title']
+					try:
+						article.image = request.FILES['article_image']
+						article.save(update_fields=["title","body","image"])
+					except:
+						article.save(update_fields=["title","body"])
+					return redirect('community_article_create_body', article.pk)
+				else:
+					return render(request, 'new_article.html', {'community':community, 'status':1, 'article':article})
+				
 		else:
 			return redirect('home')
 	else:
