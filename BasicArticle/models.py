@@ -14,7 +14,7 @@ class Articles(models.Model):
 	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
-	published_on=models.DateTimeField(null=True)
+	published_on=models.DateField(null=True)
 	published_by=models.ForeignKey(User,null=True,related_name='article_publisher')
 	views = models.PositiveIntegerField(default=0)
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')

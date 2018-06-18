@@ -138,6 +138,7 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'api/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-api')
 
 ]
 
