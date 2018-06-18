@@ -1,11 +1,24 @@
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
-from Group.models import GroupArticles, GroupMembership
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
+from Group.models import GroupArticles, GroupMembership, Group
 from django.contrib.auth.models import Group as Roles
 from notifications.signals import notify
 
-def notify_community_subscribe_unsubscribe(user, community, verb):
+def notify_subscribe_unsubscribe(user, target, type):
+    verb=''
+    target_url=''
+    if isinstance(target, Community):
+        if type == 'subscribe':
+            verb='Welcome to the community'
+        elif type == 'unsubscribe':
+            verb = 'You left the community'
+    elif isinstance(target, Group):
+        if type == 'subscribe':
+            verb = 'Welcome to the group'
+        elif type == 'unsubscribe':
+            verb = 'You left the group'
+
     notify.send(sender=user, recipient=user,
-                verb=verb, target=community, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
+                verb=verb, target=target, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
 
 def notify_update_article_state(user, article, action):
     if CommunityArticles.objects.filter(article=article).exists():
@@ -97,38 +110,49 @@ def notify_update_article_state(user, article, action):
 
 
 def notify_update_role(sender, user, target, current_role):
-    membership = CommunityMembership.objects.get(user=user, community=target.pk)
-    previous_role = membership.role.name
+    target_url=''
+    previous_role=''
+
+    if isinstance(target, Community) and CommunityMembership.objects.filter(user=user, community=target).exists():
+        membership = CommunityMembership.objects.get(user=user, community=target.pk)
+        target_url="community_view"
+        previous_role = membership.role.name
+
+    elif GroupMembership.objects.filter(user=user, group=target).exists():
+        membership = GroupMembership.objects.get(user=user, group=target.pk)
+        target_url = "group_view"
+        previous_role = membership.role.name
+
     if current_role == 'publisher':
         if previous_role == 'author':
             notify.send(sender=sender, verb='Your role has been changed from Author to Publisher', recipient=user, target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
-        elif previous_role == 'community_admin':
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
+        elif previous_role == 'community_admin' or previous_role == 'group_admin' :
             notify.send(sender=sender, verb='Your role has been changed from Admin to Publisher', recipient=user,
                         target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
     elif current_role == 'author':
         if previous_role == 'publisher':
             notify.send(sender=sender, verb='Your role has been changed from Publisher to Author', recipient=user,
                         target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
-        elif previous_role == 'community_admin':
+        elif previous_role == 'community_admin' or previous_role == 'group_admin':
             notify.send(sender=sender, verb='Your role has been changed from Admin to Author', recipient=user,
                         target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
-    elif current_role == 'community_admin':
+    elif current_role == 'community_admin' or current_role == 'group_admin':
         if previous_role == 'publisher':
             notify.send(sender=sender, verb='Your role has been changed from Publisher to Admin', recipient=user,
                         target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
         elif previous_role == 'author':
             notify.send(sender=sender, verb='Your role has been changed from Author to Admin', recipient=user,
                         target=target,
-                        target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
 
 def notify_remove_or_add_user(sender, user, target, action_type):
@@ -136,38 +160,58 @@ def notify_remove_or_add_user(sender, user, target, action_type):
         notify.send(sender=sender, verb='Your are now an admin', recipient=user,
                     target=target,
                     target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+    elif action_type == 'group_created':
+        notify.send(sender=sender, verb='Your are now an admin', recipient=user,
+                    target=target,
+                    target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
     else:
-        membership = CommunityMembership.objects.get(user=user, community=target.pk)
-        previous_role = membership.role.name
+        target_url = ''
+        previous_role = ''
+
+        if isinstance(target, Community) and CommunityMembership.objects.filter(user=user, community=target).exists():
+            membership = CommunityMembership.objects.get(user=user, community=target.pk)
+            target_url = "community_view"
+            previous_role = membership.role.name
+
+        elif GroupMembership.objects.filter(user=user, group=target).exists():
+            membership = GroupMembership.objects.get(user=user, group=target.pk)
+            target_url = "group_view"
+            previous_role = membership.role.name
+
         if previous_role == 'publisher':
             if action_type == 'removed':
                 notify.send(sender=sender, verb='Your have been removed as a publisher', recipient=user,
                             target=target,
-                            target_url="community_view", sender_url='display_user_profile',
+                            target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
                 notify.send(sender=sender, verb='You left the community as a publisher', recipient=user,
                             target=target,
-                            target_url="community_view", sender_url='display_user_profile',
+                            target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
 
-        elif previous_role == 'community_admin':
+        elif previous_role == 'community_admin' or previous_role == 'group_admin':
             if action_type == 'removed':
-                notify.send(sender=sender, verb='You have been removed from community as admin', recipient=user,
+                verb=''
+                if sender == user:
+                    verb='You left as an admin'
+                else:
+                    verb='You have been removed as an admin'
+                notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
-                            target_url="community_view", sender_url='display_user_profile',
+                            target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
-                notify.send(sender=sender, verb='Your left the community as admin', recipient=user,
+                notify.send(sender=sender, verb='Your left as an admin', recipient=user,
                             target=target,
-                            target_url="community_view", sender_url='display_user_profile',
+                            target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
 
         elif previous_role == 'author':
             if action_type == 'removed':
-                notify.send(sender=sender, verb='You have been removed from community', recipient=user,
+                notify.send(sender=sender, verb='You have been removed', recipient=user,
                             target=target,
-                            target_url="community_view", sender_url='display_user_profile',
+                            target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
 
 def notify_edit_article(user, article):

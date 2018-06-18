@@ -24,7 +24,7 @@ from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
 from feeds.views import update_role_feed,remove_or_add_user_feed
-from notification.views import notify_community_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
+from notification.views import notify_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
 # Create your views here.
 
 
@@ -75,8 +75,7 @@ def community_subscribe(request):
 
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
-			notify_community_subscribe_unsubscribe(request.user,community, 'Welcome to the Community ')
-
+			notify_subscribe_unsubscribe(request.user,community, 'subscribe')
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
@@ -94,9 +93,7 @@ def community_unsubscribe(request):
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				remove_or_add_user_feed(user,community,'left')
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-				
-				notify_community_subscribe_unsubscribe(request.user,community, 'You left the Community ')
-
+				notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
