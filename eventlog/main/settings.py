@@ -54,6 +54,8 @@ CONTEXT_SPECIFIC_FIELDS = {
 
         "event.article.view": {
             "article-id": logprocess.process_article_info,
+            "community-id": logprocess.get_community_info_from_article_info,
+            "group-id":  logprocess.get_group_info_from_article_info,
         },
         "event.article.edit": {
             "article-id": logprocess.process_article_info,
