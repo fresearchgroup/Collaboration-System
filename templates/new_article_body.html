@@ -8,8 +8,12 @@
 {% endblock %}
 {% block breadcrumb %}
 <ul style="list-style-type: none;margin: 0;padding: 0;overflow: hidden;border: 1px solid #e7e7e7;background-color: #f3f3f3;">
-      <li style = "display: block;color: #666;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 1</b>: Provide Title and Article Image</a></li>
-      <li style = "display: block;color: white;background-color: #4CAF50;text-align: center;padding: 14px 16px;text-decoration: none;float: left;"><a href="#"><b>Step 2:</b>Provide Body of the Image</a></li>
+    <li  class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: #666;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
+        <p><b>Step 1:</b> Provide Title and Article Image</p>
+      </li>
+      <li class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: white;background-color: #E45000;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
+          <p><b>Step 2:</b> Provide Body of the Image</p>
+      </li>
   </ul>
   <br>
 {% if articleof == "group" %}
@@ -28,6 +32,7 @@
 {% if user.is_authenticated %}
 <form method="post" enctype="multipart/form-data" >
   {% csrf_token %}
+  {% if status == 1 %}
   <div class="form-group">
       <iframe src="{{url}}/p/{{article.id}}?userName={{request.user}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
       {% if articleof == 'group' %}
@@ -39,11 +44,36 @@
     <input type="hidden" name="status" value={{status}}>
     <input type="hidden" name="pk" value={{article.id}}>
   </div>
-  {% if status == 2 %}
-  <button id="save" type="submit" class="btn btn-primary">Save</button>
+  <div>
+    <button id="save" type="submit" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" style="float: right">Save</button>
+  </div>
   {% endif %}
 </form>
-<br />
+<div>
+    {% if articleof == "community" %}    
+    <form method = "post" action ="{% url 'community_article_create' %}">
+    {% endif %}
+    {% if articleof == "group" %}    
+    <form method = "post" action ="{% url 'group_article_create' %}">
+    {% endif %}
+          {% csrf_token %}
+          <input type="hidden" name="status" value='0'>
+          {% if articleof == "community" %}
+          <input type="hidden" name="articleof" value='community'>
+          <input type="hidden" name="cid" value={{ community.pk }}>
+          {% endif %}
+          {% if articleof == "group" %}
+          <input type="hidden" name="articleof" value='group'>
+          <input type="hidden" name="gid" value={{ group.pk }}>
+          {% endif %}
+          <input type="hidden" name="new" value='1'>
+          <input type="hidden" name="pk" value={{ article.pk }}>
+      <button type="submit" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" style ="float: left">Prev</button>
+    </form>
+  </div>
+<br>
+<br>
+<br>
 {% endif %}
 {% endblock %}
 {% block javascript %}
