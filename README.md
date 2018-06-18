@@ -131,9 +131,7 @@ Steps for Docker --
  
 
 
-		docker-compose build
-
-		 docker-compose up db
+ sudo docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
 		 docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 

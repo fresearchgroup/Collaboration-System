@@ -9,15 +9,12 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-<<<<<<< d604503c7fce8160288882a7e07fc1a9c22cb19b
 from BasicArticle.views import getHTML
 from django.conf import settings
-=======
 from django.conf import settings
 import json
 import requests
 
->>>>>>> Appended H5P contents to group contents
 def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
@@ -162,25 +159,16 @@ def group_article_create(request):
 	else:
 		return redirect('login')
 
-<<<<<<< d604503c7fce8160288882a7e07fc1a9c22cb19b
-
-
-=======
 def group_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
 			request.session['cid'] = 0
 			request.session['gid'] = gid
-			try:
-				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
-				return redirect(settings.H5P_ROOT + '/create/')
-			except Exception as e:
-				print(e)
-				return render(request, 'h5pserverdown.html', {})
+			return redirect(settings.H5P_ROOT + '/create/')
 		return redirect('home')
 	return redirect('login')		
->>>>>>> Appended H5P contents to group contents
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:
@@ -308,8 +296,7 @@ def group_content(request, pk):
 				for obj in json_data:
 					if obj['group_id'] == group.pk:
 						gh5p.append(obj)
-			except Exception as e:
-				print(e)
+			except ConnectionError:
 				print("H5P server down...Sorry!! We will be back soon")
 			
 			lstfinal = list(garticles) + list(gh5p)
