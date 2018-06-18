@@ -31,7 +31,7 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 from voting.views import updown,article_report,report
-from reputation.views import defaultval,general_reputation_dashboard,author_reputation_dashboard,publisher_reputation_dashboard,communityadmin_reputation_dashboard
+from reputation.views import general_reputation_dashboard,author_reputation_dashboard,publisher_reputation_dashboard,communityadmin_reputation_dashboard
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)

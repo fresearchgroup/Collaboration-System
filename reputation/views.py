@@ -158,7 +158,6 @@ def communityadmin_reputation_dashboard(request):
 					article1 = article.article
 					commart = CommunityArticles.objects.filter(article_id=article1.id).exists()
 					art = Articles.objects.get(pk = article1.id)
-					author = art.created_by
 					if(commart is False): #it is not a community article
 						grpart = GroupArticles.objects.get(article_id=article1.id)
 						grp = grpart.group

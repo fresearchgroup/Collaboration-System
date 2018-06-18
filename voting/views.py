@@ -103,7 +103,6 @@ def report(request):
 		username = request.POST.get('username')
 		user= User.objects.get(username=username)
 		resource_id = request.POST.get('rid')
-		category = request.POST.get('category')
 		status = request.POST.get('status')
 		if not VotingFlag.objects.filter(article_id=resource_id,user_id=user.id).exists():
 			voting = VotingFlag()
@@ -126,7 +125,7 @@ def report(request):
 			voteflag.reportflag = True
 			voteflag.save()
 			article_votes = ArticleVotes.objects.get(article_id = resource_id)
-			article_votes.report +=1;
+			article_votes.report +=1
 			article_votes.save()
 			defaultval = DefaultValues.objects.get(pk=1)
 			if(article_votes.report >= defaultval.threshold_report):
