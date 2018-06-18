@@ -8,8 +8,8 @@
                      <div class="row margin-bottom-40">
                      	<div class="col-md-12">
                      		<div class="pricing-head">
-                     			 <h3>Graph1</h3>
-                     			 <h4>Put Graph1 here</h4>
+                     			 <h3>Graph1</h3><br>
+                     			 <div id = "communityview" ></div>
                      		</div>
                      	</div>
                      </div>
@@ -31,4 +31,9 @@
            </div>
     </div>
 </div>
+
+<script>
+  var chart = c3.generate({{ communityview|safe }})
+</script>
+
 {% endblock %}

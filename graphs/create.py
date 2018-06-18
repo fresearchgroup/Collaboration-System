@@ -85,19 +85,19 @@ def data_plot(lockto, charttype, data, label, xlabel='',ylabel='',xcat=[]):
 		return None
 	labeled_data = []
 	
-	if(charttype==linechart):
+	if(charttype=='linechart'):
 		obj = linechart()
 		for i in range (0, len(label)):
 			labeled_data.append([label[i]] + data[i])
 		result = obj.plot(lockto,labeled_data,xlabel,ylabel)
 
-	elif(charttype==piechart):
+	elif(charttype=='piechart'):
 		obj = piechart()
 		for i in range (0, len(label)):
 			labeled_data.append([label[i]] + [data[i]])
 		result = obj.plot(lockto,labeled_data)
 	
-	elif(charttype==bargraph):
+	elif(charttype=='bargraph'):
 		obj = bargraph()
 		for i in range (0, len(label)):
 			labeled_data.append([label[i]] + data[i])

@@ -4,15 +4,6 @@ import requests
 import json
 from itertools import groupby
 
-def get_articlelist(data):
-	data = list(data)
-	create_list = []
-	for i in range(0,len(data)):
-		if (data[i]['referer'] == "http://localhost:8000/community-article-create/"):
-			create_list.append(int(data[i]['event']['article-id']))
-			print("\n\n\n\n\n\n",int(data[i]['event']['article-id']),"\n\n\n\n\n\n\n\n")
-	return create_list
-
 def extract_state(article_list):
 	article_list=list(article_list)
 	article_state = []
@@ -27,13 +18,11 @@ def freq_state(article_state):
 	frequency = [len(list(group)) for key,group in groupby(article_state)]
 	return frequency
 
-def find_articles(user_id):
-	url_api = 'http://localhost:8000/logapi/user/'+str(user_id)+'/event/article/view'
-	result = requests.get(url_api)
-	json_result = result.json()
-	data = json_result["result"]
-	##print("\n\n\n\n\n\n",len(data),"\n\n\n\n\n\n")
-	article_list = get_articlelist(data)
+def find_articles(user):
+	user_articles = Articles.objects.all().filter(created_by = user)
+	article_list  = []
+	for obj in user_articles:
+		article_list.append(int(obj.id))
 	return article_list
 
 def findstates(article_list):
@@ -75,5 +64,10 @@ def get_ip(data):
 	return ip
 
 def published_articles(user):
-	published = Articles.objects.all().filter(created_by = user)
-	print(str(published))
+	user_articles = Articles.objects.all().filter(created_by = user)
+	for obj in user_articles:
+		print(str(obj.id))
+
+
+def community_articles(community_id):
+	url_api = 'http://localhost:8000/logapi/event/article/create'
