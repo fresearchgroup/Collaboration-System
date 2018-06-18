@@ -11,7 +11,6 @@ from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from BasicArticle.views import getHTML
 from django.conf import settings
-from django.conf import settings
 import json
 import requests
 
@@ -106,7 +105,7 @@ def group_article_create_body(request, pk):
 		except:
 			return redirect('home')
 		article = Articles.objects.get(pk=pk)
-		group = Group.objects.get(pk=gid)		
+		group = Group.objects.get(pk=gid)
 		if request.method == 'POST':
 			if article.creation_complete:
 				article.body = getHTML(article)
@@ -115,12 +114,12 @@ def group_article_create_body(request, pk):
 				del request.session['status']
 				return redirect('article_view', article.pk)
 			else:
-				return redirect('group_article_create_body',article.pk)								
+				return redirect('group_article_create_body',article.pk)
 		else:
 			article.creation_complete = True
 			article.save()
 			return render(request, 'new_article_body.html', {'article':article,'group':group, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'group'})
-			
+
 	else:
 		return redirect('login')
 
@@ -133,11 +132,11 @@ def group_article_create(request):
 			request.session['gid'] = gid
 			request.session['status'] = status
 			group = Group.objects.get(pk=gid)
-			if new == '0':			
+			if new == '0':
 				if status=='1':
 					article = create_article(request)
 					GroupArticles.objects.create(article=article, user = request.user , group = group )
-					return redirect('group_article_create_body',article.pk)				
+					return redirect('group_article_create_body',article.pk)
 				else:
 					return render(request, 'new_article.html', {'group':group, 'status':1})
 			elif new == '1':
@@ -153,7 +152,7 @@ def group_article_create(request):
 					return redirect('group_article_create_body', article.pk)
 				else:
 					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
-				
+
 		else:
 			return redirect('home')
 	else:
@@ -163,12 +162,23 @@ def group_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			gid = request.POST['gid']
+<<<<<<< HEAD
 			group = Group.objects.get(pk=gid)
 			request.session['cid'] = 0
 			request.session['gid'] = gid
 			return redirect(settings.H5P_ROOT + '/create/')
+=======
+			request.session['cid'] = 0
+			request.session['gid'] = gid
+			try:
+				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + '/create/')
+			except Exception as e:
+				print(e)
+				return render(request, 'h5pserverdown.html', {})
+>>>>>>> 033ac33f0928257f57fa4109c0f7ec6afcff61d9
 		return redirect('home')
-	return redirect('login')		
+	return redirect('login')
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:
@@ -296,9 +306,14 @@ def group_content(request, pk):
 				for obj in json_data:
 					if obj['group_id'] == group.pk:
 						gh5p.append(obj)
+<<<<<<< HEAD
 			except ConnectionError:
+=======
+			except Exception as e:
+				print(e)
+>>>>>>> 033ac33f0928257f57fa4109c0f7ec6afcff61d9
 				print("H5P server down...Sorry!! We will be back soon")
-			
+
 			lstfinal = list(garticles) + list(gh5p)
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -329,4 +344,3 @@ def handle_group_invitations(request):
 			grpinivtation.save()
 
 		return redirect('user_dashboard')
-	

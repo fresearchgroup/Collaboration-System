@@ -101,7 +101,7 @@ def community_article_create_body(request, pk):
 		except:
 			return redirect('home')
 		article = Articles.objects.get(pk=pk)
-		community = Community.objects.get(pk=cid)		
+		community = Community.objects.get(pk=cid)
 		if request.method == 'POST':
 			if article.creation_complete:
 				article.body = getHTML(article)
@@ -110,12 +110,12 @@ def community_article_create_body(request, pk):
 				del request.session['status']
 				return redirect('article_view', article.pk)
 			else:
-				return redirect('community_article_create_body',article.pk)								
+				return redirect('community_article_create_body',article.pk)
 		else:
 			article.creation_complete = True
 			article.save()
 			return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'community'})
-			
+
 	else:
 		return redirect('login')
 
@@ -128,11 +128,11 @@ def community_article_create(request):
 			request.session['cid'] = cid
 			request.session['status'] = status
 			community = Community.objects.get(pk=cid)
-			if new == '0':			
+			if new == '0':
 				if status=='1':
 					article = create_article(request)
 					CommunityArticles.objects.create(article=article, user = request.user , community =community )
-					return redirect('community_article_create_body',article.pk)				
+					return redirect('community_article_create_body',article.pk)
 				else:
 					return render(request, 'new_article.html', {'community':community, 'status':1})
 			elif new == '1':
@@ -148,7 +148,7 @@ def community_article_create(request):
 					return redirect('community_article_create_body', article.pk)
 				else:
 					return render(request, 'new_article.html', {'community':community, 'status':1, 'article':article})
-				
+
 		else:
 			return redirect('home')
 	else:
@@ -379,7 +379,7 @@ def create_community(request):
 				except:
 					errormessage = 'Can not create default forum for this community'
 					return render(request, 'new_community.html', {'errormessage':errormessage})
-				
+
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
@@ -394,7 +394,7 @@ def create_community(request):
 					community = community,
 					role = role
 					)
-				
+
 				create_wiki_for_community(community)
 
 				return redirect('community_view', community.pk)
@@ -469,7 +469,7 @@ def community_group_content(request, pk):
 			except Exception as e:
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
-			
+
 			lstfinal = list(cgarticles) + list(cgh5p)
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -491,7 +491,7 @@ def h5p_view(request, pk):
 		return redirect( settings.H5P_ROOT + "/content/?contentId=%s" % pk)
 	except ConnectionError:
 		return render(request, 'h5pserverdown', {})
-	
+
 def community_course_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
@@ -544,7 +544,7 @@ def create_wiki_for_community(community):
 
 	cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
 	new_id = cursor.fetchone()[0] + 1
-					
+
 	data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
 
 	cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
@@ -560,7 +560,7 @@ def create_wiki_for_community(community):
 				)
 
 	data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
-	cursor.execute(insert_stmt_article, data_article) 
+	cursor.execute(insert_stmt_article, data_article)
 
 	cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
 	con_type_id = cursor.fetchone()[0]
