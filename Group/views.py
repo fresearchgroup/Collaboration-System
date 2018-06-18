@@ -173,9 +173,10 @@ def group_h5p_create(request):
 			request.session['cid'] = 0
 			request.session['gid'] = gid
 			try:
-				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
 				return redirect(settings.H5P_ROOT + '/create/')
 			except Exception as e:
+				print(e)
 				return render(request, 'h5pserverdown.html', {})
 		return redirect('home')
 	return redirect('login')		
@@ -308,6 +309,7 @@ def group_content(request, pk):
 					if obj['group_id'] == group.pk:
 						gh5p.append(obj)
 			except Exception as e:
+				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 			
 			lstfinal = list(garticles) + list(gh5p)
