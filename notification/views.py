@@ -8,34 +8,65 @@ def notify_community_subscribe_unsubscribe(user, community, verb):
                 verb=verb, target=community, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
 
 def notify_publishable_published_article(user, article, action):
-    comm = CommunityArticles.objects.get(article=article)
-    publisher_role = Roles.objects.get(name='publisher')
-    publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
-    list = []
-    for publisher in publishers:
-        if article.created_by != publisher.user:
-            list.append(publisher.user)
+    if CommunityArticles.objects.filter(article=article).exists():
+        comm = CommunityArticles.objects.get(article=article)
+        publisher_role = Roles.objects.get(name='publisher')
+        publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
+        list = []
+        for publisher in publishers:
+            if article.created_by != publisher.user:
+                list.append(publisher.user)
 
-    admin_role = Roles.objects.get(name='community_admin')
-    admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
+        admin_role = Roles.objects.get(name='community_admin')
+        admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
 
-    for admin in admins:
-        if article.created_by != admin.user:
-            list.append(admin.user)
+        for admin in admins:
+            if article.created_by != admin.user:
+                list.append(admin.user)
 
-    if action == 'publishable':
-        notify.send(sender=user, recipient=list,
-                    verb='This article is publishable', target=article,
-                    target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
+        if action == 'publishable':
+            notify.send(sender=user, recipient=list,
+                        verb='This article is publishable', target=article,
+                        target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
-    elif action == 'published':
-        notify.send(sender=user, recipient=list,
-                    verb='This article is published', target=article,
-                    target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+        elif action == 'published':
+            notify.send(sender=user, recipient=list,
+                        verb='This article is published', target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
-        notify.send(sender=user, recipient=article.created_by,
-                    verb='Your article is published', target=article,
-                    target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+            notify.send(sender=user, recipient=article.created_by,
+                        verb='Your article is published', target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+
+    elif GroupArticles.objects.filter(article=article).exists():
+        grp = GroupArticles.objects.get(article=article)
+        publisher_role = Roles.objects.get(name='publisher')
+        publishers = GroupMembership.objects.filter(group=grp.group, role=publisher_role)
+        list = []
+        for publisher in publishers:
+            if article.created_by != publisher.user:
+                list.append(publisher.user)
+
+        admin_role = Roles.objects.get(name='group_admin')
+        admins = GroupMembership.objects.filter(group=grp.group, role=admin_role)
+
+        for admin in admins:
+            if article.created_by != admin.user:
+                list.append(admin.user)
+
+        if action == 'visible':
+            notify.send(sender=user, recipient=list,
+                        verb='This article is publishable', target=article,
+                        target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
+
+        elif action == 'published':
+            notify.send(sender=user, recipient=list,
+                        verb='This article is published', target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+
+            notify.send(sender=user, recipient=article.created_by,
+                        verb='Your article is published', target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
 
 def notify_update_role(sender, user, target, current_role):

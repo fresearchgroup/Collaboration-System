@@ -119,6 +119,7 @@ def edit_article(request, pk):
 					if 'private' in request.POST:
 						to_state = States.objects.get(name='private')
 						article.state = to_state
+						create_resource_feed(article, "Article is available for editing", request.user)
 					else:
 						to_state = request.POST['state']
 						to_state = States.objects.get(name=to_state)
@@ -129,6 +130,8 @@ def edit_article(request, pk):
 
 						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
 							article.state = to_state
+							create_resource_feed(article, 'Article has been published', article.created_by)
+
 
 						else:
 							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
@@ -138,8 +141,15 @@ def edit_article(request, pk):
 								notify_publishable_published_article(request.user,article,'publishable')
 								create_resource_feed(article,"This article is no more available for editing",request.user)
 
+							# sending group feed when an article goes from draft to private state.
 							if(to_state.name=='private'):
 								create_resource_feed(article, "Article is available for editing",request.user)
+
+							# sending group feed and personal notification to all publishers and admins of group.
+							if(current_state.name == 'private' and to_state.name=='visible'):
+								create_resource_feed(article,"This article is no more available for editing",request.user)
+								notify_publishable_published_article(request.user, article, 'visible')
+
 
 					article.title = title
 					article.body = body
