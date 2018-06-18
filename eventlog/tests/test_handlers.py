@@ -60,14 +60,14 @@ class SimpleTest(TestCase):
 		self.data2 = {
              'test_case_1' : {
                   'input' : {
-                       'status' : [1]
+                       'status' : ['1']
                   },
                   'output' : 'article_create'
              },
 
              'test_case_2' : {
                    'input' : {
-                         'status' : [2]
+                         'status' : ['0']
                    },
                    'output' : None
              }
