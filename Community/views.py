@@ -488,6 +488,7 @@ def community_group_content(request, pk):
 
 def h5p_view(request, pk):
 	try:
+		requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
 		return redirect( settings.H5P_ROOT + "/content/?contentId=%s" % pk)
 	except ConnectionError:
 		return render(request, 'h5pserverdown', {})

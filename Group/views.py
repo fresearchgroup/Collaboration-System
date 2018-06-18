@@ -162,12 +162,6 @@ def group_h5p_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			gid = request.POST['gid']
-<<<<<<< HEAD
-			group = Group.objects.get(pk=gid)
-			request.session['cid'] = 0
-			request.session['gid'] = gid
-			return redirect(settings.H5P_ROOT + '/create/')
-=======
 			request.session['cid'] = 0
 			request.session['gid'] = gid
 			try:
@@ -176,7 +170,6 @@ def group_h5p_create(request):
 			except Exception as e:
 				print(e)
 				return render(request, 'h5pserverdown.html', {})
->>>>>>> 033ac33f0928257f57fa4109c0f7ec6afcff61d9
 		return redirect('home')
 	return redirect('login')
 
@@ -306,12 +299,8 @@ def group_content(request, pk):
 				for obj in json_data:
 					if obj['group_id'] == group.pk:
 						gh5p.append(obj)
-<<<<<<< HEAD
-			except ConnectionError:
-=======
 			except Exception as e:
 				print(e)
->>>>>>> 033ac33f0928257f57fa4109c0f7ec6afcff61d9
 				print("H5P server down...Sorry!! We will be back soon")
 
 			lstfinal = list(garticles) + list(gh5p)
