@@ -378,6 +378,7 @@ def community_content(request, pk):
 					if obj['community_id'] == community.pk:
 						ch5p.append(obj)
 			except Exception as e:
+				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 			lstfinal = list(carticles) + list(ccourse) + list(ch5p)
 
@@ -419,6 +420,7 @@ def community_group_content(request, pk):
 					if obj['group_id'] in groups_in_this_community:
 						cgh5p.append(obj)
 			except Exception as e:
+				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 			
 			lstfinal = list(cgarticles) + list(cgh5p)
@@ -467,9 +469,10 @@ def community_h5p_create(request):
 			request.session['cid'] = cid
 			request.session['gid'] = 0
 			try:
-				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
 				return redirect(settings.H5P_ROOT + '/create/')
 			except Exception as e:
+				print(e)
 				return render(request, 'h5pserverdown.html', {})
 		return redirect('home')
 	return redirect('login')
