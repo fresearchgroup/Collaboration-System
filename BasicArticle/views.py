@@ -80,29 +80,35 @@ def view_article(request, pk):
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
-	# if article.article.state == States.objects.get(name='publish'):
-	# 	is_repo = True
-	article_votes = ArticleVotes.objects.filter(article_id=pk)
-	if(article_votes.count() == 0): #checking if this article has a ArticleVotes row in order to store the upvotes and downvotes,if no then create a new one
-		article_votes = ArticleVotes(article_id = pk)
-		article_votes.save()
+	
+	# article_votes = ArticleVotes.objects.filter(article_id=pk)
+	# if(article_votes.count() == 0): #checking if this article has a ArticleVotes row in order to store the upvotes and downvotes,if no then create a new one
+	# 	article_votes = ArticleVotes(article_id = pk)
+	# 	article_votes.save()
 	article_votes = ArticleVotes.objects.get(article_id=pk)
-	if request.user.is_authenticated:
-		voting = VotingFlag.objects.filter(article_id=pk,user_id=request.user.id) 
-		if(voting.count() == 0): #checking if for this user and article there is a VOtingFlag row in order to stores his flags, if no then create a new one
-			voting = VotingFlag()
-			voting.article_id = pk
-			voting.user = request.user
-			voting.upflag = False
-			voting.downflag = False
-			voting.save()
+	# if request.user.is_authenticated:
+	# 	voting = VotingFlag.objects.filter(article_id=pk,user_id=request.user.id) 
+	# 	if(voting.count() == 0): #checking if for this user and article there is a VOtingFlag row in order to stores his flags, if no then create a new one
+	# 		voting = VotingFlag()
+	# 		voting.article_id = pk
+	# 		voting.user = request.user
+	# 		voting.upflag = False
+	# 		voting.downflag = False
+	# 		voting.reportflag = False
+	# 		voting.save()
+	if VotingFlag.objects.filter(article_id=pk,user_id=request.user.id).exists():
 		voting = VotingFlag.objects.get(article_id=pk,user_id=request.user.id)
 	else: #if the user is not authenticated create a dummy Voingflag and pass to the render function
 		voting = VotingFlag()
 		voting.article_id = pk
 		voting.upflag = False
-		voting.downflag = False	
-	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav, 'art':voting, 'article_votes':article_votes,})
+		voting.reportflag = False
+		voting.downflag = False
+
+	is_repo=False
+	if article.article.state == States.objects.get(name='publish'):
+		is_repo = True
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav, 'art':voting, 'article_votes':article_votes, 'is_repo':is_repo})
 
 
 def edit_article(request, pk):
@@ -184,7 +190,7 @@ def edit_article(request, pk):
 						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
 						community_membership.role = Roles.objects.get(name='community_admin')
 						community_membership.save()
-					elif(author_crep >= defaultval.threshold_publisher): #checking if author can become a community admin
+					elif(author_crep.rep >= defaultval.threshold_publisher): #checking if author can become a community admin
 						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
 						community_membership.role = Roles.objects.get(name='community_admin')
 						community_membership.save()

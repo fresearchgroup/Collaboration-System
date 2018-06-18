@@ -105,6 +105,8 @@ def group_article_create(request):
 			if (crep>defaultval.min_crep_for_art): #checking if the user community reputation is greater than the minimum reputation required to create an article
 				if status=='1':
 					article = create_article(request)
+					article_votes = ArticleVotes(article = article)
+					article_votes.save()
 					obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
 					return redirect('article_view', article.pk)
 				else:

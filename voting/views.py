@@ -1,12 +1,15 @@
 from BasicArticle.models import Articles
 from django.http import Http404, HttpResponse
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from django.shortcuts import render,get_object_or_404,redirect
 from BasicArticle.views import display_articles,create_article,view_article,edit_article,delete_article,article_watch,SimpleModelHistoryCompareView
-from .models import VotingFlag,ArticleVotes
+from .models import VotingFlag,ArticleVotes,ArticleReport
 from reputation.views import CommunityReputation
+from reputation.models import CommunityRep,SystemRep,DefaultValues
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 
 def updown(request):
 	#This function is called whenever a user upvotes or downvotes
@@ -31,7 +34,15 @@ def updown(request):
 				else:
 					vote_type = "down"
 					vote_action = "recall-vote"
-				voting = VotingFlag.objects.get(article_id=a_id,user_id=request.user.id)
+				if not VotingFlag.objects.filter(article_id=a_id,user_id=request.user.id).exists():
+					voting = VotingFlag()
+					voting.article_id = a_id
+					voting.user = request.user
+					voting.upflag = False
+					voting.downflag = False
+					voting.reportflag = False
+					voting.save()
+				voting = VotingFlag.objects.get(article_id=a_id,user_id=request.user.id)	
 				article_votes = ArticleVotes.objects.get(article_id=a_id)
 				upflag = voting.upflag
 				downflag = voting.downflag
@@ -85,3 +96,89 @@ def updown(request):
 			return redirect('login') # anonymous user
 		return redirect('article_view',a_id) # once updated redirect back to the article
 	
+
+@csrf_exempt
+def report(request):
+	if request.method == 'POST':
+		username = request.POST.get('username')
+		user= User.objects.get(username=username)
+		resource_id = request.POST.get('rid')
+		category = request.POST.get('category')
+		status = request.POST.get('status')
+		if not VotingFlag.objects.filter(article_id=resource_id,user_id=user.id).exists():
+			voting = VotingFlag()
+			voting.article_id = resource_id
+			voting.user = user
+			voting.upflag = False
+			voting.downflag = False
+			voting.reportflag = False
+			voting.save()
+		commart = CommunityArticles.objects.filter(article_id=resource_id).exists()
+		if(commart is False): #it is not a community article
+			grpart = GroupArticles.objects.get(article_id=resource_id)
+			grp = grpart.group
+			community = CommunityGroups.objects.get(group_id=grp.id)
+		else: #it is a community article
+			commart = CommunityArticles.objects.get(article_id=resource_id)
+			community = commart.community
+		if status == 'add':
+			voteflag = VotingFlag.objects.get(user=user,article_id= resource_id)
+			voteflag.reportflag = True
+			voteflag.save()
+			article_votes = ArticleVotes.objects.get(article_id = resource_id)
+			article_votes.report +=1;
+			article_votes.save()
+			defaultval = DefaultValues.objects.get(pk=1)
+			if(article_votes.report >= defaultval.threshold_report):
+				article = Articles.objects.get(pk=resource_id)					
+				if not ArticleReport.objects.filter(article = article).exists():
+					ArticleReport.objects.create(community=community,article = article,no_of_report = article_votes.report)
+				else:
+					ArticleReport.objects.filter(community=community,article = article).update(no_of_report = article_votes.report)
+			return HttpResponse('added')
+		if status == 'remove':
+			voteflag = VotingFlag.objects.get(user=user,article_id= resource_id)
+			voteflag.reportflag = False
+			voteflag.save()
+			article_votes = ArticleVotes.objects.get(article_id = resource_id)
+			article_votes.report -=1
+			article_votes.save()
+			defaultval = DefaultValues.objects.get(pk=1)
+			if(article_votes.report < defaultval.threshold_report):
+				article = Articles.objects.get(pk=resource_id)
+				if ArticleReport.objects.filter(article = article).exists():
+					ArticleReport.objects.filter(article = article).delete()
+			else:
+				article = Articles.objects.get(pk=resource_id)
+				ArticleReport.objects.filter(community=community,article=article).update(no_of_report = article_votes.report)
+			return HttpResponse('removed')
+		return HttpResponse('ok')
+
+
+def article_report(request,pk):
+	community = Community.objects.get(pk=pk)
+	if request.method == 'POST':
+		pk1 = int(request.POST.get('pk1'))
+		article_reported = ArticleReport.objects.get(pk=pk1)
+		status = request.POST.get('status')
+		defaultval = DefaultValues.objects.get(pk=1)
+		if(status == 'approve'):
+			article = article_reported.article
+			commrep = CommunityRep.objects.get(user=article.created_by,community_id=pk)
+			commrep.rep -= defaultval.author_report
+			sysrep = SystemRep.objects.get(user=article.created_by)
+			sysrep.sysrep -= defaultval.author_report
+			commrep.save()
+			sysrep.save()
+		article = article_reported.article
+		voteflags = VotingFlag.objects.filter(article=article)
+		for voteflag in voteflags:
+			voteflag.reportflag = False
+			voteflag.save()
+		articlevotes = ArticleVotes.objects.get(article=article_reported.article)
+		articlevotes.report = 0
+		articlevotes.save()
+		ArticleReport.objects.filter(pk=pk1).delete()
+	articles_reported = ArticleReport.objects.filter(community=community)
+	membership = CommunityMembership.objects.get(user=request.user,community=community)
+	return render(request, 'article_report.html' , {'articles_reported':articles_reported,'community':community,'membership':membership})

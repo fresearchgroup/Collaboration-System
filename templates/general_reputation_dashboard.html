@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block reputationdashboard %}
+<!--   Reputation Dashboard CSS -->
+  <link rel="stylesheet" href="{% static 'css/reputation_dashboard.css' %}">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Reputaion Dashboard</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item active">
+    <a class="nav-link " href="#">General</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'author_reputation_dashboard' %}">Author</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'publisher_reputation_dashboard' %}">Publisher</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'communityadmin_reputation_dashboard' %}">Community Admin</a>
+  </li>
+</ul>
+<br/>
+
+<form method="POST" action="{% url 'general_reputation_dashboard' %}">
+{% csrf_token %}
+<div class="form-group">
+<label for="upvote">Value of upvotes:</label>
+<input type="text" id="upvote" name="upvote" value="{{defaultval.upvote}}"/><br>
+<label for="downvote">Value of downvotes:</label>
+<input type="text" id="downvote" name="downvote" value="{{defaultval.downvote}}"/><br>
+<label for="min_crep_for_art">Minimum Community Reputation for creating a article: </label>
+<input type="text" id="min_crep_for_art" name="min_crep_for_art" value="{{defaultval.min_crep_for_art}}"/><br>
+<label for="min_srep_for_comm">Minimum System Reputation for creating a community: </label>
+<input type="text" id="min_srep_for_comm" name="min_srep_for_comm" value="{{defaultval.min_srep_for_comm}}"/><br>
+<label for="srep_for_comm_creation">System Reputation increase for creating a community:</label>
+<input type="text" id="srep_for_comm_creation" name="srep_for_comm_creation" value="{{defaultval.srep_for_comm_creation}}"/><br>
+<label for="threshold_publisher">Threshold to become a publisher: </label>
+<input type="text" id="threshold_publisher" name="threshold_publisher" value="{{defaultval.threshold_publisher}}"><br>
+<label for="threshold_cadmin">Threshold to become a community admin: </label>
+<input type="text" id="threshold_cadmin" name="threshold_cadmin" value="{{defaultval.threshold_cadmin}}"><br>
+<input type="submit" name="Submit" value="Submit"/>
+</div>
+</form>
+{% endblock %}

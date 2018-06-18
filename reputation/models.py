@@ -30,6 +30,8 @@ class DefaultValues(models.Model): #stores all the values of the reputation mode
 	srep_for_comm_creation = models.PositiveIntegerField()
 	threshold_publisher = models.PositiveIntegerField(default=0)
 	threshold_cadmin = models.PositiveIntegerField(default=0)
+	threshold_report = models.PositiveIntegerField(default = 10)
+	author_report = models.PositiveIntegerField(default=50)
 
 	def __str__(self):
 		return "Default Values"

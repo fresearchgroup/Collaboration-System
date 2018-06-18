@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block reputationdashboard %}
+<!--   Reputation Dashboard CSS -->
+  <link rel="stylesheet" href="{% static 'css/reputation_dashboard.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Reputaion Dashboard</li>
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'general_reputation_dashboard' %}">General</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link " href="{% url 'author_reputation_dashboard' %}">Author</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'publisher_reputation_dashboard' %}">Publisher</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'communityadmin_reputation_dashboard' %}">Community Admin</a>
+  </li>
+</ul>
+<br/>
+
+<form method="POST" action="{% url 'author_reputation_dashboard' %}">
+{% csrf_token %}
+<div class="form-group">
+<label for="published_author">Reputation increase for publishing a article (Author): </label>
+<input type="text" id="published_author" name="published_author" value="{{defaultval.published_author}}"/><br>
+<label for="author_report">Reputation decrease when article gets reported (Author): </label>
+<input type="text" id="author_report" name="author_report" value="{{defaultval.author_report}}"><br>
+<input type="submit" name="Submit" value="Submit"/>
+</div>
+</form>
+{% endblock %}

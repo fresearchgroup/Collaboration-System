@@ -19,6 +19,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
 from reputation.models import CommunityRep,SystemRep,DefaultValues
+from voting.models import ArticleVotes
 # Create your views here.
 
 
@@ -105,6 +106,9 @@ def community_article_create(request):
 			if (crep>defaultval.min_crep_for_art): #checking if user community reputation is greater than the minimum reputation required to create an article
 				if status=='1':
 					article = create_article(request)
+					 #creating a ArticleVotes row in order to store the upvotes and downvotes and reports
+					article_votes = ArticleVotes(article = article)
+					article_votes.save()
 					obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
 					return redirect('article_view', article.pk)
 				else:

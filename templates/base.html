@@ -26,7 +26,8 @@
   <!-- Fonts START -->
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css">
   <!-- Fonts END -->
-
+  {% block reputationdashboard %}
+  {% endblock %}
 
   <!-- Global styles START -->
   <link href="{% static 'assets/plugins/font-awesome/css/font-awesome.min.css' %} " rel="stylesheet">
@@ -151,7 +152,7 @@ $(document).ready(function() {
           <ul class="dropdown-menu">
             {% if request.user.is_superuser %}
 						<li><a href="{% url 'create_community' %}">Create Community</a></li>
-            <li><a href="{% url 'defaultval' %}">Reputation Model Values</a></li>
+            <li><a href="{% url 'general_reputation_dashboard' %}">Reputation Dashboard</a></li>
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
 						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             {% endif%}

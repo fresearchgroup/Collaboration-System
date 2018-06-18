@@ -1,21 +1,20 @@
 $('document').ready(function(){
- $('#fav_submit').click(function(){
+ $('#repo_submit').click(function(){
 
   var username = $('#username').val();
   var rid = $('#rid').val();
   var category = $('#category').val();
   var csrf = $('#csrf').val();
-  var url = $('#url').val();
+  var url = $('#url1').val();
   var status = '';
 
-
-if ($( "#fav_submit" ).hasClass( "fa fa-star-o" )){
+if ($( "#repo_submit" ).hasClass( "fa fa-flag-o" )){
      
      status = 'add';
 
 }
 
-if ($( "#fav_submit" ).hasClass( "fa fa-star" )){
+if ($( "#repo_submit" ).hasClass( "fa fa-flag" )){
      
      status = 'remove';
 
@@ -33,15 +32,15 @@ if ($( "#fav_submit" ).hasClass( "fa fa-star" )){
       'status' : status
     },
     success: function(data){
-        
+
         if(data=='added'){
-      	$('#fav_submit').removeClass('fa fa-star-o');
-        $('#fav_submit').addClass('fa fa-star')
+      	$('#repo_submit').removeClass('fa fa-flag-o');
+        $('#repo_submit').addClass('fa fa-flag')
       } 
       if(data=='removed'){
 
-            $('#fav_submit').removeClass('fa fa-star');
-            $('#fav_submit').addClass('fa fa-star-o')
+            $('#repo_submit').removeClass('fa fa-flag');
+            $('#repo_submit').addClass('fa fa-flag-o')
       }
     }
   });

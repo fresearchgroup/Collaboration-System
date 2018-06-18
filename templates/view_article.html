@@ -85,13 +85,7 @@
             {% else %}
             <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
             {%endif%}
-            <!-- {% if is_repo %}
-            
-            <li><i id="report_submit" class="fa fa-flag"></i>Report</li>
-            {% else %}
-            <li><i id="report_submit" class="fa fa-star-o"></i>Report</li>
-            {% endif %} -->
-            <form methd = "post">
+            <form method = "post">
                 <input id="username" type="hidden" value="{{request.user.username}}"/>
                 <input id="rid" type="hidden" value="{{article.article.pk}}"/>
                 <input id="category" type="hidden" value="article"/>
@@ -99,7 +93,22 @@
                 <input id="url" type="hidden" value="{% url 'favourites' %}"/> 
               </form>
             {% endif %}
-            
+            {% if user.is_authenticated %}
+            {% if is_repo %}
+            {% if art.reportflag %}
+            <li><i id="repo_submit" class="fa fa-flag"></i> Report</li>
+            {% else %}
+            <li><i id="repo_submit" class="fa fa-flag-o"></i> Report</li>
+            {% endif %}
+            {% endif %}
+            <form method = "post">
+                <input id="username" type="hidden" value="{{request.user.username}}"/>
+                <input id="rid" type="hidden" value="{{article.article.pk}}"/>
+                <input id="category" type="hidden" value="article"/>
+                <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
+                <input id="url1" type="hidden" value="{% url 'report' %}"/> 
+              </form>
+            {% endif %}
           </ul>
         <p>
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
@@ -147,5 +156,6 @@
 
 {% endblock %}
 {% block javascript %}
+<script src="{% static 'js/report.js' %}"></script>
 <script src="{% static 'js/favourite.js' %}"></script>
 {% endblock %}
