@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Community.models import CommunityArticles, Community, CommunityMembership
+from Community.models import CommunityArticles, Community, CommunityMembership, CommunityGroups
 from actstream import action
 from actstream.models import Action
 from django.contrib.contenttypes.models import ContentType
@@ -8,18 +8,29 @@ from Group.models import GroupArticles
 # Create your views here.
 
 
-def create_resource_feed(actor,verb,action_object):
+def create_resource_feed(actor,verb_id,action_object):
 	if isinstance(actor, Articles):
+		verb=''
 		if CommunityArticles.objects.filter(article=actor).exists():
 			target = CommunityArticles.objects.get(article=actor).community
+			if verb_id=="article_published" :
+				verb="Article has been published"
+				actor_href='article_view'
 
 		else:
 			target = GroupArticles.objects.get(article=actor).group
+			if verb_id=="article_published" :
+				verb="Group article has been published"
+				actor_href='article_view'
+				comm=CommunityGroups.objects.get(group=target)
+				target=comm.community
 
-		if verb == "Article is available for editing":
+		if verb_id == 'article_edit':
+			verb="Article is available for editing"
 			actor_href = 'article_edit'
 
-		elif verb == "Article has been published" or verb == "This article is no more available for editing":
+		if verb_id=='article_no_edit':
+			verb = "This article is no more available for editing"
 			actor_href = 'article_view'
 
 		action.send(actor,verb=verb,action_object=action_object,target=target,actor_href=actor_href,actor_href_id=actor.id,action_object_href='display_user_profile',action_object_href_id=action_object.username)

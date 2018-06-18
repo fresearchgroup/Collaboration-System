@@ -7,18 +7,20 @@ def notify_community_subscribe_unsubscribe(user, community, verb):
     notify.send(sender=user, recipient=user,
                 verb=verb, target=community, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
 
-def notify_publishable_published_article(user, article, action):
+def notify_update_article_state(user, article, action):
     if CommunityArticles.objects.filter(article=article).exists():
         comm = CommunityArticles.objects.get(article=article)
+
         publisher_role = Roles.objects.get(name='publisher')
+        admin_role = Roles.objects.get(name='community_admin')
+
+        admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
         publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
+
         list = []
         for publisher in publishers:
             if article.created_by != publisher.user:
                 list.append(publisher.user)
-
-        admin_role = Roles.objects.get(name='community_admin')
-        admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
 
         for admin in admins:
             if article.created_by != admin.user:
@@ -40,32 +42,57 @@ def notify_publishable_published_article(user, article, action):
 
     elif GroupArticles.objects.filter(article=article).exists():
         grp = GroupArticles.objects.get(article=article)
+
         publisher_role = Roles.objects.get(name='publisher')
-        publishers = GroupMembership.objects.filter(group=grp.group, role=publisher_role)
+
+        if action=='visible' or action=='published':
+
+            admin_role = Roles.objects.get(name='community_admin')
+            comm = CommunityGroups.objects.get(group=grp.group)
+            admins = CommunityMembership.objects.filter(community=comm.community, role=admin_role)
+            publishers = CommunityMembership.objects.filter(community=comm.community, role=publisher_role)
+
+        else:
+            admin_role = Roles.objects.get(name='group_admin')
+            publishers = GroupMembership.objects.filter(group=grp.group, role=publisher_role)
+            admins = GroupMembership.objects.filter(group=grp.group, role=admin_role)
+
         list = []
         for publisher in publishers:
             if article.created_by != publisher.user:
                 list.append(publisher.user)
 
-        admin_role = Roles.objects.get(name='group_admin')
-        admins = GroupMembership.objects.filter(group=grp.group, role=admin_role)
-
         for admin in admins:
             if article.created_by != admin.user:
                 list.append(admin.user)
 
-        if action == 'visible':
+        if action=='private':
             notify.send(sender=user, recipient=list,
-                        verb='This article is publishable', target=article,
+                        verb='This group article is in private state, can be changed to visible', target=article,
                         target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
-        elif action == 'published':
+        elif action == 'visible':
             notify.send(sender=user, recipient=list,
-                        verb='This article is published', target=article,
+                        verb='This group article can be published', target=article,
+                        target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
+
+        elif action == 'published' or action=='rejected':
+            verb1=''
+            verb2=''
+            if action== 'published':
+                verb1='This article is published'
+                verb2='Your article is published'
+            elif action=='rejected':
+                verb1='This article got rejected'
+                verb2='Your article got rejected'
+
+
+            notify.send(sender=user, recipient=list,
+                        verb=verb1, target=article,
                         target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
             notify.send(sender=user, recipient=article.created_by,
-                        verb='Your article is published', target=article,
+                        verb=verb2, target=article,
                         target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
 
@@ -144,15 +171,25 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             sender_url_name=sender.username)
 
 def notify_edit_article(user, article):
-    comm = CommunityArticles.objects.get(article=article)
-    membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
-    role = membership.role.name
-    verb=''
-    if role == 'publisher':
-        verb="Publisher edited your article"
-    elif role =='community_admin':
-        verb="Admin edited your article"
-    elif role == 'author':
+    verb=""
+    role=""
+    if CommunityArticles.objects.filter(article=article).exists():
+        comm = CommunityArticles.objects.get(article=article)
+        membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
+        role = membership.role.name
+        if(role=="community_admin"):
+            verb="Admin edited your article"
+
+    else:
+        grp = GroupArticles.objects.get(article=article)
+        membership = GroupMembership.objects.get(user=user, group=grp.group.pk)
+        role = membership.role.name
+        if role == 'publisher':
+            verb="Group publisher edited your article"
+        elif (role == "group_admin"):
+            verb = "Group admin edited your article"
+
+    if role == 'author':
         verb="Your article got edited"
 
     notify.send(sender=user, verb=verb, recipient=article.created_by,
