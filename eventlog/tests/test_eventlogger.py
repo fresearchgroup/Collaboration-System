@@ -17,18 +17,18 @@ class TestEventlogger(TestCase):
         request.META['HTTP_ACCEPT_LANGUAGE']='en-GB,en;q=0.5'
         request.META['REMOTE_ADDR']='172.19.0.1'
         request.COOKIES['sessionid']='mcle7sile4a6dhfdcxtyampo0kjo0c0e'
-        self.data={}
-        self.data={}
-        self.data['request']=request
-        self.data['view_func']=None
-        self.data['view_args']=None
-        self.data['view_kwargs']={ 'pk':'1' }
 
         user = User.objects.create_user(username='tester', email='tester@gmail.com', password='tester@123')
         user.save()
         user = authenticate(username='tester', password='tester@123')
         request.user = user
         request.user.id=1
+
+        self.data={}
+        self.data['request']=request
+        self.data['view_func']=None
+        self.data['view_args']=None
+        self.data['view_kwargs']={ 'pk':'1' }
 
     def tearDown(self):
         pass
