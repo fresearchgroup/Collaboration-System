@@ -1,11 +1,13 @@
 from .models import Community, CommunityArticles
 from .serializers import CommunitySerializer, CommunityArticlesSerializer
 from rest_framework import viewsets, generics
-import datetime
+import datetime, time
 # Create your views here.
+today = datetime.date.today()
+tomorrow = today + datetime.timedelta(1)
 
 class CommunityViewSet(viewsets.ModelViewSet):
-	queryset = Community.objects.all().order_by('name')
+	queryset = Community.objects.filter(created_at__range=[today, tomorrow])
 	serializer_class = CommunitySerializer
 
 

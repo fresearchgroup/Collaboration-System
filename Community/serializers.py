@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import Community, CommunityArticles
 
-class CommunitySerializer(serializers.HyperlinkedModelSerializer):
+class CommunitySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Community
-		fields = ('name', 'desc','category')
+		fields = ('name', 'desc','category', 'created_at', 'created_by')
 
 
 
