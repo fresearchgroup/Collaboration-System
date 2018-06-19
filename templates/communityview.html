@@ -19,6 +19,9 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'article_report' community.pk %}">Articles Reported</a>
+  </li>
   {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
   <li class="nav-item">

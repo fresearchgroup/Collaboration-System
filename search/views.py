@@ -15,3 +15,4 @@ def IndexDocuments(id,title,body,date):
     docs = [{'id': id,  'title': title, 'body': body ,'created_at' : str(date) }]
     conn.add(docs)
     return
+    

@@ -93,11 +93,26 @@
       {{myhtml|safe}}{% autoescape off%}
       {% for comm in communities %}
         {% if comm.role.name == 'author' %}
-        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-pencil"></i> {{ comm.community }} </a> </li>
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-pencil"></i> {{ comm.community }} - {% for commrep in communityrep %}
+        {% if commrep.community == comm.community %}
+        {{commrep.rep}}
+        {% endif %}
+        {% endfor %}</a> 
+        </li>
         {% elif comm.role.name == 'publisher' %}
-        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-print"></i> {{ comm.community }} </a> </li>
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-print"></i> {{ comm.community }} - {% for commrep in communityrep %}
+        {% if commrep.community == comm.community %}
+        {{commrep.rep}}
+        {% endif %}
+        {% endfor %}</a> 
+        </li>
         {% else %}
-        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-trophy"></i> {{ comm.community }} </a> </li>
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-trophy"></i> {{ comm.community }} - {% for commrep in communityrep %}
+        {% if commrep.community == comm.community %}
+        {{commrep.rep}}
+        {% endif %}
+        {% endfor %} </a>  
+        </li>
         {% endif %}
       {% endfor %}
       {% endautoescape%}

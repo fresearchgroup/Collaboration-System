@@ -8,6 +8,7 @@ $('document').ready(function(){
   var url = $('#url').val();
   var status = '';
 
+
 if ($( "#fav_submit" ).hasClass( "fa fa-star-o" )){
      
      status = 'add';
@@ -32,6 +33,7 @@ if ($( "#fav_submit" ).hasClass( "fa fa-star" )){
       'status' : status
     },
     success: function(data){
+        
         if(data=='added'){
       	$('#fav_submit').removeClass('fa fa-star-o');
         $('#fav_submit').addClass('fa fa-star')
