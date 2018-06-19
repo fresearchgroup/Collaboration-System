@@ -215,28 +215,31 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             sender_url_name=sender.username)
 
 def notify_edit_article(user, article):
-    verb=""
-    role=""
-    if CommunityArticles.objects.filter(article=article).exists():
-        comm = CommunityArticles.objects.get(article=article)
-        membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
-        role = membership.role.name
-        if(role=="community_admin"):
-            verb="Admin edited your article"
 
-    else:
-        grp = GroupArticles.objects.get(article=article)
-        membership = GroupMembership.objects.get(user=user, group=grp.group.pk)
-        role = membership.role.name
-        if role == 'publisher':
-            verb="Group publisher edited your article"
-        elif (role == "group_admin"):
-            verb = "Group admin edited your article"
 
-    if role == 'author':
-        verb="Your article got edited"
+    if(user != article.created_by):
+        verb=""
+        role=""
+        if CommunityArticles.objects.filter(article=article).exists():
+            comm = CommunityArticles.objects.get(article=article)
+            membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
+            role = membership.role.name
+            if(role=="community_admin"):
+                verb="Admin edited your article"
 
-    notify.send(sender=user, verb=verb, recipient=article.created_by,
-                target=article,
-                target_url="article_view", sender_url='display_user_profile',
-                sender_url_name=user.username)
+        else:
+            grp = GroupArticles.objects.get(article=article)
+            membership = GroupMembership.objects.get(user=user, group=grp.group.pk)
+            role = membership.role.name
+            if role == 'publisher':
+                verb="Group publisher edited your article"
+            elif (role == "group_admin"):
+                verb = "Group admin edited your article"
+
+        if role == 'author':
+            verb="Your article got edited"
+
+        notify.send(sender=user, verb=verb, recipient=article.created_by,
+                    target=article,
+                    target_url="article_view", sender_url='display_user_profile',
+                    sender_url_name=user.username)
