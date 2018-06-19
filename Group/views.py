@@ -99,19 +99,14 @@ def group_article_create(request):
 			group = Group.objects.get(pk=gid)
 			community = CommunityGroups.objects.get(group=group)
 			community = community.community
-			commrep = CommunityRep.objects.get(community = community, user=request.user)
-			crep =commrep.rep
-			defaultval = DefaultValues.objects.get(pk=1)
-			if (crep>defaultval.min_crep_for_art): #checking if the user community reputation is greater than the minimum reputation required to create an article
-				if status=='1':
-					article = create_article(request)
-					article_votes = ArticleVotes(article = article)
-					article_votes.save()
-					obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
-					return redirect('article_view', article.pk)
-				else:
-					return render(request, 'new_article.html', {'group':group, 'status':1})
-			return render(request,'lowrep.html')
+			if status=='1':
+				article = create_article(request)
+				article_votes = ArticleVotes(article = article)
+				article_votes.save()
+				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
+				return redirect('article_view', article.pk)
+			else:
+				return render(request, 'new_article.html', {'group':group, 'status':1})
 		else:
 			return redirect('home')
 	else:

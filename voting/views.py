@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group as Roles
 from django.shortcuts import render,get_object_or_404,redirect
 from BasicArticle.views import display_articles,create_article,view_article,edit_article,delete_article,article_watch,SimpleModelHistoryCompareView
 from .models import VotingFlag,ArticleVotes,ArticleReport
-from reputation.views import CommunityReputation
+from reputation.views import CommunityReputation,rolechange
 from reputation.models import CommunityRep,SystemRep,DefaultValues
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -34,14 +34,7 @@ def updown(request):
 				else:
 					vote_type = "down"
 					vote_action = "recall-vote"
-				if not VotingFlag.objects.filter(article_id=a_id,user_id=request.user.id).exists():
-					voting = VotingFlag()
-					voting.article_id = a_id
-					voting.user = request.user
-					voting.upflag = False
-					voting.downflag = False
-					voting.reportflag = False
-					voting.save()
+				create_voting_flag(a_id,request.user)
 				voting = VotingFlag.objects.get(article_id=a_id,user_id=request.user.id)	
 				article_votes = ArticleVotes.objects.get(article_id=a_id)
 				upflag = voting.upflag
@@ -104,14 +97,7 @@ def report(request):
 		user= User.objects.get(username=username)
 		resource_id = request.POST.get('rid')
 		status = request.POST.get('status')
-		if not VotingFlag.objects.filter(article_id=resource_id,user_id=user.id).exists():
-			voting = VotingFlag()
-			voting.article_id = resource_id
-			voting.user = user
-			voting.upflag = False
-			voting.downflag = False
-			voting.reportflag = False
-			voting.save()
+		create_voting_flag(resource_id,user)
 		commart = CommunityArticles.objects.filter(article_id=resource_id).exists()
 		if(commart is False): #it is not a community article
 			grpart = GroupArticles.objects.get(article_id=resource_id)
@@ -161,16 +147,27 @@ def article_report(request,pk):
 		article_reported = ArticleReport.objects.get(pk=pk1)
 		status = request.POST.get('status')
 		defaultval = DefaultValues.objects.get(pk=1)
+		article = article_reported.article
 		if(status == 'approve'):
-			article = article_reported.article
 			commrep = CommunityRep.objects.get(user=article.created_by,community_id=pk)
 			commrep.rep -= defaultval.author_report
 			sysrep = SystemRep.objects.get(user=article.created_by)
 			sysrep.sysrep -= defaultval.author_report
 			commrep.save()
 			sysrep.save()
-		article = article_reported.article
-		voteflags = VotingFlag.objects.filter(article=article)
+			rolechange(commrep,article.created_by,community)
+		else:
+			users_rejected = VotingFlag.objects.filter(article=article,reportflag=True)
+			for user_rejected in users_rejected:
+				commrep = CommunityRep.objects.get(user=user_rejected.user,community=community)
+				sysrep = SystemRep.objects.get(user=user_rejected.user)
+				commrep.rep -= defaultval.article_report_rejected
+				sysrep.sysrep -= defaultval.article_report_rejected
+				commrep.save()
+				sysrep.save()
+				rolechange(commrep,user_rejected.user,community)
+
+		voteflags = VotingFlag.objects.filter(article=article,reportflag=True)
 		for voteflag in voteflags:
 			voteflag.reportflag = False
 			voteflag.save()
@@ -181,3 +178,14 @@ def article_report(request,pk):
 	articles_reported = ArticleReport.objects.filter(community=community)
 	membership = CommunityMembership.objects.get(user=request.user,community=community)
 	return render(request, 'article_report.html' , {'articles_reported':articles_reported,'community':community,'membership':membership})
+
+
+def create_voting_flag(a_id,user):
+	if not VotingFlag.objects.filter(article_id=a_id,user_id=user.id).exists():
+		voting = VotingFlag()
+		voting.article_id = a_id
+		voting.user = request.user
+		voting.upflag = False
+		voting.downflag = False
+		voting.reportflag = False
+		voting.save()	

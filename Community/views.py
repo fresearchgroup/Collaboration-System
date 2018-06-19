@@ -19,6 +19,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
 from reputation.models import CommunityRep,SystemRep,DefaultValues
+from reputation.views import rolechange
 from voting.models import ArticleVotes
 # Create your views here.
 
@@ -100,20 +101,15 @@ def community_article_create(request):
 			status = request.POST['status']
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
-			commrep = CommunityRep.objects.get(community = community, user=request.user)
-			crep =commrep.rep
-			defaultval = DefaultValues.objects.get(pk=1)
-			if (crep>defaultval.min_crep_for_art): #checking if user community reputation is greater than the minimum reputation required to create an article
-				if status=='1':
-					article = create_article(request)
-					 #creating a ArticleVotes row in order to store the upvotes and downvotes and reports
-					article_votes = ArticleVotes(article = article)
-					article_votes.save()
-					obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-					return redirect('article_view', article.pk)
-				else:
-					return render(request, 'new_article.html', {'community':community, 'status':1})
-			return render(request,'lowrep.html')
+			if status=='1':
+				article = create_article(request)
+				 #creating a ArticleVotes row in order to store the upvotes and downvotes and reports
+				article_votes = ArticleVotes(article = article)
+				article_votes.save()
+				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				return redirect('article_view', article.pk)
+			else:
+				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:
 			return redirect('home')
 	else:
@@ -215,6 +211,7 @@ def handle_community_creation_requests(request):
 					)
 				rcommunity.status = 'approved'
 				rcommunity.save()
+				
 				commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
@@ -223,6 +220,7 @@ def handle_community_creation_requests(request):
 				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
 				sysrep.save()
 				commrep.save()
+				rolechange(commrep,rcommunity.requestedby,communitycreation)
 			if status=='reject' and rcommunity.status!='rejected':
 				rcommunity.status = 'rejected'
 				rcommunity.save()

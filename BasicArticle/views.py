@@ -13,6 +13,7 @@ from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
 from voting.models import VotingFlag,ArticleVotes
 from reputation.models import DefaultValues,SystemRep,CommunityRep
+from reputation.views import rolechange
 
 def display_articles(request):
 	"""
@@ -65,16 +66,16 @@ def view_article(request, pk):
 	"""
 	
 	try:
-		article = CommunityArticles.objects.get(article_id=pk)
+		article = CommunityArticles.objects.get(article=pk)
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
-			article = GroupArticles.objects.get(article_id=pk) 	
+			article = GroupArticles.objects.get(article=pk) 	
 			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 				return redirect('home')
-			count = article_watch(request, article.article)	
+			count = article_watch(request, article.article)
 		except GroupArticles.DoesNotExist:
 			raise Http404
 	is_fav =''
@@ -171,24 +172,14 @@ def edit_article(request, pk):
 					author_srep.sysrep+=defaultval.published_author
 					author_crep.rep+=defaultval.published_author
 					publisher_crep.rep+=defaultval.published_publisher
-					publisher_srep.sysrep+=defaultval.published_publisher 
-					if(author_crep.rep >= defaultval.threshold_cadmin): #checking if author can become a communtiy admin
-						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
-						community_membership.role = Roles.objects.get(name='community_admin')
-						community_membership.save()
-					elif(author_crep.rep >= defaultval.threshold_publisher): #checking if author can become a community admin
-						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
-						community_membership.role = Roles.objects.get(name='community_admin')
-						community_membership.save()
+					publisher_srep.sysrep+=defaultval.published_publisher
 
-					if(publisher_crep.rep >= defaultval.threshold_cadmin): #checking if pubisher can become a community admin
-						community_membership = CommunityMembership.objects.get(user_id=author.id,community_id=community.id)
-						community_membership.role = Roles.objects.get(name='community_admin')
-						community_membership.save()
 					author_srep.save()
 					author_crep.save()
 					publisher_crep.save()
 					publisher_srep.save()
+					rolechange(author_crep,author,community)
+					rolechange(publisher_crep,publiher,community)
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:

@@ -1,7 +1,12 @@
 from django.db import models
 from Community.models import Community
 from django.contrib.auth.models import User
-import os
+import os, uuid
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('article', filename)
 
 class CommunityRep(models.Model): #stores the user community reputation
 	community = models.ForeignKey(Community ,on_delete = models.CASCADE)
@@ -18,6 +23,10 @@ class SystemRep(models.Model): #store the user system reputation
 	def __str__(self):
 		return self.user.username
 
+class Badges(models.Model):
+	user = models.OneToOneField(User,on_delete=models.CASCADE)
+	badge_image = models.ImageField(null=True,upload_to=get_file_path)
+
 class DefaultValues(models.Model): #stores all the values of the reputation model
 	upvote = models.PositiveIntegerField(default=1)
 	downvote = models.PositiveIntegerField(default=1)
@@ -32,6 +41,7 @@ class DefaultValues(models.Model): #stores all the values of the reputation mode
 	threshold_cadmin = models.PositiveIntegerField(default=0)
 	threshold_report = models.PositiveIntegerField(default = 10)
 	author_report = models.PositiveIntegerField(default=50)
+	article_report_rejected = models.PositiveIntegerField(default=1)
 
 	def __str__(self):
 		return "Default Values"

@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
-       
+
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -140,7 +140,7 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
-    url(r'',include('voting.urls')), 
+    
     url(r'^vote/', updown, name='updown'),
     url(r'^general-reputation-dashboard/' , general_reputation_dashboard , name='general_reputation_dashboard'),
     url(r'^author-reputation-dashboard/' , author_reputation_dashboard , name='author_reputation_dashboard'),
