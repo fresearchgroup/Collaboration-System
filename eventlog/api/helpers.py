@@ -133,6 +133,7 @@ def extract_aggregate_key(request):
     return dic
 
 def make_request_body(request, data):
+    utils.ilog(LOG_CLASS, "request_keys are {!s}".format(data), mode="DEBUG")
     final_dic = {}
     final_dic['request_keys'] = data
 
@@ -198,16 +199,20 @@ def append_key_value(resp, key, value):
     return resp
 
 def append_error_key_value(resp, key, value):
-    if len(resp.keys()):
-        resp = {}
-        resp['error'] = {}
-    resp['error'][key] = value
+    try:
+        resp['error'][key] = value
+    except KeyError as e:
+        resp = {
+                "error":{
+
+                    }
+                }
+        resp['error'][key] = value
     return resp
 
 def handle_response(request, data):
     res = {}
     status_code = 200
-    data = None
     try:
         data = make_request_body(request, data)
         utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
