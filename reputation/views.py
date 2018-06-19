@@ -194,7 +194,4 @@ def check_article(a_id):
 		commart = CommunityArticles.objects.get(article_id=a_id)
 		community = commart.community
 	return community
-
-def badgechange(sysrep,user):
-	userbadge = Badges.objects.get(user=user)
-	#if(sysrep.sysrep >= 1000):
+	

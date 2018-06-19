@@ -23,10 +23,6 @@ class SystemRep(models.Model): #store the user system reputation
 	def __str__(self):
 		return self.user.username
 
-class Badges(models.Model):
-	user = models.OneToOneField(User,on_delete=models.CASCADE)
-	badge_image = models.ImageField(null=True,upload_to=get_file_path)
-
 class DefaultValues(models.Model): #stores all the values of the reputation model
 	upvote = models.PositiveIntegerField(default=1)
 	downvote = models.PositiveIntegerField(default=1)
