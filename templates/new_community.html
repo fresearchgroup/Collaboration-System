@@ -14,18 +14,20 @@
 {% endblock %}
 
 {% block content %}
-{% block javascript %}
-{% endblock %}
+
 
 {{errormessage}}
 
 {% if user.is_authenticated %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" name = "form" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="Give a name to your community" required>
-    <div class="invalid-feedback"></div>
+    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-z A-Z ()]*$/" placeholder="Give a name to your community"  required>
+    <div class="invalid-feedback">
+      <span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
+    <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this community</span>
+    </div>
   </div>
   <div class="form-group">
     <label for="tag_line">Tag Line</label>
@@ -54,8 +56,11 @@
       <span class="custom-file-control"></span>
     </label>
   </div>
-  <button id="create" type="submit" class="btn btn-primary">Create</button>
+  <button id="create" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Create</button>
 </form>
 <br />
 {% endif %}
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
 {% endblock %}
