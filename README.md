@@ -126,8 +126,6 @@ Steps for Docker --
 
  sudo docker-compose up db
 
- sudo docker ps (find the <container-image-name> under NAMES column)
-
  sudo docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
  sudo docker-compose run web python manage.py migrate
