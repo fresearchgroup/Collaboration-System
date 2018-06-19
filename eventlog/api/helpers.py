@@ -10,22 +10,27 @@ def extract_time_keys(request):
     delta = 10
     dic = {}
     tm = None
+    bef_tm = None
     try:
         val = request.GET.__getitem__('before')
         tm = datetime.datetime.strptime(val, '%Y-%m-%dT%H:%M:%S')
+        bef_tm = tm
         tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except KeyError as e:
-        tm = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        tm = datetime.datetime.now()
+        bef_tm = tm
+        tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except ValueError as e:
         raise exceptions.BadTimeFormat
     dic['before'] = tm
     tm = None
+    utils.ilog(LOG_CLASS, "Before time is: {!s}".format(bef_tm), mode="DEBUG")
     try:
         val = request.GET.__getitem__('after')
         tm = datetime.datetime.strptime(val, '%Y-%m-%dT%H:%M:%S')
         tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except KeyError as e:
-        tm = (datetime.datetime.now() - datetime.timedelta(days = delta)).strftime('%Y-%m-%d %H:%M:%S')
+        tm = (bef_tm - datetime.timedelta(days = delta)).strftime('%Y-%m-%d %H:%M:%S')
     except ValueError as e:
         raise exceptions.BadTimeFormat
     dic['after'] = tm
@@ -33,7 +38,8 @@ def extract_time_keys(request):
 
 def extract_field_keys(request):
     dic = {'fields': []}
-    to_check = settings.OUTTER_KEYS.append('event')
+    to_check = settings.OUTTER_KEYS
+    to_check.append('event')
     try:
         val = request.GET.__getitem__('fields')
         dic['fields'] = val
