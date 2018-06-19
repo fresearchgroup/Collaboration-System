@@ -26,3 +26,5 @@ class ArticleReport(models.Model):
 	community = models.ForeignKey(Community,on_delete=models.CASCADE)
 	article = models.OneToOneField(Articles,on_delete=models.CASCADE)
 	no_of_report = models.PositiveIntegerField(default=0)
+
+	
