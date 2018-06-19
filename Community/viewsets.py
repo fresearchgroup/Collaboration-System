@@ -4,10 +4,12 @@ from rest_framework import viewsets, generics
 import datetime, time
 # Create your views here.
 today = datetime.date.today()
-tomorrow = today + datetime.timedelta(1)
+yesterday = today - datetime.timedelta(1)
+yesterday_start = datetime.datetime.combine(yesterday, datetime.time())
+yesterday_end = datetime.datetime.combine(today, datetime.time())
 
 class CommunityViewSet(viewsets.ModelViewSet):
-	queryset = Community.objects.filter(created_at__range=[today, tomorrow])
+	queryset = Community.objects.filter(created_at__range=[yesterday_start, yesterday_end])
 	serializer_class = CommunitySerializer
 
 
