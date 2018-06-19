@@ -11,7 +11,7 @@ COLLABORATION SYSTEM
                 Django Rest API
                 Mysql
 
-        Django pakages installed - 
+        Django pakages installed -
 
                 Django Rest Framework
                 Widget Tweaks
@@ -26,52 +26,46 @@ COLLABORATION SYSTEM
                 Django_comments
 		Django_wiki
 
-For development installation - 
+For development installation -
 
-        1. Install virtualenv 
+  1. Install virtualenv
 
-                ``` sudo pip3 install virtualenv ```
+	        sudo pip3 install virtualenv
 
-        2. Clone the project from github
+  2. Clone the project from github
 
-                ``` git clone https://github.com/fresearchgroup/Collaboration-System.git ```
+           git clone https://github.com/fresearchgroup/Collaboration-System.git
 
-        3. Create a virtual env --- 
+3. Create a virtual env ---
 
-        ``` virtualenv collab -p python3 ```
+		 virtualenv collab -p python3
 
-        4. Activate the virtual environment -- 
+4. Activate the virtual environment --
 
-        ``` source collab/bin/activate ```
+	      source collab/bin/activate
 
-        5. Install the requirements.txt -- 
+ 5. Install the requirements.txt --
 
-        ``` pip3 install -r Collaboration-System/requirements.txt ```
+	       pip3 install -r Collaboration-System/requirements.txt
 
-        6. Install mysql server --
+5. Install mysql server --
 
-            ```sudo apt-get update```
+            $sudo apt-get update
+            $sudo apt-get install mysql-server
+            $sudo apt-get install libmysqlclient-dev
+            $mysql -u root -p
+
+            Enter password=root
+
+	    mysql> create database collaboration;
+            mysql> use collaboration;
+            mysql> source collab.sql   
 
 
-            ```$ sudo apt-get install mysql-server```
- 
-
-            ```sudo apt-get install libmysqlclient-dev```
-
-            ```$ mysql -u root -p```
-
-                Enter password=root
-
-            ```mysql> create database collaboration;
-               mysql> use collaboration;
-               mysql> source collab.sql   
-            ```
-
-        7. Create a .env inside CollaborationSystem and paste the following -
+6. Create a .env inside CollaborationSystem and paste the following -
 
             sudo nano .env
 
-            ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
                 DB_NAME=collaboration
@@ -89,37 +83,52 @@ For development installation -
                 DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
                 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
                 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+                APIKEY=
+	            NODESERVERURL=Your IP address
+				 NODESERVERPORT=9001
 
-            ```
 
-            8. Do all the migrations --
+7.  Clone the following directory:
 
-                ``` python3 manage.py migrate ```
+			git clone http://github.com/dhanushsr/etherpad-lite
+			cd etherpad-lite/
+			./bin/run.sh
 
-            9. Runserver --
+8. Install PyEtherLite--
 
-                ``` python3 manage.py runserver ``` 
-                
+			git clone http://github.com/dhanushsr/PyEtherpadLite
+			cd PyEtherpadLite
+			python setup.py install
+			cd ..
+
+9. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env file
+9. Do all the migrations going back to django directory--
+
+	      python3 manage.py migrate
+
+10. Runserver --
+
+	      python3 manage.py runserver  
 
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
 For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
 
 
-Steps for Docker -- 
+Steps for Docker --
 
- -- Install Docker and Docker-Compose from  -
+ -- Install Docker and Docker-Compose from  --
 
-    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
-    
-    Docker Compose -- https://docs.docker.com/compose/install/
+	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
+
+	    Docker Compose -- https://docs.docker.com/compose/install/
 
 1. Clone the repository --
 
    git clone https://github.com/fresearchgroup/Collaboration-System.git
 
 2. The run the following commands inside the repository --
- 
+
 ```
 
  sudo docker-compose build
@@ -136,4 +145,4 @@ Steps for Docker --
 
  sudo docker-compose up
 
-```
+		 docker-compose up
