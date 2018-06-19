@@ -1,0 +1,2 @@
+class BadTimeFormat(Exception):
+    pass

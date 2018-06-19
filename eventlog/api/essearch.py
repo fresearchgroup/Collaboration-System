@@ -35,7 +35,7 @@ class SearchElasticSearch:
     def search_elasticsearch(self,search_key_dic):
             response = {}          
             try:
-                body = self.build_search_body(search_key_dic)
+                body = self.build_search_body(search_key_dic['request_keys'])
                 res =  self.es.search(index=self.index,body=body)
                 response = {}
                 status = 200
