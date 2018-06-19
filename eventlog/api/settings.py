@@ -37,4 +37,9 @@ INNER_KEYS = [
 
 ES_INDEX = 'logs'
 
+AGGREGATE_FUNCS = [
+        'cardinality',
+        'value_count',
+        ]
+
 SERVER_CONF = [ "elasticsearch" ]

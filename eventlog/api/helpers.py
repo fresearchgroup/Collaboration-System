@@ -126,11 +126,11 @@ def extract_aggregate_key(request):
     if len(aggs_type) != len(aggs_field):
         raise IndexError
     for key1, key2 in zip(aggs_type, aggs_field):
-        dic['agg_keys'].append({
-            key1: key2
+        if key2 in settings.AGGREGATE_FUNCS:
+            dic['agg_keys'].append({
+                key1: key2
             })
     return dic
-
 
 def make_request_body(request, data):
     final_dic = {}
@@ -165,6 +165,34 @@ def make_request_body(request, data):
 
     return final_dic
 
+def append_pagination(request, resp, page_keys, total_hits):
+    cur = final_dic['paging']['from']
+    limit = final_dic['paging']['size']
+    prev_link = int(cur) - int(limit)
+    next_link = int(cur) + int(limit)
+    if next_link >= total_hits:
+        next_link = None
+    if prev_link < 0:
+        prev_link = 0
+    if cur == 0:
+        prev_link = None
+    if prev_link:
+        temp = request
+        get = dict(temp.GET)
+        get['start'] = prev_link
+        get['limit'] = limit
+        temp.GET = get
+        resp['prev_link'] = temp.build_absolute_uri()
+    if next_link:
+        temp = request
+        get = dict(temp.GET)
+        get['start'] = next_link
+        get['limit'] = limit
+        temp.GET = get
+        resp['next_link'] = temp.build_absolute_uri()
+    return resp
+
+
 def append_key_value(resp, key, value):
     resp[key] = value
     return resp
@@ -179,6 +207,7 @@ def append_error_key_value(resp, key, value):
 def handle_response(request, data):
     res = {}
     status_code = 200
+    data = None
     try:
         data = make_request_body(request, data)
         utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
@@ -194,8 +223,9 @@ def handle_response(request, data):
         obj=SearchElasticSearch()
         result = obj.search_elasticsearch(data)
         if 'status' in result.keys():
+            res = append_pagination(request, res, data['page_keys'], result['total_hits'])
             res = append_key_value(res, 'status code', 200)
-            res = append_key_value(res, 'total hits', len(result['logs']))
+            res = append_key_value(res, 'total hits', result['total_hits'])
             res = append_key_value(res, 'result', result['logs'])
             status_code = 200
         else:
