@@ -1,6 +1,6 @@
 from .models import Community, CommunityArticles
 from .serializers import CommunitySerializer, CommunityArticlesSerializer
-from rest_framework import viewsets, generics
+from rest_framework import generics
 import datetime, time
 # Create your views here.
 today = datetime.date.today()

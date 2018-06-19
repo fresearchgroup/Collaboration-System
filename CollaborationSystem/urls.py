@@ -30,6 +30,8 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
+from Group import viewsets as groupviewsets
+
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 
@@ -137,8 +139,13 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+
     url(r'api/dspace/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-dspace-api'),
-    url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api')
+    url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
+
+    url(r'api/dspace/grouparticlesapi', groupviewsets.GroupArticleViewsets.as_view(), name='group-articles-dspace-api'),
+    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api')
+
 
 ]
 
