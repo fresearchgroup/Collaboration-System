@@ -13,6 +13,7 @@ from notifications.utils import id2slug, slug2id
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 
 if StrictVersion(get_version()) >= StrictVersion('1.7.0'):
@@ -115,6 +116,7 @@ def mark_all_unread_as_deleted(request):
 
 @login_required
 def mark_as_read(request, slug=None):
+    
     notification_id = slug2id(slug)
 
     notification = get_object_or_404(
@@ -125,8 +127,14 @@ def mark_as_read(request, slug=None):
 
     if _next:
         return redirect(_next)
-
-    return redirect('notifications:all')
+        
+    
+    html = "Success"
+    output_data = {
+    'html': html
+    
+    }
+    return JsonResponse(output_data)
 
 @login_required
 def mark_as_read_and_redirect(request, slug=None):
@@ -146,6 +154,7 @@ def mark_as_read_and_redirect(request, slug=None):
 
 @login_required
 def mark_as_unread(request, slug=None):
+    
     notification_id = slug2id(slug)
 
     notification = get_object_or_404(
@@ -157,7 +166,12 @@ def mark_as_unread(request, slug=None):
     if _next:
         return redirect(_next)
 
-    return redirect('notifications:all')
+    html = "Success"
+    output_data = {
+    'html': html
+    
+    }
+    return JsonResponse(output_data)
 
 
 @login_required
@@ -244,3 +258,4 @@ def live_unread_notification_list(request):
         'unread_list': unread_list
     }
     return JsonResponse(data)
+
