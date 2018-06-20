@@ -170,10 +170,17 @@ class SearchElasticSearch:
                     status = 200
                     logs = []
                     key = list(res["aggregations"].keys())[0]
-                    for item in res["aggregations"][key]["buckets"]:
-                        logs.append(item)
-                    response.update({'status':status})
-                    response.update({'total_hits'}:search_key_dic["paging"]["size"])
+                    agg_keys = search_key_dic["agg_keys"]
+                    agg_val = ''
+                    for key in list(agg_keys.keys()):
+                        agg_val = agg_keys[key]
+                        if agg_val == "terms":
+                            for item in res["aggregations"][key]["buckets"]:
+                                logs.append(item)
+                        else:
+                            logs.append(res["aggregations"][key])
+                    response.update({status:status})
+                    response.update({'total_hits':search_key_dic["paging"]["size"]})
                     response.update({'logs':logs})
                 else:
                     body = self.build_search_body(search_key_dic)
