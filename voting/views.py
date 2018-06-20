@@ -197,3 +197,4 @@ def create_voting_flag(a_id,user):
 def report_reasons(request,a_id):
 	votingflags = VotingFlag.objects.filter(article_id=a_id,reportflag=True)
 	return render(request,'report_reasons.html',{'votingflags':votingflags})
+
