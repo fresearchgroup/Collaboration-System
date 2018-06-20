@@ -19,7 +19,7 @@
 {{errormessage}}
 
 {% if user.is_authenticated %}
-<form method="post" name = "form" enctype="multipart/form-data">
+<form method="post" name = "form" action="{% url 'create_community' %}" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
