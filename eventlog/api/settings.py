@@ -41,6 +41,7 @@ ES_INDEX = 'logs'
 AGGREGATE_FUNCS = [
         'cardinality',
         'value_count',
+        'terms'
         ]
 
 SERVER_CONF = [ "elasticsearch" ]

@@ -3,3 +3,6 @@ class BadTimeFormat(Exception):
 
 class UnsupportedAggregateOperation(Exception):
     pass
+
+class MutlipleAggregationUnsupported(Exception):
+    pass

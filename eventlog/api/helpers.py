@@ -124,6 +124,8 @@ def extract_aggregate_key(request):
         pass
     if len(aggs_type) != len(aggs_field):
         raise IndexError
+    elif len(aggs_type) > 1:
+        raise exceptions.MutlipleAggregationUnsupported
     for key1, key2 in zip(aggs_type, aggs_field):
         if key1 in settings.AGGREGATE_FUNCS:
             dic['agg_keys'].append({
@@ -182,6 +184,11 @@ def append_get_params(url, request):
     utils.ilog(LOG_CLASS, "URL formed is: {!s}".format(url))
     return url
 
+def get_path(request):
+    url = request.build_absolute_uri()
+    url_without_params = url.split("?")[0]
+    return url_without_params
+
 def append_pagination(request, resp, page_keys, total_hits):
     cur = page_keys['from']
     limit = page_keys['size']
@@ -200,7 +207,7 @@ def append_pagination(request, resp, page_keys, total_hits):
         get['start'] = prev_link
         get['limit'] = limit
         temp.GET = get
-        resp['prev_link'] = append_get_params(temp.path, temp)
+        resp['prev_link'] = append_get_params(get_path(temp), temp)
     if next_link is not None:
         temp = None
         temp = request
@@ -208,7 +215,7 @@ def append_pagination(request, resp, page_keys, total_hits):
         get['start'] = next_link
         get['limit'] = limit
         temp.GET = get
-        resp['next_link'] = append_get_params(temp.path, temp)
+        resp['next_link'] = append_get_params(get_path(temp), temp)
     return resp
 
 
@@ -242,6 +249,9 @@ def handle_response(request, data):
         res = append_error_key_value(res, 'status code', 400)
         res = append_error_key_value(res, 'error msg', 'aggregate type and aggregate fields are of different lengths')
         status_code = 400
+    except exceptions.MutlipleAggregationUnsupported as e:
+        res = append_error_key_value(res, 'status code', 501)
+        res = append_error_key_value(res, "error message", "multiple aggregation and nested aggregation not implemented.")
     else:
         obj=SearchElasticSearch()
         result = obj.search_elasticsearch(data)
