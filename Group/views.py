@@ -165,8 +165,8 @@ def group_h5p_create(request):
 			request.session['cid'] = 0
 			request.session['gid'] = gid
 			try:
-				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
-				return redirect(settings.H5P_ROOT + '/create/')
+				requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + 'h5p/create/')
 			except Exception as e:
 				print(e)
 				return render(request, 'h5pserverdown.html', {})
@@ -292,7 +292,7 @@ def group_content(request, pk):
 
 			gh5p = []
 			try:
-				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
 				json_data = json.loads(response.text)
 				print(json_data)
 

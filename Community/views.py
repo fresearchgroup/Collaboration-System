@@ -419,7 +419,7 @@ def community_content(request, pk):
 			ch5p = []
 			print('new test')
 			try:
-				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
 				json_data = json.loads(response.text)
 				print(json_data)
 
@@ -454,7 +454,7 @@ def community_group_content(request, pk):
 			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
 			cgh5p = []
 			try:
-				response = requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
 				json_data = json.loads(response.text)
 				print(json_data)
 
@@ -490,8 +490,8 @@ def community_group_content(request, pk):
 
 def h5p_view(request, pk):
 	try:
-		requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
-		return redirect( settings.H5P_ROOT + "/content/?contentId=%s" % pk)
+		requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+		return redirect( settings.H5P_ROOT + "h5p/content/?contentId=%s" % pk)
 	except ConnectionError:
 		return render(request, 'h5pserverdown', {})
 
@@ -519,8 +519,8 @@ def community_h5p_create(request):
 			request.session['cid'] = cid
 			request.session['gid'] = 0
 			try:
-				requests.get(settings.H5P_ROOT + '/h5papi/?format=json')
-				return redirect(settings.H5P_ROOT + '/create/')
+				requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + 'h5p/create/')
 			except Exception as e:
 				print(e)
 				return render(request, 'h5pserverdown.html', {})
