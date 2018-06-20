@@ -42,13 +42,13 @@ For development installation -
 
 4. Activate the virtual environment --
 
-	      source collab/bin/activate
+	         source collab/bin/activate
 
- 5. Install the requirements.txt --
+5. Install the requirements.txt --
 
-	       pip3 install -r Collaboration-System/requirements.txt
+	         pip3 install -r Collaboration-System/requirements.txt
 
-5. Install mysql server --
+6. Install mysql server --
 
             $sudo apt-get update
             $sudo apt-get install mysql-server
@@ -71,7 +71,7 @@ For development installation -
 			cd etherpad-lite/
 			./bin/run.sh
 
-7. Install PyEtherLite--
+7. Install PyEtherpadLite--
 
 			git clone http://github.com/dhanushsr/PyEtherpadLite
 			cd PyEtherpadLite
@@ -137,3 +137,10 @@ In the Collaboration-System directory,
  sudo docker exec -i <db-container-image-name> mysql -u<username> -p<password> django < collab-updated.sql
 
  sudo docker-compose up
+ 
+ ```
+ Go to `https://h5p.org/sites/default/files/official-h5p-release-20170301.h5p` and download the official h5p libraries.
+ 
+ Go to `http://yourdockerip:8000/h5p/libraries` and upload the downloaded libraries and select proceed.
+ 
+ 
