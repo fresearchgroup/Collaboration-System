@@ -168,11 +168,11 @@ $(document).ready(function() {
           </ul>
         </li>
         {% load notifications_tags %}
-        {% notifications_unread as unread_count %}
+        <!--{% notifications_unread as unread_count %}-->
         {% register_notify_callbacks badge_class='badge' refresh_period='1' callbacks='fill_notification_badge' %}
 
         <li>
-            <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% if unread_count %}{% live_notify_badge badge_class='badge' %}{% endif %}</a>
+            <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% live_notify_badge badge_class='badge' %}</a>
         </li>
 
         {% endif %}
