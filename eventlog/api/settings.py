@@ -1,3 +1,4 @@
+from decouple import config
 OUTTER_KEYS = [
         'server-host',
         'ip-address',
@@ -43,3 +44,6 @@ AGGREGATE_FUNCS = [
         ]
 
 SERVER_CONF = [ "elasticsearch" ]
+
+PAGE_SIZE = config('PAGE_SIZE', cast=int)
+MAX_PAGE_SIZE = config('MAX_PAGE_SIZE', cast=int)

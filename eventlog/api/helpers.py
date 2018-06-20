@@ -62,16 +62,14 @@ def extract_paging_keys(request):
 
     try:
         val = int(dict(request.GET)['limit'])
-        dic['size'] = val
+        dic['size'] = val if val <= settings.MAX_PAGE_SIZE else settings.MAX_PAGE_SIZE
     except KeyError as e:
-        dic['size'] = 5
+        dic['size'] = settings.PAGE_SIZE
     return dic
 
 def extract_sorting_keys(request):
     dic= {
-            'sort_keys': [
-                    
-                ]
+            'sort_keys': []
         }
     try:
         val = dict(request.GET)['sort']
