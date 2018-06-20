@@ -2,7 +2,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
 
-COLLABORATION SYSTEM
+COLLABORATION SYSTEM - a portal
 
         Requiremnets -
 
