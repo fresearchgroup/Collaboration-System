@@ -163,29 +163,34 @@ class SearchElasticSearch:
     
     def search_elasticsearch(self,search_key_dic):
             response = {}
-            try:
-                if "agg_keys" in search_key_dic.keys():
-                    body = self.build_search_body_agg(search_key_dic)
-                    res =  self.es.search(index=self.index,body=body)
-                    status = 200
-                    logs = []
-                    key = list(res["aggregations"].keys())[0]
-                    for item in res["aggregations"][key]["buckets"]:
-                        logs.append(item)
-                    response.update({"status":status})
-                    response.update({'total_hits':search_key_dic["paging"]["size"]})
-                    response.update({'logs':logs})
-                else:
-                    body = self.build_search_body(search_key_dic)
-                    res =  self.es.search(index=self.index,body=body)
-                    total_hits = res['hits']['total']
-                    status = 200
-                    logs = []
-                    for hit in res['hits']['hits']:
-                           logs.append(hit['_source'])
-                    response.update({'status':status})
-                    response.update({'total_hits': total_hits})
-                    response.update({'logs':logs})
-            except Exception as e:
-                response.update({'error': e.args})
+            if "agg_keys" in search_key_dic.keys():
+                body = self.build_search_body_agg(search_key_dic)
+                res =  self.es.search(index=self.index,body=body)
+                status = 200
+                logs = []
+                res_agg_key = list(res["aggregations"].keys())[0]
+                agg_keys = search_key_dic["agg_keys"]
+                agg_val = ''
+                for pair in agg_keys:
+                    key = list(pair.keys())[0]
+                    agg_val = pair[key]
+                    if agg_val == "terms":
+                        for item in res["aggregations"][res_agg_key]["buckets"]:
+                            logs.append(item)
+                    else:
+                        logs.append(res["aggregations"][res_agg_key])
+                response.update({"status":status})
+                response.update({'total_hits':len(logs) if len(logs) <= search_key_dic['paging']['size'] else search_key_dic['paging']['size']})
+                response.update({'logs':logs})
+            else:
+                body = self.build_search_body(search_key_dic)
+                res =  self.es.search(index=self.index,body=body)
+                total_hits = res['hits']['total']
+                status = 200
+                logs = []
+                for hit in res['hits']['hits']:
+                    logs.append(hit['_source'])
+                response.update({'status':status})
+                response.update({'total_hits': total_hits})
+                response.update({'logs':logs})
             return response

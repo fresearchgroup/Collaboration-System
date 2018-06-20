@@ -55,13 +55,13 @@ def extract_field_keys(request):
 def extract_paging_keys(request):
     dic = {}
     try:
-        val = int(dict(request.GET)['start'])
+        val = int(dict(request.GET)['start'][0])
         dic['from'] = val
     except KeyError as e:
         dic['from'] = 0
 
     try:
-        val = int(dict(request.GET)['limit'])
+        val = int(dict(request.GET)['limit'][0])
         dic['size'] = val if val <= settings.MAX_PAGE_SIZE else settings.MAX_PAGE_SIZE
     except KeyError as e:
         dic['size'] = settings.PAGE_SIZE
