@@ -92,8 +92,9 @@ def community_unsubscribe(request):
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				remove_or_add_user_feed(user,community,'left')
+				notify_remove_or_add_user(user, user, community, 'left')
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-				notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
+				#notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
