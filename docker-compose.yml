@@ -18,6 +18,7 @@ services:
       - "7000:8000"
     depends_on:
       - db
+      - h5p
 
   h5p:
     image: h5p_image
