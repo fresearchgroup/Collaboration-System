@@ -170,9 +170,9 @@ class SearchElasticSearch:
                     status = 200
                     logs = []
                     key = list(res["aggregations"].keys())[0]
-                    for item in res["aggregation"][key]["buckets"]:
+                    for item in res["aggregations"][key]["buckets"]:
                         logs.append(item)
-                    response.update({status:status})
+                    response.update({"status":status})
                     response.update({'logs':logs})
                 else:
                     body = self.build_search_body(search_key_dic)
