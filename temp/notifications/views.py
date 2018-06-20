@@ -13,6 +13,7 @@ from notifications.utils import id2slug, slug2id
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 
 if StrictVersion(get_version()) >= StrictVersion('1.7.0'):
@@ -125,9 +126,15 @@ def mark_as_read(request, slug=None):
 
     if _next:
         return redirect(_next)
-
-    return redirect('notifications:all')
-
+        
+    
+    html = "Success"
+    output_data = {
+    'html': html
+    
+    }
+    return JsonResponse(output_data)
+    
 @login_required
 def mark_as_read_and_redirect(request, slug=None):
     notification_id = slug2id(slug)
