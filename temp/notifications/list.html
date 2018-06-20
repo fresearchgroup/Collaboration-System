@@ -38,38 +38,54 @@
                                <div class="row" style="padding-left:3px; padding-right:3px;">
                                    <div class="col-md-9"><h4><a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a></h4></div>
                                    <div class="col-md-2 text-right">{% if notice.unread %}
-                                 <p class="read alert-link glyphicon glyphicon-unchecked" id="read{{notice.id}}" data-catid="{{notice.slug}}" notif-id="{{notice.id}}">Unread</p>
+                                 <p class="notif-status alert-link glyphicon glyphicon-unchecked" id="{{notice.id}}" slug="{{notice.slug}}">Unread</p>
                                  {% else %}
-                                 <p class="unread alert-link glyphicon glyphicon-check" id="unread{{notice.id}}" data-catid="{{notice.slug}}" notif-id="{{notice.id}}">Read</p>
+                                 <p class="notif-status alert-link glyphicon glyphicon-check" id="{{notice.id}}" slug="{{notice.slug}}">Read</p>
                                    {% endif %}</div>
                                    
                                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
                                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                                     <script type="text/javascript">
-                                    $('.read').click(function(){
-                                    var slug;
-                                    
-                                    slug = $(this).attr("data-catid");
-                                    var id = $(this).attr("notif-id");
-                                    url = '{% url 'notifications:mark_as_read' 0 %}'.replace('0', slug);
-                                    $.ajax(
-                                    {
-                                        type:"GET",
-                                        url: url,
-                                        
-                                        success: function(data) 
-                                        {
-                                            console.log("Done");
-                                            
-                                            document.getElementById("read"+id).innerHTML = "Read";
-                                            $("#read"+id).removeClass("glyphicon glyphicon-unchecked","read");
-                                            $("#read"+id).addClass("glyphicon glyphicon-check","unread");
-                                            $("#notif"+id).removeClass("alert-danger");
-                                            
-                                        }
-                                     })
-                                });
-                                </script>
+
+                                    $('.notif-status').click(function(){
+                                    var slug = $(this).attr("slug");
+                                    var id = $(this).attr("id");
+                                    var status = document.getElementById(id).innerHTML;
+                                    var url;
+                                    if(status=="Read"){
+                                        url = '{% url 'notifications:mark_as_unread' 0 %}'.replace('0', slug);
+                                    }
+                                    else{
+                                        url = '{% url 'notifications:mark_as_read' 0 %}'.replace('0', slug);
+                                    }
+                                        $.ajax(
+                                            {
+                                                type:"GET",
+                                                url: url,
+                                                
+                                                success: function(data) 
+                                                {
+                                                    if(status=="Read"){
+                                                        $("#"+id).removeClass("glyphicon glyphicon-check");
+                                                        $("#"+id).addClass("glyphicon glyphicon-unchecked");
+                                                        $("#notif"+id).addClass("alert-danger");
+                                                        document.getElementById(id).innerHTML= "Unread";
+                                                    }
+                                                    else{
+                                                        $("#"+id).removeClass("glyphicon glyphicon-unchecked");
+                                                        $("#"+id).addClass("glyphicon glyphicon-check");
+                                                        $("#notif"+id).removeClass("alert-danger");
+                                                        document.getElementById(id).innerHTML= "Read";
+                                                    }
+                                                    
+                                                }
+                                             })
+                                   
+                                   });
+                                  
+                                   </script>
+                                   
+                                   
 
 
                                   <!-- <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
@@ -152,3 +168,4 @@
 </ul>
 
 {% endblock %}
+
