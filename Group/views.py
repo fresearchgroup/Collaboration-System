@@ -93,7 +93,9 @@ def group_unsubscribe(request):
 			group = Group.objects.get(pk=gid)
 			user = request.user
 			if GroupMembership.objects.filter(user=user, group=group).exists():
-				notify_subscribe_unsubscribe(request.user, group, 'unsubscribe')
+				remove_or_add_user_feed(user, group, 'left')
+				notify_remove_or_add_user(user, user, group, 'left')
+				#notify_subscribe_unsubscribe(request.user, group, 'unsubscribe')
 				obj = GroupMembership.objects.filter(user=user, group=group).delete()
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')

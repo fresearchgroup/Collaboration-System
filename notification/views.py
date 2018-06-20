@@ -202,7 +202,7 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
-                notify.send(sender=sender, verb='Your left as an admin', recipient=user,
+                notify.send(sender=sender, verb='You left as an admin', recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
@@ -210,6 +210,11 @@ def notify_remove_or_add_user(sender, user, target, action_type):
         elif previous_role == 'author':
             if action_type == 'removed':
                 notify.send(sender=sender, verb='You have been removed', recipient=user,
+                            target=target,
+                            target_url=target_url, sender_url='display_user_profile',
+                            sender_url_name=sender.username)
+            elif action_type == 'left':
+                notify.send(sender=sender, verb='You left the community', recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
@@ -224,6 +229,8 @@ def notify_edit_article(user, article):
             comm = CommunityArticles.objects.get(article=article)
             membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
             role = membership.role.name
+            if role == 'publisher':
+                verb="Publisher edited your article"
             if(role=="community_admin"):
                 verb="Admin edited your article"
 
