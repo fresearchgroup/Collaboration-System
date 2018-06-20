@@ -11,9 +11,9 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
-from voting.models import VotingFlag,ArticleVotes
+from voting.models import VotingFlag,ArticleVotes,Badges
 from reputation.models import DefaultValues,SystemRep,CommunityRep
-from reputation.views import rolechange
+from reputation.views import rolechange,check_article,article_published
 
 def display_articles(request):
 	"""
@@ -112,11 +112,21 @@ def edit_article(request, pk):
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
 				article.body = request.POST['body']
+				community = check_article(pk)
+				membership = CommunityMembership.objects.get(user=request.user,community=community)
+				badge = Badges.objects.get(user=request.user)
+				role_publisher = Roles.objects.get(name='publisher')
+				role_author = Roles.objects.get(name='author')
 				try:
 					article.image = request.FILES['article_image']
 					article.save(update_fields=["title","body","image"])
 				except:
 					article.save(update_fields=["title","body"])
+				if(membership.role == role_author):
+					badge.articles_contributed_author += 1
+				elif(membership.role == role_publisher):
+					badge.articles_revised_publisher += 1
+				badge.save()
 				return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)
@@ -150,36 +160,8 @@ def edit_article(request, pk):
 				except States.DoesNotExist:
 					message = "state doesn' exist"
 
-				if to_state.name == 'publish': 
-					commart = CommunityArticles.objects.filter(article_id=pk).exists()
-					art = Articles.objects.get(pk=pk)
-					author = art.created_by
-					publisher = request.user
-					if(commart is False): #checking if community article or group article
-						grpart = GroupArticles.objects.get(article_id=pk)
-						grp = grpart.group
-						community = CommunityGroups.objects.get(group_id=grp.id)
-					else:
-						commart = CommunityArticles.objects.get(article_id=pk)
-						community = commart.community
-
-					author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
-					author_srep = SystemRep.objects.get(user_id=author.id)
-					publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
-					publisher_srep = SystemRep.objects.get(user_id=publisher.id)
-					defaultval = DefaultValues.objects.get(pk=1)
-					#increasing the author and publisher reputation has an article has been published
-					author_srep.sysrep+=defaultval.published_author
-					author_crep.rep+=defaultval.published_author
-					publisher_crep.rep+=defaultval.published_publisher
-					publisher_srep.sysrep+=defaultval.published_publisher
-
-					author_srep.save()
-					author_crep.save()
-					publisher_crep.save()
-					publisher_srep.save()
-					rolechange(author_crep,author,community)
-					rolechange(publisher_crep,publiher,community)
+				if to_state.name == 'publish':
+					article_published(request,pk) #Changes reputation of author and publisher
 					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:

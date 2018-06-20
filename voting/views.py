@@ -94,6 +94,7 @@ def updown(request):
 def report(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
+		reason = request.POST.get('reason')
 		user= User.objects.get(username=username)
 		resource_id = request.POST.get('rid')
 		status = request.POST.get('status')
@@ -109,6 +110,7 @@ def report(request):
 		if status == 'add':
 			voteflag = VotingFlag.objects.get(user=user,article_id= resource_id)
 			voteflag.reportflag = True
+			voteflag.report_reason = reason
 			voteflag.save()
 			article_votes = ArticleVotes.objects.get(article_id = resource_id)
 			article_votes.report +=1
@@ -124,6 +126,7 @@ def report(request):
 		if status == 'remove':
 			voteflag = VotingFlag.objects.get(user=user,article_id= resource_id)
 			voteflag.reportflag = False
+			voteflag.report_reason = reason
 			voteflag.save()
 			article_votes = ArticleVotes.objects.get(article_id = resource_id)
 			article_votes.report -=1
@@ -170,6 +173,7 @@ def article_report(request,pk):
 		voteflags = VotingFlag.objects.filter(article=article,reportflag=True)
 		for voteflag in voteflags:
 			voteflag.reportflag = False
+			voteflag.report_reason = ''
 			voteflag.save()
 		articlevotes = ArticleVotes.objects.get(article=article_reported.article)
 		articlevotes.report = 0
@@ -189,3 +193,7 @@ def create_voting_flag(a_id,user):
 		voting.downflag = False
 		voting.reportflag = False
 		voting.save()	
+
+def report_reasons(request,a_id):
+	votingflags = VotingFlag.objects.filter(article_id=a_id,reportflag=True)
+	return render(request,'report_reasons.html',{'votingflags':votingflags})

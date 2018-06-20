@@ -7,16 +7,21 @@ $('document').ready(function(){
   var csrf = $('#csrf').val();
   var url = $('#url1').val();
   var status = '';
+  var reason = '';
 
 if ($( "#repo_submit" ).hasClass( "fa fa-flag-o" )){
      
      status = 'add';
+     do{
+    reason = prompt("What's the reason? Keep it Short !");
+    }while(reason == null || reason == "" );
 
 }
 
 if ($( "#repo_submit" ).hasClass( "fa fa-flag" )){
      
      status = 'remove';
+     reason = ''
 
 }
 
@@ -29,7 +34,8 @@ if ($( "#repo_submit" ).hasClass( "fa fa-flag" )){
     	'username' : username,
       'rid' : rid,
       'category' : category,
-      'status' : status
+      'status' : status,
+      'reason' : reason
     },
     success: function(data){
 

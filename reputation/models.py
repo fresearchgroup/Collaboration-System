@@ -1,12 +1,6 @@
 from django.db import models
 from Community.models import Community
 from django.contrib.auth.models import User
-import os, uuid
-
-def get_file_path(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('article', filename)
 
 class CommunityRep(models.Model): #stores the user community reputation
 	community = models.ForeignKey(Community ,on_delete = models.CASCADE)

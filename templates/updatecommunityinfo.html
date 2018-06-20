@@ -23,6 +23,9 @@
   <li class="nav-item active">
     <a class="nav-link " href="#">Update community Info</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'article_report' community.pk %}">Articles Reported</a>
+  </li>
   {% endif %}
   {% if membership %}
   <li class="nav-item">

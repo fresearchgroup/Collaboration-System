@@ -30,7 +30,7 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
-from voting.views import updown,article_report,report
+from voting.views import updown,article_report,report,report_reasons
 from reputation.views import general_reputation_dashboard,author_reputation_dashboard,publisher_reputation_dashboard,communityadmin_reputation_dashboard
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -148,6 +148,8 @@ urlpatterns = [
     url(r'^communityadmin-reputation-dashboard/' , communityadmin_reputation_dashboard , name='communityadmin_reputation_dashboard'),    
     url(r'^article-report/(?P<pk>\d+)/$', article_report, name='article_report'),
     url(r'^report/', report, name='report'),
+    url(r'^report-reasons/(?P<a_id>\d+)/$' , report_reasons , name='report_reasons')
+
 ]
 
 if settings.DEBUG:

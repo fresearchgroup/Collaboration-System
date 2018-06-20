@@ -5,7 +5,7 @@ from Group.models import GroupArticles
 from BasicArticle.models import Articles
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
-from voting.models import ArticleVotes,ArticleReport
+from voting.models import ArticleVotes,ArticleReport,Badges
 
 # Create your views here.
 
@@ -195,3 +195,32 @@ def check_article(a_id):
 		community = commart.community
 	return community
 	
+def article_published(request,pk):
+	art = Articles.objects.get(pk=pk)
+	author = art.created_by
+	publisher = request.user
+	community = check_article(pk)
+
+	author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
+	author_srep = SystemRep.objects.get(user_id=author.id)
+	publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
+	publisher_srep = SystemRep.objects.get(user_id=publisher.id)
+	defaultval = DefaultValues.objects.get(pk=1)
+	#increasing the author and publisher reputation has an article has been published
+	author_srep.sysrep+=defaultval.published_author
+	author_crep.rep+=defaultval.published_author
+	publisher_crep.rep+=defaultval.published_publisher
+	publisher_srep.sysrep+=defaultval.published_publisher
+
+	author_srep.save()
+	author_crep.save()
+	publisher_crep.save()
+	publisher_srep.save()
+	badge_publisher = Badges.objects.get(user=publisher)
+	badge_author = Badges.objects.get(user=author)
+	badge_publisher.articles_published_publisher += 1
+	badge_author.articles_published_author += 1
+	badge_publisher.save()
+	badge_author.save()
+	rolechange(author_crep,author,community)
+	rolechange(publisher_crep,publisher,community)

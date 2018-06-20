@@ -18,6 +18,7 @@ class VotingFlag(models.Model):
 	upflag = models.BooleanField(default=False)
 	downflag = models.BooleanField(default=False)
 	reportflag = models.BooleanField(default=False)
+	report_reason = models.CharField(max_length=100,default=" ")
 
 	def __str__(self):
 		return self.article.title + "-" + self.user.username
@@ -27,3 +28,15 @@ class ArticleReport(models.Model):
 	article = models.OneToOneField(Articles,on_delete=models.CASCADE)
 	no_of_report = models.PositiveIntegerField(default=0)
 
+	def __str__(self):
+		return self.article.title + "-" + self.community.name
+
+class Badges(models.Model):
+	user = models.OneToOneField(User,on_delete=models.CASCADE)
+	articles_contributed_author = models.PositiveIntegerField(default=0)
+	articles_published_author = models.PositiveIntegerField(default=0)
+	articles_published_publisher = models.PositiveIntegerField(default=0)
+	articles_revised_publisher = models.PositiveIntegerField(default=0)
+
+	def __str__(self):
+		return self.user.username

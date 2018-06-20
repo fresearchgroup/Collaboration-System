@@ -58,7 +58,7 @@
         <tr>
           <td>{{ article.community.name }}</td>
           <td><a href="{% url 'article_view' article.article.pk %}">{{ article.article.title }}</a></td>
-          <td>{{ article.no_of_report }}</td>
+          <td><a href="{% url 'report_reasons' article.article.pk %}">{{ article.no_of_report }}</a></td>
           <td>
             <form method="post" action="{% url 'article_report' community.pk %}">
                  {% csrf_token %}

@@ -21,6 +21,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
 from reputation.models import SystemRep,CommunityRep
+from voting.models import Badges
 
 def signup(request):
     """
@@ -52,6 +53,9 @@ def signup(request):
                 sysrep.user = user
                 sysrep.sysrep = 0
                 sysrep.save()
+                badge = Badges()
+                badge.user = user
+                badge.save()
                 return redirect('user_dashboard')
             else:
                 error = 'Captcha not verified'
@@ -152,10 +156,12 @@ def view_profile(request):
         try:
             user_profile = ProfileImage.objects.get(user=request.user)
             sysrep = SystemRep.objects.get(user_id=request.user.id)
+            badge = Badges.objects.get(user=request.user)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
             sysrep = SystemRep.objects.get(user_id=request.user.id)
-        return render(request, 'myprofile.html', {'user_profile':user_profile,'sysrep':sysrep})
+            badge = Badges.objects.get(user=request.user)
+        return render(request, 'myprofile.html', {'user_profile':user_profile,'sysrep':sysrep,'badge':badge})
     else:
         return redirect('login')
 
