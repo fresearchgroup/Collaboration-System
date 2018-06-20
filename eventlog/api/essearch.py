@@ -173,6 +173,7 @@ class SearchElasticSearch:
                     for item in res["aggregations"][key]["buckets"]:
                         logs.append(item)
                     response.update({'status':status})
+                    response.update({'total_hits'}:search_key_dic["paging"]["size"])
                     response.update({'logs':logs})
                 else:
                     body = self.build_search_body(search_key_dic)
