@@ -14,9 +14,62 @@
                  <hr>
                	<li><a href="{% url 'notifications:mark_all_as_read' %}">Mark all as read</a></li>
                 <li><a href="{% url 'notifications:mark_all_as_unread' %}">Mark all as unread</a></li>
-                <li><a href="{% url 'notifications:mark_all_as_deleted' %}">Delete all</a></li>
-                <li><a href="{% url 'notifications:mark_all_read_as_deleted' %}">Delete all read notifications</a></li>
-                <li><a href="{% url 'notifications:mark_all_unread_as_deleted' %}">Delete all unread notifications</a></li>
+                <!-- <li><a href="{% url 'notifications:mark_all_as_deleted' %}">Delete all</a></li> -->
+
+                 <li data-toggle="modal" data-target="#modal1"><a href="#">Delete All</a></li>
+                     <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+
+
+                  <li data-toggle="modal" data-target="#modal2"><a href="#">Delete all read notifications</a></li>
+                     <div class="modal fade" id="modal2" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_read_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+
+                  <li data-toggle="modal" data-target="#modal3"><a href="#">Delete all unread notifications</a></li>
+                     <div class="modal fade" id="modal3" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_unread_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
               </ul>
         </div>
 

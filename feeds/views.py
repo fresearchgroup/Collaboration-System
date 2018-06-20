@@ -74,7 +74,6 @@ def remove_or_add_user_feed(user,target,action_type):
 		action.send(user, verb='Admin has been added to the group',target=target, actor_href='display_user_profile', actor_href_id=user.username)
 
 	else:
-
 		previous_role = ''
 		if isinstance(target, Community) and CommunityMembership.objects.filter(user=user, community=target).exists():
 			membership = CommunityMembership.objects.get(user=user, community=target.pk)
