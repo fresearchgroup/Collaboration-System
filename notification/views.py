@@ -163,7 +163,7 @@ def notify_remove_or_add_user(sender, user, target, action_type):
     elif action_type == 'group_created':
         notify.send(sender=sender, verb='Your are now an admin', recipient=user,
                     target=target,
-                    target_url="community_view", sender_url='display_user_profile', sender_url_name=sender.username)
+                    target_url="group_view", sender_url='display_user_profile', sender_url_name=sender.username)
     else:
         target_url = ''
         previous_role = ''
@@ -185,7 +185,12 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
-                notify.send(sender=sender, verb='You left the community as a publisher', recipient=user,
+                verb = ''
+                if target_url=='community_view' :
+                    verb='You left the community as a publisher'
+                elif target_url=='group_view' :
+                    verb = 'You left the group as a publisher'
+                notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
@@ -193,28 +198,50 @@ def notify_remove_or_add_user(sender, user, target, action_type):
         elif previous_role == 'community_admin' or previous_role == 'group_admin':
             if action_type == 'removed':
                 verb=''
-                if sender == user:
-                    verb='You left as an admin'
-                else:
-                    verb='You have been removed as an admin'
+                if target_url == 'community_view':
+                    if sender == user:
+                        verb='You left the community as an admin'
+                    else:
+                        verb='You have been removed as an admin'
+                elif target_url == 'group_view' :
+                    if sender == user:
+                        verb='You left the group as an admin'
+                    else:
+                        verb='You have been removed as an admin'
+
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
-                notify.send(sender=sender, verb='You left as an admin', recipient=user,
+                verb = ''
+                if target_url == 'community_view' :
+                    verb = "You left the community as an admin"
+                elif target_url == 'group_view' :
+                    verb = 'You left the group as an admin'
+                notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
 
         elif previous_role == 'author':
             if action_type == 'removed':
-                notify.send(sender=sender, verb='You have been removed', recipient=user,
+                verb = ''
+                if target_url == 'community_view' :
+                    verb = 'You have been removed from the community'
+                elif target_url == 'group_view' :
+                    verb = 'You have been removed from the group'
+                notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
-                notify.send(sender=sender, verb='You left the community', recipient=user,
+                verb = ''
+                if target_url == 'community_view':
+                    verb = 'You left the community'
+                elif target_url == 'group_view':
+                    verb = 'You left the group'
+                notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
