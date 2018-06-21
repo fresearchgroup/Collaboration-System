@@ -107,7 +107,8 @@ def edit_article(request, pk):
 					article.save(update_fields=["title","body","image"])
 				except:
 					article.save(update_fields=["title","body"])
-				notify_edit_article(request.user,article)
+				current_state = request.POST['current']
+				notify_edit_article(request.user,article, current_state)
 				return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)

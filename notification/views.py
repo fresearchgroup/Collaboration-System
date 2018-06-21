@@ -219,7 +219,7 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
 
-def notify_edit_article(user, article):
+def notify_edit_article(user, article, current_state):
 
 
     if(user != article.created_by):
@@ -236,12 +236,23 @@ def notify_edit_article(user, article):
 
         else:
             grp = GroupArticles.objects.get(article=article)
-            membership = GroupMembership.objects.get(user=user, group=grp.group.pk)
-            role = membership.role.name
+            if current_state == 'private' :
+                membership = GroupMembership.objects.get(user=user, group=grp.group.pk)
+                role = membership.role.name
+            elif current_state == 'visible':
+                comm = CommunityGroups.objects.get(group=grp.group)
+                membership = CommunityMembership.objects.get(user=user, community=comm.community.pk)
+                role = membership.role.name
+
             if role == 'publisher':
-                verb="Group publisher edited your article"
+                if current_state == 'private' :
+                    verb="Group publisher edited your article"
+                elif current_state == 'visible' :
+                    verb = "Community publisher edited your article"
             elif (role == "group_admin"):
                 verb = "Group admin edited your article"
+            elif (role == 'community_admin') :
+                verb = "Community admin edited your article"
 
         if role == 'author':
             verb="Your article got edited"
