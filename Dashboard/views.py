@@ -42,4 +42,22 @@ def article_dashboard(request,pk):
 	return render(request,'article_dashboard.html',{'viewdata': viewdata})
 
 def user_insight_dashboard(request,pk):
-	return render(request,'user_insight_dashboard.html')
+	
+    # To show the trending articles in community
+    # data_trending = 
+    articles=[]
+    status = 'found'
+    if data_trending['status'] == 200:
+        articles_keys = []
+        for item in data_trending['logs']:
+            articles_keys.append(item['key'])
+        if len(articles_keys) == 0:
+            status = 'not found'
+        else:
+            for key in articles_keys:
+                article_title = Articles.objects.filter(id=key).first().title
+                articles.append({'article_id':key,'article_title':article_title})
+    else:
+        status = 'not found'
+        
+    return render(request, 'community_dashboard.html',{'communityview': communityview,'articles':articles,'status':status})
