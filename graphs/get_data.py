@@ -44,32 +44,45 @@ def create_plotdata(distinct_date, frequency):
 	return result
 
 def main_call(article_id):
-#write a function to obtain the article-id
 	url_api = 'http://localhost:8000/logapi/event/article/view/'+str(article_id)+'/'
 	result = requests.get(url_api).json()
-	data = result["result"]
 
-	parse_date = parse(data)
-	date_list = get_minute(parse_date)
-	date_list.sort()
+	if (result["Status Code"] == 200):
+		data = result["result"]
+		if (result["total hits"] == 0):
+			print ("No data found")
+			return [[]]
+		parse_date = parse(data)
+		date_list = get_minute(parse_date)
+		date_list.sort()
 
-	distinct_date = find_distinct(date_list)
-	frequency = find_frequency(date_list)
+		distinct_date = find_distinct(date_list)
+		frequency = find_frequency(date_list)
 
-	plot_data = create_plotdata(distinct_date,frequency)
-	return [plot_data]
+		plot_data = create_plotdata(distinct_date,frequency)
+		return [plot_data]
+	else:
+		print("Server Error")
+		return [[]]
 
 def community_view(community_id):
 	url_api = 'http://localhost:8000/logapi/event/community/view/'+str(community_id)+'/'
 	result = requests.get(url_api).json()
-	data = result["result"]
+	if (result["Status Code"] == 200):
+		data = result["result"]
+		if (result["total hits"] == 0):
+			print ("No data found")
+			return [[]]
 
-	parse_date = parse(data)
-	date_list = get_minute(parse_date)
-	date_list.sort()
+		parse_date = parse(data)
+		date_list = get_minute(parse_date)
+		date_list.sort()
 
-	distinct_date = find_distinct(date_list)
-	frequency = find_frequency(date_list)
+		distinct_date = find_distinct(date_list)
+		frequency = find_frequency(date_list)
 
-	plot_data = create_plotdata(distinct_date,frequency)
-	return [plot_data]
+		plot_data = create_plotdata(distinct_date,frequency)
+		return [plot_data]
+	else:
+		print("Server Error")
+		return [[]]

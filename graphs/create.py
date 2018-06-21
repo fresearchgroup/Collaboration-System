@@ -1,12 +1,13 @@
 class linechart:
 		
-	def plot(self,lockto,y_val,xlabel='',ylabel=''):
+	def plot(self,lockto,y_val,xlabel='',ylabel='',displayheader = ''):
 		y_val=list(y_val)
 		body = {
 			'bindto': '#'+lockto ,
 			'data': {
 				'columns':
 					y_val,
+				'type': 'spline'
 				},
 			'axis': {
 				'x': {
@@ -21,7 +22,13 @@ class linechart:
 		                'position': 'outer-middle'
 		            }
 		        }
-			}
+			},
+
+#			'tooltip': {
+#		        'format': {
+#		            'title': function (d) {' +displayheader+  '},
+#		        }
+#    		}
 		}
 		return body	
 
@@ -44,9 +51,10 @@ class bargraph:
 	def plot(self, lockto, data,xlabel='',ylabel='',xcat=[]):
 		data=list(list(data))
 		body = {
-			'bindto': '#'+lockto,
-			'data': {
-		        'columns': data,
+				'bindto': '#'+lockto,
+				'data': {
+				'x': 'x',
+		        'columns': [['x']+xcat]+data,
 		        'type': 'bar'
 		    },
 		    'bar': {
@@ -60,8 +68,7 @@ class bargraph:
 		                'text': xlabel,
 		                'position': 'outer-center'
 		            },
-		            'type': 'category',
-		            'categories': xcat  	            
+		            'type': 'category',  	            
 		        },
 		        'y': {
 		            'label': {
@@ -75,7 +82,7 @@ class bargraph:
 		}
 		return body
 
-def data_plot(lockto, charttype, data, label, xlabel='',ylabel='',xcat=[]):
+def data_plot(lockto, charttype, data, label, xlabel='',ylabel='',xcat=[],displayheader = ''):
 	data = list(list(data))
 	label = list(label) 
 	if(len(label) != len(data)):

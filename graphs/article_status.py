@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 from BasicArticle.models import Articles
+from Community.models import CommunityArticles, Community
 import requests 
 import json
 from itertools import groupby
@@ -51,10 +52,11 @@ def top_articles(create_list):
 		res.append(list(data_json["result"]))
 		ip = get_ip(res[i])
 		viewcount.append([len(list(set(ip))),create_list[i]])
-	top_view = sorted(viewcount, key=lambda l:l[1])
+	top_view = sorted(viewcount, key=lambda l:l[0], reverse= True)
 	if(len(top_view)>5):
 		top_view = top_view[:5]
-	return viewcount
+		print('greater',len(top_view))
+	return top_view
 
 def get_ip(data):
 	data = list(data)
@@ -70,4 +72,20 @@ def published_articles(user):
 
 
 def community_articles(community_id):
-	url_api = 'http://localhost:8000/logapi/event/article/create'
+	articles = CommunityArticles.objects.all().filter(community_id = community_id)
+	article_list = []
+	for item in articles:
+		article_list.append(item.id)
+	return article_list
+
+def topfive(article_list):
+	views = []
+	for item in article_list:
+		article = Articles.objects.get(pk = item)
+		view = article.views
+		views.append([view,item])
+	top_view = sorted(views, key=lambda l:l[0], reverse = True)
+	if(len(top_view)>5):
+		top_view = top_view[:5]
+		print('greater',len(top_view))
+	return top_view
