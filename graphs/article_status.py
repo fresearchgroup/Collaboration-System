@@ -87,5 +87,13 @@ def topfive(article_list):
 	top_view = sorted(views, key=lambda l:l[0], reverse = True)
 	if(len(top_view)>5):
 		top_view = top_view[:5]
-		print('greater',len(top_view))
+		print('greater, Number of results shown: ',len(top_view))
 	return top_view
+
+def get_article_name(article_list):
+	article_list=list(article_list)
+	article_name = []
+	for article in article_list:
+		obj_article = Articles.objects.get(pk = article)
+		article_name.append(obj_article.title)
+	return article_name

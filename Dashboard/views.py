@@ -21,9 +21,10 @@ def community_dashboard(request,pk):
     top = article_status.topfive(articles)
     article_id = [item[1] for item in top]
     view_count = [item[0] for item in top]
+    article_title = article_status.get_article_name(article_id)
 
     top_id = "topview"
-    topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article-id', 'Number of views', article_id)
+    topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article Title', 'Number of views', article_title)
     
     # To show the trending articles in community
     # data_trending = requests.get('/logapi/event/article/view/?community-id={{pk}}&agg_type=terms&agg_field=article-id&limit=5')
@@ -117,9 +118,10 @@ def user_insight_dashboard(request,pk):
     user_toparticles = article_status.topfive(user_articles)
     user_article_id = [item[1] for item in user_toparticles]
     user_viewcount = [item[0] for item in user_toparticles]
+    user_article_title = article_status.get_article_name(user_article_id)
 
     usertop_id = 'usertop'
-    usertopview = create.data_plot(usertop_id, 'bargraph', [user_viewcount],['View'], 'Article-id', 'Number of views', user_article_id)
+    usertopview = create.data_plot(usertop_id, 'bargraph', [user_viewcount],['View'], 'Article Title', 'Number of views', user_article_title)
         
     return render(request, 'user_insight_dashboard.html',{'articles':articles,'status':status,'res2':res2,'usertopview':usertopview})
 
