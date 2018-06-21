@@ -6,18 +6,22 @@ from .essearch import SearchElasticSearch
 from .. import utils
 
 LOG_CLASS = "API-HELPERS"
+
+def custom_time_now():
+    return datetime.datetime.now()
+
 def extract_time_keys(request):
     delta = 10
     dic = {}
     tm = None
     bef_tm = None
     try:
-        val = dict(request.GET)['before']
+        val = dict(request.GET)['before'][0]
         tm = datetime.datetime.strptime(val, '%Y-%m-%dT%H:%M:%S')
         bef_tm = tm
         tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except KeyError as e:
-        tm = datetime.datetime.now()
+        tm = custom_time_now()
         bef_tm = tm
         tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except ValueError as e:
@@ -26,7 +30,7 @@ def extract_time_keys(request):
     tm = None
     utils.ilog(LOG_CLASS, "Before time is: {!s}".format(bef_tm), mode="DEBUG")
     try:
-        val = dict(request.GET)['after']
+        val = dict(request.GET)['after'][0]
         tm = datetime.datetime.strptime(val, '%Y-%m-%dT%H:%M:%S')
         tm = tm.strftime('%Y-%m-%d %H:%M:%S')
     except KeyError as e:
@@ -50,6 +54,7 @@ def extract_field_keys(request):
     for key in dic['fields']:
         if key not in to_check:
             dic['fields'].remove(key)
+    dic['fields'] = list(set(dic['fields']))
     return dic
 
 def extract_paging_keys(request):
@@ -95,7 +100,7 @@ def extract_filter_keys(request):
           }
     for key in settings.OUTTER_KEYS:
         try:
-            val = dict(request.GET)[key]
+            val = dict(request.GET)[key][0]
             dic['filter_keys'].append({
                 key: val,
                 })
@@ -103,7 +108,7 @@ def extract_filter_keys(request):
             continue
     for key in settings.INNER_KEYS:
         try:
-            val = request.GET.__getitem__(key)
+            val = request.GET[key][0]
             dic['filter_keys'].append({
                 key: val
                 })
@@ -194,6 +199,7 @@ def append_pagination(request, resp, page_keys, total_hits):
     limit = page_keys['size']
     prev_link = int(cur) - int(limit)
     next_link = int(cur) + int(limit)
+    utils.ilog(LOG_CLASS, "Printing info: {!s} | {!s} | {!s} | {!s}".format(page_keys, total_hits, prev_link, next_link), mode="DEBUG")
     if next_link >= total_hits:
         next_link = None
     if prev_link < 0:
