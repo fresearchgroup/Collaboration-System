@@ -1,3 +1,5 @@
+import requests
+
 from django.shortcuts import render, redirect
 from graphs import get_data, article_status, create
 
@@ -12,7 +14,7 @@ def community_dashboard(request,pk):
 	communityview = create.data_plot(div_id, 'linechart', data, data_label, xlabel, ylabel)
 	
     # To show the trending articles in community
-    # data_trending = 
+    # data_trending = requests.get('/logapi/event/article/view/?community-id={{pk}}&agg_type=terms&agg_field=article-id&limit=5')
     articles=[]
     status = 'found'
     if data_trending['status'] == 200:
@@ -44,13 +46,13 @@ def article_dashboard(request,pk):
 def user_insight_dashboard(request,pk):
 	
     # To show the trending articles in community
-    # data_trending = 
+    # data_trending = requests.get('/logapi/user/{{pk}}/event/article/view/'?after=170-1-1T0:0:0&limit=5)
     articles=[]
     status = 'found'
     if data_trending['status'] == 200:
         articles_keys = []
         for item in data_trending['logs']:
-            articles_keys.append(item['key'])
+            articles_keys.append(item['event']['article-id'])
         if len(articles_keys) == 0:
             status = 'not found'
         else:
