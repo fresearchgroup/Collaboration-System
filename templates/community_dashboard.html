@@ -16,16 +16,29 @@
                 </div>
            </div>
            <div class="col-md-12">
-           	    <div class="col-md-6">
+           	    <div class="col-md-8">
            	    	<div class="pricing-head">
            	    	    <h3>Put Graph 2 here</h3>
            	    	    <h4></h4>
            	    	</div>
            	    </div>
-           	    <div class="col-md-6">
+           	    <div class="col-md-4">
            	    	<div class="pricing-head">
-           	    	     <h3>Graph3</h3>
-           	    	     <h4>Put Graph3 here</h4>
+           	    	      <h3>Trending Articles</h3>
+                        <h4>
+                        <span style="text-align:left; padding-left:20px; padding-top:10px">
+                        {{myhtml|safe}}{% autoescape off%}
+                        {% if status == 'not found' %}
+                        <h5>No recent activity</h5>
+                        {% else %}
+                        {% for article in articles %}
+                        <i class="fa fa-pencil" style="top:3px;"></i>
+                        <a id= "community_dashboard_a" href="{% url 'article_view' article.article_id %}"> {{article.article_title }}</a><br>
+                        {% endfor %}
+                        {% endif %}
+                        {% endautoescape%} 
+                        </span>
+                        </h4>
            	    	</div>
            	    </div>
            </div>
