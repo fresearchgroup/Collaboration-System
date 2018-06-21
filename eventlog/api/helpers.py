@@ -28,7 +28,7 @@ def extract_time_keys(request):
         raise exceptions.BadTimeFormat
     dic['before'] = tm
     tm = None
-    utils.ilog(LOG_CLASS, "Before time is: {!s}".format(bef_tm), mode="DEBUG")
+    #utils.ilog(LOG_CLASS, "Before time is: {!s}".format(bef_tm), mode="DEBUG")
     try:
         val = dict(request.GET)['after'][0]
         tm = datetime.datetime.strptime(val, '%Y-%m-%dT%H:%M:%S')
@@ -78,9 +78,9 @@ def extract_sorting_keys(request):
         }
     try:
         val = dict(request.GET)['sort']
-        utils.ilog(LOG_CLASS, "Sort keys are: {!s}".format(val), mode="DEBUG")
+        #utils.ilog(LOG_CLASS, "Sort keys are: {!s}".format(val), mode="DEBUG")
         for skey in val:
-            utils.ilog(LOG_CLASS, "parsing the sort strings: {!s}".format(skey), mode="DEBUG")
+            #utils.ilog(LOG_CLASS, "parsing the sort strings: {!s}".format(skey), mode="DEBUG")
             skey = skey.strip()
             if skey[0] == '-':
                 dic['sort_keys'].append({
@@ -139,7 +139,7 @@ def extract_aggregate_key(request):
     return dic
 
 def make_request_body(request, data):
-    utils.ilog(LOG_CLASS, "request_keys are {!s}".format(data), mode="DEBUG")
+    #utils.ilog(LOG_CLASS, "request_keys are {!s}".format(data), mode="DEBUG")
     final_dic = {}
     final_dic['request_keys'] = data
 
@@ -174,7 +174,7 @@ def make_request_body(request, data):
 
 def append_get_params(url, request):
     get_params = dict(request.GET)
-    utils.ilog(LOG_CLASS, "Got following params for get: {!s}".format(get_params), mode="DEBUG")
+    #utils.ilog(LOG_CLASS, "Got following params for get: {!s}".format(get_params), mode="DEBUG")
     url+="?"
     param_str_list = []
     for key in list(get_params.keys()):
@@ -186,7 +186,7 @@ def append_get_params(url, request):
             param_str_list.append("{!s}={!s}".format(str(key).strip(), str(val).strip()))
     param_str = "&".join(param_str_list)
     url += param_str
-    utils.ilog(LOG_CLASS, "URL formed is: {!s}".format(url))
+    #utils.ilog(LOG_CLASS, "URL formed is: {!s}".format(url))
     return url
 
 def get_path(request):
@@ -199,7 +199,7 @@ def append_pagination(request, resp, page_keys, total_hits):
     limit = page_keys['size']
     prev_link = int(cur) - int(limit)
     next_link = int(cur) + int(limit)
-    utils.ilog(LOG_CLASS, "Printing info: {!s} | {!s} | {!s} | {!s}".format(page_keys, total_hits, prev_link, next_link), mode="DEBUG")
+    #utils.ilog(LOG_CLASS, "Printing info: {!s} | {!s} | {!s} | {!s}".format(page_keys, total_hits, prev_link, next_link), mode="DEBUG")
     if next_link >= total_hits:
         next_link = None
     if prev_link < 0:
@@ -207,6 +207,7 @@ def append_pagination(request, resp, page_keys, total_hits):
     if cur == 0:
         prev_link = None
     if prev_link is not None:
+        #utils.ilog(LOG_CLASS, "Running prev link ", mode="DEBUG")
         temp = None
         temp = request
         get = dict(temp.GET)
@@ -215,6 +216,7 @@ def append_pagination(request, resp, page_keys, total_hits):
         temp.GET = get
         resp['prev_link'] = append_get_params(get_path(temp), temp)
     if next_link is not None:
+        #utils.ilog(LOG_CLASS, "Running next link ", mode="DEBUG")
         temp = None
         temp = request
         get = dict(temp.GET)
@@ -246,7 +248,7 @@ def handle_response(request, data):
     status_code = 200
     try:
         data = make_request_body(request, data)
-        utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
+        #utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
     except exceptions.BadTimeFormat as e:
         res = append_error_key_value(res, 'status code', 400)
         res = append_error_key_value(res, 'error msg', 'time not in format yyyy-mm-ddThh:mm:ss')
@@ -261,7 +263,7 @@ def handle_response(request, data):
     else:
         obj=SearchElasticSearch()
         result = obj.search_elasticsearch(data)
-        utils.ilog(LOG_CLASS, "Returned value: {!s}".format(result), mode="ERROR")
+        #utils.ilog(LOG_CLASS, "Returned value: {!s}".format(result), mode="ERROR")
         if 'status' in result.keys():
             res = append_pagination(request, res, data['paging'], result['total_hits'])
             res = append_key_value(res, 'status code', 200)

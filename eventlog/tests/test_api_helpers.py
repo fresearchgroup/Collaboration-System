@@ -72,7 +72,7 @@ class TestHelperClass(TestCase):
         data = {'event_name': "event.community.view"}
         res = helpers.handle_response(request, data)
         act_resp, status_code = res[0], res[1]
-        utils.ilog("HELPER CLASS", "print: {!s}".format(act_resp), mode="DEBUG")
+        #utils.ilog("HELPER CLASS", "print: {!s}".format(act_resp), mode="DEBUG")
         self.assertEqual(self.result_handle_reponse, act_resp)
     
     @mock.patch.object(helpers, 'custom_time_now')
@@ -112,7 +112,7 @@ class TestHelperClass(TestCase):
                 "fields":['server-host', 'ip-address', 'session-id', 'path-info', 'accept-language', 'user-agent', 'referer', 'host', 'event-source', 'time-stamp', 'event_name', '@version', 'headers', '@timestamp', 'user-id', 'event']
                 }
         act_result = helpers.extract_field_keys(request)
-        utils.ilog("TEST HELPER", "result actual: {!s}".format(act_result), mode="DEBUG")
+        #utils.ilog("TEST HELPER", "result actual: {!s}".format(act_result), mode="DEBUG")
         self.assertCountEqual(exp_result['fields'], act_result['fields'])
         request = RequestFactory().get("/logapi/event/community/view/", {"fields": ["event", "event_name", "host"]})
         exp_result = {
@@ -247,7 +247,7 @@ class TestHelperClass(TestCase):
         cpath = "http://localhost:8000/logapi/event/community/view/"
         gpfunc.return_value = cpath
         total_hits = 15
-        utils.ilog("TEST HELPER", "Calling for next link", mode="ERROR")
+        #utils.ilog("TEST HELPER", "Calling for next link", mode="ERROR")
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 0, "limit": 10})
         page_keys = {
                 "from": 0,
@@ -256,10 +256,11 @@ class TestHelperClass(TestCase):
         exp_result = {
                 'next_link': cpath + "?start=10&limit=10"
                 }
+        resp = {}
         act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
+        #utils.ilog("Helper class", "act result: {!s}".format(act_result), mode="DEBUG")
         self.assertEqual(exp_result, act_result)
-        utils.ilog("TEST HELPER", "Calling for prev link", mode="ERROR")
-        request = RequestFactory().get('/logapi/event/community/view/', {'start': 10, "limit": 10})
+        #utils.ilog("TEST HELPER", "Calling for prev link", mode="ERROR")
         page_keys = {
                 "from": 10,
                 "size": 10
@@ -267,9 +268,11 @@ class TestHelperClass(TestCase):
         exp_result = {
                 'prev_link': cpath + "?start=0&limit=10"
                 }
+        resp = {}
         act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
+        #utils.ilog("Helper class", "act result: {!s}".format(act_result), mode="DEBUG")
         self.assertEqual(exp_result, act_result)
-        utils.ilog("TEST HELPER", "Calling for both link", mode="ERROR")
+        #utils.ilog("TEST HELPER", "Calling for both link", mode="ERROR")
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 1, "limit": 1})
         page_keys = {
                 "from": 1,
@@ -279,9 +282,10 @@ class TestHelperClass(TestCase):
                 "next_link": cpath + "?start=2&limit=1",
                 'prev_link': cpath + "?start=0&limit=1"
                 }
+        resp = {}
         act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
         self.assertEqual(exp_result, act_result) 
-        utils.ilog("TEST HELPER", "Calling for no", mode="ERROR")
+        #utils.ilog("TEST HELPER", "Calling for no", mode="ERROR")
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 0, "limit": 100})
         page_keys = {
                 "from": 0,
@@ -289,6 +293,7 @@ class TestHelperClass(TestCase):
                 }
         exp_result = {
                 }
+        resp = {}
         act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
         self.assertEqual(exp_result, act_result)
 
