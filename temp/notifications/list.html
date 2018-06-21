@@ -8,15 +8,69 @@
 
 
         <div class="col-lg-3">
-             <ul class="nav nav-pills nav-stacked" role="tablist">
+             <ul class="nav nav-pills nav-stacked"  role="tablist">
                 <li><a href="{% url 'notifications:all' %}">All notifications</a></li>
                  <li><a href="{% url 'notifications:unread' %}">Unread notifications</a></li>
                  <hr>
                	<li><a href="{% url 'notifications:mark_all_as_read' %}">Mark all as read</a></li>
                 <li><a href="{% url 'notifications:mark_all_as_unread' %}">Mark all as unread</a></li>
-                <li><a href="{% url 'notifications:mark_all_read_as_deleted' %}">Delete all read notifications</a></li>
-                <li><a href="{% url 'notifications:mark_all_unread_as_deleted' %}">Delete all unread notifications</a></li>
-                <li><a href="{% url 'notifications:mark_all_as_deleted' %}">Delete all</a></li>
+                <!-- <li><a href="{% url 'notifications:mark_all_as_deleted' %}">Delete all</a></li> -->
+
+                 <li data-toggle="modal" data-target="#modal1"><a href="#">Delete All</a></li>
+                     <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+
+
+                  <li data-toggle="modal" data-target="#modal2"><a href="#">Delete all read notifications</a></li>
+                     <div class="modal fade" id="modal2" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_read_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+
+                  <li data-toggle="modal" data-target="#modal3"><a href="#">Delete all unread notifications</a></li>
+                     <div class="modal fade" id="modal3" aria-hidden="true" style="margin-top:7%;">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete All</h4></div>
+                            <div class="modal-body">
+                                <form method = "post" action ="{% url 'notifications:mark_all_unread_as_deleted' %}">
+                                    {% csrf_token %}
+                                    Are you sure you want to delete all the notifications?
+                                    <hr>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+                 <hr>
               </ul>
         </div>
 
@@ -27,64 +81,86 @@
 
 
           <div class="row">
-                             <div class="alert alert-block alert-{{ notice.level }}" style=" margin:1px !important; padding-bottom:2px;" >
+             <div class="alert alert-block alert-{{ notice.level }}" id="notif{{notice.id}}" style=" margin:1px !important; padding-bottom:2px;" >
 
-                             <!-- <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
-                                <i class="icon-close"></i>
-                              </a> -->
-                               <div class="row" style="padding-left:3px; padding-right:3px;">
-                                   <div class="col-md-9"><h4><a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a></h4></div>
-                                   <div class="col-md-2 text-right">{% if notice.unread %}
-                                 <p><a class="alert-link" href="{% url 'notifications:mark_as_read' notice.slug %}"><span class="glyphicon glyphicon-unchecked"></span></a> Unread</p>
-                                 {% else %}
-                                 <p><a class="alert-link" href="{% url 'notifications:mark_as_unread' notice.slug %}"><span class="glyphicon glyphicon-check"></span></a>  Read</p>
-                                   {% endif %}</div>
+             <!-- <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
+                <i class="icon-close"></i>
+              </a> -->
+               <div class="row" style="padding-left:3px; padding-right:3px;">
+                   <div class="col-md-8"><h4><a class="alert-link" href="{% url 'notifications:mark_as_read_and_redirect' notice.slug %}">{{ notice.target }} {{ notice.target_content_type }} </a></h4></div>
+                   <div class="col-md-3 text-right">{% if notice.unread %}
+                       <p class="notif-status alert-link glyphicon glyphicon-unchecked" id="notif-status{{notice.id}}" notif-id="{{notice.id}}" slug="{{notice.slug}}"><span id="notif-sp{{notice.id}}" style="font-family:arial;"> Mark as Read</span></p>
+                 {% else %}
+                       <p class="notif-status alert-link glyphicon glyphicon-check" id="notif-status{{notice.id}}" notif-id="{{notice.id}}" slug="{{notice.slug}}"><span id="notif-sp{{notice.id}}" style="font-family:arial;"> Mark as Unread</span></p>
+                   {% endif %}</div>
 
-                                  <!-- <div class="col-md-1 text-right"> <p><button class="alert-btn" style="border:0px solid transparent; background:transparent;" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-trash"></span></button></p>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                    <script type="text/javascript">
 
-                                         <div class="modal fade" id="modal1" aria-hidden="true" style="margin-top:7%;">
-                                            <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header"><button class="close" data-dismiss="modal">&times;</button><h4 class="text-left">Delete</h4></div>
-                                                <div class="modal-body">
-                                                    <form method = "post" action ="{% url 'notifications:delete' notice.slug %}">
-                                                        {% csrf_token %}
-                                                        Are you sure you want to delete this notification?
-                                                  </div>
-                                                  <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                                    <button type="submit" class="btn btn-primary">Yes</button>
-                                                    </form>
-                                                  </div>
-                                            </div>
-                                            </div>
-                                        </div></div> -->
+                    $('.notif-status').click(function(){
+                    var slug = $(this).attr("slug");
+                    var id = $(this).attr("notif-id");
+                    var status = document.getElementById("notif-sp"+id).innerHTML;
+                    var url;
+                    if(status==" Mark as Unread"){
+                        url = '{% url 'notifications:mark_as_unread' 0 %}'.replace('0', slug);
+                    }
+                    else{
+                        url = '{% url 'notifications:mark_as_read' 0 %}'.replace('0', slug);
+                    }
+                        $.ajax(
+                            {
+                                type:"GET",
+                                url: url,
 
-				<div class="col-md-1 text-right"> <p><a href="{% url 'notifications:delete' notice.slug %}"><span class="glyphicon glyphicon-trash"></span></a></p></div>
+                                success: function(data)
+                                {
+                                    if(status==" Mark as Unread"){
+                                        $("#notif-status"+id).removeClass("glyphicon glyphicon-check");
+                                        $("#notif-status"+id).addClass("glyphicon glyphicon-unchecked");
+                                        $("#notif"+id).removeClass("alert-error");
+                                        $("#notif"+id).addClass("alert-danger");
+                                        document.getElementById("notif-sp"+id).innerHTML= " Mark as Read";
+                                    }
+                                    else{
+                                        $("#notif-status"+id).removeClass("glyphicon glyphicon-unchecked");
+                                        $("#notif-status"+id).addClass("glyphicon glyphicon-check");
+                                        $("#notif"+id).removeClass("alert-danger");
+                                        $("#notif"+id).addClass("alert-error");
+                                        document.getElementById("notif-sp"+id).innerHTML= " Mark as Unread";
+                                    }
 
+                                }
+                             })
 
-                               </div>
-                                 <div class="row" style="padding-left:7px; padding-right:3px;">
-                                  <div class="col-md-9 text-left"><h5>
-                                    <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
-                                    {{ notice.verb }}
-                                      {% ifnotequal notice.actor notice.recipient %}
-                                      -by <a href="{% url notice.data.sender_url notice.data.sender_url_name %}">{{ notice.actor }}</a>
-                                      {% endifnotequal %}
-                                  </h5>
-                                   </div>
-                                     <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago</p></div>
-                                 </div>
+                   });
+                   </script>
 
-                                  <!-- <p>{{ notice.description|linebreaksbr }}</p> -->
+        <div class="col-md-1 text-right"> <p class="notif-delete glyphicon glyphicon-trash" id="notif-delete{{notice.id}}" notif-id="{{notice.id}}" slug="{{notice.slug}}"></p></div>
 
-                              <div class="notice-actions">
-                                {% for action in notice.data.actions %}
-                                  <a class="btn" href="{{ action.href }}">{{ action.title }}</a>
-                                {% endfor %}
-                              </div>
+               </div>
+                 <div class="row" style="padding-left:7px; padding-right:3px;">
+                  <div class="col-md-9 text-left"><h5>
+                    <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
+                    {{ notice.verb }}
+                      {% ifnotequal notice.actor notice.recipient %}
+                      -by <a href="{% url notice.data.sender_url notice.data.sender_url_name %}">{{ notice.actor }}</a>
+                      {% endifnotequal %}
+                  </h5>
+                   </div>
+                     <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago</p></div>
+                 </div>
 
-                             </div>
+                  <!-- <p>{{ notice.description|linebreaksbr }}</p> -->
+
+              <div class="notice-actions">
+                {% for action in notice.data.actions %}
+                  <a class="btn" href="{{ action.href }}">{{ action.title }}</a>
+                {% endfor %}
+              </div>
+
+             </div>
 
       </div>
 
@@ -93,8 +169,29 @@
     <div class="alert alert-error text-center"><strong><h4>No notifications to show!</h4></strong></div>
     {% endif %}
             </div>
+            <script type="text/javascript">
+
+            $('.notif-delete').click(function(){
+            var slug = $(this).attr("slug");
+            var id = $(this).attr("notif-id");
+            var url = '{% url 'notifications:delete' 0 %}'.replace('0', slug);
+               $.ajax(
+                    {
+                        type:"GET",
+                        url: url,
+
+                        success: function(data)
+                        {
+                            document.getElementById("notif"+id).remove();
+
+                        }
+                     })
+
+           });
+
+           </script>
     {% if is_paginated %}
-      <ul class="pagination pull-right">
+      <ul class="pagination pull-right" style="margin-top:10px;">
         {% if page_obj.has_previous %}
           <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
         {% else %}
@@ -120,3 +217,4 @@
 </ul>
 
 {% endblock %}
+
