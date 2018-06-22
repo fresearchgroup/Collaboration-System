@@ -406,7 +406,7 @@ class TestEssearch(TestCase):
                 ],
                 'sort_keys' : [
                     {
-                       'user-id' : 'asc'
+                        'time-stamp' : 'desc'
                     }
                 ]
         }
@@ -416,9 +416,9 @@ class TestEssearch(TestCase):
                                 "includes": ['ip-address']
                           }, 
                           'sort':[
-                             {
-                                'user-id.keyword':{
-                                   'order': 'asc'
+                              {
+                                'time-stamp.keyword':{
+                                   'order': 'desc'
                                 }
                              }
                           ],
