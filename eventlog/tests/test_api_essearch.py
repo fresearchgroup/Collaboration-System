@@ -603,6 +603,16 @@ class TestEssearch(TestCase):
                      }
                 ]
         }
+        self.result_essearch3 = {
+                "status":200,
+                "total_hits":1,
+                "logs":[
+                       {
+                          "value":1
+                       }
+                    
+                ]
+        }
     
     def teardown(self):
         pass
@@ -643,6 +653,32 @@ class TestEssearch(TestCase):
         utils.ilog(self.LOG_CLASS, "RETURNED FROM func esfunc2 : {!s}".format(esfuncf.return_value))
         temp = self.es.search_elasticsearch({'request_keys':{'user-id': 1},'paging':{'from':0,'size':10}, 'agg_keys':[{'user-id' : 'terms'}]})
         self.assertEqual(temp, self.result_essearch2)
+
+    @mock.patch('elasticsearch.Elasticsearch.search')
+    def test_elastic_search_func3(self, esfuncd) :
+        esfuncd.return_value = {
+                "took": 16,
+                "timed_out": 'false',
+                "_shards": {
+                "total": 2,
+                "successful": 3,
+                "skipped": 0,
+                "failed": 0
+            },
+            "hits":{
+               "total":3,
+               "max_score":0,
+               "hits":[]
+            },
+            "aggregations":{
+                "user-id_aggs":{
+                    "value":1
+                }
+            }
+        }  
+        utils.ilog(self.LOG_CLASS, "RETURNED FROM func esfunc3 : {!s}".format(esfuncd.return_value))
+        temp = self.es.search_elasticsearch({'request_keys':{'user-id': 1},'paging':{'from':0,'size':10}, 'agg_keys':[{'user-id' : 'cardinality'}]})
+        self.assertEqual(temp, self.result_essearch3)
 
     @mock.patch('elasticsearch.Elasticsearch.search')
     def test_build_search_body(self, esfunc):
