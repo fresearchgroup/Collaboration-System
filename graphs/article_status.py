@@ -41,36 +41,6 @@ def labels(article_state):
 	states.sort()
 	return states
 
-def top_articles(create_list):
-	create_list=list(create_list)
-	res = []
-	viewcount = [] 
-	for i in range (0,len(create_list)):
-		url_api = 'http://localhost:8000/logapi/event/article/view/'+str(create_list[i])+'/'
-		data = requests.get(url_api)
-		data_json = data.json()
-		res.append(list(data_json["result"]))
-		ip = get_ip(res[i])
-		viewcount.append([len(list(set(ip))),create_list[i]])
-	top_view = sorted(viewcount, key=lambda l:l[0], reverse= True)
-	if(len(top_view)>5):
-		top_view = top_view[:5]
-		print('greater',len(top_view))
-	return top_view
-
-def get_ip(data):
-	data = list(data)
-	ip = []
-	for i in range(0,len(data)):
-		ip.append(data[i]['session-id'])
-	return ip
-
-def published_articles(user):
-	user_articles = Articles.objects.all().filter(created_by = user)
-	for obj in user_articles:
-		print(str(obj.id))
-
-
 def community_articles(community_id):
 	articles = CommunityArticles.objects.all().filter(community_id = community_id)
 	article_list = []
