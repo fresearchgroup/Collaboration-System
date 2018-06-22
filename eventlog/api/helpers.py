@@ -158,12 +158,12 @@ def make_request_body(request, data):
     # extracting the filters
     dic = extract_filter_keys(request)
     if dic['filter_keys']:
-        final_dic['filters'] = dic['filter_keys']
+        final_dic['filter_keys'] = dic['filter_keys']
 
     # extracrting the sort keys
     dic = extract_sorting_keys(request)
     if dic['sort_keys']:
-        final_dic['sorts'] = dic['sort_keys']
+        final_dic['sort_keys'] = dic['sort_keys']
 
     
     dic = extract_aggregate_key(request)

@@ -113,6 +113,16 @@ class SearchElasticSearch:
              }
         }
 
+        must_keys = list(search_key_dic['request_keys'].keys())
+        #utils.ilog(self.LOG_CLASS, "Entered request keys phase...", mode="DEBUG")
+        for key in must_keys:
+            match={"match":{}}
+            if key in self.outter_keys:
+                match["match"].update({key:search_key_dic['request_keys'][key]})
+            else:
+                match["match"].update({'event.'+key:search_key_dic['request_keys'][key]})
+            body["query"]["bool"]["must"].append(match)
+
         utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
         if "time_range" in search_key_dic.keys():        
             body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"gte":search_key_dic['time_range']['after']})
@@ -163,6 +173,7 @@ class SearchElasticSearch:
     
     def search_elasticsearch(self,search_key_dic):
             response = {}
+            utils.ilog(self.LOG_CLASS, search_key_dic, mode="ERROR")
             if "agg_keys" in search_key_dic.keys():
                 body = self.build_search_body_agg(search_key_dic)
                 res =  self.es.search(index=self.index,body=body)
