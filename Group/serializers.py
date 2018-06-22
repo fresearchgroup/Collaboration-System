@@ -1,10 +1,18 @@
 from rest_framework import serializers
-from .models import Group, GroupArticles
+from .models import  GroupArticles
+from Community.models import CommunityGroups
 
 class GroupSerializer(serializers.ModelSerializer):
+	groupid = serializers.ReadOnlyField(source='group.id')
+	name = serializers.ReadOnlyField(source='group.name')
+	desc = serializers.ReadOnlyField(source='group.desc')
+	created_at = serializers.ReadOnlyField(source='group.created_at')
+	created_by = serializers.ReadOnlyField(source='group.created_by')
+	community_id = serializers.ReadOnlyField(source='community.id')
+	community_name = serializers.ReadOnlyField(source='community.name')
 	class Meta:
-		model = Group
-		fields = ('id', 'name', 'desc', 'created_at', 'created_by')
+		model = CommunityGroups
+		fields = ('groupid', 'name', 'desc', 'created_at', 'created_by', 'community_id','community_name')
 
 
 
