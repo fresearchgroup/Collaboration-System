@@ -41,8 +41,8 @@ class SearchElasticSearch:
                 },
             }
          }
-
-        must_keys = search_key_dic['request_keys'].keys()
+        print(search_key_dic)
+        must_keys = list(search_key_dic['request_keys'].keys())
         #utils.ilog(self.LOG_CLASS, "Entered request keys phase...", mode="DEBUG")
         for key in must_keys:
             match={"match":{}}
@@ -64,8 +64,8 @@ class SearchElasticSearch:
                    body["_source"]["includes"].append(field)
         
         #utils.ilog(self.LOG_CLASS, "Entered sorts keys phase...", mode="DEBUG")
-        if "sorts" in search_key_dic.keys():
-            for item in search_key_dic["sorts"]:
+        if "sort_keys" in search_key_dic.keys():
+            for item in search_key_dic["sort_keys"]:
                  for key in list(item.keys()):
                     if key in self.outter_keys:
                          body["sort"].append({str(key)+'.keyword':{"order":item[key]}})
@@ -73,8 +73,8 @@ class SearchElasticSearch:
                          body["sort"].append({'event.'+str(key)+'.keyword':{"order":item[key]}})
 
         #utils.ilog(self.LOG_CLASS, "Entered filters keys phase...", mode="DEBUG")
-        if "filters" in search_key_dic.keys():
-            items = search_key_dic["filters"]
+        if "filter_keys" in search_key_dic.keys():
+            items = search_key_dic["filter_keys"]
             for item in items:
                 key = list(item.keys())[0]
                 if key in self.outter_keys:
@@ -83,12 +83,12 @@ class SearchElasticSearch:
                      body["query"]["bool"]["filter"].append({"term":{'event.'+key:item[key]}})
         
 
-        #utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
+        utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
         if "time_range" in search_key_dic.keys():        
             body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"gte":search_key_dic['time_range']['after']})
             body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"lte":search_key_dic['time_range']['before']})
         
-        #utils.ilog(self.LOG_CLASS, "body format: {!s}".format(body), mode="DEBUG")
+        utils.ilog(self.LOG_CLASS, "body format: {!s}".format(body), mode="DEBUG")
 
         return body
 
@@ -113,7 +113,7 @@ class SearchElasticSearch:
              }
         }
 
-        #utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
+        utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
         if "time_range" in search_key_dic.keys():        
             body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"gte":search_key_dic['time_range']['after']})
             body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"lte":search_key_dic['time_range']['before']})
@@ -124,11 +124,11 @@ class SearchElasticSearch:
         else:
             size = 10
 
-        #utils.ilog(self.LOG_CLASS, "Entered aggregation keys phase...", mode="DEBUG")
+        utils.ilog(self.LOG_CLASS, "Entered aggregation keys phase...", mode="DEBUG")
         if "agg_keys" in search_key_dic.keys():
             items = search_key_dic["agg_keys"]
             for item in items:
-                #utils.ilog(self.LOG_CLASS, "Inserting key: {!s}".format(item), mode="DEBUG")
+                utils.ilog(self.LOG_CLASS, "Inserting key: {!s}".format(item), mode="DEBUG")
                 key = list(item.keys())[0]
                 main_dic={}
                 if key in self.outter_keys:
@@ -147,16 +147,16 @@ class SearchElasticSearch:
                     main_dic.update({item[key]:dic})
                 body["aggs"].update({str(key)+'_agg':main_dic})
 
-        #utils.ilog(self.LOG_CLASS, "Entered filters keys phase...", mode="DEBUG")
-        if "filters" in search_key_dic.keys():
-            items = search_key_dic["filters"]
+        utils.ilog(self.LOG_CLASS, "Entered filters keys phase...", mode="DEBUG")
+        if "filter_keys" in search_key_dic.keys():
+            items = search_key_dic["filter_keys"]
             for item in items:
                 key = list(item.keys())[0]
                 if key in self.outter_keys:
                      body["query"]["bool"]["filter"].append({"term":item})
                 else:
                      body["query"]["bool"]["filter"].append({"term":{'event.'+key:item[key]}})
-        #utils.ilog(self.LOG_CLASS, "Body returned: {!s}".format(body), mode="ERROR")
+        utils.ilog(self.LOG_CLASS, "Body returned: {!s}".format(body), mode="ERROR")
         return body
 
                 

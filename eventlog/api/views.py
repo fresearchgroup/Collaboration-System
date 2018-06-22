@@ -50,6 +50,6 @@ def get_user_id_event_id(request, id, param1, param2, eid):
             'user-id': id,
             "event_name": ".".join(["event", param1, param2]),
             id_name: eid
-            }
+           }
     res, status_code = helpers.handle_response(request, data)
     return Response(res, status = status_code)
