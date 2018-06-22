@@ -3,6 +3,8 @@ import requests
 import json
 from itertools import groupby
 
+url_basic = "http://localhost:8000/"
+
 def parse(data):
 	data = list(data)
 	date_list = []
@@ -16,7 +18,7 @@ def get_date(parse_date):
 	parse_date = list(parse_date)
 	date_list = []
 	for i in range(0,len(parse_date)):
-		date_list.append(int(parse_date[i][4])) # Change to month[1]/ date[2]
+		date_list.append(int(parse_date[i][2])) # Change to month[1]/ date[2]
 	return date_list
 
 def find_distinct(date_list):
@@ -44,7 +46,7 @@ def create_plotdata(distinct_date, frequency):
 	return result
 
 def main_call(article_id):
-	url_api = 'http://localhost:8000/logapi/event/article/view/'+str(article_id)+'/'
+	url_api = url_basic+'logapi/event/article/view/'+str(article_id)+'/'
 	result = requests.get(url_api).json()
 
 	if (result["Status Code"] == 200):
@@ -53,7 +55,7 @@ def main_call(article_id):
 			print ("No data found")
 			return [[]]
 		parse_date = parse(data)
-		date_list = get_date(parse_date)
+		date_list = get_minute(parse_date)
 		date_list.sort()
 
 		distinct_date = find_distinct(date_list)
@@ -66,7 +68,7 @@ def main_call(article_id):
 		return [[]]
 
 def community_view(community_id):
-	url_api = 'http://localhost:8000/logapi/event/community/view/'+str(community_id)+'/'
+	url_api = url_basic+'logapi/event/community/view/'+str(community_id)+'/'
 	result = requests.get(url_api).json()
 	if (result["Status Code"] == 200):
 		data = result["result"]
@@ -82,6 +84,7 @@ def community_view(community_id):
 		frequency = find_frequency(date_list)
 
 		plot_data = create_plotdata(distinct_date,frequency)
+
 		return [plot_data]
 	else:
 		print("Server Error")
