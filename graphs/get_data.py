@@ -12,7 +12,7 @@ def parse(data):
 		parse_date.append(re.split('-| |:',date_list[i]))
 	return parse_date
 
-def get_minute(parse_date):
+def get_date(parse_date):
 	parse_date = list(parse_date)
 	date_list = []
 	for i in range(0,len(parse_date)):
@@ -53,7 +53,7 @@ def main_call(article_id):
 			print ("No data found")
 			return [[]]
 		parse_date = parse(data)
-		date_list = get_minute(parse_date)
+		date_list = get_date(parse_date)
 		date_list.sort()
 
 		distinct_date = find_distinct(date_list)
@@ -75,7 +75,7 @@ def community_view(community_id):
 			return [[]]
 
 		parse_date = parse(data)
-		date_list = get_minute(parse_date)
+		date_list = get_date(parse_date)
 		date_list.sort()
 
 		distinct_date = find_distinct(date_list)
