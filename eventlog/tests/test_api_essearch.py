@@ -3,11 +3,12 @@ from django.test import RequestFactory
 from django.test import TestCase
 from unittest import mock
 import elasticsearch
-
+from .. import utils
 
 class TestEssearch(TestCase):
 
     def setUp(self):
+        self.LOG_CLASS = "TestEssearch"
         self.es = essearch.SearchElasticSearch()
         self.maxDiff = None
 
@@ -550,14 +551,126 @@ class TestEssearch(TestCase):
         #elastic search
         self.result_essearch = {
                 "status": 200,
+                "total_hits":1,
                 "logs": [
                     {
+                       "event-source": "server",
+                       "server-host": "974ae49a5fc0",
+                       "event": {
+                         "community-id": "1"
+                       },
+                       "@version": "1",
+                       "referer": "http://localhost:8000/login/?next=/community-view/1",
+                       "time-stamp": "2018-06-15 13:09:42",
+                       "accept-language": "en-US,en;q=0.9",
+                       "event_name": "event.community.view",
+                       "session-id": "5o61ux6e0n58d3myoc3z5ao6bds2xtqu",
+                       "path-info": "/community-view/1/",
+                       "ip-address": "172.18.0.1",
+                       "user-id": 1,
+                       "host": "172.18.0.6",
+                       "@timestamp": "2018-06-15T13:09:42.716Z",
+                       "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36",
+                        "headers": {
+                        "request_path": "/",
+                        "http_accept_encoding": "gzip, deflate",
+                        "http_host": "logstash:5000",
+                        "http_accept": "*/*",
+                        "http_version": "HTTP/1.1",
+                        "content_length": "516",
+                        "content_type": "application/json",
+                        "request_method": "PUT",
+                        "request_uri": "/",
+                        "http_user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36",
+                        "http_connection": "keep-alive"
+                        }
+                    },
+                ]
+        }
+
+        #elastic search 2
+        self.result_essearch2 = {
+                "status":200,
+                "total_hits": 2,
+                "logs":[
+                     {
+                         "key": 1,
+                         "doc_count":2
+                     },
+                     {
+                         "key":2,
+                         "doc_count":1
+                     }
+                ]
+        }
+    
+    def teardown(self):
+        pass
+
+    @mock.patch('elasticsearch.Elasticsearch.search')
+    def test_elastic_search_func(self, esfuncf) :
+        esfuncf.return_value = {
+                "took": 16,
+                "timed_out": 'false',
+                "_shards": {
+                "total": 2,
+                "successful": 3,
+                "skipped": 0,
+                "failed": 0
+            },
+            "hits":{
+               "total":3,
+               "max_score":0,
+               "hits":[]
+            },
+            "aggregations":{
+                "user-id_aggs":{
+                    "doc_count_error_upper_bound":0,
+                    "sum_other_doc_count":0,
+                    "buckets":[
+                        {
+                         "key": 1,
+                         "doc_count":2
+                        },
+                        {
+                         "key":2,
+                         "doc_count":1
+                        }
+                    ]
+                }
+            }
+        }  
+        utils.ilog(self.LOG_CLASS, "RETURNED FROM func esfunc2 : {!s}".format(esfuncf.return_value))
+        temp = self.es.search_elasticsearch({'request_keys':{'user-id': 1},'paging':{'from':0,'size':10}, 'agg_keys':[{'user-id' : 'terms'}]})
+        self.assertEqual(temp, self.result_essearch2)
+
+    @mock.patch('elasticsearch.Elasticsearch.search')
+    def test_build_search_body(self, esfunc):
+        esfunc.return_value = {
+                "took": 16,
+                "timed_out": 'false',
+                "_shards": {
+                "total": 5,
+                "successful": 5,
+                "skipped": 0,
+                "failed": 0
+            },
+            "hits": {
+                "total": 1,
+                "max_score": 0.18232156,
+                "hits": [
+                {
+                "_index": "logs",
+                "_type": "doc",
+                "_id": "Ix6QA2QBKird6lIx3aIx",
+                "_score": 0.18232156,
+                "_source": {
                 "event-source": "server",
                 "server-host": "974ae49a5fc0",
-                "event": {
-                    "community-id": "1"
+               "event": {
+                   "community-id": "1"
                 },
-                "@version": "1",
+               "@version": "1",
                 "referer": "http://localhost:8000/login/?next=/community-view/1",
                 "time-stamp": "2018-06-15 13:09:42",
                 "accept-language": "en-US,en;q=0.9",
@@ -582,14 +695,13 @@ class TestEssearch(TestCase):
                         "http_user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36",
                         "http_connection": "keep-alive"
                         }
-                    },
-                ]
+                    }
+                },
+             ]
+            }
         }
-    
-    def teardown(self):
-        pass
-
-    def test_build_search_body(self):
+        temp = self.es.search_elasticsearch({'request_keys':{'user-id': 1}})
+        self.assertEqual(temp, self.result_essearch)
         self.assertEqual(self.es.build_search_body(self.input_dic), self.output)
         self.assertEqual(self.es.build_search_body(self.input_dic2), self.output_dic2)
         self.assertEqual(self.es.build_search_body(self.input_dic3), self.output_dic3)
