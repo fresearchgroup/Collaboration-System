@@ -248,7 +248,7 @@ def handle_response(request, data):
     status_code = 200
     try:
         data = make_request_body(request, data)
-        #utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
+        utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
     except exceptions.BadTimeFormat as e:
         res = append_error_key_value(res, 'status code', 400)
         res = append_error_key_value(res, 'error msg', 'time not in format yyyy-mm-ddThh:mm:ss')
