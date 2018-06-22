@@ -109,7 +109,7 @@
       <span>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> </span>
       {% else %}
       {% if membership == 'FALSE' %}
-         {% if invitereceived == 'FALSE' %}
+         {% if not invitereceived %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
