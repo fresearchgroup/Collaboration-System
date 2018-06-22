@@ -152,6 +152,3 @@ class TestEssearch(TestCase):
         }
         temp = self.es.search_elasticsearch({'user-id': 1})
         self.assertEqual(temp, self.result_essearch)
-
-
-
