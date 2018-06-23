@@ -113,6 +113,12 @@ class SearchElasticSearch:
              }
         }
 
+        utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
+        if "time_range" in search_key_dic.keys():        
+            body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"gte":search_key_dic['time_range']['after']})
+            body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"lte":search_key_dic['time_range']['before']})
+        
+
         must_keys = list(search_key_dic['request_keys'].keys())
         #utils.ilog(self.LOG_CLASS, "Entered request keys phase...", mode="DEBUG")
         for key in must_keys:
@@ -122,12 +128,6 @@ class SearchElasticSearch:
             else:
                 match["match"].update({'event.'+key:search_key_dic['request_keys'][key]})
             body["query"]["bool"]["must"].append(match)
-
-        utils.ilog(self.LOG_CLASS, "Entered time range keys phase...", mode="DEBUG")
-        if "time_range" in search_key_dic.keys():        
-            body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"gte":search_key_dic['time_range']['after']})
-            body["query"]["bool"]["must"][0]["range"]["time-stamp.keyword"].update({"lte":search_key_dic['time_range']['before']})
-        
 
         if "paging" in search_key_dic.keys():
             size = search_key_dic["paging"]["size"]

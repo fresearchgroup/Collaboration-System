@@ -158,7 +158,22 @@ class TestEssearch(TestCase):
                                 "lte": "2018-06-20 00:00:00"
                             }
                         }
-                    }
+                    },
+                                    {'match': {'server-host': '12826df87baa'}}, 
+                                    {'match': {'ip-address': '172.18.0.1'}}, 
+                                    {'match': {'session-id': 'hl8950uyfhqi7y8yfcf86sq9wqjukjli'}}, 
+                                    {'match': {'path-info': '/community-view/1/'}}, 
+                                    {'match': {'accept-language': 'en-US,en;q=0.9'}}, 
+                                    {'match': {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'}}, 
+                                    {'match': {'referer': 'http://localhost:8000/'}}, 
+                                    {'match': {'event-source': 'server'}}, 
+                                    {'match': {'time-stamp': '2018-06-15 18:23:40'}}, 
+                                    {'match': {'event_name': 'event.community.view'}}, 
+                                    {'match': {'host': '1'}}, 
+                                    {'match': {'@version': '1'}}, 
+                                    {'match': {'headers': 'None'}}, 
+                                    {'match': {'@timestamp': '2018-06-15T18:42:43Z'}}, 
+                                    {'match': {'user-id': '1'}}
                 ],
                 "filter": [
                     {
@@ -228,7 +243,22 @@ class TestEssearch(TestCase):
                                     "lte": "2018-06-20 00:00:00"
                                 }
                             }
-                        }
+                        },
+                                    {'match': {'server-host': '12826df87baa'}}, 
+                                    {'match': {'ip-address': '172.18.0.1'}}, 
+                                    {'match': {'session-id': 'hl8950uyfhqi7y8yfcf86sq9wqjukjli'}}, 
+                                    {'match': {'path-info': '/community-view/1/'}}, 
+                                    {'match': {'accept-language': 'en-US,en;q=0.9'}}, 
+                                    {'match': {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'}}, 
+                                    {'match': {'referer': 'http://localhost:8000/'}}, 
+                                    {'match': {'event-source': 'server'}}, 
+                                    {'match': {'time-stamp': '2018-06-15 18:23:40'}}, 
+                                    {'match': {'event_name': 'event.community.view'}}, 
+                                    {'match': {'host': '1'}}, 
+                                    {'match': {'@version': '1'}}, 
+                                    {'match': {'headers': 'None'}}, 
+                                    {'match': {'@timestamp': '2018-06-15T18:42:43Z'}}, 
+                                    {'match': {'user-id': '1'}}
                         ],
                         "filter": [{
                             "term": {
@@ -296,7 +326,22 @@ class TestEssearch(TestCase):
                                     "lte": "2018-06-20 00:00:00"
                                 }
                             }
-                        }
+                        },
+                                        {'match': {'server-host': '12826df87baa'}}, 
+                                        {'match': {'ip-address': '172.18.0.1'}}, 
+                                        {'match': {'session-id': 'hl8950uyfhqi7y8yfcf86sq9wqjukjli'}}, 
+                                        {'match': {'path-info': '/community-view/1/'}}, 
+                                        {'match': {'accept-language': 'en-US,en;q=0.9'}}, 
+                                        {'match': {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'}}, 
+                                        {'match': {'referer': 'http://localhost:8000/'}}, 
+                                        {'match': {'event-source': 'server'}}, 
+                                        {'match': {'time-stamp': '2018-06-15 18:23:40'}}, 
+                                        {'match': {'event_name': 'event.community.view'}}, 
+                                        {'match': {'host': '1'}}, 
+                                        {'match': {'@version': '1'}}, 
+                                        {'match': {'headers': 'None'}}, 
+                                        {'match': {'@timestamp': '2018-06-15T18:42:43Z'}}, 
+                                        {'match': {'user-id': '1'}}
                         ],
                         "filter": [{
                             "term": {
@@ -363,7 +408,22 @@ class TestEssearch(TestCase):
                                     "lte": "2018-06-20 00:00:00"
                                 }
                             }
-                        }
+                        },
+                                    {'match': {'server-host': '12826df87baa'}}, 
+                                    {'match': {'ip-address': '172.18.0.1'}}, 
+                                    {'match': {'session-id': 'hl8950uyfhqi7y8yfcf86sq9wqjukjli'}}, 
+                                    {'match': {'path-info': '/community-view/1/'}}, 
+                                    {'match': {'accept-language': 'en-US,en;q=0.9'}}, 
+                                    {'match': {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'}}, 
+                                    {'match': {'referer': 'http://localhost:8000/'}}, 
+                                    {'match': {'event-source': 'server'}}, 
+                                    {'match': {'time-stamp': '2018-06-15 18:23:40'}}, 
+                                    {'match': {'event_name': 'event.community.view'}}, 
+                                    {'match': {'host': '1'}}, 
+                                    {'match': {'@version': '1'}}, 
+                                    {'match': {'headers': 'None'}}, 
+                                    {'match': {'@timestamp': '2018-06-15T18:42:43Z'}}, 
+                                    {'match': {'user-id': '1'}}
                         ],
                         "filter": [{
                             "term": {
@@ -738,6 +798,9 @@ class TestEssearch(TestCase):
         }
         temp = self.es.search_elasticsearch({'request_keys':{'user-id': 1}})
         self.assertEqual(temp, self.result_essearch)
+
+
+    def test_functions(self):
         self.assertEqual(self.es.build_search_body(self.input_dic), self.output)
         self.assertEqual(self.es.build_search_body(self.input_dic2), self.output_dic2)
         self.assertEqual(self.es.build_search_body(self.input_dic3), self.output_dic3)
