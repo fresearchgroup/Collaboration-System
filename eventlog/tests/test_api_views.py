@@ -2,6 +2,7 @@ from django.test import TestCase
 from unittest import mock
 from ..api import views
 from ..api import essearch
+from ..api import helpers
 from rest_framework.test import APIClient
 import json
 
@@ -10,7 +11,7 @@ class TestAPIView(TestCase):
     def setUp(self):
         self.rf = APIClient()
         self.result1 =  {
-                "Status Code": 200,
+                "status code": 200,
                 "total hits": 1,
                 "result": [
                     {
@@ -47,9 +48,10 @@ class TestAPIView(TestCase):
                     },
                 ]
                 }
-        self.return_value1 = {
-                "status": 200,
-                "logs": [
+        self.return_value1 = ({
+                "status code": 200,
+                "total hits": 1,
+                "result": [
                     {
                 "event-source": "server",
                 "server-host": "974ae49a5fc0",
@@ -83,117 +85,49 @@ class TestAPIView(TestCase):
                         }
                     },
                 ]
-                }
+                }, 200)
         self.result2 = {
-                "Status Code": 200,
+                "status code": 200,
                 "total hits": 0,
                 "result": []
                 }
-        self.return_value2 = {
-                "status": 200,
-                "logs": []
-                }
-
-        self.return_value3 = {
-       "error": [
-            404,
-            "index_not_found_exception",
-            {   
-                "error": {
-                    "root_cause": [
-                        {
-                            "type": "index_not_found_exception",
-                            "reason": "no such index",
-                            "resource.type": "index_or_alias",
-                            "resource.id": "logs-1",
-                            "index_uuid": "_na_",
-                            "index": "logs-1"
-                        }
-                    ],
-                    "type": "index_not_found_exception",
-                    "reason": "no such index",
-                    "resource.type": "index_or_alias",
-                    "resource.id": "logs-1",
-                    "index_uuid": "_na_",
-                    "index": "logs-1"
-                    },
-                    "status": 404
-                }
-            ]
-        }
-
-        self.result3 ={
-       "error": [
-            404,
-            "index_not_found_exception",
-            {   
-                "error": {
-                    "root_cause": [
-                        {
-                            "type": "index_not_found_exception",
-                            "reason": "no such index",
-                            "resource.type": "index_or_alias",
-                            "resource.id": "logs-1",
-                            "index_uuid": "_na_",
-                            "index": "logs-1"
-                        }
-                    ],
-                    "type": "index_not_found_exception",
-                    "reason": "no such index",
-                    "resource.type": "index_or_alias",
-                    "resource.id": "logs-1",
-                    "index_uuid": "_na_",
-                    "index": "logs-1"
-                    },
-                    "status": 404
-                }
-            ]
-        }
-
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
+        self.return_value2 = ({
+                "status code": 200,
+                "total hits": 0, 
+                "result": []
+                }, 200)
+    @mock.patch.object(helpers, 'handle_response')
     def test_get_user_id(self, func):
         func.return_value = self.return_value1
         cres = self.rf.get('/logapi/user/1/')
         self.assertEqual(cres.json(), self.result1)
 
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
+    @mock.patch.object(helpers, 'handle_response')
     def test_get_event(self, func):
         func.return_value = self.return_value1
         cres = self.rf.get('/logapi/event/community/view/')
         self.assertEqual(cres.json(), self.result1)
 
-
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
+    @mock.patch.object(helpers, 'handle_response')
     def test_get_event_id(self, func):
         func.return_value = self.return_value1
         cres = self.rf.get('/logapi/event/community/view/1/')
         self.assertEqual(cres.json(), self.result1)
 
-    @mock.patch.object(essearch.SearchElasticSearch,'search_elasticsearch')
+    @mock.patch.object(helpers, 'handle_response')
     def test_get_user_id_event(self, func):
         func.return_value = self.return_value1
         cres = self.rf.get('/logapi/user/1/event/community/view/')
         self.assertEqual(cres.json(), self.result1)
     
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
+    @mock.patch.object(helpers, 'handle_response')
     def test_get_user_id_event_id(self, func):
         func.return_value = self.return_value1
         cres = self.rf.get('/logapi/user/1/event/community/view/1/')
         self.assertEqual(cres.json(), self.result1)
 
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
+    @mock.patch.object(helpers, 'handle_response')
     def test_nothing_found_response(self, func):
         func.return_value = self.return_value2
         cres = self.rf.get('/logapi/user/2/')
         self.assertEqual(cres.json(), self.result2)
-
-    @mock.patch.object(essearch.SearchElasticSearch, 'search_elasticsearch')
-    def test_error_response(self, func):
-        func.return_value = self.return_value3
-        cres = self.rf.get('/logapi/user/2/')
-        self.assertEqual(cres.json(), self.result3)
-
-
-
-
-
