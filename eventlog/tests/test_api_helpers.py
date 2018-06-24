@@ -220,7 +220,7 @@ class TestHelperClass(TestCase):
     def test_make_request_body(self, tmfunc):
         tmfunc.return_value = {'before': '2018-06-20 17:45:18', 'after':'2018-06-10 17:45:18'}
         request = RequestFactory().get('/logapi/event/community/view/')
-        exp_result = {'request_keys': {'event_name': 'event.community.view'}, 'time_range': {'before': '2018-06-20 17:45:18', 'after': '2018-06-10 17:45:18'}, 'paging': {'from': 0, 'size': settings.PAGE_SIZE}, 'fields': ['server-host', 'ip-address', 'session-id', 'path-info', 'accept-language', 'user-agent', 'referer', 'host', 'event-source', 'time-stamp', 'event_name', '@version', 'headers', '@timestamp', 'user-id', 'event'], 'sorts': [{'time-stamp': 'desc'}]}
+        exp_result = {'request_keys': {'event_name': 'event.community.view'}, 'time_range': {'before': '2018-06-20 17:45:18', 'after': '2018-06-10 17:45:18'}, 'paging': {'from': 0, 'size': settings.PAGE_SIZE}, 'fields': ['server-host', 'ip-address', 'session-id', 'path-info', 'accept-language', 'user-agent', 'referer', 'host', 'event-source', 'time-stamp', 'event_name', '@version', 'headers', '@timestamp', 'user-id', 'event'], 'sort_keys': [{'time-stamp': 'desc'}]}
         exp_result['fields'].sort()
         act_result = helpers.make_request_body(request, {"event_name": "event.community.view"})
         act_result['fields'].sort()
