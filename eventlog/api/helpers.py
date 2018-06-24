@@ -4,6 +4,7 @@ import django
 from . import exceptions
 from .essearch import SearchElasticSearch
 from .. import utils
+import elasticsearch
 
 LOG_CLASS = "API-HELPERS"
 
@@ -246,6 +247,7 @@ def append_error_key_value(resp, key, value):
 def handle_response(request, data):
     res = {}
     status_code = 200
+    result = None
     try:
         data = make_request_body(request, data)
         utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
@@ -260,19 +262,50 @@ def handle_response(request, data):
     except exceptions.MutlipleAggregationUnsupported as e:
         res = append_error_key_value(res, 'status code', 501)
         res = append_error_key_value(res, "error message", "multiple aggregation and nested aggregation not implemented.")
+        status_code = 501
     else:
         obj=SearchElasticSearch()
-        result = obj.search_elasticsearch(data)
-        #utils.ilog(LOG_CLASS, "Returned value: {!s}".format(result), mode="ERROR")
-        if 'status' in result.keys():
-            res = append_pagination(request, res, data['paging'], result['total_hits'])
-            res = append_key_value(res, 'status code', 200)
-            res = append_key_value(res, 'total hits', result['total_hits'])
-            res = append_key_value(res, 'result', result['logs'])
-            status_code = 200
-        else:
-            res = append_error_key_value(res, 'status code', 500)
-            res = append_error_key_value(res, 'error msg', "Database Error")
+        try:
+            result = obj.search_elasticsearch(data)
+        except elasticsearch.ImproperlyConfigured as e:
+            res = append_error_key_value(res, "status code", 400)
+            res = append_error_key_value(res, "error message", "Improper configuration Error")    
+            status_code = 400
+        except elasticsearch.NotFoundError as e:
+            res = append_error_key_value(res, "status code", 404)
+            res = append_error_key_value(res, "error message", "Not Found Error")
+            status_code = 404
+        except elasticsearch.ConflictError as e:
+            res = append_error_key_value(res, "status code", 409)
+            status_code = 409
+            res = append_error_key_value(res, "error message", "Conflict Error")
+        except elasticsearch.RequestError as e:
+            res = append_error_key_value(res, "status code", 500)
+            res = append_error_key_value(res, "error message", "Request Error")
             status_code = 500
+        except elasticsearch.ConnectionError as e:
+            res = append_error_key_value(res, "status code", 400)
+            res = append_error_key_value(res, "error message", "Connection Error occurred")
+            status_code = 400
+        except elasticsearch.TransportError as e:
+            res = append_error_key_value(res, "status code", 400)
+            res = append_error_key_value(res, "error message", "Error Raised by elasticsearch: {!s}".format(e.error))
+            status_code = 400
+        except elasticsearch.ElasticsearchException as e:
+            res = append_error_key_value(res, "status code", 500)
+            res = append_error_key_value(res, "error message", "Database Error")
+            status_code = 500
+        else:
+        #utils.ilog(LOG_CLASS, "Returned value: {!s}".format(result), mode="ERROR")
+            if 'status' in result.keys():
+                res = append_pagination(request, res, data['paging'], result['total_hits'])
+                res = append_key_value(res, 'status code', 200)
+                res = append_key_value(res, 'total hits', result['total_hits'])
+                res = append_key_value(res, 'result', result['logs'])
+                status_code = 200
+            else:
+                res = append_error_key_value(res, 'status code', 500)
+                res = append_error_key_value(res, 'error msg', "Database Error")
+                status_code = 500
     return (res, status_code)
 
