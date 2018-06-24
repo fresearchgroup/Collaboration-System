@@ -2,8 +2,9 @@ import re
 import requests 
 import json
 from itertools import groupby
+from decouple import config
 
-url_basic = "http://localhost:8000/"
+url_basic = config('URL_BASIC')
 
 def parse(data):
 	data = list(data)

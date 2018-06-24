@@ -10,7 +10,7 @@ from Community.models import Articles
 
 def community_dashboard(request,pk):
     community = get_object_or_404(Community, pk = pk)
-    data = get_data.community_view(pk)
+    data = get_data.view(pk,'community')
     data_label = ['Community View']
     xlabel = "Time"
     ylabel = "Number of views"
@@ -65,7 +65,7 @@ def community_dashboard(request,pk):
 
 def article_dashboard(request,pk):
     article = get_object_or_404(Articles, pk = pk)
-    data = get_data.main_call(pk)
+    data = get_data.view(pk,'article')
     data_label = ['Article View']
     xlabel = "Time"
     ylabel = "Number of Views"
