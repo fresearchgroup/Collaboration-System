@@ -4,7 +4,7 @@ import json
 from itertools import groupby
 from decouple import config
 
-url_basic = config('URL_BASIC')
+url_basic = config('BASIC_URL')
 
 def parse(data):
 	data = list(data)
@@ -46,37 +46,15 @@ def create_plotdata(distinct_date, frequency):
 			result.append(0)
 	return result
 
-def main_call(article_id):
-	url_api = url_basic+'logapi/event/article/view/'+str(article_id)+'/'
-	result = requests.get(url_api).json()
-
+def view(id,resource):
+	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/'
+	res = requests.get(url_api)
+	result = res.json()
 	if (result["Status Code"] == 200):
 		data = result["result"]
 		if (result["total hits"] == 0):
 			print ("No data found")
 			return [[]]
-		parse_date = parse(data)
-		date_list = get_minute(parse_date)
-		date_list.sort()
-
-		distinct_date = find_distinct(date_list)
-		frequency = find_frequency(date_list)
-
-		plot_data = create_plotdata(distinct_date,frequency)
-		return [plot_data]
-	else:
-		print("Server Error")
-		return [[]]
-
-def community_view(community_id):
-	url_api = url_basic+'logapi/event/community/view/'+str(community_id)+'/'
-	result = requests.get(url_api).json()
-	if (result["Status Code"] == 200):
-		data = result["result"]
-		if (result["total hits"] == 0):
-			print ("No data found")
-			return [[]]
-
 		parse_date = parse(data)
 		date_list = get_date(parse_date)
 		date_list.sort()
@@ -85,7 +63,6 @@ def community_view(community_id):
 		frequency = find_frequency(date_list)
 
 		plot_data = create_plotdata(distinct_date,frequency)
-
 		return [plot_data]
 	else:
 		print("Server Error")

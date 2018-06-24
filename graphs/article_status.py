@@ -11,7 +11,7 @@ def extract_state(article_list):
 	for i in range (0, len(article_list)):
 		articles = Articles.objects.get(pk=int(article_list[i]))
 		article_state.append(str(articles.state))
-		print(article_state[i])
+	article_state.sort()
 	return article_state
 
 def freq_state(article_state):
@@ -24,17 +24,7 @@ def find_articles(user):
 	article_list  = []
 	for obj in user_articles:
 		article_list.append(int(obj.id))
-	return article_list
-
-def findstates(article_list):
-	article_list=list(article_list)
-	article_state = extract_state(article_list)
-	article_state.sort()
-	return article_state
-
-def plot_data(article_state):
-	state_frequency = freq_state(article_state)
-	return state_frequency	
+	return article_list	
 
 def labels(article_state):
 	states = list(set(article_state))
@@ -45,7 +35,7 @@ def community_articles(community_id):
 	articles = CommunityArticles.objects.all().filter(community_id = community_id)
 	article_list = []
 	for item in articles:
-		article_list.append(item.id)
+		article_list.append(item.article_id)
 	return article_list
 
 def topfive(article_list):
