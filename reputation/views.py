@@ -106,8 +106,10 @@ def general_reputation_dashboard(request):
 def publisher_reputation_dashboard(request):
 	if request.method == 'POST':
 		published_publisher = int(request.POST.get('published_publisher'))
+		publisher_report = int(request.POST.get('publisher_report'))
 		defaultval = DefaultValues.objects.get(pk=1)
 		defaultval.published_publisher = published_publisher
+		defaultval.publisher_report = publisher_report
 		defaultval.save()
 		return redirect('home')
 	else:
@@ -200,6 +202,9 @@ def article_published(request,pk):
 	author = art.created_by
 	publisher = request.user
 	community = check_article(pk)
+	article_vote = ArticleVotes.objects.get(article=art)
+	article_vote.published_by = publisher
+	article_vote.save()
 
 	author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
 	author_srep = SystemRep.objects.get(user_id=author.id)

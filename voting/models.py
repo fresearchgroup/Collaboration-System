@@ -8,6 +8,7 @@ class ArticleVotes(models.Model):
 	upvote = models.PositiveIntegerField(default=0)
 	downvote = models.PositiveIntegerField(default=0)
 	report = models.PositiveIntegerField(default=0)
+	published_by = models.ForeignKey(User,null=True)
 
 	def __str__(self):
 		return self.article.title
@@ -40,3 +41,4 @@ class Badges(models.Model):
 
 	def __str__(self):
 		return self.user.username
+

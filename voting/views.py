@@ -151,11 +151,19 @@ def article_report(request,pk):
 		status = request.POST.get('status')
 		defaultval = DefaultValues.objects.get(pk=1)
 		article = article_reported.article
+		article_vote = ArticlesVotes.objects.get(article=article)
+		publisher = article_vote.published_by
 		if(status == 'approve'):
-			commrep = CommunityRep.objects.get(user=article.created_by,community_id=pk)
+			commrep = CommunityRep.objects.get(user=article.created_by,community_id=pk) #reducing author reputation
 			commrep.rep -= defaultval.author_report
 			sysrep = SystemRep.objects.get(user=article.created_by)
 			sysrep.sysrep -= defaultval.author_report
+			commrep.save()
+			sysrep.save()
+			commrep = CommunityRep.objects.get(user=publisher,community_id=pk)
+			commrep.rep -= defaultval.publisher_report
+			sysrep = SystemRep.objects.get(user=publisher)
+			sysrep.sysrep -= defaultval.publisher_report
 			commrep.save()
 			sysrep.save()
 			rolechange(commrep,article.created_by,community)
@@ -197,3 +205,4 @@ def create_voting_flag(a_id,user):
 def report_reasons(request,a_id):
 	votingflags = VotingFlag.objects.filter(article_id=a_id,reportflag=True)
 	return render(request,'report_reasons.html',{'votingflags':votingflags})
+	

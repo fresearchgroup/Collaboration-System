@@ -23,11 +23,11 @@
   <li class="nav-item">
     <a class="nav-link " href="#">Update community Info</a>
   </li>
+  {% endif %}
+  {% if membership %}
   <li class="nav-item active">
     <a class="nav-link" href="{% url 'article_report' community.pk %}">Articles Reported</a>
   </li>
-  {% endif %}
-  {% if membership %}
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
@@ -49,7 +49,9 @@
         <th>Community</th>
         <th>Article</th>
         <th>Number of reports</th>
+        {% if membership.role.name == 'community_admin' %}
         <th>Action</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -59,6 +61,7 @@
           <td>{{ article.community.name }}</td>
           <td><a href="{% url 'article_view' article.article.pk %}">{{ article.article.title }}</a></td>
           <td><a href="{% url 'report_reasons' article.article.pk %}">{{ article.no_of_report }}</a></td>
+          {% if membership.role.name == 'community_admin' %}
           <td>
             <form method="post" action="{% url 'article_report' community.pk %}">
                  {% csrf_token %}
@@ -70,6 +73,7 @@
                  </div>
             </form>
           </td>
+          {% endif %}
         </tr>
       {% endfor %}
       {% endautoescape%}

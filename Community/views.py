@@ -215,8 +215,8 @@ def handle_community_creation_requests(request):
 				commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
+				commrep.rep = 3001 #he will be the community admin so his community reputation shoul be above 3000
 				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
-				defaultval = DefaultValues.objects.get(pk=1)
 				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
 				sysrep.save()
 				commrep.save()
