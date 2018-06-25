@@ -27,9 +27,6 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_h5p_content' community.pk %}">H5P Content</a>
-  </li>
   {%endif%}
   <li class="nav-item">
 	  <a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forum</a>
@@ -169,7 +166,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateArticle" data-whatever="@mdo"><p><i class="fa fa-file-text-o" style="font-size:42px;"></i></p>Article</button>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateGroup" data-whatever="@mdo"><p><i class="fa fa-soccer-ball-o" style="font-size:42px;"></i></p>Group</button>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateCourse" data-whatever="@mdo"><p><i class="fa fa-briefcase" style="font-size:42px;"></i></p>Course</button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>H5P Content</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>Interactive Content</button>
           </div>
           <div class="modal-footer">
 

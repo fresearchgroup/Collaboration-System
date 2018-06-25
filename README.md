@@ -11,7 +11,7 @@ COLLABORATION SYSTEM
                 Django Rest API
                 Mysql
 
-        Django pakages installed - 
+        Django pakages installed -
 
                 Django Rest Framework
                 Widget Tweaks
@@ -24,122 +24,126 @@ COLLABORATION SYSTEM
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+		Django_wiki
 
-For development installation - 
+For development installation -
 
-  1. Install virtualenv 
+1. Install virtualenv
 
-	        sudo pip3 install virtualenv 
+	        sudo pip3 install virtualenv
 
-  2. Clone the project from github
+2. Clone the project from github
 
-           git clone https://github.com/fresearchgroup/Collaboration-System.git 
+                git clone https://github.com/fresearchgroup/Collaboration-System.git
 
-3. Create a virtual env --- 
+3. Create a virtual env ---
 
-		 virtualenv collab -p python3 
+		 virtualenv collab -p python3
 
-4. Activate the virtual environment -- 
+4. Activate the virtual environment --
 
-	      source collab/bin/activate 
+	         source collab/bin/activate
 
- 5. Install the requirements.txt -- 
+5. Install the requirements.txt --
 
-	       pip3 install -r Collaboration-System/requirements.txt
+	         pip3 install -r Collaboration-System/requirements.txt
 
-5. Install mysql server --
+6. Install mysql server --
 
             $sudo apt-get update
             $sudo apt-get install mysql-server
             $sudo apt-get install libmysqlclient-dev
             $mysql -u root -p
-            
+
             Enter password=root
 
 	    mysql> create database collaboration;
             mysql> use collaboration;
-            mysql> source collab.sql   
-            
+            mysql> source collab-updated.sql 
+	    mysql> exit
 
-6. Create a .env inside CollaborationSystem and paste the following -
 
-            sudo nano .env
-            
-                SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
-                DEBUG=True
-                DB_NAME=collaboration
-                DB_USER=root
-                DB_PASSWORD=root
-                DB_HOST=localhost
-                DB_PORT=3306
-                ALLOWED_HOSTS= localhost
-                GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
-                EMAIL_HOST=localhost
-                EMAIL_HOST_USER=
-                EMAIL_HOST_PASSWORD=
-                EMAIL_PORT=25
-                EMAIL_USE_TLS=False
-                DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
-                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
-                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
-                APIKEY=
-	            NODESERVERURL=Your IP address
-				 NODESERVERPORT=9001
 
-            
-7.  Clone the following directory:
+
+6.  Clone the following directory:
 
 			git clone http://github.com/dhanushsr/etherpad-lite
 			cd etherpad-lite/
 			./bin/run.sh
-			
-8. Install PyEtherLite--
-			
+
+7. Install PyEtherpadLite--
+
 			git clone http://github.com/dhanushsr/PyEtherpadLite
 			cd PyEtherpadLite
 			python setup.py install
 			cd ..
+
+8. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env.example file
+
+9. Create a .env inside CollaborationSystem and paste the following -
 			
-9. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env file
+			sudo cp .env.example .env
+
 9. Do all the migrations going back to django directory--
 
-	      python3 manage.py migrate 
+	      python3 manage.py migrate
 
 10. Runserver --
 
 	      python3 manage.py runserver  
-                
+
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
 For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
 
 
-Steps for Docker -- 
+DOCKER INSTALLATION --
 
  -- Install Docker and Docker-Compose from  --
 
 	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
-    
+
 	    Docker Compose -- https://docs.docker.com/compose/install/
 
 1. Clone the repository --
-
-   git clone https://github.com/fresearchgroup/Collaboration-System.git
-
+```
+   	git clone https://github.com/fresearchgroup/Collaboration-System.git
+	git clone https://github.com/fresearchgroup/Community-Content-Tools.git
+```
 2. The run the following commands inside the repository --
+
+Note: Community-Content-Tools repository has been referred to as the H5P directory
+
+In the .env.docker of both CC and H5P,
+
+	replace 172.17.0.1 in COLLAB_ROOT and H5P with docker0 inet address
+	To find this, 
+	
+	$ ifconfig
+	
+	search for docker0 and copy inet address in place of 172.17.0.1
+
+In the H5P directory,
+```
+
+ sudo docker build -t h5p_image .
  
+```
 
+In the Collaboration-System directory,
+```
 
-		docker-compose build
+ sudo docker-compose build
 
-		 docker-compose up db
+ sudo docker-compose up db
 
-		 docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+ sudo docker exec -i <db-container-image-name> mysql -u<username> -p<password> django < collab-updated.sql
 
-		 docker-compose run web python manage.py migrate
-
-		 docker-compose run web python manage.py createsuperuser
-
-		 docker-compose run web python manage.py loaddata workflow roles faq
-
-		 docker-compose up
+ sudo docker-compose up
+ 
+ ```
+ Go to `https://h5p.org/sites/default/files/official-h5p-release-20170301.h5p` and download the official h5p libraries.
+ 
+ Go to `http://yourdockerip:8000/h5p/libraries` and upload the downloaded libraries and select proceed.
+ 
+ 

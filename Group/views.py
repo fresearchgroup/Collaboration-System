@@ -11,6 +11,9 @@ from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from BasicArticle.views import getHTML
 from django.conf import settings
+import json
+import requests
+
 def create_group(request):
 	if request.method == 'POST':
 		name = request.POST['name']
@@ -102,7 +105,7 @@ def group_article_create_body(request, pk):
 		except:
 			return redirect('home')
 		article = Articles.objects.get(pk=pk)
-		group = Group.objects.get(pk=gid)		
+		group = Group.objects.get(pk=gid)
 		if request.method == 'POST':
 			if article.creation_complete:
 				article.body = getHTML(article)
@@ -111,12 +114,12 @@ def group_article_create_body(request, pk):
 				del request.session['status']
 				return redirect('article_view', article.pk)
 			else:
-				return redirect('group_article_create_body',article.pk)								
+				return redirect('group_article_create_body',article.pk)
 		else:
 			article.creation_complete = True
 			article.save()
 			return render(request, 'new_article_body.html', {'article':article,'group':group, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'group'})
-			
+
 	else:
 		return redirect('login')
 
@@ -129,11 +132,11 @@ def group_article_create(request):
 			request.session['gid'] = gid
 			request.session['status'] = status
 			group = Group.objects.get(pk=gid)
-			if new == '0':			
+			if new == '0':
 				if status=='1':
 					article = create_article(request)
 					GroupArticles.objects.create(article=article, user = request.user , group = group )
-					return redirect('group_article_create_body',article.pk)				
+					return redirect('group_article_create_body',article.pk)
 				else:
 					return render(request, 'new_article.html', {'group':group, 'status':1})
 			elif new == '1':
@@ -149,14 +152,26 @@ def group_article_create(request):
 					return redirect('group_article_create_body', article.pk)
 				else:
 					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
-				
+
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
 
-
-
+def group_h5p_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			gid = request.POST['gid']
+			request.session['cid'] = 0
+			request.session['gid'] = gid
+			try:
+				requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + 'h5p/create/')
+			except Exception as e:
+				print(e)
+				return render(request, 'h5pserverdown.html', {})
+		return redirect('home')
+	return redirect('login')
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:
@@ -273,10 +288,24 @@ def group_content(request, pk):
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
-			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+			garticles = GroupArticles.objects.raw('select "article" as type , ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
 
+			gh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				for obj in json_data:
+					if obj['group_id'] == group.pk:
+						gh5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+
+			lstfinal = list(garticles) + list(gh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(garticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				grparticles = paginator.page(page)
 			except PageNotAnInteger:

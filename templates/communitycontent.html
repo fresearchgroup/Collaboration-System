@@ -36,9 +36,6 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_h5p_content' community.pk %}">H5P Content</a>
-  </li>
   {%endif%}
 
   <li class="nav-item">
@@ -79,7 +76,9 @@
         {% endif %}
         {% if article.type == 'course' %}
           <img src="{{ MEDIA_URL }}default/course_image_default.png" alt="default" class="img-responsive">
-        {% endif %}
+        {% else %}
+          <img src="{{ MEDIA_URL }}default/h5p_image_default.png" alt="default" class="img-responsive">                 
+        {% endif %}        
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
@@ -88,6 +87,8 @@
       {% endif %}
       {% if article.type == 'course' %}
         <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
+      {% else %}  
+        <h3><i class="fa fa-camera-retro" style="color:red;"></i> <a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
       {% endif %}
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}}</li>
