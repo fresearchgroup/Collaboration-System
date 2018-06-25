@@ -3,6 +3,7 @@ import requests
 import json
 from itertools import groupby
 from decouple import config
+import datetime
 
 url_basic = config('BASIC_URL')
 
@@ -47,14 +48,24 @@ def create_plotdata(distinct_date, frequency):
 	return result
 
 def view(id,resource):
-	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/'
+	cur = datetime.datetime.now()
+	diff = datetime.timedelta(days = 365)
+	prev = (cur-diff).strftime("%Y-%m-%dT%H%M%S")
+	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/?after='+prev+'/'
 	res = requests.get(url_api)
 	result = res.json()
+
 	if (result["Status Code"] == 200):
-		data = result["result"]
 		if (result["total hits"] == 0):
 			print ("No data found")
 			return [[]]
+
+		while('next_link' in (result.keys)):
+			res = requests.get(result['next_link'])
+			intermediate = res.json()
+			result['result'].append(intermediate['result'])
+
+		data = result["result"]
 		parse_date = parse(data)
 		date_list = get_date(parse_date)
 		date_list.sort()
