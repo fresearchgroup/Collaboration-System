@@ -1,6 +1,35 @@
 import time
 import datetime
 
+from Community.models import CommunityArticles
+from Group.models import GroupArticles
+
+def get_community_info_from_article_info(data):
+    args = data['view_kwargs']
+    if 'pk' in list(args.keys()):
+        article_id = args['pk']
+    else:
+        return ""
+    objs = CommunityArticles.objects.filter(article=article_id)
+    if len(objs) > 0:
+        community_id = objs.first().community_id
+        return community_id
+    else:
+        return ""
+
+def get_group_info_from_article_info(data):
+    args = data['view_kwargs']
+    if 'pk' in list(args.keys()):
+        article_id = args['pk']
+    else:
+        return ""
+    objs = GroupArticles.objects.filter(article=article_id)
+    if len(objs) > 0:
+       group_id = objs.first().group_id
+       return group_id
+    else:
+        return ""
+
 def process_user_agent(data):
     request = data['request']
     remote_addr = request.META.get('HTTP_USER_AGENT')

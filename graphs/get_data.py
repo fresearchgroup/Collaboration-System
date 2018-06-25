@@ -55,7 +55,7 @@ def view(id,resource):
 	res = requests.get(url_api)
 	result = res.json()
 
-	if (result["status code"] == 200):
+	if ('status code' in list(result.keys()) and result["status code"] == 200):
 		if (result["total hits"] == 0):
 			print ("No data found")
 			return [[]]

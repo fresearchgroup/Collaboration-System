@@ -12,7 +12,7 @@ from decouple import config
 
 URL_BASIC = config('URL_BASIC')
 
-def community_dashboard(request,pk):
+def community_dashboard(request, pk):
     community = get_object_or_404(Community, pk = pk)
     data = get_data.view(pk,'community')
     data_label = ['Community View']
@@ -31,12 +31,12 @@ def community_dashboard(request,pk):
     topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article Title', 'Number of views', article_title)
     
     # To show the trending articles in community
-    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={{pk}}&agg_type=terms&agg_field=article-id&limit=5')
+    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={!s}&agg_type=terms&agg_field=article-id&limit=5'.format(pk)).json()
     articles=[]
     status = 'found'
-    if data_trending['status'] == 200:
+    if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
         articles_keys = []
-        for item in data_trending['logs']:
+        for item in data_trending['result']:
             articles_keys.append(item['key'])
         if len(articles_keys) == 0:
             status = 'not found'
@@ -46,7 +46,7 @@ def community_dashboard(request,pk):
                 articles.append({'article_id':key,'article_title':article_title})
     else:
         status = 'not found'
-        
+    print("Got Data: {!s}".format(articles)) 
     return render(request, 'community_dashboard.html',{'communityview': communityview,'articles':articles,'status':status, 'topview': topview})
 
 def article_dashboard(request,pk):
@@ -59,19 +59,20 @@ def article_dashboard(request,pk):
 
     viewdata = create.data_plot(div_id, 'linechart', data, data_label, xlabel, ylabel)
 
+    print("Got Data: {!s}".format(viewdata)) 
     return render(request,'article_dashboard.html',{'viewdata': viewdata})
 
 def user_insight_dashboard(request):
 
-     if request.user.is_authenticated:
+     if request.user.is_authenticated():
 
         # To show the trending articles in community
-        data_trending = requests.get(URL_BASIC + 'logapi/user/{{pk}}/event/article/view/?after=1970-1-1T0:0:0&limit=5')
+        data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=5'.format(request.user.id)).json()
         articles=[]
         status = 'found'
-        if data_trending['status'] == 200:
+        if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
             articles_keys = []
-            for item in data_trending['logs']:
+            for item in data_trending['result']:
                 articles_keys.append(item['key'])
             if len(articles_keys) == 0:
                 status = 'not found'
@@ -94,6 +95,7 @@ def user_insight_dashboard(request):
         usertop_id = 'usertop'
         usertopview = create.data_plot(usertop_id, 'bargraph', [user_viewcount],['View'], 'Article Title', 'Number of views', user_article_title)
             
+        print("Got Data: {!s}".format(usertopview)) 
         return render(request, 'user_insight_dashboard.html',{'articles':articles,'status':status,'res2':res2,'usertopview':usertopview})
 
      else:
