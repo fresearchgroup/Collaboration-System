@@ -73,7 +73,7 @@ def user_insight_dashboard(request):
         if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
             articles_keys = []
             for item in data_trending['result']:
-                articles_keys.append(item['key'])
+                articles_keys.append(item['event']['article-id'])
             if len(articles_keys) == 0:
                 status = 'not found'
             else:
