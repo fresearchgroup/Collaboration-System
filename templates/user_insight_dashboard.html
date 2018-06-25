@@ -7,8 +7,8 @@
                 <div class="content-page">
                 <div class="col-md-8">
                   <div class="pricing-head">
-                      <h3>Put Graph 1 here</h3>
-                      <h4>Pie chart here</h4>
+                      <h3>Article Status</h3><br>
+                      <div id = "chart2"></div>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -37,8 +37,8 @@
                      <div class="row margin-bottom-40">
                       <div class="col-md-12">
                         <div class="pricing-head">
-                           <h3>Graph</h3>
-                           <h4>Put bar grap here</h4>
+                           <h3>Most Viewed Articles</h3><br>
+                           <div id ="usertop"></div>
                         </div>
                       </div>
                      </div>
@@ -46,12 +46,8 @@
            </div>
       </div>
 </div>
+<script>
+  var chart = c3.generate({{ res2|safe }})
+  var chart2 = c3.generate({{ usertopview|safe }})
+</script>
 {% endblock %}
-
-
-
-
-        
-        
-          
-      

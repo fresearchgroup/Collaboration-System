@@ -6,26 +6,26 @@
           <div class="col-md-12 ">
                <div class="content-page">
                      <div class="row margin-bottom-40">
-                     	<div class="col-md-12">
-                     		<div class="pricing-head">
-                     			 <h3>Graph1</h3><br>
-                     			 <div id = "communityview" ></div>
-                     		</div>
-                     	</div>
+                      <div class="col-md-12">
+                        <div class="pricing-head">
+                           <h3>Community View Timeline</h3><br>
+                           <div id = "communityview" ></div>
+                        </div>
+                      </div>
                      </div>
                 </div>
            </div>
            <div class="col-md-12">
                 <div class="content-page">
-           	    <div class="col-md-8">
-           	    	<div class="pricing-head">
-           	    	    <h3>Put Graph 2 here</h3>
-           	    	    <h4></h4>
-           	    	</div>
-           	    </div>
-           	    <div class="col-md-4">
-           	    	<div class="pricing-head">
-           	    	      <h3>Trending Articles</h3>
+                <div class="col-md-8">
+                  <div class="pricing-head">
+                      <h3>Most Viewed Articles in the Community</h3><br>
+                      <div id = "topview"></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="pricing-head">
+                        <h3>Trending Articles</h3>
                         <h4>
                         <span style="text-align:left; padding-left:20px; padding-top:10px">
                         {{myhtml|safe}}{% autoescape off%}
@@ -40,15 +40,16 @@
                         {% endautoescape%} 
                         </span>
                         </h4>
-           	    	</div>
-           	    </div>
-              </div>
+                  </div>
+                </div>
            </div>
+         </div>
     </div>
 </div>
 
 <script>
   var chart = c3.generate({{ communityview|safe }})
+  var chart2 = c3.generate({{ topview|safe }})
 </script>
 
 {% endblock %}
