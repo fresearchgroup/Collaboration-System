@@ -13,8 +13,8 @@ class DisplayCommunityTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_display_communities_url_resloves_display_communities_view(self):
-    	view = resolve('/communities/')
-    	self.assertEquals(view.func, display_communities)
+		view = resolve('/communities/')
+		self.assertEquals(view.func, display_communities)
 
 
 class CommunityViewTest(TestCase):

@@ -45,13 +45,14 @@ def notify_update_article_state(user, article, action):
                         target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
         elif action == 'published':
+            notify.send(sender=user, recipient=article.created_by,
+                        verb='Your article is published', target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
+
             notify.send(sender=user, recipient=list,
                         verb='This article is published', target=article,
                         target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
-            notify.send(sender=user, recipient=article.created_by,
-                        verb='Your article is published', target=article,
-                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
     elif GroupArticles.objects.filter(article=article).exists():
         grp = GroupArticles.objects.get(article=article)
@@ -99,13 +100,12 @@ def notify_update_article_state(user, article, action):
                 verb1='This article got rejected'
                 verb2='Your article got rejected'
 
+            notify.send(sender=user, recipient=article.created_by,
+                        verb=verb2, target=article,
+                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
             notify.send(sender=user, recipient=list,
                         verb=verb1, target=article,
-                        target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
-
-            notify.send(sender=user, recipient=article.created_by,
-                        verb=verb2, target=article,
                         target_url="article_view", sender_url="display_user_profile", sender_url_name=user.username)
 
 
@@ -247,7 +247,6 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                             sender_url_name=sender.username)
 
 def notify_edit_article(user, article, current_state):
-
 
     if(user != article.created_by):
         verb=""
