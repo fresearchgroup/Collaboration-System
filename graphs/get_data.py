@@ -50,8 +50,8 @@ def create_plotdata(distinct_date, frequency):
 def view(id,resource):
 	cur = datetime.datetime.now()
 	diff = datetime.timedelta(days = 365)
-	prev = (cur-diff).strftime("%Y-%m-%dT%H%M%S")
-	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/?after='+prev+'/'
+	prev = (cur-diff).strftime("%Y-%m-%dT%H:%M:%S")
+	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/?after='+prev+
 	res = requests.get(url_api)
 	result = res.json()
 
