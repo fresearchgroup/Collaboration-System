@@ -5,7 +5,7 @@ from itertools import groupby
 from decouple import config
 import datetime
 
-url_basic = config('BASIC_URL')
+url_basic = config('URL_BASIC')
 
 def parse(data):
 	data = list(data)
@@ -55,12 +55,12 @@ def view(id,resource):
 	res = requests.get(url_api)
 	result = res.json()
 
-	if (result["Status Code"] == 200):
+	if (result["status code"] == 200):
 		if (result["total hits"] == 0):
 			print ("No data found")
 			return [[]]
 
-		while('next_link' in (result.keys)):
+		while('next_link' in (result.keys())):
 			res = requests.get(result['next_link'])
 			intermediate = res.json()
 			result['result'].append(intermediate['result'])

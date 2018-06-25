@@ -8,6 +8,9 @@ import requests
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from Community.models import Articles
+from decouple import config
+
+URL_BASIC = config('URL_BASIC')
 
 def community_dashboard(request,pk):
     community = get_object_or_404(Community, pk = pk)
@@ -28,25 +31,7 @@ def community_dashboard(request,pk):
     topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article Title', 'Number of views', article_title)
     
     # To show the trending articles in community
-    # data_trending = requests.get('/logapi/event/article/view/?community-id={{pk}}&agg_type=terms&agg_field=article-id&limit=5')
-    data_trending = {
-        'status': 200,
-        "total_hits": 10,
-        "logs": [
-            {
-                'key': 4,
-                'count': 20, 
-            },
-            {
-                'key': 2,
-                'count': 30,
-            },  
-            {
-                'key': 3,
-                'count': 10,
-            }
-        ]
-    } 
+    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={{pk}}&agg_type=terms&agg_field=article-id&limit=5')
     articles=[]
     status = 'found'
     if data_trending['status'] == 200:
@@ -81,25 +66,7 @@ def user_insight_dashboard(request):
      if request.user.is_authenticated:
 
         # To show the trending articles in community
-        # data_trending = requests.get('/logapi/user/{{pk}}/event/article/view/'?after=170-1-1T0:0:0&limit=5)
-        data_trending = {
-            'status': 200,
-            "total_hits": 10,
-            "logs": [
-                {
-                    'key': 4,
-                    'count': 20, 
-                },
-                {
-                    'key': 2,
-                    'count': 30,
-                },  
-                {
-                    'key': 3,
-                    'count': 10,
-                }
-            ]
-        } 
+        data_trending = requests.get(URL_BASIC + 'logapi/user/{{pk}}/event/article/view/?after=1970-1-1T0:0:0&limit=5')
         articles=[]
         status = 'found'
         if data_trending['status'] == 200:

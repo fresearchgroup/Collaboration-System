@@ -30,6 +30,7 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from search import views as search
 from Course import views as courseview
+from Dashboard import views as dashboardview
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 router.register(r'communityapi', communityviewsets.CommunityViewSet)

@@ -3,6 +3,12 @@ from unittest import mock
 from graphs import get_data
 import requests
 
+class TestClassDummy:
+    
+    def json(self):
+        return {}
+
+
 class TestParse(TestCase):
 
 	def setUp(self):
@@ -119,12 +125,12 @@ class TestView(TestCase):
 		self.community = 'community'
 		self.commresult = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1]]
 		self.articleresult = []
-		self.requests = requests.get('http://www.google.com/')
+                #self.requests = requests.get('http://localhost:8000/')
 
 	@mock.patch('requests.get')
 	@mock.patch.object(requests.models.Response,'json')
 	def test_view(self,testfunc,func):
-		func.return_value = self.requests
+		func.return_value = TestClassDummy()
 		testfunc.return_value = {
 			'Status Code': 200, 
 			'total hits': 3, 
@@ -212,10 +218,7 @@ class TestView(TestCase):
 				}
 			]
 		}
-		self.assertEqual(get_data.view(self.communityid,self.community),self.commresult)from django.test import TestCase
-from unittest import mock
-from graphs import get_data
-
+		self.assertEqual(get_data.view(self.communityid,self.community),self.commresult)
 class TestParse(TestCase):
 
 	def setUp(self):
