@@ -11,6 +11,7 @@ from Community.models import Articles
 from decouple import config
 
 URL_BASIC = config('URL_BASIC')
+EVENT_API_TOKEN = config("EVENT_API_TOKEN")
 
 def community_dashboard(request, pk):
     community = get_object_or_404(Community, pk = pk)
@@ -31,7 +32,7 @@ def community_dashboard(request, pk):
     topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article Title', 'Number of views', article_title)
     
     # To show the trending articles in community
-    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={!s}&agg_type=terms&agg_field=article-id&limit=5&article-state=publish'.format(pk)).json()
+    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={!s}&agg_type=terms&agg_field=article-id&limit=5&article-state=publish'.format(pk), headers={'Authorization': "Token " + EVENT_API_TOKEN}).json()
     articles=[]
     status = 'found'
     if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
@@ -70,7 +71,7 @@ def user_insight_dashboard(request):
      if request.user.is_authenticated():
 
         # To show the trending articles in community
-        data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=1000'.format(request.user.id)).json()
+        data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=1000'.format(request.user.id), headers={'Authorization': "Token " + EVENT_API_TOKEN}).json()
         articles=[]
         status = 'found'
         articles_keys = []

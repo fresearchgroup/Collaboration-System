@@ -6,6 +6,7 @@ from decouple import config
 import datetime
 
 url_basic = config('URL_BASIC')
+EVENT_API_TOKEN = config('EVENT_API_TOKEN')
 
 def parse(data):
 	data = list(data)
@@ -52,8 +53,9 @@ def view(id,resource):
 	diff = datetime.timedelta(days = 365)
 	prev = (cur-diff).strftime("%Y-%m-%dT%H:%M:%S")
 	url_api = url_basic+'logapi/event/'+resource+'/view/'+str(id)+'/?after='+prev
-	res = requests.get(url_api)
-	result = res.json()
+        headers={'Authorization': 'Token ' + str(EVENT_API_TOKEN)}
+        res = requests.get(url_api, headers = headers)
+    	result = res.json()
 
 	if ('status code' in list(result.keys()) and result["status code"] == 200):
 		if (result["total hits"] == 0):
