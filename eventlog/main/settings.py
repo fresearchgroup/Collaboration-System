@@ -132,7 +132,7 @@ CONTEXT_SPECIFIC_FIELDS = {
 
         #community content view event
         "event.content.view": {
-            "community-id": logprocess.process_cid
+            "community-id": logprocess.process_community_info
         },
 
         #course create event
