@@ -34,6 +34,7 @@ INNER_KEYS = [
         'course-name',
         'reply-to-user-id',
         'object-pk',
+        'article-state'
         ]
 
 ES_INDEX = 'logs'

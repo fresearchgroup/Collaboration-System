@@ -31,7 +31,7 @@ def community_dashboard(request, pk):
     topview = create.data_plot(top_id, 'bargraph', [view_count],['View'], 'Article Title', 'Number of views', article_title)
     
     # To show the trending articles in community
-    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={!s}&agg_type=terms&agg_field=article-id&limit=5'.format(pk)).json()
+    data_trending = requests.get(URL_BASIC + 'logapi/event/article/view/?community-id={!s}&agg_type=terms&agg_field=article-id&limit=5&article-state=publish'.format(pk)).json()
     articles=[]
     status = 'found'
     if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
@@ -42,8 +42,11 @@ def community_dashboard(request, pk):
             status = 'not found'
         else:
             for key in articles_keys:
-                article_title = Articles.objects.filter(id=key).first().title
-                articles.append({'article_id':key,'article_title':article_title})
+                try:
+                    article_title = Articles.objects.filter(id=key).first().title
+                    articles.append({'article_id':key,'article_title':article_title})
+                except:
+                    continue
     else:
         status = 'not found'
     print("Got Data: {!s}".format(articles)) 
@@ -70,20 +73,24 @@ def user_insight_dashboard(request):
         data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=1000'.format(request.user.id)).json()
         articles=[]
         status = 'found'
+        articles_keys = []
         if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
-            articles_keys = []
             for item in data_trending['result']:
                 articles_keys.append(item['event']['article-id'])
             if len(articles_keys) == 0:
                 status = 'not found'
             else:
                 used=set()
-                article_keys = [x for x in article_keys  if x not in used and (used.add(x) or True)]
-                if len(article_keys)>5:
- 	                    article_keys=article_keys[:5]
+                articles_keys = [x for x in articles_keys  if x not in used and (used.add(x) or True)]
+                if len(articles_keys)>5:
+ 	                    articles_keys=articles_keys[:5]
+                print(articles_keys)
                 for key in articles_keys:
-                    article_title = Articles.objects.filter(id=key).first().title
-                    articles.append({'article_id':key,'article_title':article_title})
+                    try:
+                        article_title = Articles.objects.filter(id=key).first().title
+                        articles.append({'article_id':key,'article_title':article_title})
+                    except:
+                        continue
         else:
             status = 'not found'
         user=request.user
