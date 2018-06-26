@@ -101,7 +101,7 @@ def extract_filter_keys(request):
           }
     for key in settings.OUTTER_KEYS:
         try:
-            val = dict(request.GET)[key][0]
+            val = dict(request.GET)[key]
             dic['filter_keys'].append({
                 key: val,
                 })
@@ -109,7 +109,7 @@ def extract_filter_keys(request):
             continue
     for key in settings.INNER_KEYS:
         try:
-            val = request.GET[key][0]
+            val = request.GET[key]
             dic['filter_keys'].append({
                 key: val
                 })

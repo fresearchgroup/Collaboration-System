@@ -8,7 +8,7 @@
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
   <li class="breadcrumb-item active"> 
-  	   <a href="{% url 'user_insight_dashboard' user.id %}">Insights</a>
+  	   <a href="{% url 'user_insight_dashboard'%}">Insights</a>
   </li>
 <script type="text/javascript">
 var articlesPublished = [{{articlespublished}}];

@@ -3,6 +3,7 @@ import datetime
 
 from Community.models import CommunityArticles
 from Group.models import GroupArticles
+from BasicArticle.models import Articles
 
 def get_community_info_from_article_info(data):
     args = data['view_kwargs']
@@ -105,7 +106,6 @@ def process_community_info(data):
 
 def process_group_info(data):
     args = data['view_kwargs']
-    dic = {}
     if 'pk' in list(args.keys()):
         return args['pk']
     else:
@@ -113,7 +113,6 @@ def process_group_info(data):
 
 def process_article_info(data):
     args = data['view_kwargs']
-    dic = {}
     if 'pk' in list(args.keys()):
         return args['pk']
     else:
@@ -229,3 +228,16 @@ def process_manage_group_status(data):
         return status
     except:
         return ""
+
+def get_article_state_info(data):
+    args = data['view_kwargs']
+    if 'pk' in list(args.keys()):
+        article_id = args['pk']
+    else:
+        return ""
+    try:
+        articles = Articles.objects.get(pk=article_id)
+        return str(articles.state)
+    except:
+        return ""
+
