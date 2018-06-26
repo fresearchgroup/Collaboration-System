@@ -12,5 +12,5 @@ RUN cp temp/notifications/models.py /usr/local/lib/python3.6/site-packages/notif
 RUN cp temp/notifications/urls.py /usr/local/lib/python3.6/site-packages/notifications/urls.py
 RUN cp temp/notifications/views.py /usr/local/lib/python3.6/site-packages/notifications/views.py
 RUN cp temp/notifications/notifications_tags.py /usr/local/lib/python3.6/site-packages/notifications/templatetags/notifications_tags.py
-RUN cp temp/notifications/settings.py /usr/local/lib/python3.6/site-packages/notifications/
+RUN cp temp/notifications/settings.py /usr/local/lib/python3.6/site-packages/notifications/settings.py
 RUN cp .env.docker .env
