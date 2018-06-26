@@ -107,6 +107,7 @@ For development installation -
 				EVENTAPI_TOKEN_USERNAME=eventloguser
 				EVENTAPI_TOKEN_PASSWORD=eventlogpass
 				EVENT_API_TOKEN=
+				ELASTICSEARCH_ADDRESS=
        ```
 
 8. Do all the migrations --
