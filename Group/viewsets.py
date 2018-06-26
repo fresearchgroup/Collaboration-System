@@ -1,8 +1,9 @@
-from .models import Group, GroupArticles
+from .models import GroupArticles
 from .serializers import GroupSerializer, GroupArticlesSerializer
 from rest_framework import generics
 import datetime, time
 from django.utils import timezone
+from Community.models import CommunityGroups
 # Create your views here.
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
@@ -10,7 +11,7 @@ yesterday_start = timezone.make_aware(datetime.datetime.combine(yesterday, datet
 yesterday_end = timezone.make_aware(datetime.datetime.combine(today, datetime.time()))
 
 class GroupViewSet(generics.ListAPIView):
-	queryset = Group.objects.filter(created_at__range=[yesterday_start, yesterday_end])
+	queryset = CommunityGroups.objects.filter(group__created_at__range=[yesterday_start, yesterday_end])
 	serializer_class = GroupSerializer
 
 

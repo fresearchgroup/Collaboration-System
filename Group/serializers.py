@@ -7,7 +7,7 @@ class GroupSerializer(serializers.ModelSerializer):
 	name = serializers.ReadOnlyField(source='group.name')
 	desc = serializers.ReadOnlyField(source='group.desc')
 	created_at = serializers.ReadOnlyField(source='group.created_at')
-	created_by = serializers.ReadOnlyField(source='group.created_by')
+	created_by = serializers.ReadOnlyField(source='group.created_by.username')
 	community_id = serializers.ReadOnlyField(source='community.id')
 	community_name = serializers.ReadOnlyField(source='community.name')
 	class Meta:
