@@ -67,7 +67,7 @@ def user_insight_dashboard(request):
      if request.user.is_authenticated():
 
         # To show the trending articles in community
-        data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=5'.format(request.user.id)).json()
+        data_trending = requests.get(URL_BASIC + 'logapi/user/{!s}/event/article/view/?after=1970-1-1T0:0:0&limit=1000'.format(request.user.id)).json()
         articles=[]
         status = 'found'
         if 'status code' in list(data_trending.keys()) and data_trending['status code'] == 200:
@@ -77,6 +77,10 @@ def user_insight_dashboard(request):
             if len(articles_keys) == 0:
                 status = 'not found'
             else:
+                used=set()
+                article_keys = [x for x in article_keys  if x not in used and (used.add(x) or True)]
+                if len(article_keys)>5:
+ 	                    article_keys=article_keys[:5]
                 for key in articles_keys:
                     article_title = Articles.objects.filter(id=key).first().title
                     articles.append({'article_id':key,'article_title':article_title})
