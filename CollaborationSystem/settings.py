@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
+    'eventlog',
 ] + get_machina_apps()
 
 MIDDLEWARE = [

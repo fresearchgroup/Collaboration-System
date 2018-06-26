@@ -2,7 +2,7 @@ from .main.eventtracker import EventTracker
 from . import utils
 
 class Middleware:
-    
+
     def __init__(self, get_response):
         self.LOG_CLASS = "MIDDLEWARE"
         self.get_response = get_response
@@ -11,7 +11,7 @@ class Middleware:
 
     def __call__(self, request):
         return self.get_response(request)
-    
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         data = {}
         data['request'] = request
@@ -22,6 +22,6 @@ class Middleware:
         utils.ilog(self.LOG_CLASS, data['request'].method)
         utils.ilog(self.LOG_CLASS, data['request'].POST)
         utils.ilog(self.LOG_CLASS, data['request'].GET)
+        utils.ilog(self.LOG_CLASS, data['request'].COOKIES)
         self.eventlogger.sendRequestData(data)
         return None
-
