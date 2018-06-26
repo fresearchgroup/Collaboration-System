@@ -45,7 +45,7 @@ AGGREGATE_FUNCS = [
         'terms'
         ]
 
-SERVER_CONF = [ "elasticsearch" ]
+SERVER_CONF = [config("ELASTICSEARCH_ADDRESS")]
 
 PAGE_SIZE = config('PAGE_SIZE', cast=int)
 MAX_PAGE_SIZE = config('MAX_PAGE_SIZE', cast=int)
