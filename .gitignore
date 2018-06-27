@@ -12,3 +12,4 @@ PyEtherpadLite
 # SQLite database files
 
 *.sqlite3
+collab/

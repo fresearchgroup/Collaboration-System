@@ -234,6 +234,22 @@
 
 
 <script>
+      var id = '{{article.article.id}}';
+        setInterval(function(){
+          $.ajax({
+            type:'POST',
+            url: '/ajax/article_autosave/'+id+'/',
+            data: {
+             csrfmiddlewaretoken: '{{csrf_token}}'
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.success) {
+                console.log("Done");
+              }
+            }
+         });
+        },3000);
       // ClassicEditor
       //   .create( document.querySelector( '#editor' ) )
       //   .then( editor => {

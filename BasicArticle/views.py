@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NewArticleForm
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
@@ -22,6 +22,20 @@ def getHTML(article):
 def deletePad(article):
 	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
 	epclient.deletePad(article.id)
+
+def article_autosave(request,pk):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			article = Articles.objects.get(pk=pk)
+			article.body = getHTML(article)
+			data={
+				'success': "Done"
+			}
+			article.save()
+			return JsonResponse(data)
+	
+	else:
+		return redirect('login')
 
 def display_articles(request):
 	"""
