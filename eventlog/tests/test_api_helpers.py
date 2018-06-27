@@ -168,13 +168,13 @@ class TestHelperClass(TestCase):
         self.assertEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {'user-id': 1})
         exp_result = {
-                "filter_keys": [{'user-id': '1'}]
+                "filter_keys": [{'user-id': ['1']}]
                 }
         act_result = helpers.extract_filter_keys(request)
         self.assertEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {'event_name': 'event.community.view'})
         exp_result = {
-                "filter_keys": [{'event_name': 'event.community.view'}]
+                "filter_keys": [{'event_name': ['event.community.view']}]
                 }
         act_result = helpers.extract_filter_keys(request)
         self.assertEqual(exp_result, act_result)

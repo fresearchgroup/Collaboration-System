@@ -5,11 +5,22 @@ from ..api import essearch
 from ..api import helpers
 from rest_framework.test import APIClient
 import json
+from .. import utils
+from decouple import config
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 class TestAPIView(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create(username='testusername', password="testpassword")
+        self.token_obj = Token.objects.create(user=self.user)
+        self.TOKEN = self.token_obj.key
+        self.headers = {'Authorization': "Token {!s}".format(self.TOKEN)}
+        utils.ilog('TEST API VIEW', 'token is: {!s}'.format(self.headers)) 
         self.rf = APIClient()
+        self.rf.login(username='testusername', password='testpassword')
+        self.rf.credentials(HTTP_AUTHORIZATION='Token ' + self.TOKEN)
         self.result1 =  {
                 "status code": 200,
                 "total hits": 1,
@@ -96,6 +107,11 @@ class TestAPIView(TestCase):
                 "total hits": 0, 
                 "result": []
                 }, 200)
+
+    def teardown(self):
+        self.token_obj.delete()
+        self.user.delete()
+
     @mock.patch.object(helpers, 'handle_response')
     def test_get_user_id(self, func):
         func.return_value = self.return_value1
