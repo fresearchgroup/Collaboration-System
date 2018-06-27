@@ -184,7 +184,7 @@ class SimpleTest(TestCase):
            'test_case_18' : {
                    'input' : '/article-edit/1/',
                    'post' : {
-                       'state' : ['published']
+                       'state' : ['publish']
                    },
                    'output' : 'event.article.published'
            },
