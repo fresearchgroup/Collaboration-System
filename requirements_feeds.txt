@@ -1,0 +1,9 @@
+pip install django-activity-stream
+pip install django-jsonfield
+pip install django-jsonfield-compat
+
+
+to delete all actions from Action model of django-activity-stream
+python manage.py migrate actstream zero
+python manage.py migrate actstream
+

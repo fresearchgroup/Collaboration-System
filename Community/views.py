@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from BasicArticle.views import create_article, view_article
+from BasicArticle.views import create_article, view_article, getHTML
+
 # Create your views here.
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
@@ -18,8 +19,18 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+from notifications.signals import notify
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from django.contrib.contenttypes.models import ContentType
+from feeds.views import update_role_feed,remove_or_add_user_feed
+from notification.views import notify_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
+from django.conf import settings
+from ast import literal_eval
+import json
+import requests
 # Create your views here.
-
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -65,13 +76,17 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
+			notify_subscribe_unsubscribe(request.user,community, 'subscribe')
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
 		return redirect('/login/?next=/community-view/%d' % int(cid) )
+		
+      
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -80,9 +95,32 @@ def community_unsubscribe(request):
 			community=Community.objects.get(pk=cid)
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
+				remove_or_add_user_feed(user,community,'left')
+				notify_remove_or_add_user(user, user, community, 'left')
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+				#notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
+	else:
+		return redirect('login')
+
+def community_article_create_body(request, article, community):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			article.body = getHTML(article)
+			article.save()
+			data={
+				'article_id':article.pk,
+				'body':article.body
+			}
+			return JsonResponse(data)
+			# return redirect('article_view', article.pk)
+			# else:
+			# 	article.creation_complete = True
+			# 	article.save()
+			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
+		else:
+			return redirect('home')
 	else:
 		return redirect('login')
 
@@ -94,15 +132,45 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				article = create_article(request)
-				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-				return redirect('article_view', article.pk)
+				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				# return community_article_create_body(request, article, community)
+				data={
+					'article_id':article.id,
+					'community_id':community.pk,
+					'user_id':request.user.id,
+					'username':request.user.username,
+					'url':settings.SERVERURL, 
+					'articleof':'community'
+				}
+				return JsonResponse(data)
+				# return redirect('article_edit', article.pk)
+			
+
+			elif status == '2' or status=='3':
+				pk=''
+				# print(status)
+				if status == '2':	
+					pk = request.POST.get('pk','')
+					article = Articles.objects.get(pk=pk)
+					return community_article_create_body(request, article, community)
+				elif status == '3':
+					pk = request.POST.get('pk','3')
+					article= Articles.objects.get(pk=pk)
+					article.title=request.POST['title']
+					try:
+						image = request.FILES['article_image']
+					except:
+						image = None 
+					article.image=image
+					article.save()
+					data={}
+					return JsonResponse(data)
 			else:
 				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
-
 
 def community_group(request):
 	if request.user.is_authenticated:
@@ -186,12 +254,15 @@ def handle_community_creation_requests(request):
 					forum_link = forum_link
 
 					)
+
+				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = rcommunity.requestedby,
 					community = communitycreation,
 					role = communityadmin
 					)
+				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 				rcommunity.status = 'approved'
 				rcommunity.save()
 
@@ -229,14 +300,21 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+								#if rolename=='publisher':
+									#create_community_feed(user,'New Publisher has been added',community)
+								        
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									update_role_feed(user,community,rolename)
+									notify_update_role(request.user, user,community,rolename)
 									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 									is_member.role = role
 									is_member.save()
+									
+								                
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -244,7 +322,12 @@ def manage_community(request,pk):
 						if status == 'remove':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									remove_or_add_user_feed(user,community,'removed')
+									notify_remove_or_add_user(request.user, user,community,'removed')
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+									
+
+			
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -307,6 +390,7 @@ def create_community(request):
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
 
+
 				# Create Forum for this community
 				from django.db import connection
 				cursor = connection.cursor()
@@ -327,7 +411,6 @@ def create_community(request):
 					errormessage = 'Can not create default forum for this community'
 					return render(request, 'new_community.html', {'errormessage':errormessage})
 
-
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
@@ -342,7 +425,10 @@ def create_community(request):
 					community = community,
 					role = role
 					)
+				remove_or_add_user_feed(usr,community,'community_created')
+				notify_remove_or_add_user(request.user, usr,community,'community_created')
 
+				create_wiki_for_community(community)
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
@@ -362,7 +448,20 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username from Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.id=ccourses.course_id and ccourses.community_id=%s;', [community.pk])
-			lstfinal = list(carticles) + list(ccourse)
+			ch5p = []
+			print('new test')
+			try:
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				for obj in json_data:
+					if obj['community_id'] == community.pk:
+						ch5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+			lstfinal = list(carticles) + list(ccourse) + list(ch5p)
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -384,9 +483,30 @@ def community_group_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			cgarticles = CommunityGroups.objects.raw('select username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				from django.db import connection
+				cursor = connection.cursor()
+				stmt = "select group_id from Community_communitygroups where community_id=%s"
+				cursor.execute(stmt, [community.pk])
+				groups_in_this_community = cursor.fetchall()
+				groups_in_this_community = list(sum(groups_in_this_community, ()))
+
+				for obj in json_data:
+					if obj['group_id'] in groups_in_this_community:
+						cgh5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+
+			lstfinal = list(cgarticles) + list(cgh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(cgarticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				commgrparticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -397,6 +517,15 @@ def community_group_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
+
+
+
+def h5p_view(request, pk):
+	try:
+		requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+		return redirect( settings.H5P_ROOT + "h5p/content/?contentId=%s" % pk)
+	except ConnectionError:
+		return render(request, 'h5pserverdown', {})
 
 def community_course_create(request):
 	if request.user.is_authenticated:
@@ -414,3 +543,111 @@ def community_course_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+
+
+def feed_content(request, pk):
+	communityfeed = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			feeds = community.target_actions.all()
+			page = request.GET.get('page', 1)
+			paginator = Paginator(feeds, 5)
+			try:
+				communityfeed = paginator.page(page)
+			except PageNotAnInteger:
+				communityfeed = paginator.page(1)
+			except EmptyPage:
+				communityfeed = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+
+	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feeds':communityfeed})
+
+def community_h5p_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			cid = request.POST['cid']
+			request.session['cid'] = cid
+			request.session['gid'] = 0
+			try:
+				requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + 'h5p/create/')
+			except Exception as e:
+				print(e)
+				return render(request, 'h5pserverdown.html', {})
+		return redirect('home')
+	return redirect('login')
+
+def create_wiki_for_community(community):
+
+	from django.db import connection
+	cursor = connection.cursor()
+	wiki_slug = str(community.name) + str(community.pk)
+	#Create wiki for this community
+	cursor.execute('''SET FOREIGN_KEY_CHECKS=0''')
+	insert_stmt_urlpath = (
+			"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
+			"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+		)
+
+	cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
+	url_rght = cursor.fetchone()[0]
+
+	cursor.execute(''' select id from wiki_urlpath order by id DESC limit 1''')
+	urlpath_id = cursor.fetchone()[0] + 1
+
+	cursor.execute(''' select id from wiki_article order by id DESC limit 1''')
+	new_id = cursor.fetchone()[0] + 1
+
+	data_urlpath = (urlpath_id, wiki_slug , url_rght, url_rght + 1, 1, 1, new_id, 1, 1)
+
+	cursor.execute('''update wiki_urlpath set rght = rght + 2 where slug IS NULL''')
+
+	cursor.execute(insert_stmt_urlpath, data_urlpath)
+
+	cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
+	cur_rev_id =  cursor.fetchone()[0] + 1
+
+	insert_stmt_article = (
+					"INSERT INTO wiki_article (id, created, modified, group_read, group_write, other_read, other_write,current_revision_id, group_id, owner_id)"
+					"VALUES (%s, NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s)"
+				)
+
+	data_article = (new_id, 1, 1, 1, 1, cur_rev_id, 1,2)
+	cursor.execute(insert_stmt_article, data_article)
+
+	cursor.execute(''' select content_type_id from wiki_articleforobject order by content_type_id DESC limit 1''')
+	con_type_id = cursor.fetchone()[0]
+
+	cursor.execute(''' select id from wiki_articleforobject order by id DESC limit 1''')
+	forobject_id = cursor.fetchone()[0] + 1
+
+	insert_stmt_articleforobject = (
+					"INSERT INTO wiki_articleforobject (id, object_id, is_mptt, article_id, content_type_id)"
+					"VALUES (%s, %s, %s, %s, %s)"
+				)
+
+	data_articleforobject = (forobject_id, new_id, 1, new_id, con_type_id)
+
+	cursor.execute(insert_stmt_articleforobject, data_articleforobject)
+
+	cursor.execute(''' select id from wiki_articlerevision order by id DESC limit 1''')
+	articlerev_id = cursor.fetchone()[0] + 1
+
+	insert_stmt_wikiarticlerevision = (
+					"INSERT INTO wiki_articlerevision (id, revision_number, user_message, automatic_log, ip_address, modified, created, deleted, locked, content, title, article_id, user_id)"
+					"VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s, %s, %s, %s, %s, %s)"
+				)
+
+	data_wikiarticlerevision = (articlerev_id ,1, "Write your summary here.", "", "", 0, 0, "Write your content here", str(community.name) , new_id, 2)
+
+
+	cursor.execute(insert_stmt_wikiarticlerevision, data_wikiarticlerevision)
+
+
+	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')

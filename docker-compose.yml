@@ -15,6 +15,24 @@ services:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
+      - "7000:8000"
+    depends_on:
+      - db
+      - h5p
+      - node
+
+  h5p:
+    image: h5p_image
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
       - "8000:8000"
+    depends_on:
+      - db
+
+  node:
+    image: etherpadlite
+    command: ./bin/run.sh
+    ports:
+      - "9001:9001"
     depends_on:
       - db
