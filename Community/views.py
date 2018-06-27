@@ -119,7 +119,7 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				article = create_article(request)
-				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				CommunityArticles.objects.create(article=article, user = request.user , community =community )
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
