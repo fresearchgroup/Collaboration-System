@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NewArticleForm
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from .models import Articles, ArticleViewLogs
 from django.views.generic.edit import UpdateView
 from reversion_compare.views import HistoryCompareDetailView
@@ -20,6 +20,31 @@ from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType 
 from feeds.views import create_resource_feed
 from notification.views import notify_update_article_state, notify_edit_article
+from py_etherpad import EtherpadLiteClient
+from django.conf import settings 
+
+def getHTML(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	result =  epclient.getHtml(article.id)
+	return result['html']
+
+def deletePad(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	epclient.deletePad(article.id)
+
+def article_autosave(request,pk):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			article = Articles.objects.get(pk=pk)
+			article.body = getHTML(article)
+			data={
+				'success': "Done"
+			}
+			article.save()
+			return JsonResponse(data)
+	
+	else:
+		return redirect('login')
 
 def display_articles(request):
 	"""
@@ -48,7 +73,7 @@ def create_article(request):
 		if request.method == 'POST':
 			state = States.objects.get(name='draft')
 			title = request.POST['title']
-			body  = request.POST['body']
+			body  = ""
 			try:
 				image = request.FILES['article_image']
 			except:
@@ -102,7 +127,7 @@ def edit_article(request, pk):
 			if 'state' in request.POST and request.POST['state'] == 'save':
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
-				article.body = request.POST['body']
+				article.body = getHTML(article)
 				try:
 					article.image = request.FILES['article_image']
 					article.save(update_fields=["title","body","image"])
@@ -114,7 +139,7 @@ def edit_article(request, pk):
 			else:
 				article = Articles.objects.get(pk=pk)
 				title = request.POST['title']
-				body = request.POST['body']
+				body = getHTML(article)
 				current_state = request.POST['current']
 				try:
 					current_state = States.objects.get(name=current_state)
@@ -183,7 +208,7 @@ def edit_article(request, pk):
 			gmember = ""
 			private = ""
 			try:
-				article = CommunityArticles.objects.get(article=pk)
+				article = CommunityArticles.objects.get(pk=pk)
 				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 					return redirect('home')
 				if article.article.state == States.objects.get(name='publish'):
@@ -236,7 +261,7 @@ def edit_article(request, pk):
 						message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 				except GroupArticles.DoesNotExist:
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,})
+			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'uname':request.user,'url':settings.SERVERURL})
 	else:
 		return redirect('login')
 
@@ -257,6 +282,7 @@ def delete_article(request, pk):
 				if status == '0':
 					return redirect('article_view',pk=pk)
 				elif status == '1':
+					deletePad(article)
 					article.delete()
 					return redirect('display_articles')
 			else:
