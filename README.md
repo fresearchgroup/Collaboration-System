@@ -2,7 +2,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
 
-COLLABORATION SYSTEM
+# COLLABORATION SYSTEM
 
         Requiremnets -
 
@@ -25,52 +25,59 @@ COLLABORATION SYSTEM
                 Django_comments_xtd
                 Django_comments
 
-For development installation - 
+## For development installation - 
 
-        1. Install virtualenv 
+1. Install virtualenv 
 
-                ``` sudo pip3 install virtualenv ```
+ 	```bash
+ 		sudo pip3 install virtualenv 
+ 	```
+2. Clone the project from github
+	
+	```bash
+ 		git clone https://github.com/fresearchgroup/Collaboration-System.git 
+  	```
+3. Create a virtual env --- 
 
-        2. Clone the project from github
+	```bash
+     	virtualenv collab -p python3 
+	```
 
-                ``` git clone https://github.com/fresearchgroup/Collaboration-System.git ```
+4. Activate the virtual environment -- 
 
-        3. Create a virtual env --- 
+     ```bash
+     	source collab/bin/activate
+     ```
 
-        ``` virtualenv collab -p python3 ```
+5. Install the requirements.txt -- 
 
-        4. Activate the virtual environment -- 
+	```bash
+		pip3 install -r Collaboration-System/requirements.txt
+	```
 
-        ``` source collab/bin/activate ```
+6. Install mysql server --
 
-        5. Install the requirements.txt -- 
-
-        ``` pip3 install -r Collaboration-System/requirements.txt ```
-
-        6. Install mysql server --
-
-            ```sudo apt-get update```
-
-
-            ```$ sudo apt-get install mysql-server```
+	```
+		$ sudo apt-get update
+		
+		$ sudo apt-get install mysql-server
  
+		$ sudo apt-get install libmysqlclient-dev
 
-            ```sudo apt-get install libmysqlclient-dev```
+        $ mysql -u root -p
 
-            ```$ mysql -u root -p```
+        Enter password=root
+		
+	mysql> create database collaboration;
+        mysql> use collaboration;
+        mysql> source collab.sql   
+	```
 
-                Enter password=root
-
-            ```mysql> create database collaboration;
-               mysql> use collaboration;
-               mysql> source collab.sql   
-            ```
-
-        7. Create a .env inside CollaborationSystem and paste the following -
-
-            sudo nano .env
-
-            ```
+7. Create a .env inside CollaborationSystem and paste the following -
+	```bash
+       		sudo nano .env
+	```
+    ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
                 DEBUG=True
                 DB_NAME=collaboration
@@ -88,17 +95,58 @@ For development installation -
                 DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
                 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
                 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+		LOG_TYPE=TOSERVER
+		LOG_PROTOCOL=http
+		LOG_ADDRESS=logstash
+		LOG_PORT=5000
+		LOG_STORE=debug.log
+		LOG_USE_PROXY=False
+		URL_BASIC=http://localhost:8000/
+		PAGE_SIZE=1000
+		MAX_PAGE_SIZE=10000
+		EVENTAPI_TOKEN_USERNAME=eventloguser
+		EVENTAPI_TOKEN_PASSWORD=eventlogpass
+		EVENT_API_TOKEN=
+		ELASTICSEARCH_ADDRESS=
+    ```
 
-            ```
+8. Do all the migrations --
 
-            8. Do all the migrations --
+	```bash
+		python3 manage.py migrate
+	```
+			
+9. Run the following to generate a new Token
+			  
+	```bash
+		python3 manage.py generateToken --n
+	```
+			
+10. Add/Replace the token by adding following line in .env file
 
-                ``` python3 manage.py migrate ```
+	```
+		EVENT_API_TOKEN=<your-token>
+	``` 
 
-            9. Runserver --
+11. Runserver --
 
-                ``` python3 manage.py runserver ``` 
-                
+    ```
+    	python3 manage.py runserver
+    ``` 
+ 
+### Generating token for event logs
+1. To generate a new token run
+	```
+		python3 manage.py generateToken --n
+	```
+2. To generate a renew token run
+	```
+		python3 manage.py generateToken --r
+	```
+3. To get the previous token run
+	```
+		python3 manage.py generateToken --g
+	```
 
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
@@ -119,20 +167,47 @@ Steps for Docker --
 
 2. The run the following commands inside the repository --
  
-```
+	```
 
- docker-compose build
+ 		docker-compose build
 
- docker-compose up db
+ 		docker-compose up db
 
- docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
 
- docker-compose run web python manage.py migrate
+ 		docker-compose run web python manage.py migrate
 
- docker-compose run web python manage.py createsuperuser
+ 		docker-compose run web python manage.py createsuperuser
 
- docker-compose run web python manage.py loaddata workflow roles faq
+ 		docker-compose run web python manage.py loaddata workflow roles faq
 
- docker-compose up
+ 		docker-compose web run python3 manage.py generateToken --n
 
-```
+	```
+
+3. Copy the generated token and add/replace the line with following in .env.docker:
+
+	```
+		EVENT_API_TOKEN=<your-token>
+	```
+4. Run the following command to run all containers
+	```
+ 		docker-compose up
+
+	```
+
+### Generating token for event logs
+1. To generate a new token run
+	```
+		sudo docker-compose run web python3 manage.py generateToken --n
+	```
+2. To generate a renew token run
+		
+	```
+		sudo docker-compose run web python3 manage.py generateToken --r
+	```
+3. To get the previous token run
+
+	```
+	 sudo docker-compose run web python3 manage.py generateToken --g
+	```

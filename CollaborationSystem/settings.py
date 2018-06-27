@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'notification',
     'actstream',
     'feeds',
+    'eventlog',
 ] + get_machina_apps()
 
 SITE_ID = 1
@@ -91,6 +92,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'eventlog.middleware.Middleware',
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'

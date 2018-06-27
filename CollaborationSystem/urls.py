@@ -32,7 +32,7 @@ from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
 import notifications.urls
-
+from Dashboard import views as dashboardview
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 
@@ -149,7 +149,14 @@ urlpatterns = [
     url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
 
     url(r'api/dspace/grouparticlesapi', groupviewsets.GroupArticleViewsets.as_view(), name='group-articles-dspace-api'),
-    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api')
+    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api'),
+    url(r'^community-dashboard/(?P<pk>\d+)/$',dashboardview.community_dashboard,name='community_dashboard'),
+    url(r'^article-dashboard/(?P<pk>\d+)/$',dashboardview.article_dashboard,name='article_dashboard'),
+    url(r'^user-insight-dashboard/$',dashboardview.user_insight_dashboard,name='user_insight_dashboard'),
+
+
+    url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
 
 
 ]

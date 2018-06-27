@@ -11,6 +11,7 @@ media/course
 # SQLite database files
 
 *.sqlite3
-
-# for pycharm
-.idea
+*.swn
+*.swo
+*.swp
+*.swm
