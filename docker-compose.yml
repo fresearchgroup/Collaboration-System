@@ -19,6 +19,7 @@ services:
     depends_on:
       - db
       - h5p
+      - node
 
   h5p:
     image: h5p_image
@@ -28,3 +29,10 @@ services:
     depends_on:
       - db
 
+  node:
+    image: etherpadlite
+    command: ./bin/run.sh
+    ports:
+      - "9001:9001"
+    depends_on:
+      - db
