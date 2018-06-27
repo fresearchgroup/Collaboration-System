@@ -20,6 +20,7 @@ from django.contrib.contenttypes.models import ContentType
 from feeds.views import create_resource_feed
 from notification.views import notify_update_article_state, notify_edit_article
 
+
 def display_articles(request):
 	"""
 	display list of articles in  article list page.
