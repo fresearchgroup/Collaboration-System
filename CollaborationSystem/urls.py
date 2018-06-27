@@ -149,7 +149,6 @@ urlpatterns = [
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
-    url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
     url(r'api/dspace/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-dspace-api'),
