@@ -122,7 +122,7 @@
 		python3 manage.py generateToken --n
 	```
 			
-10. Add/Replace the token by adding following line
+10. Add/Replace the token by adding following line in .env file
 
 	```
 		EVENT_API_TOKEN=<your-token>
@@ -185,7 +185,7 @@ Steps for Docker --
 
 	```
 
-3. Copy the generated token and add/replace the line with following:
+3. Copy the generated token and add/replace the line with following in .env.docker:
 
 	```
 		EVENT_API_TOKEN=<your-token>
