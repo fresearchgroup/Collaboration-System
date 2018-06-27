@@ -9,4 +9,6 @@ ADD . /code/
 RUN cp temp/patch_for_reversion_compare.py /usr/local/lib/python3.6/site-packages/reversion_compare/views.py
 RUN cp temp/board_base.html /usr/local/lib/python3.6/site-packages/machina/templates/machina/board_base.html
 RUN cp temp/base_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/base.html
+RUN cp temp/article_menu_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/article_menu.html
+RUN cp temp/article_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/article.html
 RUN cp .env.docker .env
