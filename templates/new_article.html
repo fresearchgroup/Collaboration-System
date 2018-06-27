@@ -7,15 +7,7 @@
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
 {% endblock %}
 {% block breadcrumb %}
-<ul style="list-style-type: none;margin: 0;padding: 0;overflow: hidden;border: 1px solid #e7e7e7;background-color: #f3f3f3;">
-    <li class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: white;background-color: #E45000;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
-       <p><b>Step 1:</b> Provide Title and Article Image</p>
-    </li>
-    <li  class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: #666;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
-      <p><b>Step 2:</b> Provide Body of the Image</p>
-    </li>
-</ul>
-<br>
+
 {% if request.POST.articleof == "group" %}
   <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
 {% endif %}
@@ -30,93 +22,411 @@
 
 
 {% if user.is_authenticated %}
-{% if request.POST.new == '0' %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Give a title to the content" required>
-    <div class="invalid-feedback"></div>
-  </div>
-  <div class="form-group">
-    <!-- <label for="body">Body</label>
-    <textarea id ="editor" class="form-control" name="body" ></textarea> -->
-      {% if request.POST.articleof == 'group' %}
-        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
-        {% endif %}
-        {% if request.POST.articleof == "community" %}
-        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
-      {% endif %}
-    <input type="hidden" name="status" value={{status}}>
-    <input type="hidden" name="new" value={{request.POST.new}}>    
-  </div>
-  <div class="form-group custom-file">
-    <label for="image">Upload Image</label>
-    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload..."}>
-  </div>
-  <br>
-  {% if status == 1 %}
-  <button id="create" type="submit" class="btn btn-primary" style="font-size: 17px; padding: 10px">Create Article</button>
-  {% endif %}
-</form>
-<br />
-{% endif %}
 
-{% if request.POST.new == '1' %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Give a title to the content" value ='{{ article.title }}' required>
-    <div class="invalid-feedback"></div>
+<!-- //////////////////////////////////////////////////////////// -->
+<!-- +++++++++++++++++++++++HTML for slider++++++++++++++++++++++ -->
+<!-- //////////////////////////////////////////////////////////// -->
+
+<div class="card step-progress">
+    <div class="step-slider">
+      <div data-id="step1" class="step-slider-item"></div>
+      <div data-id="step2" class="step-slider-item"></div>
+    </div>
+    <div class="step-content">
+      <div id="step1" class="step-content-body">
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ++++++++++++++++First form:for title of article+++++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+          <form id="step_1" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" required>
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+              <!-- <label for="body">Body</label>
+              <textarea id ="editor" class="form-control" name="body" ></textarea> -->
+                {% if request.POST.articleof == 'group' %}
+                  <input type = 'hidden' name = 'gid' value = {{group.pk}}>
+                  {% endif %}
+                  {% if request.POST.articleof == "community" %}
+                  <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+                {% endif %}
+              <input type="hidden" id="status" name="status" value='1'>
+              <!-- <input type="hidden" name="update" value=0> -->
+            </div>
+            <div class="form-group custom-file">
+              <label for="image">Upload Image</label>
+              <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload...">
+            </div>
+            {% if status == 1 %}
+            <button id="create" class="btn btn-primary">Create Article and Go to Next Step</button>
+            {% endif %}
+          </form>
+        
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ++++++++++++++++++++++++End of First form+++++++++++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    </div>
+    <div id="step2" class="step-content-body out">
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ++++++++++++++++Second form:for body of article+++++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+        <form id="step_2" method="post" enctype="multipart/form-data" >
+          {% csrf_token %}
+          <div class="form-group">
+              <iframe id="etherpad_iframe" src="{{url}}/p/{{article.id}}?userName={{request.user}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+              {% if request.POST.articleof == 'group' %}
+                <input type = 'hidden' name = 'gid' value = {{group.pk}}>
+                {% endif %}
+                {% if request.POST.articleof == "community" %}
+                <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+              {% endif %}
+            <input type="hidden" id="status" name="status" value='2'>
+          </div>
+          <button id="save" class="btn btn-primary">Save</button>
+        </form>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ++++++++++++++++++++++++End of Second form++++++++++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+      </div>
+      <div id="stepLast" class="step-content-body out">Your article has been successfully created.<br>Remember to save the article body created in the last step before clicking on finish.</div>
+      <div class="step-content-foot">
+        <button id="prev" type="button" class="btn btn-primary" name="prev">Prev</button>
+        <button id="next" type="button" class="btn btn-primary" disabled name="next">Next</button>
+        <button id="finish" type="button" class="btn btn-primary out" name="finish">Finish</button>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <!-- <label for="body">Body</label>
-    <textarea id ="editor" class="form-control" name="body" ></textarea> -->
-      {% if request.POST.articleof == 'group' %}
-        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
-        {% endif %}
-        {% if request.POST.articleof == "community" %}
-        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
-      {% endif %}
-    <input type="hidden" name="status" value={{status}}>
-    <input type="hidden" name="new" value={{request.POST.new}}>
-    <input type="hidden" name="pk" value={{article.id}}>
-  </div>
-{% if article.image %}
-<img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive" width="150">
-{% else %}
-<img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-{%endif%}<br />
-  <div class="form-group custom-file">
-    <label for="image">Upload Image</label>
-    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload..."}>
-  </div>
-  {% if status == 1 %}
-  <button id="create" type="submit" class="btn btn-primary", style="font-size: 17px;padding: 10px">Save Changes</button>
-  {% endif %}
-</form>
-<br />
-</div>
-{% endif %}
+
+
+<!-- //////////////////////////////////////////////////////////// -->
+<!-- ++++++++++++++++++++++++End html for slider+++++++++++++++++ -->
+<!-- //////////////////////////////////////////////////////////// -->
+
 
 {% endif %}
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script type="text/javascript">
+   
+        var id=0;
+        var update =0;
+// ========================================================
+// =================For part 1 of the form=================
+// ========================================================
+        $("#step_1").submit(function(e) {
+          e.preventDefault();    
+          var formData = new FormData(this);
+          formData.append("pk",id);
+          $.ajax({
+              url: '',
+              type: 'POST',
+              data: formData,
+              success: function (data) {
+                  console.log(data.article_id);
+                  console.log(data.username);
+                  console.log(data.community_id);
+                  console.log(data.url);
+                  console.log(data.articleof);
+
+
+
+                  if(update==0)
+                  {
+                    var src= data.url + '/p/' + data.article_id + '?userName=' +data.username;
+                    console.log(src);
+                    document.getElementById("etherpad_iframe").src= src;
+                    id = data.article_id; 
+                    document.getElementById('create').innerText="Update Article and Go to Next Step";
+                    update= 1;
+                    document.getElementById('status').value='3';   
+                    document.getElementById('next').disabled=false;
+                  }
+
+              },
+              cache: false,
+              contentType: false,
+              processData: false
+          });
+      });
+// ========================================================
+// ========================================================
+// ========================================================
+
+// ========================================================
+// ==================For part 2 of the form================
+// ========================================================
+
+        $("#step_2").submit(function(e) {
+            e.preventDefault();    
+            var formData = new FormData(this);
+            formData.append("pk",id);
+            // alert("Sending ajax 2");
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    // alert(data);
+                    console.log(data.article_id);
+                    console.log(data.body);
+
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+
+        });
+
+// ========================================================
+// ========================================================
+// ========================================================
+
+
+
+    </script>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- +++++++++++++++Styles and script for the slider+++++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<style type="text/css">
+
+#create, #save{
+  position:relative;
+  top:50px;
+}
+
+  .card {
+  position: relative;
+  margin-bottom: 24px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.step-progress {
+  padding: 16px;
+  background-color: #FAFAFA;
+  margin: 0 auto;
+}
+
+.step-progress .step-slider {
+  width: 100%;
+}
+
+.step-progress .step-slider .step-slider-item {
+  width: 50%;
+  height: 1px;
+  position: relative;
+  float: left;
+  background-color: #E0E0E0;
+}
+
+.step-progress .step-slider .step-slider-item:after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -6px;
+  right: 0;
+  background-color: #FAFAFA;
+  border: 1px solid #E0E0E0;
+  border-radius: 50%;
+  z-index: 2;
+  transition: all 0.3s ease-out 0.5s;
+  -webkit-transition: all 0.3s ease-out 0.5s;
+}
+
+.step-progress .step-slider .step-slider-item:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 5px;
+  background-color: #B0BEC5;
+  z-index: 1;
+  -webkit-transition: all 0.5s ease-out;
+}
+
+.step-progress .step-slider .step-slider-item.active:before {
+  width: 100%;
+  background-color: #FF8F00;  
+}
+
+.step-progress .step-slider .step-slider-item.active:after {
+  border-color: #FF8F00;
+}
+
+.step-content {
+  padding: 16px 0;
+}
+
+.step-content .step-content-foot {
+  text-align: right;
+}
+
+.step-content .step-content-foot button {
+  border: 0;
+  padding: 8px 16px;
+  /*background-color: #CFD8DC;*/
+  font-size: 14px;
+  border-radius: 3px;
+  outline: 0;
+}
+
+.step-content .step-content-foot button:active {
+  /*background-color: rgba(255, 255, 255, 0.2);*/
+}
+
+.step-content .step-content-foot button.out {
+  display: none;
+}
+
+.step-content .step-content-foot button[disabled=disabled],.step-content .step-content-foot button:disabled {
+  background:#ef4d1c!important;
+}
+
+.step-content .step-content-foot button.active {
+  background: #e94d1c!important;
+}
+
+.step-content .step-content-body {
+  padding: 16px 0;
+  font-size: 18px;
+}
+
+.step-content .step-content-body.out {
+  display: none;
+}  
+
+
+</style>
+
+<script type="text/javascript">
+
+  $(function()  {
+    var pos =0;
+    var stepItem = $('.step-progress .step-slider .step-slider-item');
+    $('#title').on("keydown",function(){
+      document.getElementById('next').disabled=true;
+      // alert("Hello");
+    })
+    function check(){
+      if(pos==0)
+      {
+        $(".step-content-body").addClass("out");
+        $(".step-content-foot button").addClass("out");
+        $("#step1").removeClass("out");
+        $("#next").removeClass("out");
+        $("#prev").removeClass("out");
+        $(stepItem[1]).removeClass('active');
+        $(stepItem[0]).removeClass('active');
+      }
+      if(pos==1)
+      {
+        $(".step-content-body").addClass("out");
+        $(".step-content-foot button").addClass("out");
+        $("#step2").removeClass("out");
+        $("#next").removeClass("out");
+        $("#prev").removeClass("out");
+        $(stepItem[0]).addClass('active');
+        $(stepItem[1]).removeClass('active');
+      }
+      if(pos==2)
+      {
+        $(".step-content-body").addClass("out");
+        $(".step-content-foot button").addClass("out");
+        $("#stepLast").removeClass("out");
+        $("#prev").removeClass("out");
+        $("#finish").removeClass("out");
+        $(stepItem[0]).addClass('active');
+        $(stepItem[1]).addClass('active');
+      }
+    }
+    $("#next").on("click",function(){if(pos<2)pos++;console.log(pos);check();});
+    $("#prev").on("click",function(){if(pos>0)pos--;console.log(pos);check();});
+    $("#finish").on("click",function(){location.href = "/article-view/"+id+"/";});  
+  });
+
+
+//  $(function() {
+//  var step = 0;
+//  var stepItem = $('.step-progress .step-slider .step-slider-item');
+
+//  // Step Next
+//  $('.step-content .step-content-foot button[name="next"]').on('click', function() {
+//    var instance = $(this);
+//    if (stepItem.length - 1 < step) {
+//      return;
+//    }
+//    if (step == (stepItem.length - 1)) {
+//      instance.addClass('out');
+//      instance.siblings('button[name="finish"]').removeClass('out');
+//      // ++++++++++++++++++++++++++++++++++
+//      $(stepItem[stepItem.length - 1]).addClass('active');
+//      $('.step-content-body').addClass('out');
+//      $('#stepLast').removeClass('out');
+//    }
+//    $(stepItem[step]).addClass('active');
+//    $('.step-content-body').addClass('out');
+//    $('#' + stepItem[step + 1].dataset.id).removeClass('out');
+//    step++;
+//  });
+
+//  // Step Last
+//  $('.step-content .step-content-foot button[name="finish"]').on('click', function() {
+//    if (step == stepItem.length) {
+//      return;
+//    }
+//    alert("article displayed");
+//    // $(stepItem[stepItem.length - 1]).addClass('active');
+//    // $('.step-content-body').addClass('out');
+//    // $('#stepLast').removeClass('out');
+//  });
+
+//  // Step Previous
+//  $('.step-content .step-content-foot button[name="prev"]').on('click', function() {
+//    var instance = $(this);
+//    $(stepItem[step]).removeClass('active');
+//    if (step == (stepItem.length -1)) {
+//      instance.siblings('button[name="next"]').removeClass('out');
+//      instance.siblings('button[name="finish"]').addClass('out');
+//    }
+//    $('.step-content-body').addClass('out');
+//    $('#' + stepItem[step].dataset.id).removeClass('out');
+//    if (step <= 0) {
+//      return;
+//    }
+//    step--;
+//  });
+// });
+
+</script>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ++++++++++++++++End styless and scritps for slider++++++++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<script>
+
+    </script>
+<!-- <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script> -->
+<script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
 </script>
-<style>
-label{
-color: #E45000;
-font-weight: bold;
-display: block;
-width: 250px;
-float: left;
-font-size: 15px;
-}
-</style>
 {% endblock %}
