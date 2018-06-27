@@ -11,7 +11,6 @@ admin.site.register( CommunityGroups)
 admin.site.register( RequestCommunityCreation)
 admin.site.register(CommunityCourses)
 
-
 _old_compare = CompareMixin.compare
 
 

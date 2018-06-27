@@ -31,6 +31,7 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
+import notifications.urls
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -44,7 +45,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
-
+    url(r'^activity/', include('actstream.urls')),
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -53,7 +54,7 @@ urlpatterns = [
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
     url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
-
+    
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
@@ -70,6 +71,8 @@ urlpatterns = [
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
     url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
     url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
+
+    url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),
 
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
@@ -94,6 +97,7 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+    url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 
     url(r'^reset/$',
     auth_views.PasswordResetView.as_view(
@@ -139,6 +143,7 @@ urlpatterns = [
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
     url(r'api/dspace/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-dspace-api'),
     url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
@@ -148,6 +153,5 @@ urlpatterns = [
 
 
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

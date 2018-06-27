@@ -9,6 +9,12 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from notification.views import notify_update_role, notify_remove_or_add_user, notify_subscribe_unsubscribe
+from feeds.views import remove_or_add_user_feed, update_role_feed
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+
 
 def create_group(request):
 	if request.method == 'POST':
@@ -29,6 +35,8 @@ def create_group(request):
 			)
 		role = Roles.objects.get(name='group_admin')
 		obj = GroupMembership.objects.create(user=user, group=group, role=role)
+		notify_remove_or_add_user(request.user, user, group, 'group_created')
+		remove_or_add_user_feed(request.user, group, "group_created")
 		return group
 
 def group_view(request, pk):
@@ -72,6 +80,7 @@ def group_subscribe(request):
 			if GroupMembership.objects.filter(user=user, group=group).exists():
 				return redirect('group_view', pk=gid)
 			obj = GroupMembership.objects.create(user=user, group=group, role=role)
+			notify_subscribe_unsubscribe(request.user, group, 'subscribe')
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
 	else:
@@ -84,6 +93,8 @@ def group_unsubscribe(request):
 			group = Group.objects.get(pk=gid)
 			user = request.user
 			if GroupMembership.objects.filter(user=user, group=group).exists():
+				remove_or_add_user_feed(user, group, 'left')
+				notify_remove_or_add_user(user, user, group, 'left')
 				obj = GroupMembership.objects.filter(user=user, group=group).delete()
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
@@ -140,6 +151,8 @@ def manage_group(request,pk):
 						if status == 'update':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									notify_update_role(request.user, user, group, rolename)
+									update_role_feed(user, group, rolename)
 									is_member = GroupMembership.objects.get(user=user, group=group.pk)
 									is_member.role = role
 									is_member.save()
@@ -150,6 +163,8 @@ def manage_group(request,pk):
 						if status == 'remove':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									notify_remove_or_add_user(request.user, user, group, 'removed')
+									remove_or_add_user_feed(user, group, "removed")
 									obj = GroupMembership.objects.filter(user=user, group=group).delete()
 								except GroupMembership.DoesNotExist:
 									errormessage = 'no such user in the group'
@@ -253,3 +268,25 @@ def handle_group_invitations(request):
 			grpinivtation.save()
 
 		return redirect('user_dashboard')
+
+def feed_content(request, pk):
+	grpfeeds = ''
+	try:
+		group = Group.objects.get(pk=pk)
+		uid = request.user.id
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership:
+			gfeeds = group.target_actions.all()
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(gfeeds), 5)
+			try:
+				grpfeeds = paginator.page(page)
+			except PageNotAnInteger:
+				grpfeeds = paginator.page(1)
+			except EmptyPage:
+				grpfeeds = paginator.page(paginator.num_pages)
+
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view', group.pk)
+	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
+

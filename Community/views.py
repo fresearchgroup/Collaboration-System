@@ -18,6 +18,13 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+from notifications.signals import notify
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from django.contrib.contenttypes.models import ContentType
+from feeds.views import update_role_feed,remove_or_add_user_feed
+from notification.views import notify_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
 # Create your views here.
 
 
@@ -65,13 +72,17 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
+			notify_subscribe_unsubscribe(request.user,community, 'subscribe')
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
 		return redirect('/login/?next=/community-view/%d' % int(cid) )
+		
+      
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -80,7 +91,10 @@ def community_unsubscribe(request):
 			community=Community.objects.get(pk=cid)
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
+				remove_or_add_user_feed(user,community,'left')
+				notify_remove_or_add_user(user, user, community, 'left')
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+				#notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
 	else:
@@ -186,12 +200,14 @@ def handle_community_creation_requests(request):
 					forum_link = forum_link
 
 					)
+
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = rcommunity.requestedby,
 					community = communitycreation,
 					role = communityadmin
 					)
+				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 				rcommunity.status = 'approved'
 				rcommunity.save()
 
@@ -229,14 +245,21 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+								#if rolename=='publisher':
+									#create_community_feed(user,'New Publisher has been added',community)
+								        
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									update_role_feed(user,community,rolename)
+									notify_update_role(request.user, user,community,rolename)
 									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 									is_member.role = role
 									is_member.save()
+									
+								                
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -244,7 +267,12 @@ def manage_community(request,pk):
 						if status == 'remove':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									remove_or_add_user_feed(user,community,'removed')
+									notify_remove_or_add_user(request.user, user,community,'removed')
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+									
+
+			
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -342,7 +370,8 @@ def create_community(request):
 					community = community,
 					role = role
 					)
-
+				remove_or_add_user_feed(usr,community,'community_created')
+				notify_remove_or_add_user(request.user, usr,community,'community_created')
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
@@ -414,3 +443,26 @@ def community_course_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+
+def feed_content(request, pk):
+	communityfeed = ''
+	try:
+		community = Community.objects.get(pk=pk)
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
+		if membership:
+			feeds = community.target_actions.all()
+			page = request.GET.get('page', 1)
+			paginator = Paginator(feeds, 5)
+			try:
+				communityfeed = paginator.page(page)
+			except PageNotAnInteger:
+				communityfeed = paginator.page(1)
+			except EmptyPage:
+				communityfeed = paginator.page(paginator.num_pages)
+
+	except CommunityMembership.DoesNotExist:
+		return redirect('community_view', community.pk)
+
+	return render(request, 'communityfeed.html', {'community': community, 'membership':membership, 'feeds':communityfeed})

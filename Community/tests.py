@@ -7,14 +7,14 @@ from .views import display_communities, request_community_creation, create_commu
 from .models import Community, RequestCommunityCreation, CommunityArticles, CommunityGroups
 
 class DisplayCommunityTest(TestCase):
-    def test_display_community_view_status_code(self):
-        url = reverse('display_communities')
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+	def test_display_community_view_status_code(self):
+		url = reverse('display_communities')
+		response = self.client.get(url)
+		self.assertEquals(response.status_code, 200)
 
-    def test_display_communities_url_resloves_display_communities_view(self):
-    	view = resolve('/communities/')
-    	self.assertEquals(view.func, display_communities)
+	def test_display_communities_url_resloves_display_communities_view(self):
+		view = resolve('/communities/')
+		self.assertEquals(view.func, display_communities)
 
 
 class CommunityViewTest(TestCase):
