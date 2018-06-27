@@ -16,7 +16,7 @@ def article_event_type(obj):
         return 'article_visible'
     elif obj['state'][0] == 'publishable':
         return 'article_publishable'
-    elif obj['state'][0] == 'published':
+    elif obj['state'][0] == 'publish':
         return 'article_published'
     elif obj['state'][0] == 'private':
         return 'article_private'
