@@ -16,3 +16,5 @@ PyEtherpadLite
 *.swo
 *.swp
 *.swm
+
+src/
