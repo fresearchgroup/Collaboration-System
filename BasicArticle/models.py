@@ -17,7 +17,6 @@ class Articles(models.Model):
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
 	views = models.PositiveIntegerField(default=0)
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
-	creation_complete = models.BooleanField(default = False)
 	
 	def __str__(self):
 		return self.title
