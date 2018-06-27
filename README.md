@@ -2,7 +2,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
 
-COLLABORATION SYSTEM
+# COLLABORATION SYSTEM
 
         Requiremnets -
 
@@ -25,7 +25,7 @@ COLLABORATION SYSTEM
                 Django_comments_xtd
                 Django_comments
 
-For development installation - 
+## For development installation - 
 
 1. Install virtualenv 
 
@@ -68,14 +68,14 @@ For development installation -
 
         Enter password=root
 		
-		mysql> create database collaboration;
+	mysql> create database collaboration;
         mysql> use collaboration;
         mysql> source collab.sql   
 	```
 
 7. Create a .env inside CollaborationSystem and paste the following -
 	```bash
-       sudo nano .env
+       		sudo nano .env
 	```
     ```
                 SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
@@ -95,20 +95,20 @@ For development installation -
                 DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
                 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
                 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
-				LOG_TYPE=TOSERVER
-				LOG_PROTOCOL=http
-				LOG_ADDRESS=logstash
-				LOG_PORT=5000
-				LOG_STORE=debug.log
-				LOG_USE_PROXY=False
-				URL_BASIC=http://localhost:8000/
-				PAGE_SIZE=1000
-				MAX_PAGE_SIZE=10000
-				EVENTAPI_TOKEN_USERNAME=eventloguser
-				EVENTAPI_TOKEN_PASSWORD=eventlogpass
-				EVENT_API_TOKEN=
-				ELASTICSEARCH_ADDRESS=
-       ```
+		LOG_TYPE=TOSERVER
+		LOG_PROTOCOL=http
+		LOG_ADDRESS=logstash
+		LOG_PORT=5000
+		LOG_STORE=debug.log
+		LOG_USE_PROXY=False
+		URL_BASIC=http://localhost:8000/
+		PAGE_SIZE=1000
+		MAX_PAGE_SIZE=10000
+		EVENTAPI_TOKEN_USERNAME=eventloguser
+		EVENTAPI_TOKEN_PASSWORD=eventlogpass
+		EVENT_API_TOKEN=
+		ELASTICSEARCH_ADDRESS=
+    ```
 
 8. Do all the migrations --
 
