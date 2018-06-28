@@ -46,7 +46,22 @@ class CommunityDashboardTests(TestCase):
 		self.assertEquals(response.status_code, 404)
 
 	@mock.patch.object(get_data ,"view")
-	def test_view_community_url_resolves_view_article(self,testfunc):
+	def test_view_community_dashboard_url_resolves_view_a(self,testfunc):
 		testfunc.return_value = [[1,2,3,4,5,6,0]]
 		view = resolve('/community-dashboard/1/')
 		self.assertEquals(view.func, community_dashboard)
+
+class UserInsightDashboardTests(TestCase):
+
+	@mock.patch.object(article_status ,"find_articles")
+	def test_view_user_insight_dashboard_success_status_code(self,testfunc):
+		testfunc.return_value = [1,2,3,4]
+		url = reverse('user_dashboard')
+		response = self.client.get(url)
+		self.assertTrue(response.status_code, 200)
+
+	@mock.patch.object(article_status ,"find_articles")
+	def test_view_user_insight_url_resolves_view_article(self,testfunc):
+		testfunc.return_value = [1,2,3,4]
+		view = resolve('/user-insight-dashboard/')
+		self.assertEquals(view.func, user_insight_dashboard)
