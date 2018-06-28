@@ -44,7 +44,7 @@ class SimpleTest(TestCase):
 
 		     'test_case_6' : {
 		          'input' : {
-		              'state' : ['published']
+		              'state' : ['publish']
 		          },
 		          'output' : 'article_published'
 		     },
