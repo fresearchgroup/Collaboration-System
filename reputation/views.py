@@ -254,3 +254,4 @@ def change_badge_article_published(publisher,author):
 	badge_author.articles_published_author += 1
 	badge_publisher.save()
 	badge_author.save()
+	
