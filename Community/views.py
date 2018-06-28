@@ -18,7 +18,7 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-from reputation.models import CommunityRep,SystemRep,DefaultValues
+from reputation.models import CommunityRep,SystemRep,ReputationDashboard
 from reputation.views import rolechange
 from voting.models import ArticleVotes
 # Create your views here.
@@ -155,7 +155,7 @@ def request_community_creation(request):
 			return redirect('user_dashboard')
 		else:
 			sysrep = SystemRep.objects.get(user=request.user)
-			defaultval = DefaultValues.objects.get(pk=1)
+			defaultval = ReputationDashboard.objects.get(pk=1)
 			srep = sysrep.sysrep
 			if(srep > defaultval.min_srep_for_comm): #checking if the user system reputation is greater than the minimum reputation required to create a community
 				return render(request, 'request_community_creation.html')
@@ -215,7 +215,7 @@ def handle_community_creation_requests(request):
 				commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
 				commrep.user = rcommunity.requestedby
 				commrep.community = communitycreation
-				commrep.rep = 3001 #he will be the community admin so his community reputation shoul be above 3000
+				commrep.rep = 3001 #he will be the community admin so his community reputation should be above 3000
 				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
 				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
 				sysrep.save()

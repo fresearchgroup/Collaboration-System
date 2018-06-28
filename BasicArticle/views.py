@@ -12,7 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
 from voting.models import VotingFlag,ArticleVotes,Badges
-from reputation.models import DefaultValues,SystemRep,CommunityRep
+from reputation.models import ReputationDashboard,SystemRep,CommunityRep
 from reputation.views import rolechange,check_article,article_published
 
 def display_articles(request):

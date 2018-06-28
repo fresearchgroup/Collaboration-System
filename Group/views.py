@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from reputation.models import CommunityRep,SystemRep,DefaultValues
+from reputation.models import CommunityRep,SystemRep,ReputationDashboard
 
 def create_group(request):
 	if request.method == 'POST':

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import SystemRep,CommunityRep,DefaultValues
+from .models import SystemRep,CommunityRep,ReputationDashboard
 from Community.models import CommunityArticles,CommunityGroups, CommunityMembership,Community
 from Group.models import GroupArticles
 from BasicArticle.models import Articles
@@ -7,59 +7,40 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from voting.models import ArticleVotes,ArticleReport,Badges
 
-# Create your views here.
 
 def CommunityReputation(a_id,votetype):
 	# This method is called from the voting-views.py file 
 	# It is used to change the reputation of the author based on the type of vote
-	art = Articles.objects.get(pk = a_id)
-	author = art.created_by
+	article = Articles.objects.get(pk = a_id)
+	author = article.created_by
 	community = check_article(a_id)
 
 	#community variable stores the community
 	commrep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
 	sysrep = SystemRep.objects.get(user_id=author.id)
-	defaultval = DefaultValues.objects.get(pk=1)
+	defaultval = ReputationDashboard.objects.get(pk=1)
 	up=defaultval.upvote
 	down=defaultval.downvote
 	# Votetype contains the type of vote made which is passed as a parameter to the function
-	if(votetype==1):
-		commrep.rep+=up
-		sysrep.sysrep+=up
-	elif(votetype==3):
-		commrep.rep-=down
-		sysrep.sysrep-=down
-	elif(votetype==2):
-		commrep.rep+=down+up
-		sysrep.sysrep+=down+up
-	elif(votetype==4):
-		commrep.rep=commrep.rep-down-up
-		sysrep.sysrep=sysrep.sysrep-down-up
-	elif(votetype==5):
-		commrep.rep-=up
-		sysrep.sysrep-=up
-	else:
-		commrep.rep+=down
-		sysrep.sysrep+=down
-	commrep.save()
-	sysrep.save()
-	rolechange(commrep,author,community)
+	change_reputation(votetype,commrep,sysrep,up,down,community,author)
 	
-
+	
+#The further three functions are the repercursion of changing the default values of reputation.
 def author_reputation_dashboard(request):
 	if request.method == 'POST':
 		published_author = int(request.POST.get('published_author'))
 		author_report = int(request.POST.get('author_report'))		
-		defaultval = DefaultValues.objects.get(pk=1)
+		defaultval = ReputationDashboard.objects.get(pk=1)
 		defaultval.published_author = published_author
 		defaultval.author_report = author_report
 		defaultval.save()
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = DefaultValues.objects.get(pk=1)
+			defaultval = ReputationDashboard.objects.get(pk=1)
 			return render(request,'author_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home
+
 
 def general_reputation_dashboard(request):
 	if request.method == 'POST':
@@ -72,56 +53,55 @@ def general_reputation_dashboard(request):
 		article_report_rejected = int(request.POST.get('article_report_rejected'))
 		if(new_min_srep_for_comm == 0) or (new_threshold_publisher == 0) or (new_threshold_cadmin == 0): #can't make some of the values to zero
 			return render(request,'cantset.html')
-		defaultval = DefaultValues.objects.get(pk=1)
+		defaultval = ReputationDashboard.objects.get(pk=1)
 		defaultval.upvote = upvote
 		defaultval.downvote = downvote
 		defaultval.article_report_rejected = article_report_rejected
 		old_min_srep_for_comm = defaultval.min_srep_for_comm
-		if(old_min_srep_for_comm != new_min_srep_for_comm): #checking if old is not equal to new ,if yes then change the user reputation accordigly
-			users = User.objects.all()
-			for user in users:
-				sysrep = SystemRep.objects.get(user=user)
-				old_sysrep = sysrep.sysrep
-				new_sysrep = new_min_srep_for_comm*old_sysrep/old_min_srep_for_comm
-				sysrep.sysrep = new_sysrep
-				sysrep.save()
+		#The user reputation changes as the default changes for creating the community.
+		if(old_min_srep_for_comm != new_min_srep_for_comm): #checking if old is not equal to new ,if yes then change the user reputation accordingly
+			change_alluser_reputation(new_min_srep_for_comm,old_min_srep_for_comm)
 		defaultval.min_srep_for_comm = new_min_srep_for_comm
 		defaultval.srep_for_comm_creation = srep_for_comm_creation
 		old_threshold_publisher = defaultval.threshold_publisher
-		if(old_threshold_publisher != new_threshold_publisher): #checking if old is not equal to new ,if yes then change the user reputation accordigly
+		#The user reputation changes as the default changes for publisher threshold.
+		if(old_threshold_publisher != new_threshold_publisher): #checking if old is not equal to new ,if yes then change the user reputation accordingly
 			change(new_threshold_publisher,old_threshold_publisher,'publisher')
 		defaultval.threshold_publisher = new_threshold_publisher
 		old_threshold_cadmin = defaultval.threshold_cadmin
-		if(old_threshold_cadmin != new_threshold_cadmin): #checking if old is not equal to new ,if yes then change the user reputation accordigly
+		#The user reputation changes as the default changes for community-admin threshold.
+		if(old_threshold_cadmin != new_threshold_cadmin): #checking if old is not equal to new ,if yes then change the user reputation accordingly
 			change(new_threshold_cadmin,old_threshold_cadmin,'community_admin')
 		defaultval.threshold_cadmin = new_threshold_cadmin
 		defaultval.save()
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = DefaultValues.objects.get(pk=1)
+			defaultval = ReputationDashboard.objects.get(pk=1)
 			return render(request,'general_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home	
+
 
 def publisher_reputation_dashboard(request):
 	if request.method == 'POST':
 		published_publisher = int(request.POST.get('published_publisher'))
 		publisher_report = int(request.POST.get('publisher_report'))
-		defaultval = DefaultValues.objects.get(pk=1)
+		defaultval = ReputationDashboard.objects.get(pk=1)
 		defaultval.published_publisher = published_publisher
 		defaultval.publisher_report = publisher_report
 		defaultval.save()
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = DefaultValues.objects.get(pk=1)
+			defaultval = ReputationDashboard.objects.get(pk=1)
 			return render(request,'publisher_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home	
+
 
 def communityadmin_reputation_dashboard(request):
 	if request.method == 'POST':
 		new_threshold_report = int(request.POST.get('threshold_report'))
-		defaultval = DefaultValues.objects.get(pk=1)
+		defaultval = ReputationDashboard.objects.get(pk=1)
 		if(defaultval.threshold_report < new_threshold_report):
 			articles_reported = ArticleReport.objects.all()
 			for article in articles_reported:
@@ -140,7 +120,7 @@ def communityadmin_reputation_dashboard(request):
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = DefaultValues.objects.get(pk=1)
+			defaultval = ReputationDashboard.objects.get(pk=1)
 			return render(request,'communityadmin_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home		
 
@@ -167,9 +147,9 @@ def change(new,old,role1):
 			sysrep.save()
 			commrep.save()
 
-
+#This function is called if any default or any change in reputation occurs because it might change the roles of the user.
 def rolechange(commrep,user,community):#once the user reputation has changed we need to compare with the threshold to become a publisher or community admin in order to change his role in that community
-	defaultval=DefaultValues.objects.get(pk=1)
+	defaultval=ReputationDashboard.objects.get(pk=1)
 	if(commrep.rep >= defaultval.threshold_cadmin): #if user reputation is greater than community admin threshold then change his role to community admin
 		community_membership = CommunityMembership.objects.get(user_id=user.id,community_id=community.id)
 		community_membership.role = Roles.objects.get(name='community_admin')
@@ -186,32 +166,73 @@ def rolechange(commrep,user,community):#once the user reputation has changed we 
 		community_membership.role = Roles.objects.get(name='author')
 		community_membership.save()
 
+
+#Article belonging to which community?? THis function gives you this feature.
 def check_article(a_id):
-	commart = CommunityArticles.objects.filter(article_id=a_id).exists()
-	if(commart is False): #it is not a community article
+	communtiy_articles = CommunityArticles.objects.filter(article_id=a_id).exists()
+	if(communtiy_articles is False): #it is not a community article
 		grpart = GroupArticles.objects.get(article_id=a_id)
 		grp = grpart.group
 		community = CommunityGroups.objects.get(group_id=grp.id)
 	else: #it is a community article
-		commart = CommunityArticles.objects.get(article_id=a_id)
-		community = commart.community
+		communtiy_articles = CommunityArticles.objects.get(article_id=a_id)
+		community = communtiy_articles.community
 	return community
 	
+#When the article gets published then change in respective reputation is done.
 def article_published(request,pk):
-	art = Articles.objects.get(pk=pk)
-	author = art.created_by
+	article = Articles.objects.get(pk=pk)
+	author = article.created_by
 	publisher = request.user
 	community = check_article(pk)
-	article_vote = ArticleVotes.objects.get(article=art)
+	article_vote = ArticleVotes.objects.get(article=article)
 	article_vote.published_by = publisher
 	article_vote.save()
 
+	change_reputation_aritcle_published(community,author,publisher)
+
+
+def change_reputation(votetype,commrep,sysrep,up,down,community,author):
+	if(votetype==1):
+		commrep.rep+=up
+		sysrep.sysrep+=up
+	elif(votetype==3):
+		commrep.rep-=down
+		sysrep.sysrep-=down
+	elif(votetype==2):
+		commrep.rep+=down+up
+		sysrep.sysrep+=down+up
+	elif(votetype==4):
+		commrep.rep=commrep.rep-down-up
+		sysrep.sysrep=sysrep.sysrep-down-up
+	elif(votetype==5):
+		commrep.rep-=up
+		sysrep.sysrep-=up
+	else:
+		commrep.rep+=down
+		sysrep.sysrep+=down
+	commrep.save()
+	sysrep.save()
+	rolechange(commrep,author,community)
+
+
+def change_alluser_reputation(new_min_srep_for_comm,old_min_srep_for_comm):
+	users = User.objects.all()
+	for user in users:
+		sysrep = SystemRep.objects.get(user=user)
+		old_sysrep = sysrep.sysrep
+		new_sysrep = new_min_srep_for_comm*old_sysrep/old_min_srep_for_comm
+		sysrep.sysrep = new_sysrep
+		sysrep.save()
+
+
+def change_reputation_aritcle_published(community,author,publisher):
 	author_crep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
 	author_srep = SystemRep.objects.get(user_id=author.id)
 	publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
 	publisher_srep = SystemRep.objects.get(user_id=publisher.id)
-	defaultval = DefaultValues.objects.get(pk=1)
-	#increasing the author and publisher reputation has an article has been published
+	defaultval = ReputationDashboard.objects.get(pk=1)
+	#increasing the author and publisherc reputation has an article has been published
 	author_srep.sysrep+=defaultval.published_author
 	author_crep.rep+=defaultval.published_author
 	publisher_crep.rep+=defaultval.published_publisher
@@ -221,11 +242,15 @@ def article_published(request,pk):
 	author_crep.save()
 	publisher_crep.save()
 	publisher_srep.save()
+	rolechange(author_crep,author,community)
+	rolechange(publisher_crep,publisher,community)
+	change_badge_article_published(publisher,author)
+
+
+def change_badge_article_published(publisher,author):
 	badge_publisher = Badges.objects.get(user=publisher)
 	badge_author = Badges.objects.get(user=author)
 	badge_publisher.articles_published_publisher += 1
 	badge_author.articles_published_author += 1
 	badge_publisher.save()
 	badge_author.save()
-	rolechange(author_crep,author,community)
-	rolechange(publisher_crep,publisher,community)
