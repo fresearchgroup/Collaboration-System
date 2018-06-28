@@ -256,7 +256,7 @@ Note: Community-Content-Tools repository has been referred to as the H5P directo
 
  		docker-compose run web python manage.py loaddata workflow roles faq
 
- 		docker-compose web run python3 manage.py generateToken --n
+ 		docker-compose run web python3 manage.py generateToken --n
 
 	```
 
@@ -267,7 +267,9 @@ Note: Community-Content-Tools repository has been referred to as the H5P directo
 	```
 4. Run the following command to run all containers
 	```
- 		docker-compose up
+ 		docker-compose build
+			
+		docker-compose up
 
 	```
 
