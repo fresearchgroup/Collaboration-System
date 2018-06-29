@@ -89,7 +89,8 @@ EVENT_NAME_DICT={
     #group create event
     r'^community-group-create/$':{
         'POST':{
-            'event_name' : 'event.group.create'
+            'function': handlers.group_create_handler,
+            'group_create' : 'event.group.create'
         }
     },
 
