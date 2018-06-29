@@ -18,7 +18,7 @@ class Articles(models.Model):
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
 
 	def __str__(self):
-		return self.title
+		return self.title + "-" + str(self.pk)
 
 class ArticleViewLogs(models.Model):
     article = models.ForeignKey(Articles, related_name='articleviews')

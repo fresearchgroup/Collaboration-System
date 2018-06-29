@@ -38,6 +38,40 @@
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
             <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
+            <li><form id="my_form" method="POST" action="{% url 'updown' %}">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{article.article.id}}">
+            {% if art.upflag == False %} <!--if the user has not upvoted -->
+            {{article_votes.upvote}}{% if user.is_authenticated %}{% ifnotequal article.article.created_by user %}<button onclick="this.form.submit()" name="type" value="upvote" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endifnotequal %}{% endif %}<i class="fa fa-thumbs-o-up"></i></button>
+            {% else %} <!--if the user has upvoted -->
+            {{article_votes.upvote}}{% if user.is_authenticated %}{% ifnotequal article.article.created_by user %}<button onclick="this.form.submit()" name="type" value="uprecall" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endifnotequal %}{% endif %}<i class="fa fa-thumbs-up"></i></button>
+            {% endif %}
+            {% if art.downflag == False %} <!--if the user has not downvoted -->
+            {{article_votes.downvote}}{% if user.is_authenticated %}{% ifnotequal article.article.created_by user %}<button onclick="this.form.submit()" name="type" value="downvote" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endifnotequal %}{% endif %}<i class="fa fa-thumbs-o-down"></i></button> 
+            {% else %} <!--if the user has downvoted -->
+            {{article_votes.downvote}}{% if user.is_authenticated %}{% ifnotequal article.article.created_by user %}<button onclick="this.form.submit()" name="type" value="downrecall" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;">{% endifnotequal %}{% endif %}<i class="fa fa-thumbs-down"></i></button> 
+            {% endif %}
+            </form></li>
             <li><i class="fa fa-eye"></i> {{count}} views </li>
 
             {% if article.community.name %}
@@ -52,15 +86,92 @@
             {% else %}
             <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
             {%endif%}
-            <form methd = "post">
+            <form method = "post">
                 <input id="username" type="hidden" value="{{request.user.username}}"/>
                 <input id="rid" type="hidden" value="{{article.article.pk}}"/>
                 <input id="category" type="hidden" value="article"/>
                 <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
                 <input id="url" type="hidden" value="{% url 'favourites' %}"/> 
+                <input id="url1" type="hidden" value="{% url 'report' %}"/> 
               </form>
             {% endif %}
+
+            {% if user.is_authenticated %}
+            {% if is_repo %}
+            {% if art.reportflag %}
+            <li><form method="POST" action="{% url 'report' %}">
+            {% csrf_token %}
+            <input name="username" type="hidden" value="{{request.user.username}}"/>
+            <input name="rid" type="hidden" value="{{article.article.pk}}"/>
+            <input type="hidden" name="status" value="remove">
+            <input type="hidden" name="reason" value=" ">
+
+            <button onclick="this.form.submit()" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;"><i id="repo_submit" class="fa fa-flag"></i></button>Report</form> </li>
             
+            {% else %}
+            <li><button style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-flag-o" ></i></button> Report</li>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reason For report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+              <form method = "post" action="{% url 'report' %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <input name="username" type="hidden" value="{{request.user.username}}"/>
+                <input name="rid" type="hidden" value="{{article.article.pk}}"/>
+                <input name="category" type="hidden" value="article"/>
+                <input name="csrf" type="hidden" value="{{csrf_token}}"/>    
+                <input name="url1" type="hidden" value="{% url 'report' %}"/>
+                <input type="hidden" name="status" value="add">
+                <select name="reason" id="option" onchange='CheckReason(this.value);'>
+                  <option value="Discrimintation">Discrimination</option>
+                  <option value="Vague" >Vague</option>
+                  <option value="Harrassment">Harrassment</option>
+                  <option value="Article not related" >Article not related</option>
+                  <option value="Plagarism" >Plagarism</option>
+                  <option value="Outdated Information" >Outdated Information</option>
+                  <option value="Poorly Written" >Poorly Written</option>
+                  <option value="Factually Incorrect" >Factually Incorrect</option>
+                  <option value="Others">Others</option>
+                </select>
+
+                <input type="text" name="reasontext" id="reasontext" placeholder="Mention your reason" style=' width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display:none;' />
+                </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-primary">Yes</button>
+        </div>
+              </form>
+      </div>
+    </div>
+  </div>
+</div>
+            {% endif %}
+            {% endif %}
+            {% endif %}
           </ul>
         <p>
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
@@ -85,6 +196,9 @@
   </div>
 </div>
 
+{% if errormessage %}
+        <div class="alert alert-danger">{{ errormessage }}</div>
+ {% endif %}
 <h2>Comments</h2>
 
 {% if comment_count %}
@@ -106,5 +220,6 @@
 
 {% endblock %}
 {% block javascript %}
+<script src="{% static 'js/report.js' %}"></script>
 <script src="{% static 'js/favourite.js' %}"></script>
 {% endblock %}

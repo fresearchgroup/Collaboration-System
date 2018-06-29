@@ -20,6 +20,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
+from reputation.models import SystemRep,CommunityRep
+from voting.models import Badges
 
 def signup(request):
     """
@@ -47,6 +49,13 @@ def signup(request):
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                sysrep = Systemrep() #creating a new SystemRep row has a new user has signed up
+                sysrep.user = user
+                sysrep.sysrep = 0
+                sysrep.save()
+                badge = Badges()
+                badge.user = user
+                badge.save()
                 return redirect('user_dashboard')
             else:
                 error = 'Captcha not verified'
@@ -146,9 +155,13 @@ def view_profile(request):
     if request.user.is_authenticated:
         try:
             user_profile = ProfileImage.objects.get(user=request.user)
+            sysrep = SystemRep.objects.get(user_id=request.user.id)
+            badge = Badges.objects.get(user=request.user)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
-        return render(request, 'myprofile.html', {'user_profile':user_profile})
+            sysrep = SystemRep.objects.get(user_id=request.user.id)
+            badge = Badges.objects.get(user=request.user)
+        return render(request, 'myprofile.html', {'user_profile':user_profile,'sysrep':sysrep,'badge':badge})
     else:
         return redirect('login')
 
@@ -159,11 +172,12 @@ def display_user_profile(request, username):
         groups = GroupMembership.objects.filter(user=userinfo)
         commarticles = CommunityArticles.objects.filter(user=userinfo)
         grparticles = GroupArticles.objects.filter(user=userinfo)
+        communityrep = CommunityRep.objects.filter(user=userinfo)
         try:
             user_profile = ProfileImage.objects.get(user=userinfo)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
-        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'user_profile':user_profile})
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'user_profile':user_profile,'communityrep':communityrep})
     else:
         return redirect('login')
 

@@ -11,6 +11,9 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from search.views import IndexDocuments
 from UserRolesPermission.models import favourite
+from voting.models import VotingFlag,ArticleVotes,Badges
+from reputation.models import ReputationDashboard,SystemRep,CommunityRep
+from reputation.views import rolechange,check_article,article_published
 
 def display_articles(request):
 	"""
@@ -61,6 +64,7 @@ def view_article(request, pk):
 	community before displaying it. It displays whether the article belongs
 	to group or community
 	"""
+	
 	try:
 		article = CommunityArticles.objects.get(article=pk)
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
@@ -68,7 +72,7 @@ def view_article(request, pk):
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
 		try:
-			article = GroupArticles.objects.get(article=pk)
+			article = GroupArticles.objects.get(article=pk) 	
 			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 				return redirect('home')
 			count = article_watch(request, article.article)
@@ -77,7 +81,21 @@ def view_article(request, pk):
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
-	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
+	
+	article_votes = ArticleVotes.objects.get(article_id=pk)
+	if VotingFlag.objects.filter(article_id=pk,user_id=request.user.id).exists():
+		voting = VotingFlag.objects.get(article_id=pk,user_id=request.user.id)
+	else: #if the user is not authenticated create a dummy Voingflag and pass to the render function
+		voting = VotingFlag()
+		voting.article_id = pk
+		voting.upflag = False
+		voting.reportflag = False
+		voting.downflag = False
+
+	is_repo=False
+	if article.article.state == States.objects.get(name='publish'):
+		is_repo = True
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav, 'art':voting, 'article_votes':article_votes, 'is_repo':is_repo})
 
 
 def edit_article(request, pk):
@@ -94,11 +112,21 @@ def edit_article(request, pk):
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
 				article.body = request.POST['body']
+				community = check_article(pk)
+				membership = CommunityMembership.objects.get(user=request.user,community=community)
+				badge = Badges.objects.get(user=request.user)
+				role_publisher = Roles.objects.get(name='publisher')
+				role_author = Roles.objects.get(name='author')
 				try:
 					article.image = request.FILES['article_image']
 					article.save(update_fields=["title","body","image"])
 				except:
 					article.save(update_fields=["title","body"])
+				if(membership.role == role_author):
+					badge.articles_contributed_author += 1
+				elif(membership.role == role_publisher):
+					badge.articles_revised_publisher += 1
+				badge.save()
 				return redirect('article_view',pk=article.pk)
 			else:
 				article = Articles.objects.get(pk=pk)
@@ -131,8 +159,10 @@ def edit_article(request, pk):
 					message = "transition doesn' exist"
 				except States.DoesNotExist:
 					message = "state doesn' exist"
+
 				if to_state.name == 'publish':
-					IndexDocuments(article.pk, article.title, article.body, article.created_at)
+					article_published(request,pk) #Changes reputation of author and publisher
+					#IndexDocuments(article.pk, article.title, article.body, article.created_at)
 				return redirect('article_view',pk=pk)
 		else:
 			message=""

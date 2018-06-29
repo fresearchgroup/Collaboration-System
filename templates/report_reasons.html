@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>User</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for votingflag in votingflags %}
+        <tr>
+          <td>{{ votingflag.user.username }}</td>
+          <td>{{ votingflag.report_reason }}</a></td>
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+{% endblock %}

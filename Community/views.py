@@ -18,6 +18,9 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
+from reputation.models import CommunityRep,SystemRep,ReputationDashboard
+from reputation.views import rolechange
+from voting.models import ArticleVotes
 # Create your views here.
 
 
@@ -65,6 +68,11 @@ def community_subscribe(request):
 			community=Community.objects.get(pk=cid)
 			role = Roles.objects.get(name='author')
 			user = request.user
+			commrep = CommunityRep() #creating a CommunityRep row has a user has joined the community
+			commrep.user=user 
+			commrep.community = community
+			commrep.rep = 0
+			commrep.save()
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
@@ -79,6 +87,7 @@ def community_unsubscribe(request):
 			cid = request.POST['cid']
 			community=Community.objects.get(pk=cid)
 			user = request.user
+			CommunityRep.objects.get(community=community,user=user).delete() #deleting the a CommunityRep row has the user has left the community
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 			return redirect('community_view',pk=cid)
@@ -94,6 +103,9 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				article = create_article(request)
+				 #creating a ArticleVotes row in order to store the upvotes and downvotes and reports
+				article_votes = ArticleVotes(article = article)
+				article_votes.save()
 				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
 				return redirect('article_view', article.pk)
 			else:
@@ -142,7 +154,12 @@ def request_community_creation(request):
 				)
 			return redirect('user_dashboard')
 		else:
-			return render(request, 'request_community_creation.html')
+			sysrep = SystemRep.objects.get(user=request.user)
+			defaultval = ReputationDashboard.objects.get(pk=1)
+			srep = sysrep.sysrep
+			if(srep > defaultval.min_srep_for_comm): #checking if the user system reputation is greater than the minimum reputation required to create a community
+				return render(request, 'request_community_creation.html')
+			return render(request,'lowrepcom.html')
 	else:
 		return redirect('login')
 
@@ -194,7 +211,16 @@ def handle_community_creation_requests(request):
 					)
 				rcommunity.status = 'approved'
 				rcommunity.save()
-
+				
+				commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
+				commrep.user = rcommunity.requestedby
+				commrep.community = communitycreation
+				commrep.rep = 3001 #he will be the community admin so his community reputation should be above 3000
+				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
+				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
+				sysrep.save()
+				commrep.save()
+				rolechange(commrep,rcommunity.requestedby,communitycreation)
 			if status=='reject' and rcommunity.status!='rejected':
 				rcommunity.status = 'rejected'
 				rcommunity.save()
@@ -229,6 +255,7 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
+								CommunityRep.objects.create(user=user,community=community) # creating a new communityRep row has a user has been added to the community by the communtiy admin
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
@@ -245,6 +272,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
+									CommunityRep.objects.get(user=user,community=community).delete() # creating a new CommunityRep row has a user has been removed from the community by the community admin
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:

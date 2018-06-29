@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active">{{ community.name }}</li>
+
+{% endblock %}
+
+{% block content %}
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage community</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="#">Update community Info</a>
+  </li>
+  {% endif %}
+  {% if membership %}
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'article_report' community.pk %}">Articles Reported</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+
+  <li class="nav-item">
+  <a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
+  </li>
+
+</ul>
+<br/>
+
+<table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Community</th>
+        <th>Article</th>
+        <th>Number of reports</th>
+        {% if membership.role.name == 'community_admin' %}
+        <th>Action</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for article in articles_reported %}
+        <tr>
+          <td>{{ article.community.name }}</td>
+          <td><a href="{% url 'article_view' article.article.pk %}">{{ article.article.title }}</a></td>
+          <td><a href="{% url 'report_reasons' article.article.pk %}">{{ article.no_of_report }}</a></td>
+          {% if membership.role.name == 'community_admin' %}
+          <td>
+            <form method="post" action="{% url 'article_report' community.pk %}">
+                 {% csrf_token %}
+                 <input type="hidden" name = "pk1" value ="{{article.pk}}" />
+                 <div class="btn-group" role="group" aria-label="Basic example">
+
+                       <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
+                       <button type="radio" name ="status" value="reject" class="btn btn-danger"> Reject</button>
+                 </div>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+{% endblock %}
