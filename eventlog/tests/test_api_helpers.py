@@ -73,7 +73,13 @@ class TestHelperClass(TestCase):
         res = helpers.handle_response(request, data)
         act_resp, status_code = res[0], res[1]
         #utils.ilog("HELPER CLASS", "print: {!s}".format(act_resp), mode="DEBUG")
-        self.assertEqual(self.result_handle_reponse, act_resp)
+        self.assertDictEqual(self.get_seperate(self.result_handle_reponse['prev_link']), self.get_seperate(act_resp['prev_link']))
+        self.assertDictEqual(self.get_seperate(self.result_handle_reponse['next_link']), self.get_seperate(act_resp['next_link']))
+        self.assertEqual(self.result_handle_reponse['status code'], act_resp['status code'])
+        self.assertEqual(self.result_handle_reponse['total hits'], act_resp['total hits'])
+        self.assertEqual(len(self.result_handle_reponse['result']), len(act_resp['result']))
+        self.assertDictEqual(self.result_handle_reponse['result'][0], act_resp['result'][0])
+
     
     @mock.patch.object(helpers, 'custom_time_now')
     def test_extract_time_keys(self, tmfunc):
@@ -129,35 +135,35 @@ class TestHelperClass(TestCase):
                     "size": settings.PAGE_SIZE
                 }
         act_result = helpers.extract_paging_keys(request)
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {"start": 1, "limit": 1})
         exp_result = {
                     "from": 1 ,
                     "size": 1
                 }
         act_result = helpers.extract_paging_keys(request)
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {"start": 1})
         exp_result = {
                     "from": 1 ,
                     "size": settings.PAGE_SIZE
                 }
         act_result = helpers.extract_paging_keys(request)
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {"limit": 1})
         exp_result = {
                     "from": 0,
                     "size": 1
                 }
         act_result = helpers.extract_paging_keys(request)
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         request = RequestFactory().get("/logapi/event/community/view/", {"limit": 100000})
         exp_result = {
                     "from": 0,
                     "size": settings.MAX_PAGE_SIZE
                 }
         act_result = helpers.extract_paging_keys(request)
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
 
     def test_extract_filter_keys(self):
         request = RequestFactory().get("/logapi/event/community/view/")
@@ -229,9 +235,9 @@ class TestHelperClass(TestCase):
     def test_append_get_params(self):
         request = RequestFactory().get('/logapi/event/community/view', {'start': 0, "limit": 5})
         url = "http://localhost:8000/logapi/event/community/view/"
-        exp_result = "http://localhost:8000/logapi/event/community/view/?start=0&limit=5"
-        act_result = helpers.append_get_params(url, request)
-        self.assertEqual(exp_result, act_result)
+        exp_result = self.get_seperate("http://localhost:8000/logapi/event/community/view/?start=0&limit=5")
+        act_result = self.get_seperate(helpers.append_get_params(url, request))
+        self.assertDictEqual(exp_result, act_result)
     
     @mock.patch.object(HttpRequest, 'build_absolute_uri')
     def test_get_path(self, reqfunc):
@@ -254,24 +260,24 @@ class TestHelperClass(TestCase):
                 "size": 10
                 }
         exp_result = {
-                'next_link': cpath + "?start=10&limit=10"
+                'next_link': self.get_seperate(cpath +"?start=10&limit=10")
                 }
         resp = {}
-        act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
+        act_result = self.check_details(helpers.append_pagination(request, resp, page_keys, total_hits))
         #utils.ilog("Helper class", "act result: {!s}".format(act_result), mode="DEBUG")
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         #utils.ilog("TEST HELPER", "Calling for prev link", mode="ERROR")
         page_keys = {
                 "from": 10,
                 "size": 10
                 }
         exp_result = {
-                'prev_link': cpath + "?start=0&limit=10"
+                'prev_link': self.get_seperate(cpath + "?start=0&limit=10")
                 }
         resp = {}
-        act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
+        act_result = self.check_details(helpers.append_pagination(request, resp, page_keys, total_hits))
         #utils.ilog("Helper class", "act result: {!s}".format(act_result), mode="DEBUG")
-        self.assertEqual(exp_result, act_result)
+        self.assertDictEqual(exp_result, act_result)
         #utils.ilog("TEST HELPER", "Calling for both link", mode="ERROR")
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 1, "limit": 1})
         page_keys = {
@@ -279,12 +285,12 @@ class TestHelperClass(TestCase):
                 "size": 1
                 }
         exp_result = {
-                "next_link": cpath + "?start=2&limit=1",
-                'prev_link': cpath + "?start=0&limit=1"
+                "next_link": self.get_seperate(cpath + "?start=2&limit=1"),
+                'prev_link': self.get_seperate(cpath + "?start=0&limit=1")
                 }
         resp = {}
-        act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
-        self.assertEqual(exp_result, act_result) 
+        act_result = self.check_details(helpers.append_pagination(request, resp, page_keys, total_hits))
+        self.assertDictEqual(exp_result, act_result) 
         #utils.ilog("TEST HELPER", "Calling for no", mode="ERROR")
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 0, "limit": 100})
         page_keys = {
@@ -294,20 +300,20 @@ class TestHelperClass(TestCase):
         exp_result = {
                 }
         resp = {}
-        act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
-        self.assertEqual(exp_result, act_result)
+        act_result = self.check_details(helpers.append_pagination(request, resp, page_keys, total_hits))
+        self.assertDictEqual(exp_result, act_result)
         request = RequestFactory().get('/logapi/event/community/view/', {'start': 1, "limit": 4})
         page_keys = {
                 "from": 1,
                 "size": 4
                 }
         exp_result = {
-                "next_link": cpath + "?start=5&limit=4",
-                'prev_link': cpath + "?start=0&limit=1"
+                "next_link": self.get_seperate(cpath + "?start=5&limit=4"),
+                'prev_link': self.get_seperate(cpath + "?start=0&limit=1")
                 }
         resp = {}
-        act_result = helpers.append_pagination(request, resp, page_keys, total_hits)
-        self.assertEqual(exp_result, act_result)
+        act_result = self.check_details(helpers.append_pagination(request, resp, page_keys, total_hits))
+        self.assertDictEqual(exp_result, act_result)
 
     def test_append_key_value(self):
         resp = {}
@@ -340,3 +346,26 @@ class TestHelperClass(TestCase):
                 }
         act_result = helpers.append_error_key_value(resp, "error msg", "Database Error")
         self.assertEqual(exp_result, act_result)
+
+    def get_seperate(self, url):
+        utils.ilog("TEST API HELPER", 'Got url: {!s}'.format(url))
+        fields = {'main_url': '', 'start':'',"limit":""}
+        m, p = url.split('?')
+        p = p.split('&')
+        fields['main_url'] = m
+        for i in p:
+            k = i.strip()
+            if k.startswith('start'):
+                fields['start'] = k
+            elif k.startswith('limit'):
+                fields['limit'] = k
+            else:
+                raise ValueError
+        utils.ilog("TEST API HELPER", 'Generated for url: {!s}'.format(fields))
+        return fields
+
+    def check_details(self, dic):
+        for key in list(dic.keys()):
+            dic[key] = self.get_seperate(dic[key])
+        return dic
+        

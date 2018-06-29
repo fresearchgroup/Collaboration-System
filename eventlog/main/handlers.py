@@ -32,4 +32,10 @@ def article_create_handler(obj):
         return "article_create"
     else:
         return None
-
+def group_create_handler(obj):
+    utils.ilog(LOG_CLASS, "group_create_handler called", mode="DEBUG")
+    st = obj['status'][0]
+    if st == '1':
+        return 'group_create'
+    else:
+        return None

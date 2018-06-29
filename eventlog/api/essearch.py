@@ -42,6 +42,7 @@ class SearchElasticSearch:
             }
          }
         must_keys = list(search_key_dic['request_keys'].keys())
+        must_keys.sort()
         #utils.ilog(self.LOG_CLASS, "Entered request keys phase...", mode="DEBUG")
         for key in must_keys:
             match={"match":{}}
@@ -119,6 +120,7 @@ class SearchElasticSearch:
         
 
         must_keys = list(search_key_dic['request_keys'].keys())
+        must_keys.sort()
         #utils.ilog(self.LOG_CLASS, "Entered request keys phase...", mode="DEBUG")
         for key in must_keys:
             match={"match":{}}
