@@ -80,23 +80,23 @@
        		sudo nano .env
 	```
     ```
-                SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
-                DEBUG=True
-                DB_NAME=collaboration
-                DB_USER=root
-                DB_PASSWORD=root
-                DB_HOST=localhost
-                DB_PORT=3306
-                ALLOWED_HOSTS= localhost
-                GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
-                EMAIL_HOST=localhost
-                EMAIL_HOST_USER=
-                EMAIL_HOST_PASSWORD=
-                EMAIL_PORT=25
-                EMAIL_USE_TLS=False
-                DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
-                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
-                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+        SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
+        DEBUG=True
+        DB_NAME=collaboration
+        DB_USER=root
+        DB_PASSWORD=root
+        DB_HOST=localhost
+        DB_PORT=3306
+        ALLOWED_HOSTS= localhost
+        GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
+        EMAIL_HOST=localhost
+        EMAIL_HOST_USER=
+        EMAIL_HOST_PASSWORD=
+        EMAIL_PORT=25
+        EMAIL_USE_TLS=False
+        DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
 		LOG_TYPE=TOSERVER
 		LOG_PROTOCOL=http
 		LOG_ADDRESS=logstash
@@ -120,7 +120,7 @@
 			
 9. Runserver --
 
-    ```
+    ```bash
     	python3 manage.py runserver
     ``` 
  
