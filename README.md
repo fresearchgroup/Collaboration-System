@@ -27,7 +27,7 @@
 		Django_wiki
 
 
-## For development installation - 
+## For development installation (Virtual Environment) - 
 
 1. Install virtualenv 
 
@@ -118,25 +118,52 @@
 		python3 manage.py migrate
 	```
 			
-9. Run the following to generate a new Token
-			  
-	```bash
-		python3 manage.py generateToken --n
-	```
-			
-10. Add/Replace the token by adding following line in .env file
-
-	```
-		EVENT_API_TOKEN=<your-token>
-	``` 
-
-11. Runserver --
+9. Runserver --
 
     ```
     	python3 manage.py runserver
     ``` 
  
-### Generating token for event logs
+For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
+
+For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
+
+
+## For development installation (Docker) - 
+
+ -- Install Docker and Docker-Compose from  --
+
+	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
+
+	    Docker Compose -- https://docs.docker.com/compose/install/
+
+1. Clone the repository --
+```
+   	git clone https://github.com/fresearchgroup/Collaboration-System.git
+```
+
+2. The run the following commands inside the repository --
+ 
+	```
+
+ 		docker-compose build
+
+ 		docker-compose up db
+
+	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+
+ 		docker-compose run web python manage.py migrate
+
+ 		docker-compose run web python manage.py createsuperuser
+
+ 		docker-compose run web python manage.py loaddata workflow roles faq
+
+		docker-compose up
+	```
+ 
+ 
+
+### Generating token for event logs (Manual)
 1. To generate a new token run
 	```
 		python3 manage.py generateToken --n
@@ -149,44 +176,34 @@
 	```
 		python3 manage.py generateToken --g
 	```
+9. Run the following to generate a new Token
+			  
+	```bash
+		python3 manage.py generateToken --n
+	```
+			
+10. Add/Replace the token by adding following line in .env file
 
-For development installation -
+	```
+		EVENT_API_TOKEN=<your-token>
+	``` 
 
-1. Install virtualenv
+### Generating token for event logs (Using Docker)
+1. To generate a new token run
+	```
+		sudo docker-compose run web python3 manage.py generateToken --n
+	```
+2. To generate a renew token run
+		
+	```
+		sudo docker-compose run web python3 manage.py generateToken --r
+	```
+3. To get the previous token run
 
-	        sudo pip3 install virtualenv
-
-2. Clone the project from github
-
-                git clone https://github.com/fresearchgroup/Collaboration-System.git
-
-3. Create a virtual env ---
-
-		 virtualenv collab -p python3
-
-4. Activate the virtual environment --
-
-	         source collab/bin/activate
-
-5. Install the requirements.txt --
-
-	         pip3 install -r Collaboration-System/requirements.txt
-
-6. Install mysql server --
-
-            $sudo apt-get update
-            $sudo apt-get install mysql-server
-            $sudo apt-get install libmysqlclient-dev
-            $mysql -u root -p
-
-            Enter password=root
-
-	    mysql> create database collaboration;
-            mysql> use collaboration;
-            mysql> source collab-updated.sql 
-	    mysql> exit
-
-
+	```
+	 sudo docker-compose run web python3 manage.py generateToken --g
+	```
+### Etherpad
 
 
 6.  Clone the following directory:
@@ -216,110 +233,4 @@ For development installation -
 
 	      python3 manage.py runserver  
 
-
-For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
-
-For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
-
-
-DOCKER INSTALLATION --
-
- -- Install Docker and Docker-Compose from  --
-
-	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
-
-	    Docker Compose -- https://docs.docker.com/compose/install/
-
-1. Clone the repository --
-```
-   	git clone https://github.com/fresearchgroup/Collaboration-System.git
-	git clone https://github.com/fresearchgroup/Community-Content-Tools.git
-```
-2. The run the following commands inside the repository --
-
-Note: Community-Content-Tools repository has been referred to as the H5P directory
-
-
-2. The run the following commands inside the repository --
- 
-	```
-
- 		docker-compose build
-
- 		docker-compose up db
-
-	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
-
- 		docker-compose run web python manage.py migrate
-
- 		docker-compose run web python manage.py createsuperuser
-
- 		docker-compose run web python manage.py loaddata workflow roles faq
-
- 		docker-compose run web python3 manage.py generateToken --n
-
-	```
-
-3. Copy the generated token and add/replace the line with following in .env.docker:
-
-	```
-		EVENT_API_TOKEN=<your-token>
-	```
-4. Run the following command to run all containers
-	```
- 		docker-compose build
-			
-		docker-compose up
-
-	```
-
-### Generating token for event logs
-1. To generate a new token run
-	```
-		sudo docker-compose run web python3 manage.py generateToken --n
-	```
-2. To generate a renew token run
-		
-	```
-		sudo docker-compose run web python3 manage.py generateToken --r
-	```
-3. To get the previous token run
-
-	```
-	 sudo docker-compose run web python3 manage.py generateToken --g
-	```
-
-In the .env.docker of both CC and H5P,
-
-	replace 172.17.0.1 in COLLAB_ROOT and H5P with docker0 inet address
-	To find this, 
-	
-	$ ifconfig
-	
-	search for docker0 and copy inet address in place of 172.17.0.1
-
-In the H5P directory,
-```
-
- sudo docker build -t h5p_image .
- 
-```
-
-In the Collaboration-System directory,
-```
-
- sudo docker-compose build
-
- sudo docker-compose up db
-
- sudo docker exec -i <db-container-image-name> mysql -u<username> -p<password> django < collab-updated.sql
-
- sudo docker-compose up
- 
- ```
- Go to `https://h5p.org/sites/default/files/official-h5p-release-20170301.h5p` and download the official h5p libraries.
- 
- Go to `http://yourdockerip:8000/h5p/libraries` and upload the downloaded libraries and select proceed.
- 
- 
 
