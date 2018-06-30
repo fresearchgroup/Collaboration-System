@@ -21,6 +21,11 @@
   </li>
   {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
+
+    <li class="nav-item">
+    <a class="nav-link" href="{% url 'group_feed' group.pk %}">Feeds</a>
+  </li>
+
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
   </li>
@@ -109,7 +114,7 @@
       <span>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> </span>
       {% else %}
       {% if membership == 'FALSE' %}
-         {% if invitereceived == 'FALSE' %}
+         {% if not invitereceived %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
@@ -166,6 +171,7 @@
 </div>
   </b>
   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateArticlegrp" data-whatever="@mdo"><i class="fa fa-file-text-o margin-right-10"></i>Create Article</button>
+  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5pgrp" data-whatever="@mdo"><i class="fa fa-file-text-o margin-right-10"></i>Create Interactice Content</button>
   <div class="modal fade" id="modalCreateArticlegrp" tabindex="-1" role="dialog" aria-labelledby="CreateArticleModalgrp" aria-hidden="true">
     <div class="modal-dialog text-left" role="document">
       <div class="modal-content">
@@ -177,6 +183,85 @@
         </div>
         <div class="modal-body">
           <form method = "post" action ="{% url 'group_article_create' %}">
+            <div class="form-group">
+              {% csrf_token %}
+              <input type="hidden" name="gid" value={{ group.pk}}>
+              <input type="hidden" name="status" value='0'>
+              <input type="hidden" name="articleof" value='group'>
+              <input type="hidden" name="new" value='0'>
+              <h4>I confirm that I understand the following terms.</h4>
+              <ul>
+              <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
+              <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
+              <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
+              <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
+              </ul>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
+              </div><br />
+              <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
+              <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-primary">Yes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalCreateh5pgrp" tabindex="-1" role="dialog" aria-labelledby="Createh5pModalgrp" aria-hidden="true">
+    <div class="modal-dialog text-left" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method = "post" action ="{% url 'group_h5p_create' %}">
+            <div class="form-group">
+              {% csrf_token %}
+              <input type="hidden" name="gid" value={{ group.pk}}>
+              <input type="hidden" name="status" value='0'>
+              <input type="hidden" name="articleof" value='group'>
+              <h4>I confirm that I understand the following terms.</h4>
+              <ul>
+              <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
+              <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
+              <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
+              <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
+              </ul>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
+              </div><br />
+              <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
+              <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-primary">Yes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalCreateh5pgrp" tabindex="-1" role="dialog" aria-labelledby="Createh5pModalgrp" aria-hidden="true">
+    <div class="modal-dialog text-left" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method = "post" action ="{% url 'group_h5p_create' %}">
             <div class="form-group">
               {% csrf_token %}
               <input type="hidden" name="gid" value={{ group.pk}}>

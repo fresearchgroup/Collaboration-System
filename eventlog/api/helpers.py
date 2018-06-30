@@ -39,6 +39,7 @@ def extract_time_keys(request):
     except ValueError as e:
         raise exceptions.BadTimeFormat
     dic['after'] = tm
+    utils.ilog(LOG_CLASS, dic)
     return dic 
 
 def extract_field_keys(request):
@@ -56,6 +57,7 @@ def extract_field_keys(request):
         if key not in to_check:
             dic['fields'].remove(key)
     dic['fields'] = list(set(dic['fields']))
+    utils.ilog(LOG_CLASS, dic)
     return dic
 
 def extract_paging_keys(request):
@@ -71,6 +73,7 @@ def extract_paging_keys(request):
         dic['size'] = val if val <= settings.MAX_PAGE_SIZE else settings.MAX_PAGE_SIZE
     except KeyError as e:
         dic['size'] = settings.PAGE_SIZE
+    utils.ilog(LOG_CLASS, dic)
     return dic
 
 def extract_sorting_keys(request):
@@ -78,7 +81,7 @@ def extract_sorting_keys(request):
             'sort_keys': []
         }
     try:
-        val = dict(request.GET)['sort']
+        val = list(dict(request.GET)['sort'])
         #utils.ilog(LOG_CLASS, "Sort keys are: {!s}".format(val), mode="DEBUG")
         for skey in val:
             #utils.ilog(LOG_CLASS, "parsing the sort strings: {!s}".format(skey), mode="DEBUG")
@@ -93,6 +96,7 @@ def extract_sorting_keys(request):
                     })
     except KeyError as e:
         dic['sort_keys'].append({'time-stamp': 'desc'})
+    utils.ilog(LOG_CLASS, dic)
     return  dic
 
 def extract_filter_keys(request):
@@ -101,7 +105,7 @@ def extract_filter_keys(request):
           }
     for key in settings.OUTTER_KEYS:
         try:
-            val = dict(request.GET)[key]
+            val = dict(request.GET)[key][0]
             dic['filter_keys'].append({
                 key: val,
                 })
@@ -109,12 +113,13 @@ def extract_filter_keys(request):
             continue
     for key in settings.INNER_KEYS:
         try:
-            val = request.GET[key]
+            val = dict(request.GET)[key][0]
             dic['filter_keys'].append({
                 key: val
                 })
         except:
             continue
+    utils.ilog(LOG_CLASS, dic)
     return dic
 
 def extract_aggregate_key(request):
@@ -126,6 +131,7 @@ def extract_aggregate_key(request):
     try:
         aggs_type = dict(request.GET)['agg_type']
         aggs_field = dict(request.GET)['agg_field']
+        utils.ilog(LOG_CLASS, "Aggregation fields {!s} : {!s}".format(aggs_type, aggs_field))
     except KeyError as ve:
         pass
     if len(aggs_type) != len(aggs_field):
@@ -137,6 +143,7 @@ def extract_aggregate_key(request):
             dic['agg_keys'].append({
                 key2: key1
             })
+    utils.ilog(LOG_CLASS, dic)
     return dic
 
 def make_request_body(request, data):
@@ -202,7 +209,7 @@ def append_pagination(request, resp, page_keys, total_hits):
     next_link = int(cur) + int(limit)
     prev_limit = int(limit)
     next_limit = int(limit)
-    #utils.ilog(LOG_CLASS, "Printing info: {!s} | {!s} | {!s} | {!s}".format(page_keys, total_hits, prev_link, next_link), mode="DEBUG")
+    utils.ilog(LOG_CLASS, "Printing info: {!s} | {!s} | {!s} | {!s}".format(page_keys, total_hits, prev_link, next_link), mode="DEBUG")
     if next_link >= total_hits:
         next_link = None
     if prev_link < 0:
@@ -256,11 +263,11 @@ def handle_response(request, data):
         utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
     except exceptions.BadTimeFormat as e:
         res = append_error_key_value(res, 'status code', 400)
-        res = append_error_key_value(res, 'error msg', 'time not in format yyyy-mm-ddThh:mm:ss')
+        res = append_error_key_value(res, 'error message', 'time not in format yyyy-mm-ddThh:mm:ss')
         status_code = 400
     except IndexError as e:
         res = append_error_key_value(res, 'status code', 400)
-        res = append_error_key_value(res, 'error msg', 'aggregate type and aggregate fields are of different lengths')
+        res = append_error_key_value(res, 'error message', 'aggregate type and aggregate fields are of different lengths')
         status_code = 400
     except exceptions.MutlipleAggregationUnsupported as e:
         res = append_error_key_value(res, 'status code', 501)
@@ -308,7 +315,7 @@ def handle_response(request, data):
                 status_code = 200
             else:
                 res = append_error_key_value(res, 'status code', 500)
-                res = append_error_key_value(res, 'error msg', "Database Error")
+                res = append_error_key_value(res, 'error message', "Database Error")
                 status_code = 500
     return (res, status_code)
 

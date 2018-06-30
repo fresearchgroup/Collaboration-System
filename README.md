@@ -11,7 +11,7 @@
                 Django Rest API
                 Mysql
 
-        Django pakages installed - 
+        Django pakages installed -
 
                 Django Rest Framework
                 Widget Tweaks
@@ -24,8 +24,10 @@
                 Django-role-permission
                 Django_comments_xtd
                 Django_comments
+		Django_wiki
 
-## For development installation - 
+
+## For development installation (Virtual Environment) - 
 
 1. Install virtualenv 
 
@@ -78,23 +80,23 @@
        		sudo nano .env
 	```
     ```
-                SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
-                DEBUG=True
-                DB_NAME=collaboration
-                DB_USER=root
-                DB_PASSWORD=root
-                DB_HOST=localhost
-                DB_PORT=3306
-                ALLOWED_HOSTS= localhost
-                GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
-                EMAIL_HOST=localhost
-                EMAIL_HOST_USER=
-                EMAIL_HOST_PASSWORD=
-                EMAIL_PORT=25
-                EMAIL_USE_TLS=False
-                DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
-                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
-                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
+        SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
+        DEBUG=True
+        DB_NAME=collaboration
+        DB_USER=root
+        DB_PASSWORD=root
+        DB_HOST=localhost
+        DB_PORT=3306
+        ALLOWED_HOSTS= localhost
+        GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
+        EMAIL_HOST=localhost
+        EMAIL_HOST_USER=
+        EMAIL_HOST_PASSWORD=
+        EMAIL_PORT=25
+        EMAIL_USE_TLS=False
+        DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
 		LOG_TYPE=TOSERVER
 		LOG_PROTOCOL=http
 		LOG_ADDRESS=logstash
@@ -116,54 +118,29 @@
 		python3 manage.py migrate
 	```
 			
-9. Run the following to generate a new Token
-			  
-	```bash
-		python3 manage.py generateToken --n
-	```
-			
-10. Add/Replace the token by adding following line in .env file
+9. Runserver --
 
-	```
-		EVENT_API_TOKEN=<your-token>
-	``` 
-
-11. Runserver --
-
-    ```
+    ```bash
     	python3 manage.py runserver
     ``` 
  
-### Generating token for event logs
-1. To generate a new token run
-	```
-		python3 manage.py generateToken --n
-	```
-2. To generate a renew token run
-	```
-		python3 manage.py generateToken --r
-	```
-3. To get the previous token run
-	```
-		python3 manage.py generateToken --g
-	```
-
 For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
 
 For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
 
 
-Steps for Docker -- 
+## For development installation (Docker) - 
 
- -- Install Docker and Docker-Compose from  -
+ -- Install Docker and Docker-Compose from  --
 
-    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
-    
-    Docker Compose -- https://docs.docker.com/compose/install/
+	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
+
+	    Docker Compose -- https://docs.docker.com/compose/install/
 
 1. Clone the repository --
-
-   git clone https://github.com/fresearchgroup/Collaboration-System.git
+```
+   	git clone https://github.com/fresearchgroup/Collaboration-System.git
+```
 
 2. The run the following commands inside the repository --
  
@@ -181,22 +158,37 @@ Steps for Docker --
 
  		docker-compose run web python manage.py loaddata workflow roles faq
 
- 		docker-compose web run python3 manage.py generateToken --n
-
+		docker-compose up
 	```
+ 
+ 
 
-3. Copy the generated token and add/replace the line with following in .env.docker:
+### Generating token for event logs (Manual)
+1. To generate a new token run
+	```
+		python3 manage.py generateToken --n
+	```
+2. To generate a renew token run
+	```
+		python3 manage.py generateToken --r
+	```
+3. To get the previous token run
+	```
+		python3 manage.py generateToken --g
+	```
+9. Run the following to generate a new Token
+			  
+	```bash
+		python3 manage.py generateToken --n
+	```
+			
+10. Add/Replace the token by adding following line in .env file
 
 	```
 		EVENT_API_TOKEN=<your-token>
-	```
-4. Run the following command to run all containers
-	```
- 		docker-compose up
+	``` 
 
-	```
-
-### Generating token for event logs
+### Generating token for event logs (Using Docker)
 1. To generate a new token run
 	```
 		sudo docker-compose run web python3 manage.py generateToken --n
@@ -211,3 +203,34 @@ Steps for Docker --
 	```
 	 sudo docker-compose run web python3 manage.py generateToken --g
 	```
+### Etherpad
+
+
+6.  Clone the following directory:
+
+			git clone http://github.com/dhanushsr/etherpad-lite
+			cd etherpad-lite/
+			./bin/run.sh
+
+7. Install PyEtherpadLite--
+
+			git clone http://github.com/dhanushsr/PyEtherpadLite
+			cd PyEtherpadLite
+			python setup.py install
+			cd ..
+
+8. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env.example file
+
+9. Create a .env inside CollaborationSystem and paste the following -
+			
+			sudo cp .env.example .env
+
+9. Do all the migrations going back to django directory--
+
+	      python3 manage.py migrate
+
+10. Runserver --
+
+	      python3 manage.py runserver  
+
+
