@@ -95,7 +95,7 @@ class SimpleTest(TestCase):
 
            'test_case_6' : {
                    'input' : '/community-group-create/',
-                   'post'  : {},
+                   'post'  : {'status': ['1']},
                    'output' : 'event.group.create'
            },
 
