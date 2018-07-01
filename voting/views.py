@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group as Roles
 from django.shortcuts import render,get_object_or_404,redirect
 from BasicArticle.views import display_articles,create_article,view_article,edit_article,delete_article,article_watch,SimpleModelHistoryCompareView
 from .models import VotingFlag,ArticleVotes,ArticleReport
-from reputation.views import CommunityReputation,rolechange,check_article
+from reputation.views import CommunityReputation,rolechange,check_article, get_reputation_values
 from reputation.models import CommunityRep,SystemRep,ReputationDashboard
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -80,7 +80,7 @@ def article_report(request,pk):
 		pk1 = int(request.POST.get('pk1'))
 		article_reported = ArticleReport.objects.get(pk=pk1)
 		status = request.POST.get('status')
-		defaultval = ReputationDashboard.objects.get(pk=1)
+		defaultval = get_reputation_values()
 		article = article_reported.article
 		article_vote = ArticleVotes.objects.get(article=article)
 		publisher = article_vote.published_by
@@ -177,7 +177,7 @@ def add_report(user,resource_id,community,reason):
 	article_votes = ArticleVotes.objects.get(article_id = resource_id)
 	article_votes.report +=1
 	article_votes.save()
-	defaultval = ReputationDashboard.objects.get(pk=1)
+	defaultval = get_reputation_values()
 	if(article_votes.report >= defaultval.threshold_report):
 		article = Articles.objects.get(pk=resource_id)					
 		if not ArticleReport.objects.filter(article = article).exists():
@@ -195,7 +195,7 @@ def remove_report(user,resource_id,community,reason):
 	article_votes = ArticleVotes.objects.get(article_id = resource_id)
 	article_votes.report -=1
 	article_votes.save()
-	defaultval = ReputationDashboard.objects.get(pk=1)
+	defaultval = get_reputation_values()
 	if(article_votes.report < defaultval.threshold_report):
 		article = Articles.objects.get(pk=resource_id)
 		if ArticleReport.objects.filter(article = article).exists():

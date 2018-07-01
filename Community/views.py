@@ -19,7 +19,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
 from reputation.models import CommunityRep,SystemRep,ReputationDashboard
-from reputation.views import rolechange
+from reputation.views import rolechange,get_reputation_values
 from voting.models import ArticleVotes
 # Create your views here.
 
@@ -155,7 +155,7 @@ def request_community_creation(request):
 			return redirect('user_dashboard')
 		else:
 			sysrep = SystemRep.objects.get(user=request.user)
-			defaultval = ReputationDashboard.objects.get(pk=1)
+			defaultval = get_reputation_values()
 			srep = sysrep.sysrep
 			if(srep > defaultval.min_srep_for_comm): #checking if the user system reputation is greater than the minimum reputation required to create a community
 				return render(request, 'request_community_creation.html')
