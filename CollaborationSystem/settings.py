@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'wiki.plugins.notifications.apps.NotificationsConfig',
     'wiki.plugins.images.apps.ImagesConfig',
     'wiki.plugins.macros.apps.MacrosConfig',
+    'Recommendation_API',
 ] + get_machina_apps()
 
 SITE_ID = 1
