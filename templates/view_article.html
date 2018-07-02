@@ -89,7 +89,7 @@
 	
 	<div class="alert alert-info" role="alert">
 	<h4>Recommended for you -</h4></br>
-	{% for rarticle in final %}
+	{% for rarticle in Recommended_articles %}
 		<h5><a href = "{% url 'article_view' rarticle.id %}">{{ rarticle.title}}</h5></br>
 	{% endfor %}
         </div>
