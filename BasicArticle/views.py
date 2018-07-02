@@ -116,12 +116,12 @@ def view_article(request, pk):
 	var = get_Recommendations().as_view()(request)
 	for item in var:
 		result = json.loads(item.decode())
-	final = []
-	for a_id in result['output']:
-		new_article = Articles.objects.get(id=a_id['id'])
-		final.append({'id':a_id['id'],'title':new_article.title})
+	Recommended_articles = []
+	for article_id in result['output']:
+		new_article = Articles.objects.get(id=article_id['id'])
+		Recommended_articles.append({'id':article_id['id'],'title':new_article.title})
 
-	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav,'final':final})
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav,'Recommended_articles':Recommended_articles})
 
 
 
