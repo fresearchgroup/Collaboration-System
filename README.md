@@ -160,49 +160,10 @@ For automated installation using nginx and gunicorn- https://github.com/abhisgit
 
 		docker-compose up
 	```
+### Event Logging
+To set-up event loggin for this system, please refer to the installation steps given in the repository link given below:
+https://github.com/fresearchgroup/Collaboration-System-Event-Logs
  
- 
-
-### Generating token for event logs (Manual)
-1. To generate a new token run
-	```
-		python3 manage.py generateToken --n
-	```
-2. To generate a renew token run
-	```
-		python3 manage.py generateToken --r
-	```
-3. To get the previous token run
-	```
-		python3 manage.py generateToken --g
-	```
-9. Run the following to generate a new Token
-			  
-	```bash
-		python3 manage.py generateToken --n
-	```
-			
-10. Add/Replace the token by adding following line in .env file
-
-	```
-		EVENT_API_TOKEN=<your-token>
-	``` 
-
-### Generating token for event logs (Using Docker)
-1. To generate a new token run
-	```
-		sudo docker-compose run web python3 manage.py generateToken --n
-	```
-2. To generate a renew token run
-		
-	```
-		sudo docker-compose run web python3 manage.py generateToken --r
-	```
-3. To get the previous token run
-
-	```
-	 sudo docker-compose run web python3 manage.py generateToken --g
-	```
 ### Etherpad
 
 
