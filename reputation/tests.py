@@ -11,7 +11,7 @@ from workflow.models import States
 from voting.models import ArticleVotes,VotingFlag,ArticleReport,Badges
 from voting.views import updown,article_report
 from .models import CommunityRep,SystemRep,ReputationDashboard
-from .views import author_reputation_dashboard, general_reputation_dashboard, publisher_reputation_dashboard, communityadmin_reputation_dashboard,article_published,check_article,rolechange
+from .views import get_reputation_values, author_reputation_dashboard, general_reputation_dashboard, publisher_reputation_dashboard, communityadmin_reputation_dashboard,article_published,check_article,rolechange
 from django.test.client import RequestFactory
 
 
@@ -91,7 +91,7 @@ class TestUpdown(TransactionTestCase):
 		url = reverse('author_reputation_dashboard')
 		request = self.factory.post(url,{'published_author':25,'author_report':10})
 		response = author_reputation_dashboard(request)
-		reputationvalue = ReputationDashboard.objects.get(pk=1)
+		reputationvalue = get_reputation_values()
 		self.assertEqual(reputationvalue.published_author,25)
 		self.assertEqual(reputationvalue.author_report,10)
 
@@ -104,7 +104,7 @@ class TestUpdown(TransactionTestCase):
 		url = reverse('general_reputation_dashboard')
 		request = self.factory.post(url,{'upvote':5,'downvote':10,'min_srep_for_comm':1000,'srep_for_comm_creation':100,'threshold_publisher':3000,'threshold_cadmin':4000,'article_report_rejected':5})
 		response = general_reputation_dashboard(request)
-		reputationvalue = ReputationDashboard.objects.get(pk=1)
+		reputationvalue = get_reputation_values()
 		#checking only few
 		self.assertEqual(reputationvalue.upvote,5)
 		self.assertEqual(reputationvalue.downvote,10)
@@ -120,7 +120,7 @@ class TestUpdown(TransactionTestCase):
 		url = reverse('publisher_reputation_dashboard')
 		request = self.factory.post(url,{'published_publisher':10,'publisher_report':50})
 		response = publisher_reputation_dashboard(request)
-		reputationvalue = ReputationDashboard.objects.get(pk=1)
+		reputationvalue = get_reputation_values()
 		self.assertEqual(reputationvalue.published_publisher,10)
 		self.assertEqual(reputationvalue.publisher_report,50)
 
@@ -133,7 +133,7 @@ class TestUpdown(TransactionTestCase):
 		url = reverse('communityadmin_reputation_dashboard')
 		request = self.factory.post(url,{'threshold_report':10})
 		response = communityadmin_reputation_dashboard(request)
-		reputationvalue = ReputationDashboard.objects.get(pk=1)
+		reputationvalue = get_reputation_values()
 		self.assertEqual(reputationvalue.threshold_report,10)
 
 	def test_article_published(self):

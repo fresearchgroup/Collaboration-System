@@ -18,7 +18,7 @@ def CommunityReputation(a_id,votetype):
 	#community variable stores the community
 	commrep = CommunityRep.objects.get(community_id=community.id, user_id=author.id)
 	sysrep = SystemRep.objects.get(user_id=author.id)
-	defaultval = ReputationDashboard.objects.get(pk=1)
+	defaultval = get_reputation_values()
 	up=defaultval.upvote
 	down=defaultval.downvote
 	# Votetype contains the type of vote made which is passed as a parameter to the function
@@ -30,14 +30,14 @@ def author_reputation_dashboard(request):
 	if request.method == 'POST':
 		published_author = int(request.POST.get('published_author'))
 		author_report = int(request.POST.get('author_report'))		
-		defaultval = ReputationDashboard.objects.get(pk=1)
+		defaultval = get_reputation_values()
 		defaultval.published_author = published_author
 		defaultval.author_report = author_report
 		defaultval.save()
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = ReputationDashboard.objects.get(pk=1)
+			defaultval = get_reputation_values()
 			return render(request,'author_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home
 
@@ -53,7 +53,7 @@ def general_reputation_dashboard(request):
 		article_report_rejected = int(request.POST.get('article_report_rejected'))
 		if(new_min_srep_for_comm == 0) or (new_threshold_publisher == 0) or (new_threshold_cadmin == 0): #can't make some of the values to zero
 			return render(request,'cantset.html')
-		defaultval = ReputationDashboard.objects.get(pk=1)
+		defaultval = get_reputation_values()
 		defaultval.upvote = upvote
 		defaultval.downvote = downvote
 		defaultval.article_report_rejected = article_report_rejected
@@ -77,7 +77,7 @@ def general_reputation_dashboard(request):
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = ReputationDashboard.objects.get(pk=1)
+			defaultval = get_reputation_values()
 			return render(request,'general_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home	
 
@@ -86,14 +86,14 @@ def publisher_reputation_dashboard(request):
 	if request.method == 'POST':
 		published_publisher = int(request.POST.get('published_publisher'))
 		publisher_report = int(request.POST.get('publisher_report'))
-		defaultval = ReputationDashboard.objects.get(pk=1)
+		defaultval = get_reputation_values()
 		defaultval.published_publisher = published_publisher
 		defaultval.publisher_report = publisher_report
 		defaultval.save()
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = ReputationDashboard.objects.get(pk=1)
+			defaultval = get_reputation_values()
 			return render(request,'publisher_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home	
 
@@ -101,7 +101,7 @@ def publisher_reputation_dashboard(request):
 def communityadmin_reputation_dashboard(request):
 	if request.method == 'POST':
 		new_threshold_report = int(request.POST.get('threshold_report'))
-		defaultval = ReputationDashboard.objects.get(pk=1)
+		defaultval = get_reputation_values()
 		if(defaultval.threshold_report < new_threshold_report):
 			articles_reported = ArticleReport.objects.all()
 			for article in articles_reported:
@@ -120,7 +120,7 @@ def communityadmin_reputation_dashboard(request):
 		return redirect('home')
 	else:
 		if request.user.is_superuser: 
-			defaultval = ReputationDashboard.objects.get(pk=1)
+			defaultval = get_reputation_values()
 			return render(request,'communityadmin_reputation_dashboard.html',{'defaultval':defaultval})
 		return redirect('home') #if user is not superuser redirect to home		
 
@@ -149,7 +149,7 @@ def change(new,old,role1):
 
 #This function is called if any default or any change in reputation occurs because it might change the roles of the user.
 def rolechange(commrep,user,community):#once the user reputation has changed we need to compare with the threshold to become a publisher or community admin in order to change his role in that community
-	defaultval=ReputationDashboard.objects.get(pk=1)
+	defaultval=get_reputation_values()
 	if(commrep.rep >= defaultval.threshold_cadmin): #if user reputation is greater than community admin threshold then change his role to community admin
 		community_membership = CommunityMembership.objects.get(user_id=user.id,community_id=community.id)
 		community_membership.role = Roles.objects.get(name='community_admin')
@@ -231,7 +231,7 @@ def change_reputation_aritcle_published(community,author,publisher):
 	author_srep = SystemRep.objects.get(user_id=author.id)
 	publisher_crep = CommunityRep.objects.get(community_id=community.id,user_id=publisher.id)
 	publisher_srep = SystemRep.objects.get(user_id=publisher.id)
-	defaultval = ReputationDashboard.objects.get(pk=1)
+	defaultval = get_reputation_values()
 	#increasing the author and publisherc reputation has an article has been published
 	author_srep.sysrep+=defaultval.published_author
 	author_crep.rep+=defaultval.published_author
@@ -254,4 +254,9 @@ def change_badge_article_published(publisher,author):
 	badge_author.articles_published_author += 1
 	badge_publisher.save()
 	badge_author.save()
-	
+
+def get_reputation_values():
+	if not ReputationDashboard.objects.filter(pk=1).exists():
+		ReputationDashboard.objects.create()
+	defaultval = ReputationDashboard.objects.get(pk=1)
+	return defaultval

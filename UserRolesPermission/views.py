@@ -49,11 +49,11 @@ def signup(request):
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                sysrep = Systemrep() #creating a new SystemRep row has a new user has signed up
+                sysrep = Systemrep() #creating a new SystemRep row for the user
                 sysrep.user = user
                 sysrep.sysrep = 0
                 sysrep.save()
-                badge = Badges()
+                badge = Badges() #creating a new Badges row for the user
                 badge.user = user
                 badge.save()
                 return redirect('user_dashboard')
