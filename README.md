@@ -161,9 +161,13 @@ For automated installation using nginx and gunicorn- https://github.com/abhisgit
 		docker-compose up
 	```
 ### Event Logging
-To set-up event loggin for this system, please refer to the installation steps given in the repository link given below:
+To set-up event logging for this system, please refer to the installation steps given in the repository link given below:
 https://github.com/fresearchgroup/Collaboration-System-Event-Logs
- 
+
+### Interactive Content (H5P) and Real-time editing
+To create and edit interactive content (H5P) and to enable real-time collaborative editing of articles, please refer to the installation steps given in the repository link given below:
+https://github.com/fresearchgroup/Community-Content-Tools
+
 ### Etherpad
 
 
