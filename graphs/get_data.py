@@ -63,7 +63,7 @@ def view(id,resource):
 			return [[]]
 
 		while('next_link' in (result.keys())):
-			res = requests.get(result['next_link'])
+			res = requests.get(result['next_link'], headers = headers)
 			intermediate = res.json()
 			result['result'].append(intermediate['result'])
 

@@ -263,11 +263,11 @@ def handle_response(request, data):
         utils.ilog(LOG_CLASS, "Returned data: {!s}".format(data), mode="DEBUG")
     except exceptions.BadTimeFormat as e:
         res = append_error_key_value(res, 'status code', 400)
-        res = append_error_key_value(res, 'error msg', 'time not in format yyyy-mm-ddThh:mm:ss')
+        res = append_error_key_value(res, 'error message', 'time not in format yyyy-mm-ddThh:mm:ss')
         status_code = 400
     except IndexError as e:
         res = append_error_key_value(res, 'status code', 400)
-        res = append_error_key_value(res, 'error msg', 'aggregate type and aggregate fields are of different lengths')
+        res = append_error_key_value(res, 'error message', 'aggregate type and aggregate fields are of different lengths')
         status_code = 400
     except exceptions.MutlipleAggregationUnsupported as e:
         res = append_error_key_value(res, 'status code', 501)
@@ -315,7 +315,7 @@ def handle_response(request, data):
                 status_code = 200
             else:
                 res = append_error_key_value(res, 'status code', 500)
-                res = append_error_key_value(res, 'error msg', "Database Error")
+                res = append_error_key_value(res, 'error message', "Database Error")
                 status_code = 500
     return (res, status_code)
 
