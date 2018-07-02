@@ -31,6 +31,7 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
+from Recommendation_API import views
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -144,7 +145,8 @@ urlpatterns = [
     url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
 
     url(r'api/dspace/grouparticlesapi', groupviewsets.GroupArticleViewsets.as_view(), name='group-articles-dspace-api'),
-    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api')
+    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api'),
+    url(r'returned_json_object/',views.get_Recommendations().as_view(),name='returned_json_object'),
 
 
 ]
