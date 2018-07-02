@@ -21,7 +21,9 @@ from django.contrib.contenttypes.models import ContentType
 from feeds.views import create_resource_feed
 from notification.views import notify_update_article_state, notify_edit_article
 from py_etherpad import EtherpadLiteClient
-from django.conf import settings 
+from django.conf import settings
+from Recommendation_API.views import get_Recommendations
+import json
 
 def getHTML(article):
 	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
@@ -111,7 +113,16 @@ def view_article(request, pk):
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
-	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
+	var = get_Recommendations().as_view()(request)
+	for item in var:
+		result = json.loads(item.decode())
+	Recommended_articles = []
+	for article_id in result['output']:
+		new_article = Articles.objects.get(id=article_id['id'])
+		Recommended_articles.append({'id':article_id['id'],'title':new_article.title})
+
+	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav,'Recommended_articles':Recommended_articles})
+
 
 
 def edit_article(request, pk):
