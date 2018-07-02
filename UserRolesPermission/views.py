@@ -49,7 +49,7 @@ def signup(request):
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                sysrep = Systemrep() #creating a new SystemRep row for the user
+                sysrep = SystemRep() #creating a new SystemRep row for the user
                 sysrep.user = user
                 sysrep.sysrep = 0
                 sysrep.save()
