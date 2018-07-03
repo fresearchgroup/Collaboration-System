@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+  <li class="breadcrumb-item active">{{ article.title }}</li>
+{% endblock %}
+
+{% block content %}
+<div>
+<ul class="nav nav-tabs">
+   <li class="nav-item">
+    <a class="nav-link " href="{% url 'article_view' article.pk %}">View</a>
+  </li>
+  {% if user.is_authenticated %}
+
+  {% if article.state.name != 'publish'%}
+        <li class="nav-item">
+          <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
+        </li>
+        {%endif%}
+  
+  <li class="nav-item active">
+    <a class="nav-link active " href="{% url 'article_revision' article.pk %}">Revisions</a>
+  </li>
+  {% endif %}
+</ul>
+<br/>
+  <div class="panel panel-default">
+  <div class="panel-body" ><samp><label value="">
+
+  		<style type="text/css">
+/* minimal style for the diffs */
+del, ins {
+    color: #000;
+    text-decoration: none;
+}
+del { background-color: #ffe6e6; }
+ins { background-color: #e6ffe6; }
+sup.follow { color: #5555ff; }
+</style>
+
+{% include "action_list_partial.html"  %}
+{% if request.GET.version_id1 %}
+    {% include "compare_partial.html"  %}
+{% endif %}
+
+
+  </label></samp></div>
+
+</div>
+{% endblock %}

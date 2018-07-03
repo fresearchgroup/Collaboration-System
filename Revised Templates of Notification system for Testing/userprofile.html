@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">User Profile</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-4" style="width: 350px">
+      <div class="recent-work-item">
+        <em>
+          {% if user_profile.photo %}
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 350px; width: 350px">
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{userinfo.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {% else %}
+          <img src="{{ MEDIA_URL }}default/avatar.png" class="img-responsive">
+          <a href="{{ MEDIA_URL }}default/avatar.png" class="fancybox-button" title="{{userinfo.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {%endif%}
+        </em>
+        <a class="recent-work-description" href="javascript:;">
+          <strong>{{userinfo.username}}</strong>
+        </a>
+      </div>
+  </div>
+
+  <div class="col-md-8 blog-posts">
+    <h3>{{userinfo.first_name}} {{userinfo.last_name}}</h3>
+    <ul class="blog-info">
+      <li><i class="fa fa-institution"></i>Member Since:  {{userinfo.date_joined}}</li><br />
+      <li><i class="fa fa-video-camera"></i> Last Seen: {{userinfo.last_login}} </li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="main">
+  <div class="container">
+<!-- BEGIN SIDEBAR & CONTENT -->
+<div class="row ">
+  <!-- BEGIN CONTENT -->
+  <div class="col-md-12 col-sm-12">
+    <div class="content-page">
+      <div class="row">
+        <!-- BEGIN LEFT most SIDEBAR -->
+        <div class="col-md-6 col-sm-6 blog-sidebar">
+
+      <h2>Articles</h2>
+      <table id="userArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+          <tr style="background-color:#E84D1C">
+            <th style="color:white">Article</th>
+            <th style="color:white">Community / Group</th>
+          </tr>
+          </thead>
+        <tbody>
+          {{myhtml|safe}}{% autoescape off%}
+          {% for cart in commarticles %}
+            <tr>
+              <td>
+                <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }}  </a>
+              </td>
+              <td>
+                <a href="{% url 'community_view' cart.community.pk %}">{{ cart.community }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+          {% endautoescape%}
+
+          {{myhtml|safe}}{% autoescape off%}
+          {% for gart in grparticles %}
+            <tr>
+              <td>
+                <a href="{% url 'article_view' gart.article.pk %}"> {{ gart.article }} </a>
+              </td>
+              <td>
+                <a href="{% url 'group_view' gart.group.pk  %}"> {{ gart.group }} </a>
+              </td>
+            </tr>
+          {% endfor %}
+          {% endautoescape%}
+        </tbody>
+      </table>
+    </div>
+    <!-- END LEFT most SIDEBAR -->
+
+    <!-- BEGIN center  -->
+    <div class="col-md-3 col-sm-3 blog-sidebar">
+      <h2>Communities</h2>
+      <ul class="nav sidebar-categories margin-bottom-40">
+      {{myhtml|safe}}{% autoescape off%}
+      {% for comm in communities %}
+        {% if comm.role.name == 'author' %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-pencil"></i> {{ comm.community }} </a> </li>
+        {% elif comm.role.name == 'publisher' %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-print"></i> {{ comm.community }} </a> </li>
+        {% else %}
+        <li><a href="{% url 'community_view' comm.community.pk %}"><i class="fa fa-trophy"></i> {{ comm.community }} </a> </li>
+        {% endif %}
+      {% endfor %}
+      {% endautoescape%}
+      </ul>
+    </div>
+    <!-- END LEFT most SIDEBAR -->
+
+    <!-- BEGIN right  -->
+    <div class="col-md-3 col-sm-3 blog-sidebar">
+      <h2>Groups</h2>
+      <ul class="nav sidebar-categories margin-bottom-40">
+      {{myhtml|safe}}{% autoescape off%}
+      {% for grp in groups %}
+        {% if grp.role.name == 'author' %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-pencil"></i> {{ grp.group }} </a> </li>
+        {% elif grp.role.name == 'publisher' %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-print"></i> {{ grp.group }} </a> </li>
+        {% else %}
+        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-trophy"></i> {{ grp.group }} </a> </li>
+        {% endif %}
+      {% endfor %}
+      {% endautoescape%}
+      </ul>
+    </div>
+    <!-- end right -->
+  </div>
+</div></div>
+<!-- END CONTENT -->
+</div>
+<!-- END SIDEBAR & CONTENT -->
+</div>
+</div>
+
+{% endblock %}

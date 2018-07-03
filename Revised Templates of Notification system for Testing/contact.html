@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main">
+  <div class="container">
+    <div class="row margin-bottom-40">
+      <!-- BEGIN CONTENT -->
+      <div class="col-md-12">
+        <h1>Contact Us</h1>
+        <div class="content-page">
+          <div class="row">
+            <div class="col-md-12 margin-bottom-40">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d942.3697617256648!2d72.91527241572378!3d19.13049686045727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c7f6bd454eb9%3A0xd765f6b6bd646a65!2sFundamental+Research+Lab!5e0!3m2!1sen!2sin!4v1516801676329" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
+            <div class="col-md-9 col-sm-9">
+              <h2>Contact Form</h2>
+              <p>Please feel free to contact us in case you have any issues. We would recommend you to first look at our FAQs before writing to us. Kindly use the <a href="{% url 'provide_feedback' %}" class="active">feedback form</a> to provide feedback.</p>
+              <div class="alert alert-danger">
+                Our email protocol is not setup. We shall be able to do so only on production server. Kindly use <a href="{% url 'provide_feedback' %}" class="active">feedback form</a> for any issues.
+              </div>
+              <!-- BEGIN FORM-->
+              <form action="#" role="form">
+                <div class="form-group">
+                  <label for="contacts-name">Name</label>
+                  <input type="text" class="form-control" id="contacts-name" required>
+                </div>
+                <div class="form-group">
+                  <label for="contacts-email">Email</label>
+                  <input type="email" class="form-control" id="contacts-email" required>
+                </div>
+                <div class="form-group">
+                  <label for="required">Issue Type</label>
+                  <select class="form-control" id="issue" name="issue">
+                    <option>Administration and Accounts</option>
+                    <option>Community</option>
+                    <option>Group</option>
+                    <option>Inappropriate Content</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="contacts-message">Message</label>
+                  <textarea class="form-control" rows="5" id="contacts-message" required></textarea>
+                </div>
+                <button id="submit" type="submit" class="btn btn-primary"><i class="icon-ok"></i> Send</button>
+                <button id="cancel" type="reset" class="btn btn-default">Cancel</button>
+              </form>
+              <!-- END FORM-->
+            </div>
+
+            <div class="col-md-3 col-sm-3 sidebar2">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END CONTENT -->
+    </div>
+  </div>
+</div>
+{% endblock %}

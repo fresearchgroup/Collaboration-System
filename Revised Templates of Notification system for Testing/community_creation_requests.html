@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Purpose</th>
+        <th>Requested by</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for req in requestcommunitycreation %}
+        <tr>
+          <td>{{ req.name }}</td>
+          <td><small class="text-muted d-block">{{ req.desc }}</small></td>
+          <td><small class="text-muted d-block">{{ req.purpose }}</small></td>
+          <td>{{ req.requestedby }}</td>
+          <td>{{ req.email }}</td>
+          <td>
+            <form method="post" action="{% url 'handle_community_creation_requests' %}">
+                 {% csrf_token %}
+                 <input type='hidden' name = 'pk' value ={{req.pk}} />
+                 <div class="btn-group" role="group" aria-label="Basic example">
+
+                       <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
+                       <button type="radio" name ="status" value="reject" class="btn btn-danger"> Reject</button>
+                 </div>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+{% endblock %}

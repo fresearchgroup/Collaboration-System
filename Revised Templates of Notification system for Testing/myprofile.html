@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{user.username}}'s Dashboard </li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-5" style="width: 300px">
+      <div class="recent-work-item">
+        <em>
+          {% if user_profile.photo %}
+          <img src="{{ MEDIA_URL }}{{user_profile.photo}}" class="img-responsive" style="height: 300px; width: 300px">
+          <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
+          <a href="{{ MEDIA_URL }}{{user_profile.photo}}" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {% else %}
+          <img src="{{ MEDIA_URL }}default/avatar.png" class="img-responsive">
+          <a href="{% url 'update_profile' %}"><i class="fa fa-link"></i></a>
+          <a href="{{ MEDIA_URL }}default/avatar.png" class="fancybox-button" title="{{user.username}}" data-rel="fancybox-button"><i class="fa fa-search"></i></a>
+          {%endif%}
+        </em>
+        <a class="recent-work-description" href="">
+          <strong class="level">{{user.username}}</strong>
+          <b class="level">{{user.email}}</b>
+        </a>
+      </div>
+  </div>
+
+  <div class="col-md-7">
+        <h2> Welcome {{user.username}} </h2><br />
+        <form>
+          <div class="form-group">
+            <label for="First Name">First Name: </label>
+            <label for="First Name">{{user.first_name}}</label>
+          </div>
+
+          <div class="form-group">
+            <label for="Last Name">Last Name: </label>
+            <label for="Last Name">{{user.last_name}}</label>
+          </div>
+
+          <div class="form-group">
+            <label for="Email Address">Email: </label>
+            <label for="Email Address">{{user.email}}</label>
+          </div>
+
+          <a href="/settings/password">Change Password</a>
+        </form>
+  </div>
+</div>
+
+
+
+<br />
+
+
+<br />
+{% endblock %}
