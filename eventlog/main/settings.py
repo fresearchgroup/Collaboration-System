@@ -22,7 +22,7 @@ SERVER_CONF = {
 SERVER_CONF["proxies"] = {
             "http": config('http_proxy'),
             "https": config('https_proxy'),
-            "ftp": config("ftp://address:port"),
+            "ftp": config("ftp_proxy"),
          } if SERVER_CONF['use_proxy' ] is True else {}
 
 SERVER_CONF["proxy_auth"] = {
