@@ -51,6 +51,12 @@ background-color:#FE642E;
                 <li><a href="#"> <form id="manageresources" name="nodeidform" method="post" >
                   {% csrf_token %}
                   <span>{{node.name}}</span>
+                 <input type="hidden" id="nodeid" name="nodeid" value = {{node.id}} >
+                 <input type="submit" class="btn btn-link" value =" {{node.id}} ">
+                  {% if  node.is_leaf_node %}
+                 <i class="fa fa-edit EditTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalEditTopic" data-whatever="@mdo"></i>
+                 <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
+                  {%endif%}
                 </form>
                               </a>
                     {% if not node.is_leaf_node %}

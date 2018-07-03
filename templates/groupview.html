@@ -21,6 +21,11 @@
   </li>
   {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'group_admin' %}
+
+    <li class="nav-item">
+    <a class="nav-link" href="{% url 'group_feed' group.pk %}">Feeds</a>
+  </li>
+
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'group_content' group.pk %}">Group Content</a>
   </li>
@@ -109,7 +114,7 @@
       <span>Please join the <a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a> </span>
       {% else %}
       {% if membership == 'FALSE' %}
-         {% if not invitereceived %}
+         {% if invitereceived == 'FALSE' %}
       <b> <form id = "subscribe" method = "post" action ="{% url 'group_subscribe' %}">
         <div class="form-group">
               {% csrf_token %}
@@ -131,7 +136,7 @@
         {% endif %}
     {%else%}
     <b>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id = "Unsubscribe"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog text-left" role="document">
@@ -154,7 +159,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <button type="submit" class="btn btn-primary">Yes</button>
+        <button type="submit" class="btn btn-primary" id = "Yes">Yes</button>
         </form>
         {%else%}
          <label for="message-text" class="col-form-label">Before unsubscribing please assign some other group admin</label>

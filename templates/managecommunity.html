@@ -14,7 +14,7 @@
   </li>
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item active">
-    <a class="nav-link " href="#">Manage Community</a>
+    <a class="nav-link " href="#" id = "manage">Manage Community</a>
   </li>
   <li class="nav-item">
     <a class="nav-link " href="{% url 'update_community_info' community.pk %}">Update community Info</a>
@@ -23,6 +23,9 @@
   {% if membership %}
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
@@ -83,8 +86,8 @@
         </div>
         <div class="form-group">
           <button type="submit" name ="status" value="add" class="btn btn-primary">Add User</button>
-          <button type="submit" name ="status" value="update" class="btn btn-primary">Update User</button>
-          <button type="submit" name ="status" value="remove" class="btn btn-primary">Remove User</button>
+          <button type="submit" name ="status" value="update" class="btn btn-primary" id = "update">Update User</button>
+          <button type="submit" name ="status" value="remove" class="btn btn-primary" id = "remove">Remove User</button>
       </div>
       </form>
       {% if errormessage %}
