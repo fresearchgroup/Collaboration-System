@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{%load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr{
+background-color:#FE642E;
+
+  }
+  #clr{
+    color:black;
+  }
+</style>
+{% endblock %}
+
+
+{% load mptt_tags %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' course.community.pk %}"> {{ course.community.name }} </a></li>
+  <li class="breadcrumb-item active">{{ course.course.title }} </li>
+{% endblock %}
+{% block content %}
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'course_view' course.course.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item active">
+          <a class="nav-link " href="#">Edit</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="{% url 'manage_resource' course.course.pk %}">Manage Resource</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'update_course_info' course.course.pk %}">Update Course Info</a>
+        </li>
+
+        {% endif %}
+      </ul>
+      </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-4">
+
+      <div style="margin-right: 0px;height:450px; overflow: scroll; ">
+       <div class="tree-menu demo" id="tree-menu" style="margin-left: 0px;">
+
+        <ul >
+            {% recursetree topics %}
+                <li><a href="#" >
+
+
+                    <form id="updatetopic" method="post" action="{% url 'course_edit' course.course.pk %}">
+                        {% csrf_token %}
+                        <input type='hidden' id='status' name='status' value='update'>
+                        <input type='hidden' id='nodeid' name='nodeid' value = {{node.id}}>
+                        <i class="fa fa-trash DeleteTopicDialog" style="color: red;" data-toggle="modal" data-id = {{ node.id }} data-target="#modalDeleteTopic" data-whatever="@mdo"></i>
+                        <input type='text' id='txt{{node.id}}' name='name{{node.id}}' onclick='saveTopic({{node.id}})' style='border:0px' value =" {{node.name}} "/>
+                      </form>
+                      </a>
+
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+          </div>
+        </div>
+         <div class="modal fade" id="modalDeleteTopic" tabindex="-1" role="dialog" aria-labelledby="DeleteTopicmodal" aria-hidden="true">
+              <div class="modal-dialog text-left" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Delete Topic</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5>Deleting a topic amounts to deleting all topics in the hierarchy.<br /><br />
+                      <b>Are you sure you want to delete this ?</b></h5>
+                    <form id="deletetopic" method = "post" action ="{% url 'course_edit' course.course.pk %}">
+                      <div class="form-group">
+                        {% csrf_token %}
+                        <input type='hidden' id='status' name='status' value='deletetopic'>
+                        <input type="hidden" id="deletenodeid" name="deletenodeid" value = "">
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </div>
+    <div class="col-sm-4"><br />
+      <h3><a href="#">Add Topic </a></h3>
+      <form id="newtopic" method="post" novalidate>
+          {% csrf_token %}
+          <table>
+            {{ form.as_p }}
+          </table>
+          {% csrf_token %}
+          <input type="hidden" name="status" value="addtopic">
+          <button type="submit">Save</button>
+        </form>
+    </div>
+    <div class="col-sm-4"><br />
+      <h3><a href="#">Move Topics</a></h3>
+      <form method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="topic">Topic:</label>
+
+          <select id="topic" name="topic" onChange="loadTopics()">
+            {% recursetree topics %}
+              <option value = {{ node.id }}> {{node.name}} </option>
+              {% if not node.is_leaf_node %}
+                {{ children }}
+              {% endif %}
+            {% endrecursetree %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="moving">Move To:</label>
+          <select id="parent" name="parent">
+          </select>
+        </div>
+        <input type="hidden" name="status" value="movetopic" />
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+function saveTopic(nodeid) {
+      document.getElementById("txt"+nodeid).addEventListener("keydown", function(e) {
+          // Enter is pressed
+          if (e.keyCode == 13) { submitForm(); }
+      }, false);
+}
+function submitForm(){
+    document.updatetopic.submit();
+    document.updatetopic.method='post';
+}
+function loadTopics(){
+    var selectedTopic = document.getElementById("topic").value;
+    var topicList= document.getElementById("topic");
+    document.getElementById('parent').innerHTML = "";
+    var sel = document.getElementById('parent');
+    var firstoption = document.createElement('option');
+    firstoption.innerHTML = '---------';
+    firstoption.value = '';
+    sel.appendChild(firstoption);
+    for(i=0; i<topicList.options.length;i++){
+        if (! (selectedTopic == topicList.options[i].value)) {
+            var opt = document.createElement('option');
+            opt.innerHTML = topicList.options[i].innerHTML;
+            opt.value = topicList.options[i].value;
+            sel.appendChild(opt);
+        }
+    }
+}
+window.onload = loadTopics;
+$(document).on("click", ".DeleteTopicDialog", function () {
+     var nodeid = $(this).data('id');
+     $(".modal-body #deletenodeid").val( nodeid );
+});
+
+</script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/plugins/lib/jquery.ntm/js/jquery.ntm.js' %}"></script>
+< <script type="text/javascript">
+            $(document).ready(function() {
+                $('.demo').ntm();
+            });
+        </script>
+
+
+
+</script>
+{% endblock %}

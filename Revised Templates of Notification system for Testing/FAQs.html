@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+
+{% endblock %}
+
+{% block content %}
+<div class="main">
+  <div class="container">
+    <div class="row margin-bottom-40">
+      <!-- BEGIN CONTENT -->
+      <div class="col-md-12 col-sm-12">
+        <h1>Frequently Asked Questions</h1>
+        {% if not categories %}
+        <div class="content-page page-404">
+           <div class="number">
+              Oops!
+           </div>
+           <div class="details">
+              <h3>No FAQs</h3>
+              <p>
+                 Sorry, we do not have FAQs right now.
+              </p>
+           </div>
+        </div>
+        {% endif %}
+        <div class="content-page">
+          <div class="row">
+            <div class="col-md-3 col-sm-3">
+              <ul class="tabbable faq-tabbable">
+                {{myhtml|safe}}{% autoescape off%}
+                {% for cat in categories %}
+                {% if forloop.counter == 1 %}
+                  <li class="active"><a href="#tab{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
+                {% else %}
+                  <li><a href="#tab{{cat.id}}" data-toggle="tab">{{cat.name}}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% endautoescape%}
+              </ul>
+            </div>
+            <div class="col-md-9 col-sm-9">
+                <div class="tab-content" style="padding:0; background: #fff;">
+                  {{myhtml|safe}}{% autoescape off%}
+                  {% for cat in categories %}
+                  {% with forloop.counter as outer %}
+                  <!-- START TAB -->
+                  {% if outer == 1 %}
+                    <div class="tab-pane active" id="tab{{cat.id}}">
+                  {% else %}
+                    <div class="tab-pane" id="tab{{cat.id}}">
+                  {% endif %}
+                     <div class="panel-group" id="accordion{{outer}}">
+                       {{myhtml|safe}}{% autoescape off%}
+                       {% for faq in faqs %}
+                          {% if cat.id == faq.category.id %}
+                            <div class="panel panel-danger">
+                               <div class="panel-heading">
+                                  <h4 class="panel-title">
+                                     <a href="#{{faq.pk}}" data-parent="#accordion{{outer}}" data-toggle="collapse" class="accordion-toggle collapsed">
+                                     {{faq.question}}
+                                     </a>
+                                  </h4>
+                               </div>
+                               <div class="panel-collapse collapse " id="{{faq.pk}}">
+                                  <div class="panel-body">
+                                     {{faq.answer}}
+                                  </div>
+                               </div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                        {% endautoescape%}
+                     </div>
+                  </div>
+                  <!-- END TAB -->
+                  {% endwith %}
+                  {% endfor %}
+                  {% endautoescape%}
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END CONTENT -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}

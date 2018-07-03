@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+{% if message %}
+  <div class="alert alert-success">{{ message }}</div>
+{% endif %}
+
+<form method="post" name="newfaq"  action ="{% url 'create_faq' %}">
+  {% csrf_token %}
+  <div class="form-group">
+  <label for="category">Category</label>
+    <select name="category" class="form-control">
+      {{myhtml|safe}}{% autoescape off%}
+      {% for cat in categories %}
+        <option value="{{cat.name}}">{{cat.name}}</option>
+      {% endfor %}
+      {% endautoescape%}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="name">Order No.</label>
+    <input type="text" class="form-control" id="flow" name="flow" ng-model="flow" ng-pattern="/^[0-9]*$/" placeholder="Suggest a name for your community" required>
+    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only decimal numbers are allowed</span>
+    <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide order number for the question</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="tag_line">Question</label>
+    <input type="text" class="form-control" id="question" name="question" ng-model="question" placeholder="Write your question here" required>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="form-group">
+    <label for="answer">Answer</label>
+    <textarea  class="form-control" name="answer" rows="6"></textarea>
+    <small id="bodyhelp" class="form-text text-muted">Provide your answer to the question</small>
+  </div>
+  <button id="create" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Create</button>
+</form>
+{% endif %}
+<br />
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
+{% endblock %}

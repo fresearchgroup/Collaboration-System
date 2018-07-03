@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Articles</h1>
+{% if not articles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Content</h3>
+      <p>
+         Sorry, currently there are no published articles from any community or group. 
+      </p>
+   </div>
+</div>
+{% endif %}
+{{myhtml|safe}}{% autoescape off%}
+<div class="row ">
+  <div class="col-md-10 col-sm-10">
+{% for article in articles %}
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      {% if article.image %}
+      <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+    </div>
+    <div class="col-md-7 col-sm-7">
+      <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} </li>
+        {%if article.CNAME%}
+        <li><i class="fa fa-users"></i> {{article.CNAME}} Community </li>
+        {%endif%}
+        {%if article.GNAME%}
+        <li><i class="fa fa-users"></i> {{article.GNAME}} Group </li>
+        {%endif%}
+        {% get_comment_count for article as commentscnt %}
+        <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
+      </ul>
+      <p>
+        {{ article.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+
+  </div>
+
+  <hr class="blog-post-sep">
+{% endfor %}
+</div>
+{%if favs != ''%}
+<div class="col-md-2 col-sm-2">
+                <div class="card" style="width: 18rem;">
+                  <div class="card-header alert alert-warning">
+                    Favourite Articles
+                  </div>
+                  {%for article in favs%}
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="{% url 'article_view' article.id %}">{{article.title}}</a></li>
+                  </ul>
+                  {%endfor%}
+          </div>
+    </div>
+    {%endif%}
+</div>
+{% endautoescape%}
+
+{% if articles.has_other_pages %}
+<div class="row">
+  <div class="col-md-4 col-sm-4 items-info">{{articles}}</div>
+  <div class="col-md-8 col-sm-8">
+    <ul class="pagination pull-right">
+    {% if articles.has_previous %}
+      <li><a href="?page={{ articles.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in articles.paginator.page_range %}
+      {% if articles.number == i %}
+        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if articles.has_next %}
+      <li><a href="?page={{ articles.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+</div>
+</div>
+<br />
+{% endif %}
+{% endblock %}

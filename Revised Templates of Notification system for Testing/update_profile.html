@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row recent-work margin-bottom-40">
+  <div class="col-md-4">
+      <div class="file-loading">
+          <form method="post" action= "{% url 'upload_photo' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label">Upload Photo</label>
+            <input type="file"  id="profile_image" name ="profile_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'  required>
+            </div>
+        </form>
+      </div>
+  </div>
+  <div class="col-md-1"></div>
+
+  <div class="col-md-7">
+        <h2> Update Profile </h2><br />
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="First Name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="{{user.first_name}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="Last Name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="{{user.last_name}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="Email Address">Email</label>
+            <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" required>
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update</button>
+
+        </form>
+
+  </div>
+</div>
+
+<br />
+
+
+<br />
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}

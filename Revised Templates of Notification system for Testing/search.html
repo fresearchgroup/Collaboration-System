@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Articles</h1>
+{% if not articles %}
+<div class="content-page page-404">
+   <div class="number">
+      Oops!
+   </div>
+   <div class="details">
+      <h3>No Articles</h3>
+      <p>
+         Sorry, no articles found!
+      </p>
+   </div>
+</div>
+{% endif %}
+{{myhtml|safe}}{% autoescape off%}
+{% for art in articles %}
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
+
+    </div>
+    <div class="col-md-10 col-sm-10">
+      <h3><a href="{% url 'article_view' art.id %}">{{ art.title }}</a></h3>
+      <p>
+        {{ art.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' art.id %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+  </div>
+  <hr class="blog-post-sep">
+{% endfor %}
+{% endautoescape%}
+
+
+{% endblock %}

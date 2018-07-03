@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+{% load static %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+     <li class="breadcrumb-item active">{{ article.article.title }} </li>
+    {% endblock %}
+    {% block content %}
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-9">
+      <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item active">
+          <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+       {% if article.article.state.name != 'publish'%}
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+        </li>
+
+    {%endif%}
+        
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+      <br/>
+      <div class="blog-item">
+        <h2><a href="#">{{ article.article.title }} </a></h2>
+          <ul class="blog-info">
+            <li><i class="fa fa-user"></i> <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </li>
+            <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
+            {% get_comment_count for article as comment_count %}
+            <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
+            <li><i class="fa fa-eye"></i> {{count}} views </li>
+
+            {% if article.community.name %}
+            <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
+            {% endif %}
+            {% if article.group.name %}
+            <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
+            {% endif %}
+            {%if user.is_authenticated %}
+            {%if is_fav %}
+            <li><i id ="fav_submit" class="fa fa-star"></i>Favourites</li>
+            {% else %}
+            <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
+            {%endif%}
+            <form methd = "post">
+                <input id="username" type="hidden" value="{{request.user.username}}"/>
+                <input id="rid" type="hidden" value="{{article.article.pk}}"/>
+                <input id="category" type="hidden" value="article"/>
+                <input id="csrf" type="hidden" value="{{csrf_token}}"/>    
+                <input id="url" type="hidden" value="{% url 'favourites' %}"/> 
+              </form>
+            {% endif %}
+            
+          </ul>
+        <p>
+          {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
+        </p>
+      </div>
+    </div>
+    <div class="col-sm-3"><br/><br/>
+      <div class="alert alert-info" role="alert">
+        This article belongs to -
+        {% if article.community.name %}
+         <h5><a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community</h5>
+         {% endif %}
+         {% if article.group.name %}
+         <h5><a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</h5>
+         {% endif %}
+         <h5>Created by : <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </h5>
+         <h5>Created on : {{article.article.created_at}}</h5>
+         <h5>Views : {{count}} times</h5>
+         <h5>Status : {{article.article.state|slice:"1:3:2"}}</h5>
+        </div>
+    </div>
+  </div>
+</div>
+
+<h2>Comments</h2>
+
+{% if comment_count %}
+<hr/>
+<div class="comments">
+  <div class="media">
+    <ul class="media-body">
+      {% render_xtdcomment_tree for article allow_flagging allow_feedback show_feedback %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+<div class="post-comment padding-top-40">
+  <h3>Leave a Comment</h3>
+  <label>Message</label>
+   {% render_comment_form for article %}
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/favourite.js' %}"></script>
+{% endblock %}
