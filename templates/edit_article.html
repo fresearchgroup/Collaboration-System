@@ -35,9 +35,6 @@
     <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
   </li>
   {% endif %}
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
-  </li>
 </ul>
 </div>
 <br/>
@@ -56,7 +53,7 @@
                       </div>
                       <div class="form-group">
                         <label for="body">Body</label>
-                        <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                        <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
                         <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                         </div>
                         {% if article.article.image %}
@@ -83,7 +80,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -114,7 +111,7 @@
             </div>
             <div class="form-group">
               <label for="body">Body</label>
-              <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+              <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
               <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
               </div>
               {% if article.article.image %}
@@ -129,7 +126,7 @@
               <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
             <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
             <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-            <button type="submit" id="state_change_id"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+            <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
             <button type="submit"  class="btn btn-outline-info"  name="private" value='{{private}}'> Reject </button>
         {%endif%}
 
@@ -144,7 +141,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -171,7 +168,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -198,7 +195,7 @@
               </div>
               <div class="form-group">
                 <label for="body">Body</label>
-                <iframe src="{{url}}/p/{{article.id}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                <textarea id ="editor" class="form-control" name="body" >{{article.article.body}}</textarea>
                 <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                 </div>
                 {% if article.article.image %}
@@ -235,32 +232,16 @@
 {% endblock %}
 {% block javascript %}
 
-
+<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
 <script>
-      var id = '{{article.article.id}}';
-        setInterval(function(){
-          $.ajax({
-            type:'POST',
-            url: '/ajax/article_autosave/'+id+'/',
-            data: {
-             csrfmiddlewaretoken: '{{csrf_token}}'
-            },
-            dataType: 'json',
-            success: function (data) {
-              if (data.success) {
-                console.log("Done");
-              }
-            }
-         });
-        },3000);
-      // ClassicEditor
-      //   .create( document.querySelector( '#editor' ) )
-      //   .then( editor => {
-      //     console.log( editor );
-      //   } )
-      //   .catch( error => {
-      //     console.error( error );
-      //   } );
+      ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .then( editor => {
+          console.log( editor );
+        } )
+        .catch( error => {
+          console.error( error );
+        } );
     </script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>

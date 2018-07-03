@@ -19,7 +19,7 @@
         {% if user.is_authenticated %}
        {% if article.article.state.name != 'publish'%}
         <li class="nav-item ">
-          <a id="article_edit_id" class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
         </li>
 
     {%endif%}
@@ -28,9 +28,6 @@
           <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
         </li>
         {% endif %}
-        <li class="nav-item">
-              <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
-        </li>
       </ul>
       </div>
       <br/>
@@ -65,9 +62,8 @@
             {% endif %}
             
           </ul>
-        <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;">
+        <p>
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
-          
         </p>
       </div>
     </div>
@@ -84,14 +80,6 @@
          <h5>Created on : {{article.article.created_at}}</h5>
          <h5>Views : {{count}} times</h5>
          <h5>Status : {{article.article.state|slice:"1:3:2"}}</h5>
-          </div>
-	<hr/>
-	
-	<div class="alert alert-info" role="alert">
-	<h4>Recommended for you -</h4></br>
-	{% for rarticle in Recommended_articles %}
-		<h5><a href = "{% url 'article_view' rarticle.id %}">{{ rarticle.title}}</h5></br>
-	{% endfor %}
         </div>
     </div>
   </div>
