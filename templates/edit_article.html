@@ -70,8 +70,8 @@
                       </div>
                       <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
-                      <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
             {% endif %}
         {%elif cmember.role%}
                 <form method="post" enctype="multipart/form-data">
@@ -97,8 +97,8 @@
                   </div>
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
         {% endif %}
     {% endif %}
 
@@ -128,9 +128,9 @@
                   </div>
               <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
             <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-            <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-            <button type="submit" id="state_change_id"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>{{transition.to_state.name}}</button>
-            <button type="submit"  class="btn btn-outline-info"  name="private" value='{{private}}'> Reject </button>
+            <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+            <button type="submit" id="state_change_id"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>{{transition.to_state.name}}</button>
+            <button type="submit"  class="btn btn-outline-info"  name="private" value='{{private}}' id = "reject"> Reject </button>
         {%endif%}
 
            {%if article.article.state.name == 'private' %}
@@ -157,8 +157,8 @@
                     <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
                   </div>    
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>             {{transition.to_state.name}}</button>
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">             {{transition.to_state.name}}</button>
             {%endif%}
            {%endif%}
             {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
@@ -184,7 +184,7 @@
                     <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
                   </div>  
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
 
              {%endif%}
 
@@ -211,8 +211,8 @@
                     <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
                   </div>
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save'>Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'>
+                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'id = "visible">
                    {{transition.to_state.name}}</button>
              {%endif%}
 
