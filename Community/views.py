@@ -217,6 +217,7 @@ def handle_community_creation_requests(request):
 				commrep.community = communitycreation
 				commrep.rep = 3001 #he will be the community admin so his community reputation should be above 3000
 				sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
+				defaultval = get_reputation_values()
 				sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
 				sysrep.save()
 				commrep.save()
@@ -370,7 +371,15 @@ def create_community(request):
 					community = community,
 					role = role
 					)
-
+					commrep = CommunityRep() #createing a new CommunityRep row has the community creation has been approved
+					commrep.user = usr
+					commrep.community = community
+					commrep.rep = 3001 #he will be the community admin so his community reputation should be above 3000
+					sysrep = SystemRep.objects.get(user=rcommunity.requestedby)
+					defaultval = get_reputation_values()
+					sysrep.sysrep+=defaultval.srep_for_comm_creation #increasing the user system reputation has he has created a new community
+					sysrep.save()
+					commrep.save()
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
