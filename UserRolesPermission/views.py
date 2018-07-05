@@ -33,7 +33,6 @@ def signup(request):
         if form.is_valid():
 
             ''' Begin reCAPTCHA validation '''
-            '''
             recaptcha_response = request.POST.get('g-recaptcha-response')
             url = 'https://www.google.com/recaptcha/api/siteverify'
             values = {
@@ -44,23 +43,23 @@ def signup(request):
             req =  urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
-            ''' 
-            #End reCAPTCHA validation 
+            ''' End reCAPTCHA validation '''
 
-            #if result['success']:
-            user = form.save()
-            assign_role(user, Author)
-            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            sysrep = SystemRep() #creating a new SystemRep row for the user
-            sysrep.user = user
-            sysrep.save()
-            badge = Badges() #creating a new Badges row for the user
-            badge.user = user
-            badge.save()
-            return redirect('user_dashboard')
-        else:
-            #error = 'Captcha not verified'
-            return render(request, 'signup.html', {'form': form, 'error':error})
+            if result['success']:
+                user = form.save()
+                assign_role(user, Author)
+                auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                sysrep = SystemRep() #creating a new SystemRep row for the user
+                sysrep.user = user
+                sysrep.sysrep = 0
+                sysrep.save()
+                badge = Badges() #creating a new Badges row for the user
+                badge.user = user
+                badge.save()
+                return redirect('user_dashboard')
+            else:
+                error = 'Captcha not verified'
+                return render(request, 'signup.html', {'form': form, 'error':error})
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
