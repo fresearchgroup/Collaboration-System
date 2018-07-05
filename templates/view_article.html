@@ -87,11 +87,8 @@
           </div>
 	<hr/>
 	
-	<div class="alert alert-info" role="alert">
+	<div class="alert alert-info" id="recommendations" role="alert">
 	<h4>Recommended for you -</h4></br>
-	{% for rarticle in Recommended_articles %}
-		<h5><a href = "{% url 'article_view' rarticle.id %}">{{ rarticle.title}}</h5></br>
-	{% endfor %}
         </div>
     </div>
   </div>
@@ -119,4 +116,24 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/favourite.js' %}"></script>
+
+<script type="text/javascript">
+$(window).load(function() {
+               var url = "recommendation_json_object/";
+                 $.ajax({
+                      url: url,
+                      type: 'get',
+		      dataType:'json',
+                      success: function(data){
+			var total;
+			total = Object.keys(data.output).length;
+				for(var i=0;i<total;i++)
+				{
+					$('<a href="{% url "article_view" 0 %}"'.replace('0',data.output[i].id)+'>'+data.output[i].title +'</a></br></br>').appendTo('#recommendations'); 
+				}
+			}
+                      
+                    });
+          });
+</script>
 {% endblock %}
