@@ -30,7 +30,69 @@
     <h3>{{userinfo.first_name}} {{userinfo.last_name}}</h3>
     <ul class="blog-info">
       <li><i class="fa fa-institution"></i>Member Since:  {{userinfo.date_joined}}</li><br />
-      <li><i class="fa fa-video-camera"></i> Last Seen: {{userinfo.last_login}} </li>
+      <li><i class="fa fa-video-camera"></i> Last Seen: {{userinfo.last_login}} </li><br><br>
+      
+
+      <li>
+      <div class="col-md-3 col-sm-3 blog-sidebar">
+      <h2>Badges</h2>
+      <ul class="nav sidebar-categories margin-bottom-10">
+      {{myhtml|safe}}{% autoescape off%}
+      <li>
+            {%if badge.articles_contributed_author > 50 %}
+            <img src="{{ MEDIA_URL }}articles_contributed_badge/4" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_contributed_author > 30 %}
+            <img src="{{ MEDIA_URL }}articles_contributed_badge/3" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_contributed_author > 15 %}
+            <img src="{{ MEDIA_URL }}articles_contributed_badge/2" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_contributed_author > 5 %}
+            <img src="{{ MEDIA_URL }}articles_contributed_badge/1" style="height: 50px; width: 80px;"></label><br>
+            {% else %}
+            <img src="{{ MEDIA_URL }}articles_contributed_badge/0" style="height: 50px; width: 80px;"></label><br>
+            {% endif %}
+            
+            {%if badge.articles_published_publisher > 50 %}
+            <img src="{{ MEDIA_URL }}publisher_publish_badge/4" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_publisher > 30 %}
+            <img src="{{ MEDIA_URL }}publisher_publish_badge/3" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_publisher > 15 %}
+            <img src="{{ MEDIA_URL }}apublisher_publish_badge/2" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_publisher > 5 %}
+            <img src="{{ MEDIA_URL }}publisher_publish_badge/1" style="height: 50px; width: 80px;"></label><br>
+            {% else %}
+            <img src="{{ MEDIA_URL }}publisher_publish_badge/0" style="height: 50px; width: 80px;"></label><br>
+            {% endif %}
+
+             {%if badge.articles_published_author > 50 %}
+            <img src="{{ MEDIA_URL }}articles_publish_badge/4" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_author > 30 %}
+            <img src="{{ MEDIA_URL }}articles_publish_badge/3" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_author > 15 %}
+            <img src="{{ MEDIA_URL }}articles_publish_badge/2" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_published_author > 5 %}
+            <img src="{{ MEDIA_URL }}articles_publish_badge/1" style="height: 50px; width: 80px;"></label><br>
+            {% else %}
+            <img src="{{ MEDIA_URL }}articles_publish_badge/0" style="height: 50px; width: 80px;"></label><br>
+            {% endif %}
+
+            {%if badge.articles_revised_publisher > 50 %}
+            <img src="{{ MEDIA_URL }}publisher_revise_badge/4" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_revised_publisher > 30 %}
+            <img src="{{ MEDIA_URL }}publisher_revise_badge/3" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_revised_publisher > 15 %}
+            <img src="{{ MEDIA_URL }}apublisher_revise_badge/2" style="height: 50px; width: 80px;"></label><br>
+            {%elif badge.articles_revised_publisher > 5 %}
+            <img src="{{ MEDIA_URL }}publisher_revise_badge/1" style="height: 50px; width: 80px;"></label><br>
+            {% else %}
+            <img src="{{ MEDIA_URL }}publisher_revise_badge/0" style="height: 50px; width: 80px;"></label><br>
+            {% endif %}
+
+      </li>
+      {% endautoescape%}
+      </ul>
+    </div>
+    </li>
+
     </ul>
   </div>
 </div>
@@ -137,6 +199,9 @@
       {% endautoescape%}
       </ul>
     </div>
+    <!-- <div class="col-md-3 col-sm-3 blog-sidebar">
+    <h2>Badges</h2>
+    </div> -->
     <!-- end right -->
   </div>
 </div></div>
