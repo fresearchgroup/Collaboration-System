@@ -17,10 +17,11 @@ class get_Recommendations(APIView):
 		user_id = request.user.id
 		result = []
 		try:
-			output = urllib.request.urlopen("http://"+config('RecommendationIP')+":"+config('RecommendationPort')+"/rec?user=" + str(user_id)).read()
+			output = urllib.request.urlopen("http://"+config('Address')+":"+config('port')+"/rec?user=" + str(user_id)).read()
 			output = json.loads(output.decode())
 			for x in output["predictions"]:
-				result.append({'id':output['map'][x]})
+				new_article = Articles.objects.get(id=output['map'][x])
+				result.append({'id':output['map'][x],'title':new_article.title})
 			serializer = ArticleSerializer(result,many=True)
 			return JsonResponse({'output': result})
 			
