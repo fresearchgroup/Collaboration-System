@@ -126,7 +126,7 @@
 
     </b>
     {%else%}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id = "Unsubscribe"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -147,7 +147,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <button id="communityUnsubscribe" type="submit" class="btn btn-primary">Yes</button>
+        <button id="communityUnsubscribe" type="submit" class="btn btn-primary" id = "Yes">Yes</button>
         </form>
         {%else%}
          <label for="message-text" class="col-form-label">Before unsubscribing please assign some other community admin</label>
@@ -336,7 +336,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            <button type="submit" class="btn btn-primary">Yes</button>
+            <button type="submit" class="btn btn-primary" id = "Yes">Yes</button>
             </form>
           </div>
         </div>

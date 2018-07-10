@@ -168,6 +168,10 @@ https://github.com/fresearchgroup/Collaboration-System-Event-Logs
 To create and edit interactive content (H5P) and to enable real-time collaborative editing of articles, please refer to the installation steps given in the repository link given below:
 https://github.com/fresearchgroup/Community-Content-Tools
 
+### Recommendation System
+This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
+https://github.com/fresearchgroup/Community-Recommendation
+
 ### Etherpad
 
 
