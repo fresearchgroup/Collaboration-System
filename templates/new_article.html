@@ -346,8 +346,10 @@
 
     $("#icf").on("click",function(){
 
+      $(".overlay")[0].style.display="block";
+
       $.ajax({
-                  url: 'http://localhost:8001/ajax/article_text/'+id,
+                  url: '/ajax/article_text/'+id,
                   type: 'GET',
                   data: {'pk':id},
                   success: function (data) {
@@ -371,6 +373,8 @@
                                     // console.log("Done checkin")
                                 },
                                 complete:function(data){
+                                 $(".overlay")[0].style.display="none";
+
                                  if(status==1)
                                   {
                                     alert("Sorry the article is not appropriate. Consider reviewing your article.");
