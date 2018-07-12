@@ -40,6 +40,7 @@
     <div class="step-content">
       <div id="step1" class="step-content-body">
 
+      
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- ++++++++++++++++First form:for title of article+++++++++++++ -->
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -104,7 +105,7 @@
       </div>
       <div id="stepLast" class="step-content-body out">Your article has been successfully created.</div>
       <div class="step-content-foot">
-        <button id="prev" type="button" class="btn btn-primary" name="prev">Prev</button>
+        <button id="prev" type="button" class="btn btn-primary out" name="prev">Prev</button>
       <!-- <button id="next" type="button" class="btn btn-primary" disabled name="next">Next</button> -->
         <button id="next1" type="button" class="btn btn-primary"  name="next1">Next</button>
         <button id="next2" type="button" class="btn btn-primary out"  name="next2">Next</button>
@@ -211,7 +212,6 @@
               $(".step-content-foot button").addClass("out");
               $("#step1").removeClass("out");
               $("#next1").removeClass("out");
-              $("#prev").removeClass("out");
               $(stepItem[1]).removeClass('active');
               $(stepItem[0]).removeClass('active');
             }
