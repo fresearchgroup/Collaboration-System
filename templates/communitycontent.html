@@ -82,9 +82,10 @@
         {% endif %}
         {% if article.type == 'course' %}
           <img src="{{ MEDIA_URL }}default/course_image_default.png" alt="default" class="img-responsive">
-        {% else %}
-          <img src="{{ MEDIA_URL }}default/h5p_image_default.png" alt="default" class="img-responsive">                 
-        {% endif %}        
+        {% endif %}
+        {% if article.type == 'h5p' %}
+          <img src="{{ MEDIA_URL }}default/h5p_image_default.png" alt="default" class="img-responsive">
+        {% endif %}
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
@@ -93,7 +94,8 @@
       {% endif %}
       {% if article.type == 'course' %}
         <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
-      {% else %}  
+      {% endif %}
+      {% if article.type == 'h5p' %}
         <h3><i class="fa fa-camera-retro" style="color:red;"></i> <a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
       {% endif %}
       <ul class="blog-info">

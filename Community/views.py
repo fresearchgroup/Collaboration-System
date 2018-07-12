@@ -85,8 +85,8 @@ def community_subscribe(request):
 		return render(request, 'communityview.html')
 	else:
 		return redirect('/login/?next=/community-view/%d' % int(cid) )
-		
-      
+
+
 
 def community_unsubscribe(request):
 	if request.user.is_authenticated:
@@ -139,17 +139,17 @@ def community_article_create(request):
 					'community_id':community.pk,
 					'user_id':request.user.id,
 					'username':request.user.username,
-					'url':settings.SERVERURL, 
+					'url':settings.SERVERURL,
 					'articleof':'community'
 				}
 				return JsonResponse(data)
 				# return redirect('article_edit', article.pk)
-			
+
 
 			elif status == '2' or status=='3':
 				pk=''
 				# print(status)
-				if status == '2':	
+				if status == '2':
 					pk = request.POST.get('pk','')
 					article = Articles.objects.get(pk=pk)
 					return community_article_create_body(request, article, community)
@@ -160,7 +160,7 @@ def community_article_create(request):
 					try:
 						image = request.FILES['article_image']
 					except:
-						image = None 
+						image = None
 					article.image=image
 					article.save()
 					data={}
@@ -302,7 +302,7 @@ def manage_community(request,pk):
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 								#if rolename=='publisher':
 									#create_community_feed(user,'New Publisher has been added',community)
-								        
+
 							else:
 								errormessage = 'user exists in community'
 						if status == 'update':
@@ -313,8 +313,8 @@ def manage_community(request,pk):
 									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 									is_member.role = role
 									is_member.save()
-									
-								                
+
+
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -325,9 +325,9 @@ def manage_community(request,pk):
 									remove_or_add_user_feed(user,community,'removed')
 									notify_remove_or_add_user(request.user, user,community,'removed')
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
-									
 
-			
+
+
 								except CommunityMembership.DoesNotExist:
 									errormessage = 'no such user in the community'
 							else:
@@ -457,6 +457,7 @@ def community_content(request, pk):
 
 				for obj in json_data:
 					if obj['community_id'] == community.pk:
+						obj['type'] = 'h5p'
 						ch5p.append(obj)
 			except Exception as e:
 				print(e)
