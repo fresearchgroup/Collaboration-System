@@ -23,6 +23,11 @@
 
 {% if user.is_authenticated %}
 
+<div class="overlay">
+    <div class="nb-spinner"></div>
+</div>
+
+
 <!-- //////////////////////////////////////////////////////////// -->
 <!-- +++++++++++++++++++++++HTML for slider++++++++++++++++++++++ -->
 <!-- //////////////////////////////////////////////////////////// -->
@@ -35,6 +40,7 @@
     <div class="step-content">
       <div id="step1" class="step-content-body">
 
+      
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- ++++++++++++++++First form:for title of article+++++++++++++ -->
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -63,7 +69,7 @@
               <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select article image for upload...">
             </div>
             {% if status == 1 %}
-            <button id="create" class="btn btn-primary">Create Article and Go to Next Step</button>
+            <button id="create"  style="visibility: hidden;"  class="btn btn-primary">Create Article and Go to Next Step</button>
             {% endif %}
           </form>
         
@@ -88,18 +94,21 @@
               {% endif %}
             <input type="hidden" id="status" name="status" value='2'>
           </div>
-          <button id="save" class="btn btn-primary">Save</button>
+          <button id="save" style="visibility: hidden;"  class="btn btn-primary">Save</button>
         </form>
+        <button id="icf" style="visibility: hidden;" class="btn btn-primary" >Check</button>
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- ++++++++++++++++++++++++End of Second form++++++++++++++++++ -->
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
       </div>
-      <div id="stepLast" class="step-content-body out">Your article has been successfully created.<br>Remember to save the article body created in the last step before clicking on finish.</div>
+      <div id="stepLast" class="step-content-body out">Your article has been successfully created.</div>
       <div class="step-content-foot">
-        <button id="prev" type="button" class="btn btn-primary" name="prev">Prev</button>
-        <button id="next" type="button" class="btn btn-primary" disabled name="next">Next</button>
+        <button id="prev" type="button" class="btn btn-primary out" name="prev">Prev</button>
+      <!-- <button id="next" type="button" class="btn btn-primary" disabled name="next">Next</button> -->
+        <button id="next1" type="button" class="btn btn-primary"  name="next1">Next</button>
+        <button id="next2" type="button" class="btn btn-primary out"  name="next2">Next</button>
         <button id="finish" type="button" class="btn btn-primary out" name="finish">Finish</button>
       </div>
     </div>
@@ -114,10 +123,129 @@
 {% endif %}
 {% endblock %}
 {% block javascript %}
+
+<style type="text/css">
+  
+  .overlay {
+      background: #e9e9e9; 
+      display: none;       
+      position: fixed; 
+      top: 0;                  
+      right: 0;             
+      bottom: 0;
+      left: 0;
+      opacity: 0.5;
+      z-index: 1000;
+  }
+
+  .nb-spinner {
+    position:fixed;
+    /*z-index: 1000;*/
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    width: 75px;
+    height: 75px;
+    margin: 0;
+    background: transparent;
+    border-top: 4px solid #e94d1c;
+    border-right: 4px solid transparent;
+    border-radius: 50% !important;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+  }
+
+-webkit-@keyframes spin {
+  -webkit-from {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  -webkit-to {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+
+</style>
+
 <script type="text/javascript">
-   
+    var pos =0;
+    var status= 1;
+    var stepItem = $('.step-progress .step-slider .step-slider-item');
+
+
+    // $('#title').on("keydown",function(){
+    //   // document.getElementById('next').disabled=true;
+    //   // alert("Hello");
+    // })
+  
+
+        function check(){
+            if(pos==0)
+            {
+              $(".step-content-body").addClass("out");
+              $(".step-content-foot button").addClass("out");
+              $("#step1").removeClass("out");
+              $("#next1").removeClass("out");
+              $(stepItem[1]).removeClass('active');
+              $(stepItem[0]).removeClass('active');
+            }
+            if(pos==1)
+            {
+              $(".step-content-body").addClass("out");
+              $(".step-content-foot button").addClass("out");
+              $("#step2").removeClass("out");
+              $("#next2").removeClass("out");
+              $("#prev").removeClass("out");
+              $(stepItem[0]).addClass('active');
+              $(stepItem[1]).removeClass('active');
+            }
+            if(pos==2)
+            {
+              $(".step-content-body").addClass("out");
+              $(".step-content-foot button").addClass("out");
+              $("#stepLast").removeClass("out");
+              $("#prev").removeClass("out");
+              $("#finish").removeClass("out");
+              $(stepItem[0]).addClass('active');
+              $(stepItem[1]).addClass('active');
+            }
+          }
         var id=0;
         var update =0;
+
+        // $("#next1").on("click",function(){
+        //   $("#create").click();
+        // })
+
+        // $("#next2").on("click",function(){
+        //   $("#save").click();
+        // })
 // ========================================================
 // =================For part 1 of the form=================
 // ========================================================
@@ -125,6 +253,8 @@
           e.preventDefault();    
           var formData = new FormData(this);
           formData.append("pk",id);
+          $(".overlay")[0].style.display="block";
+
           $.ajax({
               url: '',
               type: 'POST',
@@ -144,12 +274,19 @@
                     console.log(src);
                     document.getElementById("etherpad_iframe").src= src;
                     id = data.article_id; 
-                    document.getElementById('create').innerText="Update Article and Go to Next Step";
+                    // document.getElementById('create').innerText="Update Article and Go to Next Step";
                     update= 1;
                     document.getElementById('status').value='3';   
-                    document.getElementById('next').disabled=false;
+                    // document.getElementById('next').disabled=false;
                   }
-
+                  // check();
+                  console.log("Checking done");
+              },
+              complete: function(){
+                 setTimeout(function(){
+                  $(".overlay")[0].style.display="none";
+                 check();
+                },3000);
               },
               cache: false,
               contentType: false,
@@ -166,7 +303,9 @@
 
         $("#step_2").submit(function(e) {
             e.preventDefault();    
+            // console.log("Submitting form");
             var formData = new FormData(this);
+            // console.log(formData);
             formData.append("pk",id);
             // alert("Sending ajax 2");
             $.ajax({
@@ -177,23 +316,87 @@
                     // alert(data);
                     console.log(data.article_id);
                     console.log(data.body);
-
+                    console.log("Done checkin");
+                },
+                fail: function(){
+                  alert("Something wrong happened!!")
+                },
+                 complete: function(){
+                  check();
                 },
                 cache: false,
                 contentType: false,
                 processData: false
             });
-
-
         });
 
 // ========================================================
 // ========================================================
 // ========================================================
+  
+    $("#next1").on("click",function(){$("#create").click();if(pos<2)pos++;console.log(pos);});
+
+    $("#next2").on("click",function(){
+      $("#icf").click();
+    });
+    
+    $("#prev").on("click",function(){if(pos>0)pos--;console.log(pos);check();});
+    $("#finish").on("click",function(){location.href = "/article-view/"+id+"/";});  
 
 
+    $("#icf").on("click",function(){
 
+      $(".overlay")[0].style.display="block";
+
+      $.ajax({
+                  url: '/ajax/article_text/'+id,
+                  type: 'GET',
+                  data: {'pk':id},
+                  success: function (data) {
+                      // alert(data);
+                      // console.log(data.article_id);
+                      console.log(data.body);
+                      // check();
+                      // console.log("Done checkin")
+                       $.ajax({
+                                url: 'http://192.168.43.175:3000/?topic='+data.body,
+                                type: 'GET',
+                                data: {},
+                                success: function (data) {
+                                    // alert(data);
+                                    // console.log(data.article_id);
+                                    // console.log("!");
+                                    console.log(data);
+                                    // console.log(data.inappropriates);
+                                    status= data.inappropriates;
+                                    // check();
+                                    // console.log("Done checkin")
+                                },
+                                complete:function(data){
+                                 $(".overlay")[0].style.display="none";
+
+                                 if(status==1)
+                                  {
+                                    alert("Sorry the article is not appropriate. Consider reviewing your article.");
+                                  }
+                                  else
+                                  {
+                                    if(pos<2)pos++;console.log(pos);
+                                    $("#save").click();
+                                  }
+                                },
+                                cache: false,
+                                contentType: false,
+                                processData: false
+                            });
+                  },
+                  cache: false,
+                  contentType: false,
+                  processData: false
+              });
+     });
     </script>
+
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- +++++++++++++++Styles and script for the slider+++++++++++++ -->
@@ -313,106 +516,7 @@
 
 </style>
 
-<script type="text/javascript">
 
-  $(function()  {
-    var pos =0;
-    var stepItem = $('.step-progress .step-slider .step-slider-item');
-    $('#title').on("keydown",function(){
-      document.getElementById('next').disabled=true;
-      // alert("Hello");
-    })
-    function check(){
-      if(pos==0)
-      {
-        $(".step-content-body").addClass("out");
-        $(".step-content-foot button").addClass("out");
-        $("#step1").removeClass("out");
-        $("#next").removeClass("out");
-        $("#prev").removeClass("out");
-        $(stepItem[1]).removeClass('active');
-        $(stepItem[0]).removeClass('active');
-      }
-      if(pos==1)
-      {
-        $(".step-content-body").addClass("out");
-        $(".step-content-foot button").addClass("out");
-        $("#step2").removeClass("out");
-        $("#next").removeClass("out");
-        $("#prev").removeClass("out");
-        $(stepItem[0]).addClass('active');
-        $(stepItem[1]).removeClass('active');
-      }
-      if(pos==2)
-      {
-        $(".step-content-body").addClass("out");
-        $(".step-content-foot button").addClass("out");
-        $("#stepLast").removeClass("out");
-        $("#prev").removeClass("out");
-        $("#finish").removeClass("out");
-        $(stepItem[0]).addClass('active');
-        $(stepItem[1]).addClass('active');
-      }
-    }
-    $("#next").on("click",function(){if(pos<2)pos++;console.log(pos);check();});
-    $("#prev").on("click",function(){if(pos>0)pos--;console.log(pos);check();});
-    $("#finish").on("click",function(){location.href = "/article-view/"+id+"/";});  
-  });
-
-
-//  $(function() {
-//  var step = 0;
-//  var stepItem = $('.step-progress .step-slider .step-slider-item');
-
-//  // Step Next
-//  $('.step-content .step-content-foot button[name="next"]').on('click', function() {
-//    var instance = $(this);
-//    if (stepItem.length - 1 < step) {
-//      return;
-//    }
-//    if (step == (stepItem.length - 1)) {
-//      instance.addClass('out');
-//      instance.siblings('button[name="finish"]').removeClass('out');
-//      // ++++++++++++++++++++++++++++++++++
-//      $(stepItem[stepItem.length - 1]).addClass('active');
-//      $('.step-content-body').addClass('out');
-//      $('#stepLast').removeClass('out');
-//    }
-//    $(stepItem[step]).addClass('active');
-//    $('.step-content-body').addClass('out');
-//    $('#' + stepItem[step + 1].dataset.id).removeClass('out');
-//    step++;
-//  });
-
-//  // Step Last
-//  $('.step-content .step-content-foot button[name="finish"]').on('click', function() {
-//    if (step == stepItem.length) {
-//      return;
-//    }
-//    alert("article displayed");
-//    // $(stepItem[stepItem.length - 1]).addClass('active');
-//    // $('.step-content-body').addClass('out');
-//    // $('#stepLast').removeClass('out');
-//  });
-
-//  // Step Previous
-//  $('.step-content .step-content-foot button[name="prev"]').on('click', function() {
-//    var instance = $(this);
-//    $(stepItem[step]).removeClass('active');
-//    if (step == (stepItem.length -1)) {
-//      instance.siblings('button[name="next"]').removeClass('out');
-//      instance.siblings('button[name="finish"]').addClass('out');
-//    }
-//    $('.step-content-body').addClass('out');
-//    $('#' + stepItem[step].dataset.id).removeClass('out');
-//    if (step <= 0) {
-//      return;
-//    }
-//    step--;
-//  });
-// });
-
-</script>
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- ++++++++++++++++End styless and scritps for slider++++++++++ -->
