@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+<ul style="list-style-type: none;margin: 0;padding: 0;overflow: hidden;border: 1px solid #e7e7e7;background-color: #f3f3f3;">
+    <li  class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: #666;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
+        <p><b>Step 1:</b> Provide Title and Article Image</p>
+      </li>
+      <li class="col-sm-6 col-md-6 col-lg-6" style = "display: block;color: white;background-color: #E45000;text-align: center;padding-bottom: 8px;padding-top: 17px;text-decoration: none;float: left;font-size: 17px">
+          <p><b>Step 2:</b> Provide Body of the Image</p>
+      </li>
+  </ul>
+  <br>
+{% if articleof == "group" %}
+  <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
+{% endif %}
+{% if articleof == "community" %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+{% endif %}
+  <li class="breadcrumb-item active">Create an Article</li>
+{% endblock %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}
+<form method="post" enctype="multipart/form-data" >
+  {% csrf_token %}
+  {% if status == 1 %}
+  <div class="form-group">
+      <iframe src="{{url}}/p/{{article.id}}?userName={{request.user}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+      {% if articleof == 'group' %}
+        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
+        {% endif %}
+        {% if articleof == "community" %}
+        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+      {% endif %}
+    <input type="hidden" name="status" value={{status}}>
+    <input type="hidden" name="pk" value={{article.id}}>
+  </div>
+  <div>
+    <button id="save" type="submit" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" style="float: right">Save</button>
+  </div>
+  {% endif %}
+</form>
+<div>
+    {% if articleof == "community" %}    
+    <form method = "post" action ="{% url 'community_article_create' %}">
+    {% endif %}
+    {% if articleof == "group" %}    
+    <form method = "post" action ="{% url 'group_article_create' %}">
+    {% endif %}
+          {% csrf_token %}
+          <input type="hidden" name="status" value='0'>
+          {% if articleof == "community" %}
+          <input type="hidden" name="articleof" value='community'>
+          <input type="hidden" name="cid" value={{ community.pk }}>
+          {% endif %}
+          {% if articleof == "group" %}
+          <input type="hidden" name="articleof" value='group'>
+          <input type="hidden" name="gid" value={{ group.pk }}>
+          {% endif %}
+          <input type="hidden" name="new" value='1'>
+          <input type="hidden" name="pk" value={{ article.pk }}>
+      <button type="submit" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" style ="float: left">Prev</button>
+    </form>
+  </div>
+<br>
+<br>
+<br>
+{% endif %}
+{% endblock %}
+{% block javascript %}
+
+<script>
+      // ClassicEditor
+      //   .create( document.querySelector( '#editor' ) )
+      //   .then( editor => {
+      //     console.log( editor );
+      //   } )
+      //   .catch( error => {
+      //     console.error( error );
+      //   } );
+    </script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}

@@ -30,7 +30,7 @@
   </div>
   <div class="form-group">
     <label for="desc">Description</label>
-    <textarea  class="form-control" name="desc" rows="6"></textarea>
+    <textarea class="form-control" name="desc" rows="6"></textarea>
     <input type = 'hidden' name = 'cid' value = {{community.pk}}>
     <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">Let people know what this group is about</small>
@@ -48,7 +48,7 @@
   </div>
 
   {% if status == 1 %}
-  <button type="submit" class="btn btn-primary">Create</button>
+  <button id="grpCreate" type="submit" class="btn btn-primary">Create</button>
   {% endif %}
 </form>
 <br />

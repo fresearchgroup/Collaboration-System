@@ -9,6 +9,15 @@ from django.contrib.auth.models import User
 from rolepermissions.roles import assign_role
 from UserRolesPermission.roles import GroupAdmin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from notification.views import notify_update_role, notify_remove_or_add_user, notify_subscribe_unsubscribe
+from feeds.views import remove_or_add_user_feed, update_role_feed
+from actstream import action
+from actstream.models import Action
+from actstream.models import target_stream
+from BasicArticle.views import getHTML
+from django.conf import settings
+import json
+import requests
 
 def create_group(request):
 	if request.method == 'POST':
@@ -29,6 +38,8 @@ def create_group(request):
 			)
 		role = Roles.objects.get(name='group_admin')
 		obj = GroupMembership.objects.create(user=user, group=group, role=role)
+		notify_remove_or_add_user(request.user, user, group, 'group_created')
+		remove_or_add_user_feed(request.user, group, "group_created")
 		return group
 
 def group_view(request, pk):
@@ -72,6 +83,7 @@ def group_subscribe(request):
 			if GroupMembership.objects.filter(user=user, group=group).exists():
 				return redirect('group_view', pk=gid)
 			obj = GroupMembership.objects.create(user=user, group=group, role=role)
+			notify_subscribe_unsubscribe(request.user, group, 'subscribe')
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
 	else:
@@ -84,9 +96,40 @@ def group_unsubscribe(request):
 			group = Group.objects.get(pk=gid)
 			user = request.user
 			if GroupMembership.objects.filter(user=user, group=group).exists():
+				remove_or_add_user_feed(user, group, 'left')
+				notify_remove_or_add_user(user, user, group, 'left')
 				obj = GroupMembership.objects.filter(user=user, group=group).delete()
 			return redirect('group_view', pk=gid)
 		return render(request, 'groupview.html')
+	else:
+		return redirect('login')
+
+def group_article_create_body(request, pk):
+	if request.user.is_authenticated:
+		try:
+			gid = request.session['gid']
+		except:
+			return redirect('home')
+		try:
+			status = request.session['status']
+		except:
+			return redirect('home')
+		article = Articles.objects.get(pk=pk)
+		group = Group.objects.get(pk=gid)
+		if request.method == 'POST':
+			if article.creation_complete:
+				article.body = getHTML(article)
+				article.save()
+				del request.session['gid']
+				del request.session['status']
+				return redirect('article_view', article.pk)
+			else:
+				return redirect('group_article_create_body',article.pk)
+		else:
+			article.creation_complete = True
+			article.save()
+			return render(request, 'new_article_body.html', {'article':article,'group':group, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'group'})
+
 	else:
 		return redirect('login')
 
@@ -95,17 +138,50 @@ def group_article_create(request):
 		if request.method == 'POST':
 			status = request.POST['status']
 			gid = request.POST['gid']
+			new = request.POST['new']
+			request.session['gid'] = gid
+			request.session['status'] = status
 			group = Group.objects.get(pk=gid)
-			if status=='1':
-				article = create_article(request)
-				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
-				return redirect('article_view', article.pk)
-			else:
-				return render(request, 'new_article.html', {'group':group, 'status':1})
+			if new == '0':
+				if status=='1':
+					article = create_article(request)
+					GroupArticles.objects.create(article=article, user = request.user , group = group )
+					return redirect('group_article_create_body',article.pk)
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1})
+			elif new == '1':
+				pk = request.POST['pk']
+				article = Articles.objects.get(pk=pk)
+				if status == '1':
+					article.title = request.POST['title']
+					try:
+						article.image = request.FILES['article_image']
+						article.save(update_fields=["title","body","image"])
+					except:
+						article.save(update_fields=["title","body"])
+					return redirect('group_article_create_body', article.pk)
+				else:
+					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
+
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
+
+def group_h5p_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			gid = request.POST['gid']
+			request.session['cid'] = 0
+			request.session['gid'] = gid
+			try:
+				requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				return redirect(settings.H5P_ROOT + 'h5p/create/')
+			except Exception as e:
+				print(e)
+				return render(request, 'h5pserverdown.html', {})
+		return redirect('home')
+	return redirect('login')
 
 def manage_group(request,pk):
 	if request.user.is_authenticated:
@@ -140,6 +216,8 @@ def manage_group(request,pk):
 						if status == 'update':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									notify_update_role(request.user, user, group, rolename)
+									update_role_feed(user, group, rolename)
 									is_member = GroupMembership.objects.get(user=user, group=group.pk)
 									is_member.role = role
 									is_member.save()
@@ -150,6 +228,8 @@ def manage_group(request,pk):
 						if status == 'remove':
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
+									notify_remove_or_add_user(request.user, user, group, 'removed')
+									remove_or_add_user_feed(user, group, "removed")
 									obj = GroupMembership.objects.filter(user=user, group=group).delete()
 								except GroupMembership.DoesNotExist:
 									errormessage = 'no such user in the group'
@@ -222,10 +302,24 @@ def group_content(request, pk):
 		uid = request.user.id
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
-			garticles = GroupArticles.objects.raw('select ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+			garticles = GroupArticles.objects.raw('select "article" as type , ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
 
+			gh5p = []
+			try:
+				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+				json_data = json.loads(response.text)
+				print(json_data)
+
+				for obj in json_data:
+					if obj['group_id'] == group.pk:
+						gh5p.append(obj)
+			except Exception as e:
+				print(e)
+				print("H5P server down...Sorry!! We will be back soon")
+
+			lstfinal = list(garticles) + list(gh5p)
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(garticles), 5)
+			paginator = Paginator(list(lstfinal), 5)
 			try:
 				grparticles = paginator.page(page)
 			except PageNotAnInteger:
@@ -253,3 +347,25 @@ def handle_group_invitations(request):
 			grpinivtation.save()
 
 		return redirect('user_dashboard')
+
+def feed_content(request, pk):
+	grpfeeds = ''
+	try:
+		group = Group.objects.get(pk=pk)
+		uid = request.user.id
+		membership = GroupMembership.objects.get(user=uid, group=group.pk)
+		if membership:
+			gfeeds = group.target_actions.all()
+			page = request.GET.get('page', 1)
+			paginator = Paginator(list(gfeeds), 5)
+			try:
+				grpfeeds = paginator.page(page)
+			except PageNotAnInteger:
+				grpfeeds = paginator.page(1)
+			except EmptyPage:
+				grpfeeds = paginator.page(paginator.num_pages)
+
+	except GroupMembership.DoesNotExist:
+		return redirect('group_view', group.pk)
+	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
+

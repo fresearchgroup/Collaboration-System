@@ -7,7 +7,14 @@ media/community
 media/group
 media/profile
 media/course
+PyEtherpadLite
 
 # SQLite database files
 
 *.sqlite3
+*.swn
+*.swo
+*.swp
+*.swm
+
+src/

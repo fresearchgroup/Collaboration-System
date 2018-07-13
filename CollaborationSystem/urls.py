@@ -31,7 +31,9 @@ from webcontent import views as web
 from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
-
+import notifications.urls
+from Dashboard import views as dashboardview
+from Recommendation_API import views
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 
@@ -44,7 +46,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
 
-
+    url(r'^activity/', include('actstream.urls')),
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
 
@@ -53,11 +55,15 @@ urlpatterns = [
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
     url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
-
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
+
+    url(r'^ajax/article_autosave/(?P<pk>\d*)/$', articleview.article_autosave, name='article_autosave'),
+
+
+    url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
     url(r'^article-edit/(?P<pk>\d*)/$', articleview.edit_article, name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
@@ -68,8 +74,11 @@ urlpatterns = [
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
-    url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
+    url(r'^group-article-create/1$', group_views.group_article_create, name='group_article_create'),
+    url(r'^group-article-create/2/(?P<pk>\d+)/$', group_views.group_article_create_body, name='group_article_create_body'),
     url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
+
+    url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),
 
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
@@ -94,6 +103,7 @@ urlpatterns = [
     url(r'^create_community/$', communityview.create_community, name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+    url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 
     url(r'^reset/$',
     auth_views.PasswordResetView.as_view(
@@ -133,20 +143,37 @@ urlpatterns = [
     url(r'^group-invitations/$', user_views.group_invitations, name='group_invitations'),
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
+    url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
+    url(r'^group-h5p-create/$', group_views.group_h5p_create, name='group_h5p_create'),
     url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
-    url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
     url(r'api/dspace/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-dspace-api'),
     url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
 
     url(r'api/dspace/grouparticlesapi', groupviewsets.GroupArticleViewsets.as_view(), name='group-articles-dspace-api'),
-    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api')
+    url(r'api/dspace/groupapi', groupviewsets.GroupViewSet.as_view(), name='group-dspace-api'),
+    url(r'^community-dashboard/(?P<pk>\d+)/$',dashboardview.community_dashboard,name='community_dashboard'),
+    url(r'^article-dashboard/(?P<pk>\d+)/$',dashboardview.article_dashboard,name='article_dashboard'),
+    url(r'^user-insight-dashboard/$',dashboardview.user_insight_dashboard,name='user_insight_dashboard'),
 
 
+    url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
+    url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
+    url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
+
+]
+
+from wiki.urls import get_pattern as get_wiki_pattern
+from django_nyt.urls import get_pattern as get_nyt_pattern
+
+urlpatterns += [
+    url(r'^wiki-notifications/', get_nyt_pattern()),
+    url(r'^wiki/', get_wiki_pattern())
 ]
 
 if settings.DEBUG:
