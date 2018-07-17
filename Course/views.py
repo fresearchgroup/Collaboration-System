@@ -34,6 +34,8 @@ def create_topics(request, pk):
 def course_view(request, pk):
 	try:
 		course = CommunityCourses.objects.get(course=pk)
+		if course.course.state == States.objects.get(name='draft') and course.course.created_by != request.user:
+			return redirect('home')
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
@@ -48,6 +50,9 @@ def course_view(request, pk):
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
+		course = Course.objects.get(pk=pk)
+		if course.state == States.objects.get(name='draft') and course.created_by != request.user:
+			return redirect('home')
 		if request.method == 'POST':
 			status = request.POST['status']
 			if status == 'addtopic':
@@ -113,6 +118,9 @@ def delete_topic(request):
 
 def manage_resource(request, pk):
 	if request.user.is_authenticated:
+		course = Course.objects.get(pk=pk)
+		if course.state == States.objects.get(name='draft') and course.created_by != request.user:
+			return redirect('home')
 		if request.method=='POST':
 			topicid =request.POST['topic']
 			topic = Topics.objects.get(pk=topicid)
@@ -142,6 +150,8 @@ def manage_resource(request, pk):
 def update_course_info(request,pk):
 	if request.user.is_authenticated:
 		course = Course.objects.get(pk=pk)
+		if course.state == States.objects.get(name='draft') and course.created_by != request.user:
+			return redirect('home')
 		community = CommunityCourses.objects.get(course=pk)
 		uid = request.user.id
 		membership = None
