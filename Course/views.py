@@ -76,6 +76,10 @@ def course_edit(request, pk):
 				form = TopicForm(course.course)
 			except CommunityCourses.DoesNotExist:
 				raise Http404
+			membership = CommunityMembership.objects.get(user=request.user.id, community=course.community)
+			message = canEditCourse(course.course.state.name, membership.role.name, course.course, request)
+			if message != 'True':
+				return render(request, 'error.html', {'message':message, 'url':'course_view', 'argument':pk})				
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
 	else:
 		return redirect('login')
