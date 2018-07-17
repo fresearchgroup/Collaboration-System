@@ -20,40 +20,51 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
+from decouple import config
 
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
     user input, validates it, register the user , and gives an Author role to the user.
     """
+    Captcha = config('CAPTCHA', cast=bool)
+
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
 
-            ''' Begin reCAPTCHA validation '''
-            recaptcha_response = request.POST.get('g-recaptcha-response')
-            url = 'https://www.google.com/recaptcha/api/siteverify'
-            values = {
-                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-                'response': recaptcha_response
-            }
-            data = urllib.parse.urlencode(values).encode()
-            req =  urllib.request.Request(url, data=data)
-            response = urllib.request.urlopen(req)
-            result = json.loads(response.read().decode())
-            ''' End reCAPTCHA validation '''
+            if Captcha:
+                ''' Begin reCAPTCHA validation '''
+                recaptcha_response = request.POST.get('g-recaptcha-response')
+                url = 'https://www.google.com/recaptcha/api/siteverify'
+                values = {
+                    'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                    'response': recaptcha_response
+                }
+                data = urllib.parse.urlencode(values).encode()
+                req =  urllib.request.Request(url, data=data)
+                response = urllib.request.urlopen(req)
+                result = json.loads(response.read().decode())
+                ''' End reCAPTCHA validation '''
 
-            if result['success']:
+                if result['success']:
+                    user = form.save()
+                    assign_role(user, Author)
+                    auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    return redirect('user_dashboard')
+                else:
+                    error = 'Captcha not verified'
+                    return render(request, 'signup.html', {'form': form, 'error':error, 'captcha':Captcha})
+            else:
                 user = form.save()
                 assign_role(user, Author)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('user_dashboard')
-            else:
-                error = 'Captcha not verified'
-                return render(request, 'signup.html', {'form': form, 'error':error})
+        else:
+            return render(request, 'signup.html', {'form': form, 'captcha':Captcha})
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form, 'captcha':Captcha})
 
 def user_dashboard(request):
     currentyear=date.today()
