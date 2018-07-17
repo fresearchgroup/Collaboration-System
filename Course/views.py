@@ -142,6 +142,10 @@ def manage_resource(request, pk):
 				articles = Articles.objects.filter(state__name='publish')
 			except CommunityCourses.DoesNotExist:
 				raise Http404
+			membership = CommunityMembership.objects.get(user=request.user.id, community=course.community)
+			message = canEditCourse(course.course.state.name, membership.role.name, course.course, request)
+			if message != 'True':
+				return render(request, 'error.html', {'message':message, 'url':'course_view', 'argument':pk})
 			return render(request, 'manage_resource.html', {'course':course, 'topics':topics, 'articles':articles})
 	else:
 		return redirect('course_view',pk=pk)
