@@ -98,6 +98,20 @@ background-color:#FE642E;
                 <p>{{ course.course.body | safe }}</p>
                 <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' course.course.created_by %}">{{course.course.created_by}} </a> </h4>
                 <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
+                <h4>
+                  {% if course.course.state.name == 'draft' %}
+                  <i class="fa fa-cut"></i> Draft 
+                  {% endif %}
+                  {% if course.course.state.name == 'visible' %}
+                  <i class="fa fa-bullhorn"></i> Visible
+                  {% endif %}
+                  {% if course.course.state.name == 'publishable' %}
+                  <i class="fa fa-bell"></i> Publishable
+                  {% endif %}
+                  {% if course.course.state.name == 'publish' %}
+                  <i class="fa fa-save"></i> Published
+                  {% endif %}
+                </h4>
               </div>
             </div>
           </blockquote>
@@ -132,7 +146,7 @@ background-color:#FE642E;
 
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-danger active">
-              <input type="radio" name="types" id="option1" value="Youtube" autocomplete="off" checked> Youtube 
+              <input type="radio" name="types" id="option1" value="Youtube" autocomplete="off" checked> Youtube
             </label>
             <label class="btn btn-warning">
               <input type="radio" name="types" id="option2" value="External" autocomplete="off"> External
@@ -294,12 +308,12 @@ background-color:#FE642E;
                           success: function(data){
 
                                   $.each(data, function (i, item) {
-                                      $('#topics').append($('<option>', { 
+                                      $('#topics').append($('<option>', {
                                           value: item.id,
-                                          text : item.name 
+                                          text : item.name
                                       }));
                                   });
-                                
+
 
                              }
 
@@ -340,15 +354,15 @@ background-color:#FE642E;
                             'link' : link,
                             'desc' : desc,
                             'topics' : topic,
-                            'types' : types 
+                            'types' : types
                           },
                           success: function(data){
-                              
+
                               $('#resourceModal').modal('hide');
                           }
                         });
 
-                
+
 
             });
 
@@ -362,7 +376,7 @@ background-color:#FE642E;
                           } ;
 
                 if (confirm('Are you sure you want to delete this resource?')) {
-                    
+
                      $.ajax({
                           url: url,
                           dataType : 'json',
@@ -370,7 +384,7 @@ background-color:#FE642E;
                           type: 'DELETE',
                           cache: false,
                           success: function(data){
-                              
+
                               alert('Successfully deleted');
                           }
                         });
@@ -378,7 +392,7 @@ background-color:#FE642E;
                 } else {
                     // Do nothing!
                 }
-               
+
 
             });
 
@@ -393,7 +407,7 @@ background-color:#FE642E;
                           } ;
 
                 if (confirm('Are you sure you want to delete this resource?')) {
-                    
+
                      $.ajax({
                           url: url,
                           dataType : 'json',
@@ -401,7 +415,7 @@ background-color:#FE642E;
                           type: 'DELETE',
                           cache: false,
                           success: function(data){
-                              
+
                               alert('Successfully deleted');
                           }
                         });

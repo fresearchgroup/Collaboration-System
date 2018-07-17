@@ -7,15 +7,17 @@ from django.http import Http404, HttpResponse
 from BasicArticle.models import Articles
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import Group as Roles
 
 def create_course(request):
 	title = request.POST['name']
 	body = request.POST['desc']
+	state = States.objects.get(name='draft')
 	try:
 		course_image = request.FILES['course_image']
 	except:
 		course_image = None
-	course = Course.objects.create(title=title, body=body, created_by=request.user, image=course_image)
+	course = Course.objects.create(title=title, body=body, created_by=request.user, state=state, image=course_image)
 	return course
 
 def create_topics(request, pk):
@@ -151,8 +153,11 @@ def update_course_info(request,pk):
 				if request.method == 'POST':
 					title = request.POST['name']
 					body = request.POST['desc']
+					getstate = request.POST['change_course_state']
+					state = States.objects.get(name=getstate)
 					course.title = title
 					course.body = body
+					course.state = state
 					try:
 						image = request.FILES['course_image']
 						course.image = image
@@ -161,10 +166,24 @@ def update_course_info(request,pk):
 					course.save()
 					return redirect('course_view',pk=pk)
 				else:
-					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm})
+					canEdit = 'True'
+					errormessage = canEditCourse(course.state.name, membership.role.name, course, request)
+					if errormessage != 'True':
+						canEdit = 'False'
+					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm, 'canEdit':canEdit, 'errormessage':errormessage})
 			else:
 				return redirect('course_view',pk=pk)
 		except CommunityMembership.DoesNotExist:
 			return redirect('login')
 	else:
 		return redirect('login')
+
+def canEditCourse(state, role, course, request):
+	errormessage = 'True'
+	if state=='publishable' and role=='author':
+		errormessage = 'Since it is publishable only the publishers can edit this'
+	if state=='publishable' and request.user == course.created_by:
+		errormessage = 'You cannot edit your own content when it is publishable state'
+	if state=='publish':
+		errormessage = 'You cannot edit content which is already published'
+	return errormessage

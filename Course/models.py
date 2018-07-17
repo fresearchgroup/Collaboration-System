@@ -3,6 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 from BasicArticle.models import Articles
 import os, uuid
+from workflow.models import States
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -15,6 +16,7 @@ class Course(models.Model):
 	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True,null=True)
 	created_by = models.ForeignKey(User,null=True,related_name='community_createdby')
+	state = models.ForeignKey(States, null=True, related_name='course_workflow')
 
 	def __str__(self):
 		return self.title
