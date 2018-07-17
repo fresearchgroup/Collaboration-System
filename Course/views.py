@@ -166,11 +166,10 @@ def update_course_info(request,pk):
 					course.save()
 					return redirect('course_view',pk=pk)
 				else:
-					canEdit = 'True'
-					errormessage = canEditCourse(course.state.name, membership.role.name, course, request)
-					if errormessage != 'True':
-						canEdit = 'False'
-					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm, 'canEdit':canEdit, 'errormessage':errormessage})
+					message = canEditCourse(course.state.name, membership.role.name, course, request)
+					if message != 'True':
+						return render(request, 'error.html', {'message':message, 'url':'course_view', 'argument':pk})
+					return render(request, 'update_course_info.html', {'course':course, 'membership':membership, 'community':community, 'comm':comm})
 			else:
 				return redirect('course_view',pk=pk)
 		except CommunityMembership.DoesNotExist:

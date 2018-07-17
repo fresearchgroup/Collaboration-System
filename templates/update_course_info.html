@@ -46,10 +46,8 @@ background-color:#FE642E;
     </ul>
     </div>
     <br/>
-
     <div class="col-sm-12">
       {% if user.is_authenticated %}
-      {% if canEdit == 'True' %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -97,19 +95,6 @@ background-color:#FE642E;
           <button id="update_id" type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
         </div>
       </form>
-      {% else %} <!-- can't edit -->
-        <div class="content-page page-404">
-           <div class="number">
-              Oops!
-           </div>
-           <div class="details">
-              <h3>Sorry</h3>
-              <p>
-                 {{errormessage}}
-              </p>
-           </div>
-        </div>
-        {% endif %} <!-- canEdit -->
       {% endif %} <!-- user authenticated -->
     </div>
   </div>
