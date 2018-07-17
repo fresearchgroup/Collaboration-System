@@ -49,6 +49,7 @@ background-color:#FE642E;
 
     <div class="col-sm-12">
       {% if user.is_authenticated %}
+      {% if canEdit == 'True' %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -74,11 +75,42 @@ background-color:#FE642E;
         </div>
 
         <div class="form-group">
+          <label for="State">State</label>
+          <select id="change_course_state" name="change_course_state" class="btn btn-primary">
+            {% if course.state.name == 'draft' %}
+              <option value="draft">Draft</option>
+              <option value="visible">Visible</option>
+            {% endif %}
+            {% if course.state.name == 'visible' %}
+              <option value="visible">Visible</option>
+              <option value="publishable">Publishable</option>
+            {% endif %}
+            {% if course.state.name == 'publishable' %}
+              <option value="publishable">Publishable</option>
+              <option value="visible">Visible</option>
+              <option value="publish">Publish</option>
+            {% endif %}
+          </select>
+        </div>
+
+        <div class="form-group">
           <button id="update_id" type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
         </div>
       </form>
-
-      {% endif %}
+      {% else %} <!-- can't edit -->
+        <div class="content-page page-404">
+           <div class="number">
+              Oops!
+           </div>
+           <div class="details">
+              <h3>Sorry</h3>
+              <p>
+                 {{errormessage}}
+              </p>
+           </div>
+        </div>
+        {% endif %} <!-- canEdit -->
+      {% endif %} <!-- user authenticated -->
     </div>
   </div>
 </div>
