@@ -172,34 +172,3 @@ https://github.com/fresearchgroup/Community-Content-Tools
 This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
 https://github.com/fresearchgroup/Community-Recommendation
 
-### Etherpad
-
-
-6.  Clone the following directory:
-
-			git clone http://github.com/dhanushsr/etherpad-lite
-			cd etherpad-lite/
-			./bin/run.sh
-
-7. Install PyEtherpadLite--
-
-			git clone http://github.com/dhanushsr/PyEtherpadLite
-			cd PyEtherpadLite
-			python setup.py install
-			cd ..
-
-8. Paste the apikey from APIKEY.text from etherpad-lite folder in the .env.example file
-
-9. Create a .env inside CollaborationSystem and paste the following -
-			
-			sudo cp .env.example .env
-
-9. Do all the migrations going back to django directory--
-
-	      python3 manage.py migrate
-
-10. Runserver --
-
-	      python3 manage.py runserver  
-
-
