@@ -1,6 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation
+from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
@@ -89,6 +89,21 @@ def user_dashboard(request):
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
+        commcourses = CommunityCourses.objects.filter(user=request.user)
+
+        for cart in commarticles:
+            cart.type = 'article'
+            cart.belongsto = 'community'
+
+        for gart in grparticles:
+            gart.type = 'article'
+            gart.belongsto = 'group'
+
+        for ccourse in commcourses:
+            ccourse.type = 'course'
+            ccourse.belongsto = 'community'
+
+        lstContent = list(commarticles) + list(grparticles) + list(commcourses)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
         grpinvitations = GroupInvitations.objects.filter(status='Invited', user=request.user)
@@ -115,7 +130,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile, 'grpinvitations':grpinvitations})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile, 'grpinvitations':grpinvitations, 'lstContent':lstContent})
     else:
         return redirect('login')
 

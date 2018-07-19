@@ -7,7 +7,7 @@
 {% block breadcrumb %}
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
-  <li class="breadcrumb-item active"> 
+  <li class="breadcrumb-item active">
   	   <a href="{% url 'user_insight_dashboard'%}">Insights</a>
   </li>
 <script type="text/javascript">
@@ -157,7 +157,8 @@ var articlesContributed = [{{total}}];
     <table id="myArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
         <tr style="background-color:#E84D1C">
-          <th style="color:white">Article</th>
+          <th style="color:white">Type</th>
+          <th style="color:white">Content</th>
           <th style="color:white">Status</th>
           <th style="color:white">Community / Group</th>
           <th style="color:white">Created</th>
@@ -165,38 +166,47 @@ var articlesContributed = [{{total}}];
     </thead>
       <tbody>
         {{myhtml|safe}}{% autoescape off%}
-        {% for cart in commarticles %}
+        {% for content in lstContent %}
           <tr>
             <td>
-              <a href="{% url 'article_view' cart.article.pk %}"> {{ cart.article }}  </a>
+              {% if content.type == 'article' %}
+                <i class="fa fa-file-text" style="color:red;"></i> Article
+              {% endif %}
+              {% if content.type == 'course' %}
+                <i class="fa fa-briefcase" style="color:red;"></i> Course
+              {% endif %}
             </td>
             <td>
-              {{cart.article.state.name}}
+              {% if content.type == 'article' %}
+                <a href="{% url 'article_view' content.article.pk %}"> {{ content.article }}  </a>
+              {% endif %}
+              {% if content.type == 'course' %}
+                <a href="{% url 'course_view' content.course.pk %}"> {{ content.course }}  </a>
+              {% endif %}
             </td>
             <td>
-              <a href="{% url 'community_view' cart.community.pk %}">{{ cart.community }}</a>
+              {% if content.type == 'article' %}
+                {{content.article.state.name}}
+              {% endif %}
+              {% if content.type == 'course' %}
+                {{content.course.state.name}}
+              {% endif %}
             </td>
             <td>
-              {{cart.article.created_at}}
-            </td>
-          </tr>
-        {% endfor %}
-        {% endautoescape%}
-
-        {{myhtml|safe}}{% autoescape off%}
-        {% for gart in grparticles %}
-          <tr>
-            <td>
-              <a href="{% url 'article_view' gart.article.pk %}"> {{ gart.article }} </a>
+              {% if content.belongsto == 'community' %}
+                <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
+              {% endif %}
+              {% if content.belongsto == 'group' %}
+                <a href="{% url 'group_view' content.group.pk  %}">{{ content.group }}</a>
+              {% endif %}
             </td>
             <td>
-              {{gart.article.state.name}}
-            </td>
-            <td>
-              <a href="{% url 'group_view' gart.group.pk  %}"> {{ gart.group }} </a>
-            </td>
-            <td>
-              {{gart.article.created_at}}
+              {% if content.type == 'article' %}
+                {{content.article.created_at}}
+              {% endif %}
+              {% if content.type == 'course' %}
+                {{content.course.created_at}}
+              {% endif %}
             </td>
           </tr>
         {% endfor %}
