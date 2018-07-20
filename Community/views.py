@@ -136,7 +136,7 @@ def community_article_create(request):
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
-					'community_id':community.pk,
+					'community_or_group_id':community.pk,
 					'user_id':request.user.id,
 					'username':request.user.username,
 					'url':settings.SERVERURL,
