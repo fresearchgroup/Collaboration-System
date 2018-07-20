@@ -96,7 +96,7 @@
           </div>
           <button id="save" style="visibility: hidden;"  class="btn btn-primary">Save</button>
         </form>
-        <button id="icf" style="visibility: hidden;" class="btn btn-primary" >Check</button>
+        <!-- <button id="icf" style="visibility: hidden;" class="btn btn-primary" >Check</button> -->
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- ++++++++++++++++++++++++End of Second form++++++++++++++++++ -->
@@ -262,7 +262,7 @@
               success: function (data) {
                   console.log(data.article_id);
                   console.log(data.username);
-                  console.log(data.community_id);
+                  console.log(data.community_or_group_id);
                   console.log(data.url);
                   console.log(data.articleof);
 
@@ -337,7 +337,7 @@
     $("#next1").on("click",function(){$("#create").click();if(pos<2)pos++;console.log(pos);});
 
     $("#next2").on("click",function(){
-      $("#icf").click();
+      $("#save").click();if(pos<2)pos++;console.log(pos);
     });
     
     $("#prev").on("click",function(){if(pos>0)pos--;console.log(pos);check();});

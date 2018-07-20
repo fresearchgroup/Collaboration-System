@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from .models import Group, GroupMembership, GroupArticles, GroupInvitations
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
@@ -104,32 +104,23 @@ def group_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def group_article_create_body(request, pk):
+def group_article_create_body(request,article, group):
 	if request.user.is_authenticated:
-		try:
-			gid = request.session['gid']
-		except:
-			return redirect('home')
-		try:
-			status = request.session['status']
-		except:
-			return redirect('home')
-		article = Articles.objects.get(pk=pk)
-		group = Group.objects.get(pk=gid)
 		if request.method == 'POST':
-			if article.creation_complete:
-				article.body = getHTML(article)
-				article.save()
-				del request.session['gid']
-				del request.session['status']
-				return redirect('article_view', article.pk)
-			else:
-				return redirect('group_article_create_body',article.pk)
-		else:
-			article.creation_complete = True
+			article.body = getHTML(article)
 			article.save()
-			return render(request, 'new_article_body.html', {'article':article,'group':group, 'status':int(status), 'url':settings.SERVERURL, 'articleof':'group'})
-
+			data={
+				'article_id':article.pk,
+				'body':article.body
+			}
+			return JsonResponse(data)
+			# return redirect('article_view', article.pk)
+			# else:
+			# 	article.creation_complete = True
+			# 	article.save()
+			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
+		else:
+			return redirect('home')
 	else:
 		return redirect('login')
 
@@ -138,31 +129,44 @@ def group_article_create(request):
 		if request.method == 'POST':
 			status = request.POST['status']
 			gid = request.POST['gid']
-			new = request.POST['new']
-			request.session['gid'] = gid
-			request.session['status'] = status
 			group = Group.objects.get(pk=gid)
-			if new == '0':
-				if status=='1':
-					article = create_article(request)
-					GroupArticles.objects.create(article=article, user = request.user , group = group )
-					return redirect('group_article_create_body',article.pk)
-				else:
-					return render(request, 'new_article.html', {'group':group, 'status':1})
-			elif new == '1':
-				pk = request.POST['pk']
-				article = Articles.objects.get(pk=pk)
-				if status == '1':
-					article.title = request.POST['title']
-					try:
-						article.image = request.FILES['article_image']
-						article.save(update_fields=["title","body","image"])
-					except:
-						article.save(update_fields=["title","body"])
-					return redirect('group_article_create_body', article.pk)
-				else:
-					return render(request, 'new_article.html', {'group':group, 'status':1, 'article':article})
+			if status=='1':
+				article = create_article(request)
+				GroupArticles.objects.create(article=article, user = request.user , group =group )
+				# return community_article_create_body(request, article, community)
+				data={
+					'article_id':article.id,
+					'community_or_group_id':group.pk,#see this thing
+					'user_id':request.user.id,
+					'username':request.user.username,
+					'url':settings.SERVERURL,
+					'articleof':'group'
+				}
+				return JsonResponse(data)
+				# return redirect('article_edit', article.pk)
 
+
+			elif status == '2' or status=='3':
+				pk=''
+				# print(status)
+				if status == '2':
+					pk = request.POST.get('pk','')
+					article = Articles.objects.get(pk=pk)
+					return group_article_create_body(request, article, group)
+				elif status == '3':
+					pk = request.POST.get('pk','3')
+					article= Articles.objects.get(pk=pk)
+					article.title=request.POST['title']
+					try:
+						image = request.FILES['article_image']
+					except:
+						image = None
+					article.image=image
+					article.save()
+					data={}
+					return JsonResponse(data)
+			else:
+				return render(request, 'new_article.html', {'group':group, 'status':1})
 		else:
 			return redirect('home')
 	else:
