@@ -84,7 +84,7 @@
          <h5>Created on : {{article.article.created_at}}</h5>
          <h5>Views : {{count}} times</h5>
          <h5>Status : {{article.article.state|slice:"1:3:2"}}</h5>
-         <h5>Appropriate : Waiting for javascript</h5>
+         <h5 id="appropriateness">Appropriate : Waiting for javascript</h5>
           </div>
 	<hr/>
 	
@@ -119,6 +119,57 @@
 <script src="{% static 'js/favourite.js' %}"></script>
 
 <script type="text/javascript">
+var id = {{article.article.id}};
+$(function(){
+        $.ajax({
+                  url: '/ajax/article_text/'+id,
+                  type: 'GET',
+                  data: {'pk':id},
+                  success: function (data) {
+                      // alert(data);
+                      // console.log(data.article_id);
+                      console.log(data.body);
+                      // check();
+                      // console.log("Done checkin")
+                       $.ajax({
+                                url: 'http://192.168.43.175:3000/?topic='+data.body,
+                                type: 'GET',
+                                data: {},
+                                success: function (data) {
+                                    // alert(data);
+                                    // console.log(data.article_id);
+                                    // console.log("!");
+                                    console.log(data);
+                                    // console.log(data.inappropriates);
+                                    status= data.inappropriates;
+                                    // check();
+                                    // console.log("Done checkin")
+                                },
+                                complete:function(data){
+                                 // $(".overlay")[0].style.display="none";
+
+                                 if(status==1)
+                                  {
+                                    // alert("Sorry the article is not appropriate. Consider reviewing your article.");
+                                    $("#appropriateness").text("Appropriate : No");
+                                  }
+                                  else
+                                  {
+                                    // alert("Good job");
+                                     $("#appropriateness").text("Appropriate : Yes");
+                                  }
+                                },
+                                cache: false,
+                                contentType: false,
+                                processData: false
+                            });
+                  },
+                  cache: false,
+                  contentType: false,
+                  processData: false
+              });
+})
+
 $(window).load(function() {
                var url = "recommendation_json_object/";
                  $.ajax({
