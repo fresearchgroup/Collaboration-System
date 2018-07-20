@@ -50,7 +50,8 @@ def article_autosave(request,pk):
 			article = Articles.objects.get(pk=pk)
 			article.body = getHTML(article)
 			data={
-				'success': "Done"
+				'success': "Done",
+				'html' : article.body
 			}
 			article.save()
 			return JsonResponse(data)
