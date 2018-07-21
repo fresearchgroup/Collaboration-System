@@ -153,10 +153,14 @@ $(function(){
                                     // alert("Sorry the article is not appropriate. Consider reviewing your article.");
                                     $("#appropriateness").text("Appropriate : No");
                                   }
-                                  else
+                                  else if(status == 0)
                                   {
                                     // alert("Good job");
                                      $("#appropriateness").text("Appropriate : Yes");
+                                  }
+                                  else 
+                                  {
+                                    $("#appropriateness").text("Appropriate : Unknown");
                                   }
                                 },
                                 cache: false,

@@ -50,7 +50,8 @@ def article_autosave(request,pk):
 			article = Articles.objects.get(pk=pk)
 			article.body = getHTML(article)
 			data={
-				'success': "Done"
+				'success': "Done",
+				'html' : article.body
 			}
 			article.save()
 			return JsonResponse(data)
@@ -241,12 +242,18 @@ def edit_article(request, pk):
 			gmember = ""
 			private = ""
 			try:
-				article = CommunityArticles.objects.get(pk=pk)
+				# print ("Hello")
+				article = CommunityArticles.objects.get(article=pk)
+				# print ("Hello2")
+				
 				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 					return redirect('home')
 				if article.article.state == States.objects.get(name='publish'):
 					return redirect('article_view',pk=pk)
 				belongs_to = 'community'
+				# print ("Hello3")
+				
+
 				try:
 					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
 					try:
@@ -264,6 +271,8 @@ def edit_article(request, pk):
 					cmember = 'FALSE'
 			except CommunityArticles.DoesNotExist:
 				try:
+					# print ("Hello4")
+
 					article = GroupArticles.objects.get(article=pk)
 					if article.article.state == States.objects.get(name='publish'):
 						return redirect('article_view',pk=pk)
@@ -272,6 +281,8 @@ def edit_article(request, pk):
 					belongs_to = 'group'
 					private =''
 					try:
+						# print ("Hello5")
+
 						communitygroup = CommunityGroups.objects.get(group=article.group.pk)
 						cmember = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 						try:
@@ -293,6 +304,8 @@ def edit_article(request, pk):
 					except CommunityMembership.DoesNotExist:
 						message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
 				except GroupArticles.DoesNotExist:
+					# print ("Hello6")
+
 					raise Http404
 			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'uname':request.user,'url':settings.SERVERURL})
 	else:

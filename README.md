@@ -110,6 +110,12 @@
 		EVENTAPI_TOKEN_PASSWORD=eventlogpass
 		EVENT_API_TOKEN=
 		ELASTICSEARCH_ADDRESS=
+		
+		NODESERVERURL=http://localhost
+		NODESERVERPORT=9001
+		COLLAB_ROOT=http://localhost:7000
+		H5P_ROOT=http://localhost:8000
+		APIKEY=ae0135343b703000e7377f8438e5f1154dcdc2ffc434268729203764cfe28b26
     ```
 
 8. Do all the migrations --
