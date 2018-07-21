@@ -175,7 +175,7 @@ $(document).ready(function() {
         </li>
         {% load notifications_tags %}
         <!--{% notifications_unread as unread_count %}-->
-        {% register_notify_callbacks badge_class='badge' refresh_period='1' callbacks='fill_notification_badge' %}
+        {% register_notify_callbacks badge_class='badge' refresh_period='60' callbacks='fill_notification_badge' %}
 
         <li>
             <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% live_notify_badge badge_class='badge' %}</a>
