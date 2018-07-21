@@ -18,3 +18,5 @@ PyEtherpadLite
 *.swm
 
 src/
+.vscode/
+*.pyc
