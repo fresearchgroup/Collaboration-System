@@ -3,38 +3,43 @@
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
 
 # COLLABORATION SYSTEM
+The system allows individual users to form communities, create groups, participate in various activities defined in the community/group, and thus, enhance its value for the society in terms of education.
 
-        Requiremnets -
+## Requirements and Django Packages
+* [Python 3.6](https://python.org/)
+* [Django 1.11.7](https://www.djangoproject.com/)
+* [MySQL Server](https://www.mysql.com/)
+* [Django REST Framework](http://www.django-rest-framework.org/)
+* [django-role-permissions 2.1.0](https://djangopackages.org/packages/p/django-role-permissions/)
+* [python-decouple 3.1](https://djangopackages.org/packages/p/python-decouple/)
+* [PyEtherpad Lite](https://github.com/devjones/PyEtherpadLite)
+* [social-auth-app-django 2.1.0](https://djangopackages.org/packages/p/social-app-django/)
+* [django-comments-xtd 2.0.9](https://djangopackages.org/packages/p/django-comments-xtd/)
+* [django-contrib-comments 1.8.0](https://djangopackages.org/packages/p/django-contrib-comments/)
+* [django-machina 0.6.0](https://djangopackages.org/packages/p/django-machina/)
+* [django-reversion 2.0.10](https://djangopackages.org/packages/p/django-reversion/)
+* [django-reversion-compare 0.8.1](https://djangopackages.org/packages/p/django-reversion-compare/)
+* [django-mptt 0.8.7](https://djangopackages.org/packages/p/django-mptt/)
+* [django-notifications-hq 1.4.0](https://djangopackages.org/packages/p/django-notifications-hq/)
+* [django-activity-stream 0.6.5](https://djangopackages.org/packages/p/django-activity-stream/)
+* [django-jsonfield 1.0.1](https://djangopackages.org/packages/p/schinckel-django-jsonfield/)
+* [django-widget-tweaks 1.4.1](https://djangopackages.org/packages/p/django-widget-tweaks/)
+* [django-cors-headers 2.1.0](https://djangopackages.org/packages/p/django-cors-headers/)
+* [Django Wiki 0.3.1](https://djangopackages.org/packages/p/django-wiki/)
+* [Gunicorn](https://pypi.org/project/gunicorn/)
+* [Oauthlib](https://pypi.org/project/oauthlib/)
+* [Pillow](https://pypi.org/project/Pillow/)
+* [Requests](https://pypi.org/project/requests/)
+* [Elasticsearch](https://pypi.org/project/elasticsearch/)
 
-                Django - 1.11.7 LTS
-                python - 3.6
-                Django Rest API
-                Mysql
-
-        Django pakages installed -
-
-                Django Rest Framework
-                Widget Tweaks
-                Django Reversion
-                Reversion Compare
-                MPTT
-                Haystack
-                Django Machina
-                Django-cors-headers
-                Django-role-permission
-                Django_comments_xtd
-                Django_comments
-		Django_wiki
-
-
-## For development installation (Virtual Environment) - 
+## For development installation (Virtual Environment)
 
 1. Install virtualenv 
 
  	```bash
  		sudo pip3 install virtualenv 
  	```
-2. Clone the project from github
+2. Clone the project from github 
 	
 	```bash
  		git clone https://github.com/fresearchgroup/Collaboration-System.git 
