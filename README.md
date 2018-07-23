@@ -1,6 +1,7 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system)
 [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)
+[![Docs](https://img.shields.io/badge/Docs-View-blue.svg)](https://fresearchgroup.github.io/docs-collaboration-system/)
 
 # COLLABORATION SYSTEM
 The system allows individual users to form communities, create groups, participate in various activities defined in the community/group, and thus, enhance its value for the society in terms of education.
