@@ -389,6 +389,10 @@ def create_community(request):
 				category = request.POST['category']
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
+				try:
+					image = request.FILES['community_image']
+				except:
+					image = None
 
 
 				# Create Forum for this community
@@ -415,7 +419,7 @@ def create_community(request):
 					name=name,
 					desc=desc,
 					category = category,
-					image = request.FILES['community_image'],
+					image = image,
 					tag_line = tag_line,
 					created_by = usr,
 					forum_link = forum_link
