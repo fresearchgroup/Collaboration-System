@@ -39,6 +39,8 @@ def course_view(request, pk):
 		topics = Topics.objects.filter(course=pk)
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
+		membership = CommunityMembership.objects.get(user=request.user.id, community=course.community)
+		canEdit = canEditCourse(course.course.state.name, membership.role.name, course.course, request)
 		token =""
 		if request.user.is_authenticated:
 			token, created = Token.objects.get_or_create(user=request.user)
@@ -46,7 +48,7 @@ def course_view(request, pk):
 #		count = course_watch(request, course.course) #Shall add this later
 	except CommunityCourses.DoesNotExist:
 		raise Http404
-	return render(request, 'view_course.html', {'course':course, 'topics':topics, 'token':token})
+	return render(request, 'view_course.html', {'course':course, 'topics':topics, 'token':token, 'canEdit':canEdit})
 
 def course_edit(request, pk):
 	if request.user.is_authenticated:
@@ -79,7 +81,7 @@ def course_edit(request, pk):
 			membership = CommunityMembership.objects.get(user=request.user.id, community=course.community)
 			message = canEditCourse(course.course.state.name, membership.role.name, course.course, request)
 			if message != 'True':
-				return render(request, 'error.html', {'message':message, 'url':'course_view', 'argument':pk})				
+				return render(request, 'error.html', {'message':message, 'url':'course_view', 'argument':pk})
 			return render(request, 'edit_course.html', {'course':course, 'topics':topics,'form':form})
 	else:
 		return redirect('login')

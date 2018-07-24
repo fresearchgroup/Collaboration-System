@@ -100,7 +100,7 @@ background-color:#FE642E;
                 <h4> <i class="fa fa-calendar"></i> {{course.course.created_at}} </h4>
                 <h4>
                   {% if course.course.state.name == 'draft' %}
-                  <i class="fa fa-cut"></i> Draft 
+                  <i class="fa fa-cut"></i> Draft
                   {% endif %}
                   {% if course.course.state.name == 'visible' %}
                   <i class="fa fa-bullhorn"></i> Visible
@@ -211,11 +211,11 @@ background-color:#FE642E;
                               }
                               if (countResources == 1){ //active frame
                                   var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete" >{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in active" id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9"> ' + myiframe + '</div><br/>{% if user.is_authenticated %}{% if canEdit == "True" %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete" >{% endif %}{% endif %}</div>'
                               }
                               else { //inactive frames
                                   var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tab' + links['id'] + '"> ' + icon + '</a></li>'
-                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete">{% endif %}</div>'
+                                  var listcollection = '<div class="tab-pane row fade in " id="tab'+links['id'] +  '"><div class="embed-responsive embed-responsive-16by9">' + myiframe + '</div> <br/>{% if user.is_authenticated %}{% if canEdit == "True" %}<input type="button"  id="'+links['id']+'" class="btn btn-success edit" value="Edit"><input type="button" id="'+links['id']+'" class="btn btn-danger delete" value="Delete">{% endif %}{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
@@ -239,12 +239,12 @@ background-color:#FE642E;
                               if(countResources == 1){
                                 var list = '<li class="nav-item active"><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
                                 var listcollection = '<div class="tab-pane row fade in active" id="tabArt'+articles['id'] +  '">'
-                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %}</div>'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>   {% if user.is_authenticated %}{% if canEdit == "True" %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %}{% endif %}</div>'
                               }
                               else {
                                 var list = '<li class="nav-item "><a class="nav-link " data-toggle="tab" href="#tabArt' + articles['id'] + '"> <i  class="fa fa-file-text" style="font-size: 20px;"></i></a></li>'
                                 var listcollection = '<div class="tab-pane row fade in " id="tabArt'+articles['id'] +  '">'
-                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>  {% if user.is_authenticated %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %} </div>'
+                                listcollection += '<div class="blog-item"> <h2> <a href=" ' + articleurl + ' ">' + title + ' </a></h2> <ul class="blog-info"> <li><i class="fa fa-user"></i> ' + created_by + '</li> <li><i class="fa fa-calendar"></i> ' + created_at + '</li> </ul><p> ' + body + '</p> </div>  {% if user.is_authenticated %}{% if canEdit == "True" %}<input type="button" class ="btn btn-primary delete_topic_article" id = "'+articles['article']+'"  value ="Delete" >{% endif %}{% endif %}</div>'
                               }
                               $("#list").append(list);
                               $("#collection").append(listcollection);
