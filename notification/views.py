@@ -82,7 +82,7 @@ def notify_update_article_state(user, article, action):
 
         if action=='private':
             notify.send(sender=user, recipient=list,
-                        verb='This group article is in private state, can be changed to visible', target=article,
+                        verb='Article is available for editing to group members', target=article,
                         target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
         elif action == 'visible':
