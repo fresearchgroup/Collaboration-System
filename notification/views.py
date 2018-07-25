@@ -7,18 +7,20 @@ def notify_subscribe_unsubscribe(user, target, type):
     verb=''
     target_url=''
     if isinstance(target, Community):
+        target_url="community_view"
         if type == 'subscribe':
             verb='Welcome to the community'
         elif type == 'unsubscribe':
             verb = 'You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
     elif isinstance(target, Group):
+        target_url="group_view"
         if type == 'subscribe':
             verb = 'Welcome to the group'
         elif type == 'unsubscribe':
             verb = 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
 
     notify.send(sender=user, recipient=user,
-                verb=verb, target=target, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
+                verb=verb, target=target, target_url=target_url, sender_url="display_user_profile", sender_url_name=user.username )
 
 def notify_update_article_state(user, article, action):
     if CommunityArticles.objects.filter(article=article).exists():
