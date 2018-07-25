@@ -83,6 +83,10 @@ def remove_or_add_user_feed(user,target,action_type):
 			membership = GroupMembership.objects.get(user=user, group=target.pk)
 			previous_role = membership.role.name
 
+		if action_type=='added':
+			verb = previous_role + ' has been added'
+			action.send(user, verb=verb, target=target, actor_href='display_user_profile', actor_href_id=user.username)			
+
 		if previous_role=='publisher':
 			if action_type=='removed':
 				action.send(user, verb='Publisher has been removed',target=target, actor_href='display_user_profile', actor_href_id=user.username)
