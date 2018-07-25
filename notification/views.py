@@ -178,6 +178,11 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             target_url = "group_view"
             previous_role = membership.role.name
 
+        if action_type == 'added':
+            verb = 'You have been added to the community as ' +  previous_role
+            notify.send(sender=sender, verb=verb, recipient=user, target=target, 
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
+
         if previous_role == 'publisher':
             if action_type == 'removed':
                 notify.send(sender=sender, verb='You have been removed from the community and can no longer contribute. Your earlier contributions to the community will remain.', recipient=user,
