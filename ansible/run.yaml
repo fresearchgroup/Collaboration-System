@@ -1,0 +1,11 @@
+    - name: Migrate the database
+      command: chdir={{repo}}  docker-compose run web python manage.py migrate
+
+    - name: Create Superuser
+      command: chdir={{repo}} docker-compose run web python manage.py createsuperuser
+
+    - name: Load Required Data
+      command: chdir={{repo}} docker-compose run web python manage.py loaddata workflow roles faq
+
+    - name: Start the container
+      command: chdir={{repo}} docker-compose up -d
