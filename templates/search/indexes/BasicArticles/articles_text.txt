@@ -1,0 +1,4 @@
+{{ object.title }}
+{{ object.created_by.get_full_name }}
+{{ object.body }}
+{{object.published_on}}
