@@ -99,5 +99,5 @@ def remove_or_add_user_feed(user,target,action_type):
 			elif action_type=='left':
 				action.send(user, verb='Admin has left',target=target, actor_href='display_user_profile', actor_href_id=user.username)
 			elif action_type=='added':
-				verb = previous_role + ' has been added'
+				verb = 'Admin has been added'
 				action.send(user, verb=verb, target=target, actor_href='display_user_profile', actor_href_id=user.username)			
