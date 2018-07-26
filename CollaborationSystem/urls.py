@@ -28,7 +28,6 @@ from UserRolesPermission import viewsets as user_viewsets
 from django.conf import settings
 from django.conf.urls.static import static
 from webcontent import views as web
-from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
 import notifications.urls
