@@ -1,13 +1,32 @@
 ---
 repo_url: https://github.com/fresearchgroup 
-repo: Collaboration-System
-home_dir: /home/edx
+home_dir: /home/glenn
 upass: edx
-repo_dir: "{{ home_dir }}/{{ repo }}"
 config_files_dir: /home/nithin/config
 django_dir: "{{ repo_dir }}/"
 static_dir: "{{ home_dir }}/static"
 django_project: Collaboration-System
 dbname: django
 dbuser: root 
-dbpassword: root 
+dbpassword: root
+container_name: collaboration-system_db_1
+token_container: collaboration-system_web_1
+h5p_dbname: collab-updated.sql
+username: root
+password: root
+collab_repo_dir: "{{ home_dir }}/{{ collab_repo }}"
+collab_repo: Collaboration-System
+events_repo_dir: "{{ home_dir }}/{{ events_repo }}"
+events_repo: Collaboration-System-Event-Logs
+content_repo_dir: "{{ home_dir }}/{{ content_repo }}"
+content_repo: Community-Content-Tools
+recommendation_repo_dir: "{{ home_dir }}/{{ recommendation_repo }}"
+recommendation_repo: Community-Recommendation
+etherpad_repo_url: https://github.com/ether
+etherpad_repo: etherpad-lite
+etherpad_repo_dir: "{{ home_dir }}/{{ etherpad_repo }}"
+etherpad_key_file: APIKEY.txt
+recommendation_IP: 10.129.27.60
+NodeServerUrl: http://10.129.27.60
+h5p_ip: http://10.129.27.60:8000/
+collab_ip: http://10.129.27.60:7000/

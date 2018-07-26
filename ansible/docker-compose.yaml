@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+  - name: Install Docker Compose
+    command: curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
+  - name: Permissions
+    command: chmod +x /usr/local/bin/docker-compose

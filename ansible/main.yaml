@@ -1,0 +1,166 @@
+- hosts: glenn
+  gather_facts: no
+  tasks:
+    #    - name: Create edx user
+    #  user: name=edx password={{ upass | password_hash('sha512') }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa groups=sudo shell=/bin/bash
+    
+    #- name: Read SSH public key
+    #  slurp: src=/home/edx/.ssh/id_rsa.pub
+    #  register: public_key
+    
+- hosts: all
+  gather_facts: no
+  tasks:
+ 
+    - name: Running apt update
+      apt: update_cache=yes
+  
+    - name: Installing required packages
+      apt: name={{item}} state=present
+      with_items:
+        - git
+   
+    - name: Pull Collaboration system repo
+      git:
+        repo={{ repo_url }}/{{ collab_repo }}.git
+        dest={{ collab_repo_dir }}
+        force=yes
+        accept_hostkey=yes
+        #version=develop
+    - name: Pull Event Logs repo
+      git:
+       repo={{ repo_url }}/{{ events_repo }}.git
+       dest={{ events_repo_dir }}
+       force=yes
+       accept_hostkey=yes
+       #    - name: Navigate to repo directory
+    - name: Pull Content tools repo
+      git:
+       repo={{ repo_url }}/{{ content_repo }}.git
+       dest={{ content_repo_dir }}
+       force=yes
+       accept_hostkey=yes
+    - name: Pull Recommendation system repo
+      git:
+       repo={{ repo_url }}/{{ recommendation_repo }}.git
+       dest={{ recommendation_repo_dir }}
+       force=yes
+       accept_hostkey=yes
+      #shell: cd {{repo}}
+        #    - name: changing mysql version 
+        #command: chdir={{repo}} sed -i 's/libmysqlclient-dev/default-libmysqlclient-dev/g' Dockerfile
+
+
+    - name: Build Docker
+      command: chdir={{collab_repo}} docker-compose build
+
+    - name: Up Database
+      command: chdir={{collab_repo}} docker-compose up -d db
+
+      #    - name: Load db with h5p updates 
+      #command: chdir={{collab_repo}} docker exec -i {{container_name}} mysql -uroot -proot django < {{ h5p_dbname }}
+
+    - name: Change COLLAB_ROOT IP
+      lineinfile:
+        path={{content_repo}}/H5P/.env.docker 
+        regexp='^COLLAB_ROOT'
+        line='COLLAB_ROOT={{collab_ip}}'
+    - name: Change H5P_ROOT IP
+      lineinfile:
+        path={{content_repo}}/H5P/.env.docker 
+        regexp='^H5P_ROOT'
+        line='H5P_ROOT={{h5p_ip}}' 
+    
+    - name: Build h5p image
+      command: chdir={{content_repo}}/H5P docker build -t h5p_image .
+
+    - name: Pull Etherpad repo
+      git:
+       repo={{etherpad_repo_url}}/{{etherpad_repo}}
+       dest={{ etherpad_repo_dir }}
+       force=yes
+       accept_hostkey=yes
+ 
+    - name: Move Etherpad into content tools
+      command: cp -r {{etherpad_repo_dir}} {{content_repo_dir}}/
+
+    - name: Build Etherpad Image
+      command: chdir={{ content_repo }}/{{ etherpad_repo }} docker build -t etherpadlite .
+
+      #- name: Run Etherpad Docker 
+      #command: chdir={{ content_repo }}/{{ etherpad_repo }} docker run -dp 9001:9001 etherpadlite
+
+      #- name: Run Etherpad
+      #command: chdir={{collab_repo}} docker-compose up -d node
+
+    - name: Build ELK
+      command: chdir={{ events_repo_dir }}/evelog-Docker docker-compose build
+
+    - name: Run ELK
+      command: chdir={{ events_repo_dir }}/evelog-Docker docker-compose up -d
+
+      #- name: Build Recommendation
+      #command: chdir={{ recommendation_repo_dir }} docker-compose build
+
+      #- name: Run Recommendation
+      #command: chdir={{ recommendation_repo_dir }} docker-compose up -d
+
+    - name: Run Docker
+      command: chdir={{collab_repo}} docker-compose up -d
+
+    - name: Generate Token
+      shell: docker exec -i {{token_container}} python3 manage.py generateToken --r |  sed '1,3d;s/Token for eventloguser//' 
+      register: token
+
+    - name: Edit .env.docker file for token 
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^EVENT_API_TOKEN'
+        line='EVENT_API_TOKEN={{token.stdout}}'
+ 
+    - name: Change COLLAB_ROOT IP
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^COLLAB_ROOT'
+        line='COLLAB_ROOT={{collab_ip}}'
+
+    - name: Change H5P_ROOT IP
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^H5P_ROOT'
+        line='H5P_ROOT={{h5p_ip}}' 
+ 
+    - name: Get API Key for Etherpad
+      command: chdir={{ content_repo }}/{{ etherpad_repo }} docker exec -i {{ container_name }} cat {{ etherpad_key_file }}
+      register: APIKEY
+
+    - name: Change APIKEY 
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^APIKEY'
+        line='APIKEY='APIKEY.stdout
+    - name: Change NodeServerURL 
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^NODESERVERURL'
+        line='NODESERVERURL={{NodeServerUrl}}' 
+ 
+    - name: Change Recommendation IP
+      lineinfile:
+        path={{collab_repo}}/.env.docker 
+        regexp='^RecommendationIP'
+        line='RecommendationIP={{recommendation_IP}}' 
+ 
+    
+    - name: Migrate the database
+      command: chdir={{repo}}  docker-compose run web python manage.py migrate
+
+      #    - name: Create Superuser
+      #command: chdir={{repo}} docker-compose run web python manage.py createsuperuser
+
+      #- name: Load Required Data
+      #command: chdir={{repo}} docker-compose run web python manage.py loaddata workflow roles faq
+    - name: Build the container
+      command: chdir={{repo}} docker-compose build
+    - name: Start the container
+      command: chdir={{repo}} docker-compose up -d
