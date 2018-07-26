@@ -347,7 +347,7 @@ def handle_group_invitations(request):
 			grpinivtation.status = 'Accepted'
 			grpinivtation.save()
 			notify_remove_or_add_user(request.user, user, grpinivtation.group, 'added')
-			if grpinivtation.role.name=='publisher' or grpinivtation.role.name=='community_admin':
+			if grpinivtation.role.name=='publisher' or grpinivtation.role.name=='group_admin':
 				remove_or_add_user_feed(user, grpinivtation.group, 'added')
 
 		if status=='Reject' and grpinivtation.status!='Rejected':
