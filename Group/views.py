@@ -340,11 +340,13 @@ def handle_group_invitations(request):
 		pk = int(request.POST['pk'])
 		grpinivtation=GroupInvitations.objects.get(pk=pk)
 		status = request.POST['status']
+		user = User.objects.get(username = request.user.username)
 
 		if status=='Accept' and grpinivtation.status!='Accepted':
 			grpmmbership = GroupMembership.objects.create(user=grpinivtation.user, group=grpinivtation.group, role=grpinivtation.role)
 			grpinivtation.status = 'Accepted'
 			grpinivtation.save()
+			notify_remove_or_add_user(request.user, user, grpinivtation.group, 'added')
 
 		if status=='Reject' and grpinivtation.status!='Rejected':
 			grpinivtation.status = 'Rejected'

@@ -174,14 +174,16 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             membership = CommunityMembership.objects.get(user=user, community=target.pk)
             target_url = "community_view"
             previous_role = membership.role.name
+            place = 'community'
 
         elif GroupMembership.objects.filter(user=user, group=target).exists():
             membership = GroupMembership.objects.get(user=user, group=target.pk)
             target_url = "group_view"
             previous_role = membership.role.name
+            place = 'group'
 
         if action_type == 'added':
-            verb = 'You have been added to the community as ' +  previous_role
+            verb = 'You have been added to the ' + place + ' as ' +  previous_role
             notify.send(sender=sender, verb=verb, recipient=user, target=target, 
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
