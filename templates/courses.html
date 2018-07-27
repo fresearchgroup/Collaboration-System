@@ -1,0 +1,84 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
+<li class="breadcrumb-item active">
+  <a href="{% url 'display_courses' %}">Courses</a>
+</li>
+{% endblock %} {% block content %}
+<h1>Courses</h1>
+{% if not courses %}
+<div class="content-page page-404">
+  <div class="number">
+    Oops!
+  </div>
+  <div class="details">
+    <h3>No Content</h3>
+    <p>
+      Sorry, currently there are no published courses from any community
+    </p>
+  </div>
+</div>
+{% endif %} {{myhtml|safe}}{% autoescape off%}
+<div class="row ">
+  <div class="col-md-10 col-sm-10">
+    <div class="infinite-container">
+      {% for course in courses %}
+      <div class="infinite-item">
+        <div class="row margin-bottom-15">
+          <div class="col-md-2 col-sm-2">
+            {% if course.course.image %}
+            <img src="{{ MEDIA_URL }}{{ course.course.image}}" alt="image" class="img-responsive"> {% else %}
+            <img src="{{ MEDIA_URL }}default/course_image_default.png" alt="default" class="img-responsive"> {%endif%}
+          </div>
+          <div class="col-md-7 col-sm-7">
+            <h3>
+              <a href="{% url 'course_view' course.course.pk %}">{{ course.course.title }}</a>
+            </h3>
+            <ul class="blog-info">
+              <li>
+                <i class="fa fa-user"></i> {{ course.course.created_by }} </li>
+              <li>
+                <i class="fa fa-calendar"></i> {{course.course.created_at}} </li>
+              <li>
+                <i class="fa fa-users"></i>
+                <a href="{% url 'community_view' course.community.pk %}"> {{course.community.name}} </a> Community </li>
+            </ul>
+            <p>
+              {{ course.course.body|striptags|truncatewords:50 }}
+              <a href="{% url 'course_view' course.course.id %}" class="more">View
+                <i class="icon-angle-right"></i>
+              </a>
+            </p>
+          </div>
+
+        </div>
+
+        <hr class="blog-post-sep">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endautoescape%} {% if courses.has_next %}
+<a class="infinite-more-link" href="?page={{ courses.next_page_number }}">
+  <i class="fa fa-spinner fa-spin" style="font-size:24px;color:red"></i> Loading...
+</a>
+{% endif %}
+
+<div class="loading" style="display: none;">
+  
+</div>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script> {% endblock %}

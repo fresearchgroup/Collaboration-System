@@ -8,6 +8,7 @@ from BasicArticle.models import Articles
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import Group as Roles
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def create_course(request):
 	title = request.POST['name']
@@ -206,3 +207,15 @@ def canEditCourse(state, role, course, request):
 	if state=='publish':
 		errormessage = 'You cannot edit content which is already published'
 	return errormessage
+
+def display_courses(request):
+	courselist = CommunityCourses.objects.filter(course__state__name='publish')
+	page = request.GET.get('page', 1)
+	paginator = Paginator(list(courselist), 5)
+	try:
+		courses = paginator.page(page)
+	except PageNotAnInteger:
+		courses = paginator.page(1)
+	except EmptyPage:
+		courses = paginator.page(paginator.num_pages)
+	return render(request, 'courses.html',{'courses':courses})

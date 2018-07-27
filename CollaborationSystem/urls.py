@@ -147,6 +147,7 @@ urlpatterns = [
     url(r'^group-h5p-create/$', group_views.group_h5p_create, name='group_h5p_create'),
     url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
+    url(r'^courses/$', courseview.display_courses, name='display_courses'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
