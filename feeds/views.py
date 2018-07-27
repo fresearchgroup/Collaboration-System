@@ -20,8 +20,9 @@ def create_resource_feed(actor,verb_id,action_object):
 		else:
 			target = GroupArticles.objects.get(article=actor).group
 			if verb_id=="article_published" :
-				verb="Group article has been published"
+				verb="Article has been published in the group, " + str(target)
 				actor_href='article_view'
+				action.send(actor,verb=verb,action_object=action_object,target=target,actor_href=actor_href,actor_href_id=actor.id,action_object_href='display_user_profile',action_object_href_id=action_object.username)
 				comm=CommunityGroups.objects.get(group=target)
 				target=comm.community
 
