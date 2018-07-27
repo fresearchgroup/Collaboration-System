@@ -182,8 +182,12 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             previous_role = membership.role.name
             place = 'group'
 
+        assigned_role = previous_role
+        if assigned_role == 'community_admin' or assigned_role == 'group_admin':
+            assigned_role = 'Admin'
+
         if action_type == 'added':
-            verb = 'You have been added to the ' + place + ' as ' +  previous_role
+            verb = 'You have been added to the ' + place + ' as ' +  assigned_role
             notify.send(sender=sender, verb=verb, recipient=user, target=target, 
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
