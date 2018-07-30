@@ -104,7 +104,7 @@ def create_article(request):
 		if request.method == 'POST':
 			state = States.objects.get(name='draft')
 			title = request.POST['title']
-			body  = ""
+			body  = request.POST['body']
 			try:
 				image = request.FILES['article_image']
 			except:
