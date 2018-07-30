@@ -109,7 +109,7 @@ $(document).ready(function() {
                 <ul class="list-unstyled list-inline pull-right">
                     {% if user.is_authenticated %}
                     {% else %}
-                    <li><a href="{% url 'login' %}?next={{request.path}}">Log In</a></li>
+                    <li><a href="{% url 'login' %}?next={{r/search/equest.path}}">Log In</a></li>
                     <li><a href="{% url 'signup' %}">Sign up</a></li>
                     {% endif %}
                 </ul>
@@ -175,7 +175,7 @@ $(document).ready(function() {
           <span class="sep"></span>
           <i class="fa fa-search search-btn"></i>
           <div class="search-box">
-            <form method ='post' action="{% url 'search_articles' %}">
+            <form method ='post' action="/search/">
               {% csrf_token %}
               <div class="input-group">
                 <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">
