@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-create-js": "./node_modules/.bin/browserify nodejs/article-create.js -o static/js/article-create.js",
-    "build-edit-js": "./node_modules/.bin/browserify nodejs/article-edit.js -o static/js/article-edit.js",
-    "build-view-js": "./node_modules/.bin/browserify nodejs/article-view.js -o static/js/article-view.js",
+    "build-create-js": "./node_modules/.bin/browserify nodejs/article-create.js -o static/js/dist/article-create.js",
+    "build-edit-js": "./node_modules/.bin/browserify nodejs/article-edit.js -o static/js/dist/article-edit.js",
+    "build-view-js": "./node_modules/.bin/browserify nodejs/article-view.js -o static/js/dist/article-view.js",
     "build": "npm run -s build-edit-js && npm run -s build-view-js && npm run -s build-create-js"
   },
   "author": "",
