@@ -20,8 +20,9 @@ def create_resource_feed(actor,verb_id,action_object):
 		else:
 			target = GroupArticles.objects.get(article=actor).group
 			if verb_id=="article_published" :
-				verb="Group article has been published"
+				verb="Article has been published in the group, " + str(target)
 				actor_href='article_view'
+				action.send(actor,verb=verb,action_object=action_object,target=target,actor_href=actor_href,actor_href_id=actor.id,action_object_href='display_user_profile',action_object_href_id=action_object.username)
 				comm=CommunityGroups.objects.get(group=target)
 				target=comm.community
 
@@ -88,9 +89,16 @@ def remove_or_add_user_feed(user,target,action_type):
 				action.send(user, verb='Publisher has been removed',target=target, actor_href='display_user_profile', actor_href_id=user.username)
 			elif action_type=='left':
 				action.send(user, verb='Publisher has left',target=target, actor_href='display_user_profile', actor_href_id=user.username)
+			elif action_type=='added':
+				verb = 'Publisher has been added'
+				action.send(user, verb=verb, target=target, actor_href='display_user_profile', actor_href_id=user.username)			
+
 
 		elif previous_role=='community_admin' or previous_role=='group_admin':
 			if action_type=='removed':
 				action.send(user, verb='Admin has been removed',target=target, actor_href='display_user_profile', actor_href_id=user.username)
 			elif action_type=='left':
 				action.send(user, verb='Admin has left',target=target, actor_href='display_user_profile', actor_href_id=user.username)
+			elif action_type=='added':
+				verb = 'Admin has been added'
+				action.send(user, verb=verb, target=target, actor_href='display_user_profile', actor_href_id=user.username)			

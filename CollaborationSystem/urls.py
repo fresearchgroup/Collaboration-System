@@ -28,7 +28,6 @@ from UserRolesPermission import viewsets as user_viewsets
 from django.conf import settings
 from django.conf.urls.static import static
 from webcontent import views as web
-from search import views as search
 from Course import views as courseview
 from Group import viewsets as groupviewsets
 import notifications.urls
@@ -132,7 +131,7 @@ urlpatterns = [
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
-    url(r'^search_articles/$', search.search_articles, name ='search_articles' ),
+    url(r'^search/', include('haystack.urls')),
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
@@ -148,6 +147,7 @@ urlpatterns = [
     url(r'^group-h5p-create/$', group_views.group_h5p_create, name='group_h5p_create'),
     url(r'^course-view/(?P<pk>\d*)/$', courseview.course_view, name='course_view'),
     url(r'^course-edit/(?P<pk>\d*)/$', courseview.course_edit, name='course_edit'),
+    url(r'^courses/$', courseview.display_courses, name='display_courses'),
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 

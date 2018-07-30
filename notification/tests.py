@@ -70,7 +70,7 @@ class NotificationManagersTest(TestCase):
 
         views.notify_subscribe_unsubscribe(self.user1, self.comm, 'unsubscribe')
         notification = Notification.objects.get(pk=2)
-        self.assertEqual(notification.verb, 'You left the community')
+        self.assertEqual(notification.verb, 'You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.')
         self.assertEqual(notification.actor, self.user1)
         self.assertEqual(notification.recipient, self.user1)
 
@@ -82,7 +82,7 @@ class NotificationManagersTest(TestCase):
 
         views.notify_subscribe_unsubscribe(self.user1, self.grp, 'unsubscribe')
         notification = Notification.objects.get(pk=4)
-        self.assertEqual(notification.verb, 'You left the group')
+        self.assertEqual(notification.verb, 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.')
         self.assertEqual(notification.actor, self.user1)
         self.assertEqual(notification.recipient, self.user1)
 
@@ -108,7 +108,7 @@ class NotificationManagersTest(TestCase):
         views.notify_update_article_state(self.user1, self.article2, 'private')
         notifications = Notification.objects.all()
         for notification in notifications:
-            self.assertEqual(notification.verb, 'This group article is in private state, can be changed to visible')
+            self.assertEqual(notification.verb, 'Article is available for editing to group members')
 
     def test_visible_article_state_for_group(self):
         self.article2.state = self.visible

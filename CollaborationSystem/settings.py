@@ -231,10 +231,13 @@ CACHES = {
 }
 
 HAYSTACK_CONNECTIONS = {
-  'default': {
-    'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-  },
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://'+config('ELASTICSEARCH_ADDRESS')+':9200/',
+        'INDEX_NAME': 'haystack',
+    },
 }
+
 
 COMMENTS_APP='django_comments_xtd'
 

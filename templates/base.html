@@ -137,7 +137,15 @@ $(document).ready(function() {
       <ul>
       <li><a href="#">About Us</a></li>
       <li><a href="{% url 'display_communities' %}">Communities</a></li>
-      <li><a href="{% url 'display_articles' %}">Articles</a></li>
+      <li class="dropdown" id="resources">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+          Resources
+        </a>
+        <ul class="dropdown-menu myinvitations" id="myinvitations">
+          <li><a href="{% url 'display_articles' %}">Articles</a></li>
+          <li><a href="{% url 'display_courses' %}">Courses</a></li>
+        </ul>
+      </li>  
       <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
@@ -187,7 +195,7 @@ $(document).ready(function() {
           <span class="sep"></span>
           <i class="fa fa-search search-btn"></i>
           <div class="search-box">
-            <form method ='post' action="{% url 'search_articles' %}">
+            <form method ='post' action="/search/">
               {% csrf_token %}
               <div class="input-group">
                 <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">

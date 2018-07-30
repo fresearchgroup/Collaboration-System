@@ -7,18 +7,20 @@ def notify_subscribe_unsubscribe(user, target, type):
     verb=''
     target_url=''
     if isinstance(target, Community):
+        target_url="community_view"
         if type == 'subscribe':
             verb='Welcome to the community'
         elif type == 'unsubscribe':
-            verb = 'You left the community'
+            verb = 'You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
     elif isinstance(target, Group):
+        target_url="group_view"
         if type == 'subscribe':
             verb = 'Welcome to the group'
         elif type == 'unsubscribe':
-            verb = 'You left the group'
+            verb = 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
 
     notify.send(sender=user, recipient=user,
-                verb=verb, target=target, target_url="community_view", sender_url="display_user_profile", sender_url_name=user.username )
+                verb=verb, target=target, target_url=target_url, sender_url="display_user_profile", sender_url_name=user.username )
 
 def notify_update_article_state(user, article, action):
     if CommunityArticles.objects.filter(article=article).exists():
@@ -82,7 +84,7 @@ def notify_update_article_state(user, article, action):
 
         if action=='private':
             notify.send(sender=user, recipient=list,
-                        verb='This group article is in private state, can be changed to visible', target=article,
+                        verb='Article is available for editing to group members', target=article,
                         target_url="article_edit", sender_url="display_user_profile", sender_url_name=user.username)
 
         elif action == 'visible':
@@ -125,7 +127,7 @@ def notify_update_role(sender, user, target, current_role):
 
     if current_role == 'publisher':
         if previous_role == 'author':
-            notify.send(sender=sender, verb='Your role has been changed from Author to Publisher', recipient=user, target=target,
+            notify.send(sender=sender, verb='Congratulations! Your role has been upgraded from Author to Publisher', recipient=user, target=target,
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
         elif previous_role == 'community_admin' or previous_role == 'group_admin' :
             notify.send(sender=sender, verb='Your role has been changed from Admin to Publisher', recipient=user,
@@ -145,12 +147,12 @@ def notify_update_role(sender, user, target, current_role):
 
     elif current_role == 'community_admin' or current_role == 'group_admin':
         if previous_role == 'publisher':
-            notify.send(sender=sender, verb='Your role has been changed from Publisher to Admin', recipient=user,
+            notify.send(sender=sender, verb='Congratulations! Your role has been upgraded from Publisher to Admin', recipient=user,
                         target=target,
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
         elif previous_role == 'author':
-            notify.send(sender=sender, verb='Your role has been changed from Author to Admin', recipient=user,
+            notify.send(sender=sender, verb='Congratulations! Your role has been upgraded from Author to Admin', recipient=user,
                         target=target,
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
@@ -172,24 +174,35 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             membership = CommunityMembership.objects.get(user=user, community=target.pk)
             target_url = "community_view"
             previous_role = membership.role.name
+            place = 'community'
 
         elif GroupMembership.objects.filter(user=user, group=target).exists():
             membership = GroupMembership.objects.get(user=user, group=target.pk)
             target_url = "group_view"
             previous_role = membership.role.name
+            place = 'group'
+
+        assigned_role = previous_role
+        if assigned_role == 'community_admin' or assigned_role == 'group_admin':
+            assigned_role = 'Admin'
+
+        if action_type == 'added':
+            verb = 'You have been added to the ' + place + ' as ' +  assigned_role
+            notify.send(sender=sender, verb=verb, recipient=user, target=target, 
+                        target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
         if previous_role == 'publisher':
             if action_type == 'removed':
-                notify.send(sender=sender, verb='Your have been removed as a publisher', recipient=user,
+                notify.send(sender=sender, verb='You have been removed from the community and can no longer contribute. Your earlier contributions to the community will remain.', recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
                             sender_url_name=sender.username)
             elif action_type == 'left':
                 verb = ''
                 if target_url=='community_view' :
-                    verb='You left the community as a publisher'
+                    verb='You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
                 elif target_url=='group_view' :
-                    verb = 'You left the group as a publisher'
+                    verb = 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
@@ -200,14 +213,14 @@ def notify_remove_or_add_user(sender, user, target, action_type):
                 verb=''
                 if target_url == 'community_view':
                     if sender == user:
-                        verb='You left the community as an admin'
+                        verb='You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
                     else:
-                        verb='You have been removed as an admin'
+                        verb='You have been removed from the communtiy and can no longer contribute. Your earlier contributions to the community will remain.'
                 elif target_url == 'group_view' :
                     if sender == user:
-                        verb='You left the group as an admin'
+                        verb='You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
                     else:
-                        verb='You have been removed as an admin'
+                        verb='You have been removed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
 
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
@@ -216,9 +229,9 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             elif action_type == 'left':
                 verb = ''
                 if target_url == 'community_view' :
-                    verb = "You left the community as an admin"
+                    verb = "You have successfully unsubscribed the community and can no longer contribute. Your earlier contributions to the community will remain."
                 elif target_url == 'group_view' :
-                    verb = 'You left the group as an admin'
+                    verb = 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
@@ -228,9 +241,9 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             if action_type == 'removed':
                 verb = ''
                 if target_url == 'community_view' :
-                    verb = 'You have been removed from the community'
+                    verb = 'You have been removed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
                 elif target_url == 'group_view' :
-                    verb = 'You have been removed from the group'
+                    verb = 'You have been removed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',
@@ -238,9 +251,9 @@ def notify_remove_or_add_user(sender, user, target, action_type):
             elif action_type == 'left':
                 verb = ''
                 if target_url == 'community_view':
-                    verb = 'You left the community'
+                    verb = 'You have successfully unsubscribed from the community and can no longer contribute. Your earlier contributions to the community will remain.'
                 elif target_url == 'group_view':
-                    verb = 'You left the group'
+                    verb = 'You have successfully unsubscribed from the group and can no longer contribute. Your earlier contributions to the group will remain.'
                 notify.send(sender=sender, verb=verb, recipient=user,
                             target=target,
                             target_url=target_url, sender_url='display_user_profile',

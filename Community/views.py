@@ -271,8 +271,9 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-								#if rolename=='publisher':
-									#create_community_feed(user,'New Publisher has been added',community)
+								notify_remove_or_add_user(request.user, user, community, 'added')
+								if rolename=='publisher' or rolename=='community_admin':
+									remove_or_add_user_feed(user,community,'added')
 
 							else:
 								errormessage = 'user exists in community'
