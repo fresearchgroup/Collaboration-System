@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
+
 {% load activity_tags %}
 {% load comments %}
 {% load comments_xtd %}
@@ -88,31 +95,23 @@
   </div>
   
 
-{% if grpfeeds.has_other_pages %}
-<div class="row">
-  <div class="col-md-4 col-sm-4 items-info">{{grpfeeds}}</div>
-  <div class="col-md-8 col-sm-8">
-    <ul class="pagination pull-right">
-    {% if grpfeeds.has_previous %}
-      <li><a href="?page={{ grpfeeds.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in grpfeeds.paginator.page_range %}
-      {% if grpfeeds.number == i %}
-        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if grpfeeds.has_next %}
-      <li><a href="?page={{ grpfeeds.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-</div>
-</div>
-<br />
-{% endif %}
-{% endblock %}
+  {% if grpfeeds.has_next %}
+  <a class="infinite-more-link" href="?page={{ feeds.next_page_number }}">More</a>
+  {% endif %}
+  
+  <div class="loading" style="display: none;">
+    Loading...
+  </div>
+  
+  {% endblock %} {% block javascript %}
+  <script type="text/javascript">
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script> {% endblock %}
