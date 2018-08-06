@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from BasicArticle.views import create_article, view_article, getHTML
+from BasicArticle.views import create_article, view_article
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse

@@ -160,7 +160,7 @@ def edit_article(request, pk):
 			if 'state' in request.POST and request.POST['state'] == 'save':
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
-				article.body = getHTML(article)
+				article.body = request.POST['body']
 				try:
 					article.image = request.FILES['article_image']
 					article.save(update_fields=["title","body","image"])
@@ -172,7 +172,7 @@ def edit_article(request, pk):
 			else:
 				article = Articles.objects.get(pk=pk)
 				title = request.POST['title']
-				body = getHTML(article)
+				body = request.POST['body']
 				current_state = request.POST['current']
 				try:
 					current_state = States.objects.get(name=current_state)

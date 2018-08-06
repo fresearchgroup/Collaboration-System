@@ -60,8 +60,10 @@ doc.subscribe(function(err) {
 
 $('#savechanges').click(function(e) {  
   var content = document.querySelector('input[name=body]');
-  console.log(content);
-  console.log(quill.getContents());
   content.value = JSON.stringify(quill.getContents());
-  console.log(content);
+});
+
+$('.state-change-btn').click(function(e) {  
+  var content = document.querySelector('input[name=body]');
+  content.value = JSON.stringify(quill.getContents());
 });
