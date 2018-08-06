@@ -30,6 +30,7 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
+from decouple import config
 # Create your views here.
 
 def display_communities(request):
@@ -125,6 +126,9 @@ def community_article_create_body(request, article, community):
 		return redirect('login')
 
 def community_article_create(request):
+	SHAREDB_SERVER_IP = config('SHAREDB_SERVER_IP')
+	SHAREDB_SERVER_PORT = config('SHAREDB_SERVER_PORT')
+
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
@@ -133,7 +137,11 @@ def community_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
-				requests.post(f'http://localhost:8080/api/article/create/doc/{article.pk}', {'body': article.body})
+
+				requests.post(
+					f'http://{SHAREDB_SERVER_IP}:{SHAREDB_SERVER_PORT}/api/article/{article.pk}/', 
+					data={'body': article.body})
+
 				return redirect('article_view', article.pk)
 			else:
 				return render(request, 'new_article.html', {'community':community, 'status':1})
