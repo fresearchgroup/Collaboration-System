@@ -1,4 +1,4 @@
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community, CommunityCourses
 from Group.models import GroupArticles, GroupMembership, Group
 from django.contrib.auth.models import Group as Roles
 from notifications.signals import notify
@@ -300,3 +300,17 @@ def notify_edit_article(user, article, current_state):
                     target=article,
                     target_url="article_view", sender_url='display_user_profile',
                     sender_url_name=user.username)
+
+def notify_edit_course(user, course, verb):
+    if(user != course.created_by):
+        try: 
+            commcourses = CommunityCourses.objects.get(course=course)
+            membership = CommunityMembership.objects.get(user=user, community=commcourses.community.pk)
+            sender_rolename = membership.role.name
+            notify.send(sender=user, verb=verb, recipient=course.created_by,
+                        target=course, target_url="course_view", 
+                        sender_url='display_user_profile',
+                        sender_url_name=user.username, 
+                        sender_rolename=sender_rolename)
+        except CommunityMembership.DoesNotExist:
+            errormessage = 'You are not a member of the community'
