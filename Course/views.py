@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import Group as Roles
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from feeds.views import create_resource_feed
-from notification.views import notify_edit_course
+from notification.views import notify_edit_course, notify_update_course_state
 
 def create_course(request):
 	title = request.POST['name']
@@ -200,11 +200,13 @@ def update_course_info(request,pk):
 					course.save()
 					notify_edit_course(request.user, course, 'Course information was updated')
 					if getstate == 'visible':
-						create_resource_feed(course, 'course_edit', request.user)
+						create_resource_feed(course, 'course_edit', request.user)						
 					elif getstate == 'publishable':
 						create_resource_feed(course, 'course_no_edit', request.user)
+						notify_update_course_state(request.user, course, 'publishable')
 					elif getstate == 'publish':
 						create_resource_feed(course, 'course_published', request.user)
+						notify_update_course_state(request.user, course, 'publish')
 					return redirect('course_view',pk=pk)
 				else:
 					message = canEditCourse(course.state.name, membership.role.name, course, request)

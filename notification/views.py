@@ -314,3 +314,44 @@ def notify_edit_course(user, course, verb):
                         sender_rolename=sender_rolename)
         except CommunityMembership.DoesNotExist:
             errormessage = 'You are not a member of the community'
+
+def notify_update_course_state(user, course, action):
+    if CommunityCourses.objects.filter(course=course).exists():
+        commcourses = CommunityCourses.objects.get(course=course)
+        membership = CommunityMembership.objects.get(user=user, community=commcourses.community.pk)
+        sender_rolename = membership.role.name
+
+        comm_admin_list = []
+        comm_publisher_list = []
+        comm_pub_admin = []
+        comm_admin_list = get_comm_list(commcourses.community,'community_admin',course)
+        comm_publisher_list = get_comm_list(commcourses.community,'publisher',course)
+        comm_pub_admin = comm_admin_list + comm_publisher_list
+
+        if action == 'publishable':
+            notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='This course has been made publishable', target=course,
+                        target_url="course_view", sender_url="display_user_profile", 
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+        elif action == 'publish':
+            notify.send(sender=user, recipient=course.created_by,
+                        verb='Your course has been published', target=course,
+                        target_url="course_view", sender_url="display_user_profile", 
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+            notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='Course has been published', target=course,
+                        target_url="course_view", sender_url="display_user_profile", 
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+
+def get_comm_list(comm, rolename, resource):
+    list = []
+    role = Roles.objects.get(name=rolename)
+    members = CommunityMembership.objects.filter(community=comm, role=role)
+    for member in members:
+        if resource.created_by != member.user:
+            list.append(member.user)
+    return list
+
