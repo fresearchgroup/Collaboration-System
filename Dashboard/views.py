@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from graphs import get_data, article_status, create
 from BasicArticle.models import Articles
-from Community.models import Community
+from Community.models import Community, CommunityMembership
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 import requests
@@ -15,6 +15,10 @@ EVENT_API_TOKEN = config("EVENT_API_TOKEN")
 
 def community_dashboard(request, pk):
     community = get_object_or_404(Community, pk = pk)
+    try:
+        membership = CommunityMembership.objects.get(user =request.user.id, community = community.pk)
+    except CommunityMembership.DoesNotExist:
+        membership = 'FALSE'
     data = get_data.view(pk,'community')
     data_label = ['Community View']
     xlabel = "Time"
@@ -51,7 +55,7 @@ def community_dashboard(request, pk):
     else:
         status = 'not found'
     print("Got Data: {!s}".format(articles)) 
-    return render(request, 'community_dashboard.html',{'communityview': communityview,'articles':articles,'status':status, 'topview': topview})
+    return render(request, 'community_dashboard.html',{'community':community,'membership':membership,'communityview': communityview,'articles':articles,'status':status, 'topview': topview})
 
 def article_dashboard(request,pk):
     article = get_object_or_404(Articles, pk = pk)

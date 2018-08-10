@@ -540,7 +540,7 @@ def feed_content(request, pk):
 		if membership:
 			feeds = community.target_actions.all()
 			page = request.GET.get('page', 1)
-			paginator = Paginator(feeds, 5)
+			paginator = Paginator(feeds, 10)
 			try:
 				communityfeed = paginator.page(page)
 			except PageNotAnInteger:

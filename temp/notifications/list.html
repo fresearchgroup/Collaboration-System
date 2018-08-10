@@ -143,13 +143,14 @@
                  <div class="row" style="padding-left:7px; padding-right:3px;">
                   <div class="col-md-9 text-left"><h5>
                     <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
-                    {{ notice.verb }}
+                    {{ notice.verb }}  
                       {% ifnotequal notice.actor notice.recipient %}
-                      -by <a href="{% url notice.data.sender_url notice.data.sender_url_name %}">{{ notice.actor }}</a>
+                      by <a href="{% url notice.data.sender_url notice.data.sender_url_name %}">{{ notice.actor }} ({{notice.data.sender_rolename}})</a>
                       {% endifnotequal %}
                   </h5>
                    </div>
-                     <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago</p></div>
+                     <div class="col-md-3 text-right"><p>{{ notice.timesince }} ago  
+                     </p></div>
                  </div>
 
                   <!-- <p>{{ notice.description|linebreaksbr }}</p> -->

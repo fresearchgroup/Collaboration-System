@@ -1,23 +1,13 @@
-{% extends 'base.html' %}
-{% load activity_tags %}
-{%load static %}
-{% block css %}
-<script src="{% static 'js/jquery-3.2.1.min.js' %}" xmlns:base="http://www.w3.org/1999/xhtml"
-        xmlns:base="http://www.w3.org/1999/xhtml" xmlns:base="http://www.w3.org/1999/xhtml"
-        xmlns:base="http://www.w3.org/1999/xhtml"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/infinite.min.js' %}"></script>
-{% endblock %}
-
-{% load comments %}
-{% load comments_xtd %}
-
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  <li class="breadcrumb-item active">{{ community.name }}</li>
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load activity_tags %} {%load static %} {% block css %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}" xmlns:base="http://www.w3.org/1999/xhtml" xmlns:base="http://www.w3.org/1999/xhtml"
+  xmlns:base="http://www.w3.org/1999/xhtml" xmlns:base="http://www.w3.org/1999/xhtml"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% load comments %} {% load comments_xtd %} {% block breadcrumb %}
+<li class="breadcrumb-item">
+  <a href="{% url 'display_communities' %}">Communities</a>
+</li>
+<li class="breadcrumb-item active">{{ community.name }}</li>
+{% endblock %} {% block content %}
 
 
 <ul class="nav nav-tabs">
@@ -31,12 +21,11 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
-  {%endif%}
-  {% if  membership.role.name != '' %}
+  {%endif%} {% if membership.role.name != '' %}
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
-    <li class="nav-item active">
+  <li class="nav-item active">
     <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
   </li>
   <li class="nav-item">
@@ -45,76 +34,70 @@
   {%endif%}
 
   <li class="nav-item">
-	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
+    <a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>
   </li>
 
 </ul>
-<br /><br />
-{% if not feeds %}
+<br />
+<br /> {% if not feeds %}
 <div class="content-page page-404">
-   <div class="number">
-      Oops!
-   </div>
-   <div class="details">
-      <h3>No Content</h3>
-      <p>
-         Sorry, currently there is no news feed to this community.
-      </p>
-   </div>
+  <div class="number">
+    Oops!
+  </div>
+  <div class="details">
+    <h3>No Content</h3>
+    <p>
+      Sorry, currently there is no news feed to this community.
+    </p>
+  </div>
 </div>
 {% endif %}
 
 <div class="infinite-container">
-{{myhtml|safe}}{% autoescape off%}
-{% for feed in feeds %}
-    <div class="infinite-item">
-          <div class="row margin-bottom-15">
-            <div class="col-md-12 col-md-10 col-md-offset-1">
-                
-                <div class="alert alert-error" role="alert" style="margin:1px; padding-bottom:2px;">
-                    
-                    <div class="row" style="padding-left:3px; padding-right:3px;">
-                    <div class="col-md-9">
-                    {% if feed.action_object is None %}
-                    <h3><i class="fa fa-user" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
-                    {% else %}
-                    <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a></h3>
-                    {% endif %}
-                    </div>
-                        {% if feed.action_object is not None %}
-                        <div class="col-md-3 text-right">
-                            <i class="fa fa-user"></i> <a href="{% url feed.data.action_object_href feed.data.action_object_href_id %}">{{feed.action_object}}</a>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="row" style="padding-left:7px; padding-right:3px;">
-                        <div class="col-md-9">
-                        <h5>{{feed.verb}} </h5>
-                      </div>
-                          <div class="text-right col-md-3"> {{feed.timesince}} ago</div>
-                      </div>
-                    
-                </div>
-                </a>
+  <div class="infinite-item">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        {{myhtml|safe}}{% autoescape off%} {% for feed in feeds %}
+        <div class="col-md-6 col-sm-6 mix mix_all">
+          <div class="alert alert-danger" role="alert" style="padding-bottom:1px; padding-top: 1px;">
+            <div class="row" style="background-color:mistyrose;">
+              <div class="col-md-8">
+                <h4 style="padding-top: 10px;">
+                  {% if feed.action_object is None %}
+                  <i class="fa fa-user" style="color:red;"></i>
+                  <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a>
+                  {% else %}
+                  <i class="fa fa-file-text" style="color:red;"></i>
+                  <a href="{% url feed.data.actor_href feed.data.actor_href_id %}" data-toggle="tooltip" title="{{feed.actor}}">{{feed.actor|truncatewords:4}}</a>
+                  {% endif %}
+                </h4>
+                <h5>{{feed.verb}} </h5>
+              </div>
+              <div class="col-md-4 text-right" style="padding-top: 10px;">
+                {% if feed.action_object is not None %}
+                <i class="fa fa-user"></i>
+                <a href="{% url feed.data.action_object_href feed.data.action_object_href_id %}">{{feed.action_object}}</a>
+                <br /> {% endif %}
+                <h5>{{feed.timesince}} ago </h5>
+              </div>
             </div>
           </div>
         </div>
-{% endfor %}
-{% endautoescape%}
+        {% endfor %} {% endautoescape%}
+      </div>
+    </div>
+  </div>
 </div>
 
 {% if feeds.has_next %}
-  <a class="infinite-more-link" href="?page={{ feeds.next_page_number }}">More</a>
+<a class="infinite-more-link" href="?page={{ feeds.next_page_number }}">More</a>
 {% endif %}
 
 <div class="loading" style="display: none;">
   Loading...
 </div>
 
-{% endblock %}
-
-{% block javascript %}
+{% endblock %} {% block javascript %}
 <script type="text/javascript">
   var infinite = new Waypoint.Infinite({
     element: $('.infinite-container')[0],
@@ -125,5 +108,4 @@
       $('.loading').hide();
     }
   });
-</script>
-{% endblock %}
+</script> {% endblock %}

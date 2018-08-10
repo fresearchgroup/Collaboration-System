@@ -365,7 +365,7 @@ def feed_content(request, pk):
 		if membership:
 			gfeeds = group.target_actions.all()
 			page = request.GET.get('page', 1)
-			paginator = Paginator(list(gfeeds), 5)
+			paginator = Paginator(list(gfeeds), 10)
 			try:
 				grpfeeds = paginator.page(page)
 			except PageNotAnInteger:

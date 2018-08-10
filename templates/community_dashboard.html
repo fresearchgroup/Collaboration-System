@@ -1,6 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item ">
+    <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
+  </li>
+  {% if membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
+  </li>
+  {%endif%}
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+  </li>
+   <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
+  </li>
+  {%endif%}
+  <li class="nav-item">
+	  <a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forum</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'community_dashboard' community.pk %}">Insights</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/wiki/{{community.name}}{{ community.pk }}">Wiki</a>
+  </li>
+</ul>
+<br/>
+
 <div class="main">
     <div class="container">
           <div class="col-md-12 ">

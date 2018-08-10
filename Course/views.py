@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import Group as Roles
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from feeds.views import create_resource_feed
+from notification.views import notify_edit_course, notify_update_course_state
 
 def create_course(request):
 	title = request.POST['name']
@@ -30,6 +32,8 @@ def create_topics(request, pk):
 	else:
 		parent = Topics.objects.get(pk=parentid)
 	topic = Topics.objects.create(name = name, parent=parent, course = course )
+	verb = 'Topic, "' + name + '" was added'
+	notify_edit_course(request.user, course, verb)
 	return topic
 
 def course_view(request, pk):
@@ -61,16 +65,16 @@ def course_edit(request, pk):
 			if status == 'addtopic':
 				create_topics(request,pk)
 			if status == 'update':
-				update_topic_name(request)
+				update_topic_name(request, course)
 			if status == 'movetopic':
-				isMoved = move_topic(request)
+				isMoved = move_topic(request, course)
 				if isMoved == False:
 					message = 'A topic cannot be made a child of itself or any of its descendants.'
 					url = 'course_edit'
 					argument = pk
 					return render(request, 'error.html', {'message':message, 'url':url, 'argument':argument})
 			if status == 'deletetopic':
-				delete_topic(request)
+				delete_topic(request, course)
 			return redirect('course_edit',pk=pk)
 		else:
 			try:
@@ -87,14 +91,16 @@ def course_edit(request, pk):
 	else:
 		return redirect('login')
 
-def update_topic_name(request):
+def update_topic_name(request, course):
 	nodeid = request.POST['nodeid']
 	name = request.POST['name'+nodeid]
 	topic = Topics.objects.get(pk=nodeid)
+	verb = 'Topic, "' + topic.name + '" was renamed to "' + name + '"'
 	topic.name = name
 	topic.save()
+	notify_edit_course(request.user, course, verb)
 
-def move_topic(request):
+def move_topic(request, course):
 	parent = request.POST['parent']
 	if parent == '':
 		parent = None
@@ -105,6 +111,8 @@ def move_topic(request):
 	if canMove(parent, topic):
 		topic.parent = parent
 		topic.save()
+		verb = 'Topic, "' + str(topic.name) + '" was moved under "' + str(topic.parent)+ '"'
+		notify_edit_course(request.user, course, verb)
 		return True
 	else:
 		return False
@@ -119,9 +127,12 @@ def canMove(parent, topic):
 		cpyParent = cpyParent.parent
 	return True
 
-def delete_topic(request):
+def delete_topic(request, course):
 	deletenodeid = request.POST['deletenodeid']
-	topic = Topics.objects.filter(pk=deletenodeid).delete()
+	topic = Topics.objects.get(pk=deletenodeid)
+	verb = 'Topic, "' + topic.name + '" and its sub-topics if any, were deleted'
+	topic.delete()
+	notify_edit_course(request.user, course, verb)
 
 def manage_resource(request, pk):
 	if request.user.is_authenticated:
@@ -136,12 +147,14 @@ def manage_resource(request, pk):
 				topic_link=request.POST['topic_link']
 				topic_description=request.POST['topic_description']
 				link = Links.objects.create(link = topic_link, desc= topic_description, topics = topic, types=topic_type)
-				return redirect('course_view',pk=pk)
+				verb = topic_type + ' link was added to "' + topic.name + '"'
 			elif topic_type=='PublishedArticle':
 				article_id=request.POST['article_id']
 				article = Articles.objects.get(pk=article_id)
 				topicarticle = TopicArticle.objects.create(topics=topic, article=article)
-				return redirect('course_view',pk=pk)
+				verb = 'Published article was added to "' + topic.name + '"'
+			notify_edit_course(request.user, course, verb)
+			return redirect('course_view',pk=pk)
 		else:
 			try:
 				course = CommunityCourses.objects.get(course=pk)
@@ -185,6 +198,15 @@ def update_course_info(request,pk):
 					except:
 						errormessage = 'image not uploaded'
 					course.save()
+					notify_edit_course(request.user, course, 'Course information was updated')
+					if getstate == 'visible':
+						create_resource_feed(course, 'course_edit', request.user)						
+					elif getstate == 'publishable':
+						create_resource_feed(course, 'course_no_edit', request.user)
+						notify_update_course_state(request.user, course, 'publishable')
+					elif getstate == 'publish':
+						create_resource_feed(course, 'course_published', request.user)
+						notify_update_course_state(request.user, course, 'publish')
 					return redirect('course_view',pk=pk)
 				else:
 					message = canEditCourse(course.state.name, membership.role.name, course, request)
