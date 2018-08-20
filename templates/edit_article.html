@@ -249,7 +249,7 @@
 {% block javascript %}
 <script type="text/javascript">
   var articleBody = {{ article.article.body | safe }};
-  var id = {{article.id}};
+  var id = {{article.article.id}};
 </script>
 <script src="{% static 'js/dist/article-edit.js' %}"></script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
