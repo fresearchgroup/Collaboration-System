@@ -105,26 +105,6 @@ def community_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def community_article_create_body(request, article, community):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article.body = getHTML(article)
-			article.save()
-			data={
-				'article_id':article.pk,
-				'body':article.body
-			}
-			return JsonResponse(data)
-			# return redirect('article_view', article.pk)
-			# else:
-			# 	article.creation_complete = True
-			# 	article.save()
-			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
 def community_article_create(request):
 	SHAREDB_SERVER_IP = config('SHAREDB_SERVER_IP')
 	SHAREDB_SERVER_PORT = config('SHAREDB_SERVER_PORT')

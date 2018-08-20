@@ -24,58 +24,6 @@ from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
 
-def getHTML(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getHtml(article.id)
-	return result['html']
-
-# +++++++++++++++++++++++++++++++++++++++++++
-
-
-def getText(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getText(article.id)
-	return result['text']
-
-# +++++++++++++++++++++++++++++++++++++++++++
-
-def deletePad(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	epclient.deletePad(article.id)
-
-def article_autosave(request,pk):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article = Articles.objects.get(pk=pk)
-			article.body = getHTML(article)
-			data={
-				'success': "Done",
-				'html' : article.body
-			}
-			article.save()
-			return JsonResponse(data)
-	
-	else:
-		return redirect('login')
-
-# +++++++++++++++++++++++++++++++++++++++++++
-
-def article_text(request,pk):
-	if request.user.is_authenticated:
-		if request.method == 'GET':
-			article = Articles.objects.get(pk=pk)
-			body = getText(article)
-			data={
-				'body' : body,
-				'success': "Done"
-			}
-			# article.save()
-			return JsonResponse(data)
-	
-	else:
-		return redirect('login')
-# +++++++++++++++++++++++++++++++++++++++++++
-
 def display_articles(request):
 	"""
 	display list of articles in  article list page.
