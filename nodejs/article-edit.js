@@ -6,11 +6,10 @@ sharedb.types.register(richText.type);
 
 
 // TODO: Use env variables to get these values
-var SHAREDB_SERVER_IP = '10.16.23.106';
+// var SHAREDB_SERVER_IP = '10.16.23.129';
 var SHAREDB_SERVER_PORT = '8080';
 
-
-var socket = new WebSocket(`ws://${SHAREDB_SERVER_IP}:${SHAREDB_SERVER_PORT}`);
+var socket = new WebSocket(`ws://${window.location.hostname}:${SHAREDB_SERVER_PORT}`);
 
 var connection = new sharedb.Connection(socket);
 
