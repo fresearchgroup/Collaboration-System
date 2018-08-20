@@ -166,6 +166,7 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
+    url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
 ]
 
