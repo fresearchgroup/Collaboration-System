@@ -33,6 +33,7 @@ from Group import viewsets as groupviewsets
 import notifications.urls
 from Dashboard import views as dashboardview
 from Recommendation_API import views
+from Reputation import views as repuationview
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
 
@@ -166,7 +167,9 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
-    url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+
+    url(r'manage_reputation/',repuationview.manage_reputation , name = 'manage_reputation'),
+    #url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
 ]
 
