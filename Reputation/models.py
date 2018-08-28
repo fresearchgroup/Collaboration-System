@@ -12,10 +12,11 @@ class CommunityReputaion(models.Model):
 #reputation values and operation for any resource in the system
 class ResourceScore(models.Model):
     can_vote_unpublished = models.BooleanField(default=True)
-    upvote_value = models.IntegerField()
-    downvote_value = models.IntegerField()
+    upvote_value = models.IntegerField(null=True)
+    downvote_value = models.IntegerField(null=True)
     can_report = models.BooleanField(default=True)
     publish_value = models.IntegerField(null = True)
+    resource_type = models.CharField(max_length=20, default='resource')
 
 
 #score needed to achieve a certain role
