@@ -6,17 +6,74 @@
 
 
 <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#author">Author</a></li>
-    <li><a data-toggle="tab" href="#publisher">Pusblisher</a></li>
-    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    <li class="active"><a data-toggle="tab" href="#res">Resources</a></li>
+    <li><a data-toggle="tab" href="#users">Users</a></li>
+
   </ul>
   
   <div class="tab-content">
-    <div id="author" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Some content.</p>
+    <div id="res" class="tab-pane fade in active">
+      <h3>Assign points for Resources</h3>
+      <br/>
+      <form method='post' action='{% url 'manage_resource_score' %}'>
+        {% csrf_token %}
+        <div class="form-group row">
+          <label for="can_vote" class="col-sm-3 col-form-label">User can upvote unpublish content.</label>
+          <div class="col-sm-9">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="can_vote" name="can_vote" value="True">
+              <label class="form-check-label" for="can_vote">
+                (Set as ={{res.can_vote_unpublished}})
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="upvote" class="col-sm-3 col-form-label">Points for upvotes</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" id="upvote" name="upvote" >
+          </div>
+          <label class="form-text-label" for="upvote">
+              (Value assigned = {{res.upvote_value}})
+            </label>
+        </div>
+        <div class="form-group row">
+          <label for="downvote" class="col-sm-3 col-form-label">Points for downvotes</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" id="downvote" name="downvote" >
+          </div>
+          <label class="form-text-label" for="downvote">
+              (value assigned = {{res.downvote_value}})
+            </label>
+        </div>
+        <div class="form-group row">
+          <label for="can_report" class="col-sm-3 col-form-label">User can report content.</label>
+          <div class="col-sm-9">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="can_report" name="can_report" value="True">
+              <label class="form-check-label" for="can_report">
+                (Set as = {{res.can_report}})
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="pub_content" class="col-sm-3 col-form-label">Points for publish content</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" id="pub_content" name="pub_content" >
+          </div>
+          <label class="form-text-label" for="pub_content">
+              (Value assigned = {{res.publish_value}})
+            </label>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
-    <div id="publisher" class="tab-pane fade">
+    <div id="users" class="tab-pane fade">
       <h3>Menu 1</h3>
       <p>Some content in menu 1.</p>
     </div>
