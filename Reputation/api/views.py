@@ -1,24 +1,22 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 from .serializers import CommunityReputaionSerializer
 from Reputation.models import CommunityReputaion
-
-@api_view(['GET'])
-def get_reputation(request):
-    if request.user.is_authenicated:
-        if request.method == 'GET':
-            serializer = CommunityReputaionSerializer(data=request.data)
-            if serializer.is_valid():
-                cid = serializer.data['cid']
-                if CommunityReputaion.objects.filter(community=cid, user = request.user).exists():
-                    rep = CommunityReputaion.objects.get(community=cid, user = request.user)
-                    rep = CommunityReputaionSerializer(rep, many=False)
-                    return Response(rep.data)
-                else:
-                    pass
-            else:
-                pass
+from rest_framework.permissions import IsAuthenticated
+from Community.models import Community
 
 
+class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = CommunityReputaionSerializer
+    permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        cid = self.kwargs['pk']
+        community = Community.objects.get(id=cid)
+        if CommunityReputaion.objects.filter(community=community, user = self.request.user).exists():
+            return CommunityReputaion.objects.get(community=community, user = self.request.user)
+        else:
+            return CommunityReputaion.objects.create(community=community, user = self.request.user)

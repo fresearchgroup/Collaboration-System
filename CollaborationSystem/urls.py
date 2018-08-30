@@ -172,7 +172,7 @@ urlpatterns = [
     url(r'manage_resource_score/',repuationview.manage_resource_score , name = 'manage_resource_score'),
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
-    #url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+    url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
 ]
 
