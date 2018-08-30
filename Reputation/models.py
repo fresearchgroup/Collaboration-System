@@ -7,7 +7,7 @@ from BasicArticle.models import Articles
 class CommunityReputaion(models.Model): 
 	community = models.ForeignKey(Community ,on_delete = models.CASCADE)
 	user = models.ForeignKey(User , on_delete = models.CASCADE)
-	score = models.IntegerField()
+	score = models.IntegerField(null=True)
 
 #reputation values and operation for any resource in the system
 class ResourceScore(models.Model):

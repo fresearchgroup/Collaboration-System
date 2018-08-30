@@ -3,7 +3,7 @@ from Reputation.models import CommunityReputaion
 
 class CommunityReputaionSerializer(serializers.ModelSerializer):
     class Meta:
-        models = CommunityReputaion
+        model = CommunityReputaion
         fields = [
             'community',
             'user',
