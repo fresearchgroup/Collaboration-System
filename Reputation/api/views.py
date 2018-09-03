@@ -13,7 +13,7 @@ class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommunityReputaionSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_queryset(self):
+    def get_object(self):
         cid = self.kwargs['pk']
         community = Community.objects.get(id=cid)
         if CommunityReputaion.objects.filter(community=community, user = self.request.user).exists():
