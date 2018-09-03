@@ -5,7 +5,7 @@ from rest_framework import generics
 from .serializers import CommunityReputaionSerializer
 from Reputation.models import CommunityReputaion
 from rest_framework.permissions import IsAuthenticated
-from Community.models import Community
+from Community.models import Community, CommunityMembership
 
 
 class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
@@ -16,7 +16,8 @@ class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         cid = self.kwargs['pk']
         community = Community.objects.get(id=cid)
-        if CommunityReputaion.objects.filter(community=community, user = self.request.user).exists():
-            return CommunityReputaion.objects.get(community=community, user = self.request.user)
-        else:
-            return CommunityReputaion.objects.create(community=community, user = self.request.user)
+        if CommunityMembership.objects.filter(community=community, user = self.request.user).exists():
+            if CommunityReputaion.objects.filter(community=community, user = self.request.user).exists():
+                return CommunityReputaion.objects.get(community=community, user = self.request.user)
+            else:
+                return CommunityReputaion.objects.create(community=community, user = self.request.user)
