@@ -23,6 +23,7 @@ from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
+from Reputation.models import ArticleScoreLog
 
 def getHTML(article):
 	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
@@ -115,6 +116,7 @@ def create_article(request):
 				created_by = request.user,
 				state = state
 				)
+			ArticleScoreLog.objects.create(article=article)
 			return article
 	else:
 		return redirect('login')
