@@ -5,8 +5,8 @@ from BasicArticle.models import Articles
 
 #score of a user in different communities
 class CommunityReputaion(models.Model): 
-	community = models.ForeignKey(Community ,on_delete = models.CASCADE)
-	user = models.ForeignKey(User , on_delete = models.CASCADE)
+	community = models.ForeignKey(Community ,on_delete = models.CASCADE, null=True)
+	user = models.ForeignKey(User , on_delete = models.CASCADE,null=True)
 	score = models.IntegerField(null=True)
 
 #reputation values and operation for any resource in the system
