@@ -10,9 +10,9 @@ def create_community_ether(community):
     return
 
 
-def create_group_ether(community_id, group):
+def create_group_ether(group):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-    group_id = str(community_id) + str(group)
+    group_id = 'group' + str(group.id)
     result =  epclient.createGroupIfNotExistsFor(group_id)
     EtherGroup.objects.create(group=group, group_ether_id=result['groupID'])
     return
@@ -22,4 +22,11 @@ def create_article_ether_community(community_id, article):
     community = EtherCommunity.objects.get(community=community_id)
     result =  epclient.createGroupPad(community.community_ether_id, article.id)
     EtherArticle.objects.create(article=article, article_ether_id=result['padID'])
+    return
     
+def create_article_ether_group(group_id, article):
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    group = EtherGroup.objects.get(group=group_id)
+    result =  epclient.createGroupPad(group.group_ether_id, article.id)
+    EtherArticle.objects.create(article=article, article_ether_id=result['padID'])
+    return
