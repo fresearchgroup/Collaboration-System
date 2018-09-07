@@ -30,7 +30,7 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
-from etherpad.views import create_community_ether
+from etherpad.views import create_community_ether, create_article_ether_community
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -133,6 +133,10 @@ def community_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+
+				#create the ether id for artcile blonging to this community
+				create_article_ether_community(cid, article)
+
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
