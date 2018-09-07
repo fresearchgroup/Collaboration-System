@@ -21,6 +21,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
 from decouple import config
+from etherpad.views import create_ether_user
 
 def signup(request):
     """
@@ -58,6 +59,7 @@ def signup(request):
             else:
                 user = form.save()
                 assign_role(user, Author)
+                create_ether_user(user)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('user_dashboard')
         else:

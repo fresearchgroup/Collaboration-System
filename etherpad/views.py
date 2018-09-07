@@ -34,5 +34,5 @@ def create_article_ether_group(group_id, article):
 def create_ether_user(user):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
     result =  epclient.createAuthorIfNotExistsFor(user.id, user.username)
-    EtherUser.object.create(user=user, user_ether_id= result['authorID'])
+    EtherUser.objects.create(user=user, user_ether_id= result['authorID'])
     return
