@@ -2,6 +2,7 @@ from django.shortcuts import render
 from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from .models import EtherCommunity, EtherGroup, EtherArticle, EtherUser
+from time import time
 
 def create_community_ether(community):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
@@ -35,4 +36,16 @@ def create_ether_user(user):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
     result =  epclient.createAuthorIfNotExistsFor(user.id, user.username)
     EtherUser.objects.create(user=user, user_ether_id= result['authorID'])
+    return
+
+
+
+#session creation
+
+def create_session_community(request, community, user):
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    ether_com = EtherCommunity.objects.get(community=community)
+    ether_user = EtherUser.objects.get(user=user)
+    result = EtherpadLiteClient.createSession(ether_com.community_ether_id, ether_user.user_ether_id, validUntil=time()+28800)
+    request.session['sessionID'] = result['sessionID']
     return
