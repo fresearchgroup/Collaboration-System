@@ -57,20 +57,23 @@ def create_session_community(request, community_id):
 
 
 def getHTML(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getHtml(article.id)
-	return result['html']
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    article = EtherArticle.objects.get(article=article)
+    result =  epclient.getHtml(article.article_ether_id)
+    return result['html']
 
 # +++++++++++++++++++++++++++++++++++++++++++
 
 
 def getText(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getText(article.id)
-	return result['text']
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    article = EtherArticle.objects.get(article=article)
+    result =  epclient.getText(article.article_ether_id)
+    return result['text']
 
 # +++++++++++++++++++++++++++++++++++++++++++
 
 def deletePad(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	epclient.deletePad(article.id)
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    article = EtherArticle.objects.get(article=article)
+    epclient.deletePad(article.article_ether_id)
