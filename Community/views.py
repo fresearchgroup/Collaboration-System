@@ -30,7 +30,7 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
-# Create your views here.
+from etherpad.views import create_community_ether
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -255,6 +255,9 @@ def handle_community_creation_requests(request):
 
 					)
 
+				#create the ether id for community
+				create_community_ether(communitycreation)
+
 				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
@@ -432,6 +435,9 @@ def create_community(request):
 					)
 				remove_or_add_user_feed(usr,community,'community_created')
 				notify_remove_or_add_user(request.user, usr,community,'community_created')
+
+				#create the ether id for community
+				create_community_ether(community)
 
 				create_wiki_for_community(community)
 

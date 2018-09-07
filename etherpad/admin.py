@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import EtherUser
+from .models import EtherUser, EtherCommunity, EtherGroup
 # Register your models here.
 
 admin.site.register(EtherUser)
+admin.site.register(EtherCommunity)
+admin.site.register(EtherGroup)
