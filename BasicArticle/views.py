@@ -23,25 +23,7 @@ from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
-
-def getHTML(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getHtml(article.id)
-	return result['html']
-
-# +++++++++++++++++++++++++++++++++++++++++++
-
-
-def getText(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	result =  epclient.getText(article.id)
-	return result['text']
-
-# +++++++++++++++++++++++++++++++++++++++++++
-
-def deletePad(article):
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-	epclient.deletePad(article.id)
+from etherpad.views import getHTML, getText, deletePad
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:

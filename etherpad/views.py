@@ -51,3 +51,26 @@ def create_session_community(request, community_id):
     validUntil = int(time())+28800
     result = epclient.createSession(ether_com, ether_user, validUntil)
     return result['sessionID']
+
+
+#pad operations
+
+
+def getHTML(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	result =  epclient.getHtml(article.id)
+	return result['html']
+
+# +++++++++++++++++++++++++++++++++++++++++++
+
+
+def getText(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	result =  epclient.getText(article.id)
+	return result['text']
+
+# +++++++++++++++++++++++++++++++++++++++++++
+
+def deletePad(article):
+	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	epclient.deletePad(article.id)
