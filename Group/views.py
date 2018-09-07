@@ -18,6 +18,7 @@ from BasicArticle.views import getHTML
 from django.conf import settings
 import json
 import requests
+from etherpad.views import create_group_ether
 
 def create_group(request):
 	if request.method == 'POST':
@@ -37,7 +38,11 @@ def create_group(request):
 			created_by = user
 			)
 		role = Roles.objects.get(name='group_admin')
-		obj = GroupMembership.objects.create(user=user, group=group, role=role)
+		GroupMembership.objects.create(user=user, group=group, role=role)
+
+		#create ether id for the group 
+		create_group_ether(group)
+		
 		notify_remove_or_add_user(request.user, user, group, 'group_created')
 		remove_or_add_user_feed(request.user, group, "group_created")
 		return group
