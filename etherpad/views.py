@@ -42,10 +42,12 @@ def create_ether_user(user):
 
 #session creation
 
-def create_session_community(request, community, user):
+def create_session_community(request, community_id):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-    ether_com = EtherCommunity.objects.get(community=community)
-    ether_user = EtherUser.objects.get(user=user)
-    result = EtherpadLiteClient.createSession(ether_com.community_ether_id, ether_user.user_ether_id, validUntil=time()+28800)
-    request.session['sessionID'] = result['sessionID']
-    return
+    ether_com = EtherCommunity.objects.get(community=community_id)
+    ether_com = str(ether_com.community_ether_id)
+    ether_user = EtherUser.objects.get(user=request.user)
+    ether_user = str(ether_user.user_ether_id)
+    validUntil = int(time())+28800
+    result = epclient.createSession(ether_com, ether_user, validUntil)
+    return result['sessionID']

@@ -30,7 +30,7 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
-from etherpad.views import create_community_ether, create_article_ether_community
+from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -170,7 +170,11 @@ def community_article_create(request):
 					data={}
 					return JsonResponse(data)
 			else:
-				return render(request, 'new_article.html', {'community':community, 'status':1})
+				#create the session for this article in ether pad
+				sid = create_session_community(request, cid)
+				response = render(request, 'new_article.html', {'community':community, 'status':1})
+				response.set_cookie('sessionID', sid)
+				return response
 		else:
 			return redirect('home')
 	else:
