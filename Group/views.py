@@ -18,7 +18,7 @@ from BasicArticle.views import getHTML
 from django.conf import settings
 import json
 import requests
-from etherpad.views import create_group_ether
+from etherpad.views import create_group_ether, create_article_ether_group
 
 def create_group(request):
 	if request.method == 'POST':
@@ -138,6 +138,10 @@ def group_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				GroupArticles.objects.create(article=article, user = request.user , group =group )
+
+				#create ether id for the article belonging to the group
+				create_article_ether_group(gid, article)
+
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
