@@ -58,9 +58,6 @@ urlpatterns = [
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
-
-    url(r'^ajax/article_autosave/(?P<pk>\d*)/$', articleview.article_autosave, name='article_autosave'),
-
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
