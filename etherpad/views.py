@@ -23,14 +23,14 @@ def create_article_ether_community(community_id, article):
     community = EtherCommunity.objects.get(community=community_id)
     result =  epclient.createGroupPad(community.community_ether_id, article.id)
     EtherArticle.objects.create(article=article, article_ether_id=result['padID'])
-    return
+    return result['padID']
     
 def create_article_ether_group(group_id, article):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
     group = EtherGroup.objects.get(group=group_id)
     result =  epclient.createGroupPad(group.group_ether_id, article.id)
     EtherArticle.objects.create(article=article, article_ether_id=result['padID'])
-    return
+    return result['padID']
 
 def create_ether_user(user):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
