@@ -85,7 +85,7 @@
         <form id="step_2" method="post" enctype="multipart/form-data" >
           {% csrf_token %}
           <div class="form-group">
-              <iframe id="etherpad_iframe" src="{{url}}/p/{{article.id}}?userName={{request.user}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+              <iframe id="etherpad_iframe" src="" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
               {% if request.POST.articleof == 'group' %}
                 <input type = 'hidden' name = 'gid' value = {{group.pk}}>
                 {% endif %}
@@ -264,7 +264,6 @@
                   if(update==0)
                   {
                     var src= data.url + '/p/' + data.padid;
-                    console.log(src);
                     document.getElementById("etherpad_iframe").src= src;
                     id = data.article_id; 
                     // document.getElementById('create').innerText="Update Article and Go to Next Step";
@@ -273,7 +272,7 @@
                     // document.getElementById('next').disabled=false;
                   }
                   // check();
-                  console.log("Checking done");
+                  
               },
               complete: function(){
                  setTimeout(function(){
@@ -307,8 +306,6 @@
                 data: formData,
                 success: function (data) {
                     // alert(data);
-                    console.log(data.article_id);
-                    console.log(data.body);
                     console.log("Done checkin");
                 },
                 fail: function(){
@@ -327,13 +324,13 @@
 // ========================================================
 // ========================================================
   
-    $("#next1").on("click",function(){$("#create").click();if(pos<2)pos++;console.log(pos);});
+    $("#next1").on("click",function(){$("#create").click();if(pos<2)pos++;});
 
     $("#next2").on("click",function(){
-      $("#save").click();if(pos<2)pos++;console.log(pos);
+      $("#save").click();if(pos<2)pos++;
     });
     
-    $("#prev").on("click",function(){if(pos>0)pos--;console.log(pos);check();});
+    $("#prev").on("click",function(){if(pos>0)pos--;check();});
     $("#finish").on("click",function(){location.href = "/article-view/"+id+"/";});  
 
 
@@ -348,7 +345,6 @@
                   success: function (data) {
                       // alert(data);
                       // console.log(data.article_id);
-                      console.log(data.body);
                       // check();
                       // console.log("Done checkin")
                        $.ajax({
@@ -359,7 +355,6 @@
                                     // alert(data);
                                     // console.log(data.article_id);
                                     // console.log("!");
-                                    console.log(data);
                                     // console.log(data.inappropriates);
                                     status= data.inappropriates;
                                     // check();
@@ -374,7 +369,7 @@
                                   }
                                   else
                                   {
-                                    if(pos<2)pos++;console.log(pos);
+                                    if(pos<2)pos++;
                                     $("#save").click();
                                   }
                                 },
