@@ -40,7 +40,7 @@ def create_ether_user(user):
 
 
 
-#session creation
+#session creation community
 
 def create_session_community(request, community_id):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
@@ -77,3 +77,17 @@ def deletePad(article):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
     article = EtherArticle.objects.get(article=article)
     epclient.deletePad(article.article_ether_id)
+
+
+
+#create session group
+
+def create_session_group(request, group_id):
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    ether_group = EtherGroup.objects.get(group=group_id)
+    ether_group = str(ether_group.group_ether_id)
+    ether_user = EtherUser.objects.get(user=request.user)
+    ether_user = str(ether_user.user_ether_id)
+    validUntil = int(time())+28800
+    result = epclient.createSession(ether_group, ether_user, validUntil)
+    return result['sessionID']
