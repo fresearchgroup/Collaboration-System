@@ -91,3 +91,8 @@ def create_session_group(request, group_id):
     validUntil = int(time())+28800
     result = epclient.createSession(ether_group, ether_user, validUntil)
     return result['sessionID']
+
+
+def get_pad_id(article_id):
+    article = EtherArticle.objects.get(article=article_id)
+    return article.article_ether_id
