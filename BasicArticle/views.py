@@ -23,7 +23,7 @@ from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
-from etherpad.views import getHTML, getText, deletePad
+from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -234,6 +234,7 @@ def edit_article(request, pk):
 
 				try:
 					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
+					sessionid = create_session_community(request, article.community.id)
 					try:
 						transition = Transitions.objects.get(from_state=article.article.state)
 						state1 = States.objects.get(name='draft')
@@ -265,6 +266,7 @@ def edit_article(request, pk):
 						cmember = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 						try:
 							gmember =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
+							sessionid = create_session_group(request, article.group.id)
 						except GroupMembership.DoesNotExist:
 							gmember = 'FALSE'
 						try:
@@ -285,7 +287,10 @@ def edit_article(request, pk):
 					# print ("Hello6")
 
 					raise Http404
-			return render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'uname':request.user,'url':settings.SERVERURL})
+			padid = get_pad_id(article.article.id)
+			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'url':settings.SERVERURL, 'padid':padid})
+			response.set_cookie('sessionID', sessionid)
+			return response
 	else:
 		return redirect('login')
 
