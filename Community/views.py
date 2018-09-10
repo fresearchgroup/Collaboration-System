@@ -135,7 +135,7 @@ def community_article_create(request):
 				CommunityArticles.objects.create(article=article, user = request.user , community =community )
 
 				#create the ether id for artcile blonging to this community
-				create_article_ether_community(cid, article)
+				padid = create_article_ether_community(cid, article)
 
 				# return community_article_create_body(request, article, community)
 				data={
@@ -144,7 +144,8 @@ def community_article_create(request):
 					'user_id':request.user.id,
 					'username':request.user.username,
 					'url':settings.SERVERURL,
-					'articleof':'community'
+					'articleof':'community',
+					'padid':padid
 				}
 				return JsonResponse(data)
 				# return redirect('article_edit', article.pk)

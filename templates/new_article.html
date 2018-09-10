@@ -260,17 +260,10 @@
               type: 'POST',
               data: formData,
               success: function (data) {
-                  console.log(data.article_id);
-                  console.log(data.username);
-                  console.log(data.community_or_group_id);
-                  console.log(data.url);
-                  console.log(data.articleof);
-
-
-
+                
                   if(update==0)
                   {
-                    var src= data.url + '/p/' + data.article_id + '?userName=' +data.username;
+                    var src= data.url + '/p/' + data.padid;
                     console.log(src);
                     document.getElementById("etherpad_iframe").src= src;
                     id = data.article_id; 
