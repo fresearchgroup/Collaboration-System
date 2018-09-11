@@ -30,7 +30,7 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
-# Create your views here.
+from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -133,6 +133,10 @@ def community_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+
+				#create the ether id for artcile blonging to this community
+				padid = create_article_ether_community(cid, article)
+
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
@@ -140,7 +144,8 @@ def community_article_create(request):
 					'user_id':request.user.id,
 					'username':request.user.username,
 					'url':settings.SERVERURL,
-					'articleof':'community'
+					'articleof':'community',
+					'padid':padid
 				}
 				return JsonResponse(data)
 				# return redirect('article_edit', article.pk)
@@ -166,7 +171,11 @@ def community_article_create(request):
 					data={}
 					return JsonResponse(data)
 			else:
-				return render(request, 'new_article.html', {'community':community, 'status':1})
+				#create the session for this article in ether pad
+				sid = create_session_community(request, cid)
+				response = render(request, 'new_article.html', {'community':community, 'status':1})
+				response.set_cookie('sessionID', sid)
+				return response
 		else:
 			return redirect('home')
 	else:
@@ -254,6 +263,9 @@ def handle_community_creation_requests(request):
 					forum_link = forum_link
 
 					)
+
+				#create the ether id for community
+				create_community_ether(communitycreation)
 
 				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
@@ -432,6 +444,9 @@ def create_community(request):
 					)
 				remove_or_add_user_feed(usr,community,'community_created')
 				notify_remove_or_add_user(request.user, usr,community,'community_created')
+
+				#create the ether id for community
+				create_community_ether(community)
 
 				create_wiki_for_community(community)
 

@@ -18,6 +18,7 @@ from BasicArticle.views import getHTML
 from django.conf import settings
 import json
 import requests
+from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
 
 def create_group(request):
 	if request.method == 'POST':
@@ -37,7 +38,11 @@ def create_group(request):
 			created_by = user
 			)
 		role = Roles.objects.get(name='group_admin')
-		obj = GroupMembership.objects.create(user=user, group=group, role=role)
+		GroupMembership.objects.create(user=user, group=group, role=role)
+
+		#create ether id for the group 
+		create_group_ether(group)
+		
 		notify_remove_or_add_user(request.user, user, group, 'group_created')
 		remove_or_add_user_feed(request.user, group, "group_created")
 		return group
@@ -133,6 +138,10 @@ def group_article_create(request):
 			if status=='1':
 				article = create_article(request)
 				GroupArticles.objects.create(article=article, user = request.user , group =group )
+
+				#create ether id for the article belonging to the group
+				padid = create_article_ether_group(gid, article)
+
 				# return community_article_create_body(request, article, community)
 				data={
 					'article_id':article.id,
@@ -140,7 +149,8 @@ def group_article_create(request):
 					'user_id':request.user.id,
 					'username':request.user.username,
 					'url':settings.SERVERURL,
-					'articleof':'group'
+					'articleof':'group',
+					'padid':padid
 				}
 				return JsonResponse(data)
 				# return redirect('article_edit', article.pk)
@@ -166,7 +176,11 @@ def group_article_create(request):
 					data={}
 					return JsonResponse(data)
 			else:
-				return render(request, 'new_article.html', {'group':group, 'status':1})
+				#create session for this group article in ether pad
+				sid = create_session_group(request, gid)
+				response = render(request, 'new_article.html', {'group':group, 'status':1})
+				response.set_cookie('sessionID', sid)
+				return response
 		else:
 			return redirect('home')
 	else:
