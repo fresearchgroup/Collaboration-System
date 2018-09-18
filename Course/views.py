@@ -45,7 +45,7 @@ def course_view(request, pk):
 		topic = topics.first()
 		links = Links.objects.filter(topics = topic)
 		canEdit = ""
-		if CommunityMembership.objects.get(user=request.user.id, community=course.community).exist():
+		if CommunityMembership.objects.filter(user=request.user.id, community=course.community).exists():
 			membership = CommunityMembership.objects.get(user=request.user.id, community=course.community)
 			canEdit = canEditCourse(course.course.state.name, membership.role.name, course.course, request)
 		token =""
