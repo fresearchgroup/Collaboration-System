@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+{% if request.POST.imageof == "community" %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+{% endif %}
+  <li class="breadcrumb-item active">Upload an Image</li>
+{% endblock %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}
+<form method="post" enctype="multipart/form-data" >
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="title">Name</label>
+    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to your image" required>
+    <div class="invalid-feedback"></div>
+  </div>
+      {% if request.POST.imageof == "community" %}
+        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+      {% endif %}
+    <input type="hidden" name="status" value={{status}}>
+  <div class="form-group custom-file">
+    <label for="image">Upload Image</label>
+    <input type="file"   name ="image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload..." required>
+  </div>
+  {% if status == 1 %}
+  <button id="image_create" type="submit" class="btn btn-primary">Create</button>
+  {% endif %}
+</form>
+<br />
+{% endif %}
+{% endblock %}
+{% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+{% endblock %}
