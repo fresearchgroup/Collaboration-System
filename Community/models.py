@@ -5,6 +5,7 @@ from BasicArticle.models import Articles
 from Group.models import Group
 from Course.models import Course
 import os, uuid
+from Image.models import Images
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -64,3 +65,7 @@ class CommunityCourses(models.Model):
 	community = models.ForeignKey(Community, null=True, related_name='communitycourses')
 
 
+class CommunityImages(models.Model):
+	image = models.ForeignKey(Images, null=True, related_name='communityimages')
+	user = models.ForeignKey(User, null=True, related_name='communityimages')
+	community = models.ForeignKey(Community, null=True, related_name='communityimages')
