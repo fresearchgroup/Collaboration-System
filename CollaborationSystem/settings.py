@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'wiki.plugins.macros.apps.MacrosConfig',
     'Recommendation_API',
     'etherpad',
+    'Image',
 ] + get_machina_apps()
 
 SITE_ID = 1
