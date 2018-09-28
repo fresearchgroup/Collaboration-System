@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityImages
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -31,6 +31,7 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
+from Image.views import create_image
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -672,3 +673,20 @@ def create_wiki_for_community(community):
 
 
 	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
+
+def community_image_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				image = create_image(request)
+				CommunityImages.objects.create(image=image, user=request.user, community=community)
+				return redirect('image_view', image.pk)
+			else:
+				return render(request, 'new_image.html', {'community':community, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
