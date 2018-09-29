@@ -28,9 +28,9 @@ class UserScore(models.Model):
 #it will store score of a particular article
 class ArticleScoreLog(models.Model):
     article = models.OneToOneField(Articles ,on_delete = models.CASCADE)
-    upvote = models.IntegerField(null = True)
-    downvote = models.IntegerField(null = True)
-    reported = models.IntegerField(null = True)
+    upvote = models.IntegerField(null = True, default=0)
+    downvote = models.IntegerField(null = True, default=0)
+    reported = models.IntegerField(null = True, default=0)
     publish = models.BooleanField(default=False)
 
 class ArticleVotedByLogs(models.Model):
