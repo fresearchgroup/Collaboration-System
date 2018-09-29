@@ -24,6 +24,7 @@ from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
 from Reputation.models import ArticleScoreLog
+import requests
 
 def getHTML(article):
 	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
@@ -117,6 +118,8 @@ def create_article(request):
 				state = state
 				)
 			ArticleScoreLog.objects.create(article=article)
+			res = requests.post('http://localhost:7000/api/reputation/reputation_stats/', { article: article })
+
 			return article
 	else:
 		return redirect('login')
