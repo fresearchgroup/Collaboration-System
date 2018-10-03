@@ -167,6 +167,7 @@ urlpatterns = [
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
     url(r'community_image_create/', communityview.community_image_create, name='community_image_create'),
     url(r'image_view/(?P<pk>\d+)/$', imageview.image_view, name='image_view'),
+    url(r'image_edit/(?P<pk>\d+)/$', imageview.image_edit, name='image_edit'),
 
 ]
 

@@ -24,6 +24,9 @@
     {% if url == 'course_view'%}
       redirectto = '{% url "course_view" 0 %}'.replace('0', {{argument}})
     {% endif %}
+    {% if url == 'image_view' %}
+      redirectto = '{% url "image_view" 0 %}'.replace('0', {{argument}})
+    {% endif %}
     window.location.href = redirectto;
   }, 2000);
 </script>

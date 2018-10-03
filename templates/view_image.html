@@ -30,7 +30,7 @@
           {% if user.is_authenticated %} 
             {% if image.image.state.name != 'publish'%}
               <li class="nav-item ">
-                <a id="image_edit_id" class="nav-link " href="">Edit</a>
+                <a id="image_edit_id" class="nav-link " href="{% url 'image_edit' image.image.pk %}">Edit</a>
               </li>
             {%endif%} 
           {% endif %}
