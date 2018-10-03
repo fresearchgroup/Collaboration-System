@@ -14,13 +14,13 @@ def create_image(request):
 			state = States.objects.get(name='draft')
 			title = request.POST['title']
 			image = request.FILES['image']
-			article = Images.objects.create(
+			images = Images.objects.create(
 				title = title,
 				image = image,
 				created_by = request.user,
 				state = state
 				)
-			return article
+			return images
 	else:
 		return redirect('login')
 
