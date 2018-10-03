@@ -168,6 +168,7 @@ urlpatterns = [
     url(r'community_image_create/', communityview.community_image_create, name='community_image_create'),
     url(r'image_view/(?P<pk>\d+)/$', imageview.image_view, name='image_view'),
     url(r'image_edit/(?P<pk>\d+)/$', imageview.image_edit, name='image_edit'),
+    url(r'^images_published/$', imageview.display_published_images, name='display_published_images'),
 
 ]
 

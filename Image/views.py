@@ -3,6 +3,7 @@ from .models import Images
 from workflow.models import States
 from Community.models import CommunityImages, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def create_image(request):
 	"""
@@ -75,3 +76,14 @@ def image_edit(request,pk):
 	else:
 		return redirect('login')
 
+def display_published_images(request):
+	imagelist = CommunityImages.objects.filter(image_resource__state__name='publish')
+	page = request.GET.get('page', 1)
+	paginator = Paginator(list(imagelist), 5)
+	try:
+		imagesPublished = paginator.page(page)
+	except PageNotAnInteger:
+		imagesPublished = paginator.page(1)
+	except EmptyPage:
+		imagesPublished = paginator.page(paginator.num_pages)
+	return render(request, 'images_published.html',{'imagesPublished':imagesPublished})
