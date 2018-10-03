@@ -66,6 +66,6 @@ class CommunityCourses(models.Model):
 
 
 class CommunityImages(models.Model):
-	image = models.ForeignKey(Images, null=True, related_name='communityimages')
+	image_resource = models.ForeignKey(Images, null=True, related_name='communityimages')
 	user = models.ForeignKey(User, null=True, related_name='communityimages')
 	community = models.ForeignKey(Community, null=True, related_name='communityimages')

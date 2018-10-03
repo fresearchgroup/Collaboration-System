@@ -682,7 +682,7 @@ def community_image_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				image = create_image(request)
-				CommunityImages.objects.create(image=image, user=request.user, community=community)
+				CommunityImages.objects.create(image_resource=image, user=request.user, community=community)
 				return redirect('image_view', image.pk)
 			else:
 				return render(request, 'new_image.html', {'community':community, 'status':1})

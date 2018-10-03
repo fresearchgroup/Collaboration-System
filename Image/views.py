@@ -26,13 +26,13 @@ def create_image(request):
 
 def image_view(request, pk):
 	try:
-		image = CommunityImages.objects.get(image=pk)
-		if image.image.state == States.objects.get(name='draft') and image.image.created_by != request.user:
+		image = CommunityImages.objects.get(image_resource=pk)
+		if image.image_resource.state == States.objects.get(name='draft') and image.image_resource.created_by != request.user:
 			return redirect('home')
 		canEdit = ""
 		if CommunityMembership.objects.filter(user=request.user.id, community=image.community).exists():
 			membership = CommunityMembership.objects.get(user=request.user.id, community=image.community)
-			canEdit = canEditResourceCommunity(image.image.state.name, membership.role.name, image.image, request)
+			canEdit = canEditResourceCommunity(image.image_resource.state.name, membership.role.name, image.image_resource, request)
 	except CommunityImages.DoesNotExist:
 		raise Http404
 	return render(request, 'view_image.html', {'image':image, 'canEdit':canEdit})
@@ -42,7 +42,7 @@ def image_edit(request,pk):
 		image = Images.objects.get(pk=pk)
 		if image.state == States.objects.get(name='draft') and image.created_by != request.user:
 			return redirect('home')
-		community = CommunityImages.objects.get(image=pk)
+		community = CommunityImages.objects.get(image_resource=pk)
 		uid = request.user.id
 		membership = None
 		comm = Community.objects.get(pk=community.community.id)
