@@ -1,53 +1,90 @@
-{% extends 'base.html' %}
-{%load static %}
-{% block css %}
+{% extends 'base.html' %} {%load static %} {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
-<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet"  />
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet" />
 <link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
 <link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
 <style type="text/css">
-  #liclr{
-background-color:#FE642E;
+  #liclr {
+    background-color: #FE642E;
 
   }
-  #clr{
-    color:black;
+
+  #clr {
+    color: black;
   }
 </style>
-{% endblock %}
+{% endblock %} {% load mptt_tags %} {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' image.community.pk %}"> {{ image.community.name }} </a></li>
+<li class="breadcrumb-item active">Images </li>
+<li class="breadcrumb-item active">{{ image.image_resource.title }} </li>
+{% endblock %} {% block content %}
 
-{% load mptt_tags %}
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item active">
+            <a class="nav-link " href="{% url 'image_view' image.image_resource.pk %}">View</a>
+          </li>
+          {% if user.is_authenticated %} 
+            {% if image.image_resource.state.name != 'publish'%}
+              <li class="nav-item ">
+                <a id="image_edit_id" class="nav-link " href="{% url 'image_edit' image.image_resource.pk %}">Edit</a>
+              </li>
+            {%endif%} 
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br/>
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' image.community.pk %}"> {{ image.community.name }} </a></li>
-  <li class="breadcrumb-item active">{{ image.image.title }} </li>
-{% endblock %}
-{% block content %}
+  <div class="blog-item">
+      <h2><a href="#">{{ image.image_resource.title }} </a></h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-sm-6">
+      <img src="{{ MEDIA_URL }}{{ image.image_resource.image}}" alt="image" class="img-responsive">
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <h4> 
+        <i class="fa fa-user"></i> 
+        <a href="{% url 'display_user_profile' image.image_resource.created_by %}">
+          {{image.image_resource.created_by}}
+        </a> 
+      </h4>
+      <h4> 
+        <i class="fa fa-calendar"></i> {{image.image_resource.created_at}} 
+      </h4>
 
-            <div class="row">
-              <div class="col-md-3 col-sm-3">
-                  <img src="{{ MEDIA_URL }}{{ image.image.image}}" alt="image" class="img-responsive">
-              </div>
-              <div class="col-md-9 col-sm-9">
-                <h4> <i class="fa fa-user"></i> <a href="{% url 'display_user_profile' image.image.created_by %}">{{image.image.created_by}} </a> </h4>
-                <h4> <i class="fa fa-calendar"></i> {{image.image.created_at}} </h4>
-                <h4>
-                  {% if image.image.state.name == 'draft' %}
-                  <i class="fa fa-cut"></i> Draft
-                  {% endif %}
-                  {% if image.image.state.name == 'visible' %}
-                  <i class="fa fa-bullhorn"></i> Visible
-                  {% endif %}
-                  {% if image.image.state.name == 'publishable' %}
-                  <i class="fa fa-bell"></i> Publishable
-                  {% endif %}
-                  {% if image.image.state.name == 'publish' %}
-                  <i class="fa fa-save"></i> Published
-                  {% endif %}
-                </h4>
-              </div>
-            </div>
+      <h4>
+      {% if image.community.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'community_view' image.community.pk %}">{{image.community.name}}</a> Community
+      {% endif %}
+      {% if image.group.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'group_view' image.group.pk %}">{{image.group.name}}</a> Group
+      {% endif %}      
+      </h4>
 
-{% endblock %}
-{% block javascript %}
+      <h4>
+        {% if image.image_resource.state.name == 'draft' %}
+          <i class="fa fa-cut"></i> Draft 
+        {% endif %} 
+        {% if image.image_resource.state.name == 'visible' %}
+          <i class="fa fa-bullhorn"></i> Visible 
+        {% endif %} 
+        {% if image.image_resource.state.name == 'publishable' %}
+          <i class="fa fa-bell"></i> Publishable 
+        {% endif %} 
+        {% if image.image_resource.state.name == 'publish' %}
+          <i class="fa fa-save"></i> Published 
+        {% endif %}
+      </h4>
+    </div>
+  </div>
+</div>
+<br />
+{% endblock %} 
+{% block javascript %} 
 {% endblock %}

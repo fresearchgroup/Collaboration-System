@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+    #liclr {
+        background-color: #FE642E;
+
+    }
+
+    #clr {
+        color: black;
+    }
+</style>
+{% endblock %} {% load mptt_tags %} {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' comm.pk %}"> {{comm}} </a></li>
+<li class="breadcrumb-item active">{{ image.title }} </li>
+{% endblock %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item ">
+                    <a class="nav-link " href="{% url 'image_view' image.pk %}">View</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link " href="{% url 'image_edit' image.pk %}">Edit</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <br/>
+        <div class="col-sm-12">
+            {% if user.is_authenticated %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-5">
+
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{image.title}}" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="State">State</label>
+                            <select id="change_image_state" name="change_image_state" class="btn btn-primary">
+                                {% if image.state.name == 'draft' %}
+                                <option value="draft">Draft</option>
+                                <option value="visible">Visible</option>
+                                {% endif %} 
+                                {% if image.state.name == 'visible' %}
+                                <option value="visible">Visible</option>
+                                <option value="publishable">Publishable</option>
+                                {% endif %} 
+                                {% if image.state.name == 'publishable' %}
+                                <option value="publishable">Publishable</option>
+                                <option value="visible">Visible</option>
+                                <option value="publish">Publish</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div> <!-- end of 5 columns meta data-->
+
+                    <div class="col-sm-7">
+                        <img src="{{ MEDIA_URL }}{{ image.image}}" alt="image" class="img-responsive" width=350> <br />
+                        <div class="form-group custom-file">
+                            <input type="file" id="image_image" name="image_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the image...">
+                        </div>
+                    </div> <!-- end of 7 columns images-->
+                </div> <!-- end of row -->
+
+                <div class="form-group">
+                    <button id="update_id" type="submit" name="status" value="update" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            {% endif %}
+            <!-- user authenticated -->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script> {% endblock %}
