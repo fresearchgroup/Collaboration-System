@@ -92,6 +92,9 @@
       {% if article.type == 'article' %}
         <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
+      {% if article.type == 'resource_image' %}
+        <h3><i class="fa fa-picture-o" style="color:red;"></i> <a href="{% url 'image_view' article.id %}">{{ article.title }}</a></h3>
+      {% endif %}
       {% if article.type == 'course' %}
         <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}

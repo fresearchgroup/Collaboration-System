@@ -469,6 +469,7 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username, workflow_states.name as state from workflow_states, Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.state_id=workflow_states.id and course.id=ccourses.course_id and ccourses.community_id=%s and course.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			cimages = CommunityImages.objects.raw('select "resource_image" as type, images.id, images.title, images.image, images.created_at, username, workflow_states.name as state from workflow_states, Image_images as images, Community_communityimages as cimages, auth_user au where au.id=images.created_by_id and images.state_id=workflow_states.id and images.id=cimages.image_resource_id and cimages.community_id=%s and images.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ch5p = []
 			print('new test')
 			try:
@@ -483,7 +484,7 @@ def community_content(request, pk):
 			except Exception as e:
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
-			lstfinal = list(carticles) + list(ccourse) + list(ch5p)
+			lstfinal = list(carticles) +  list(cimages) + list(ccourse) + list(ch5p)
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
