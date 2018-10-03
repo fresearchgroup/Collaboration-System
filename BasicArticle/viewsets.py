@@ -2,7 +2,7 @@ from .models import Articles
 from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 from .serializers import ArticleSerializer
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Create your views here.
 
@@ -10,3 +10,4 @@ from .serializers import ArticleSerializer
 class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Articles.objects.all().order_by('-title')
 	serializer_class = ArticleSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
