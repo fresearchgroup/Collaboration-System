@@ -172,6 +172,7 @@ urlpatterns = [
     url(r'^images_published/$', imageview.display_published_images, name='display_published_images'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
+    url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
 
 ]
 

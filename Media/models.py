@@ -11,7 +11,7 @@ def get_file_path(instance, filename):
 		return os.path.join('audio', filename)
 	if ext == 'jpg' or ext == 'jpeg' or ext == 'png':
 		return os.path.join('images', filename)
-	if ext == 'vob' or ext == 'webm' or ext == 'avi' or ext == 'mp4':
+	if ext == 'vob' or ext == 'webm' or ext == 'avi' or ext == 'mp4' or ext == 'wmv':
 		return os.path.join('video', filename)
 
 class Media(models.Model):

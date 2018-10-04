@@ -15,7 +15,7 @@
 </style>
 {% endblock %} {% load mptt_tags %} {% block breadcrumb %}
 <li class="breadcrumb-item active"><a href="{% url 'community_view' comm.pk %}"> {{comm}} </a></li>
-<li class="breadcrumb-item active">{{ image.title }} </li>
+<li class="breadcrumb-item active">{{ media.title }} </li>
 {% endblock %} {% block content %}
 
 <div class="container-fluid">
@@ -23,11 +23,11 @@
         <div>
             <ul class="nav nav-tabs">
                 <li class="nav-item ">
-                    <a class="nav-link " href="{% url 'image_view' image.pk %}">View</a>
+                    <a class="nav-link " href="{% url 'media_view' media.pk %}">View</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item active">
-                    <a class="nav-link " href="{% url 'image_edit' image.pk %}">Edit</a>
+                    <a class="nav-link " href="{% url 'media_edit' media.pk %}">Edit</a>
                 </li>
                 {% endif %}
             </ul>
@@ -43,22 +43,22 @@
 
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{image.title}}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{media.title}}" required>
                             <div class="invalid-feedback"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="State">State</label>
-                            <select id="change_image_state" name="change_image_state" class="btn btn-primary">
-                                {% if image.state.name == 'draft' %}
+                            <select id="change_media_state" name="change_media_state" class="btn btn-primary">
+                                {% if media.state.name == 'draft' %}
                                 <option value="draft">Draft</option>
                                 <option value="visible">Visible</option>
                                 {% endif %} 
-                                {% if image.state.name == 'visible' %}
+                                {% if media.state.name == 'visible' %}
                                 <option value="visible">Visible</option>
                                 <option value="publishable">Publishable</option>
                                 {% endif %} 
-                                {% if image.state.name == 'publishable' %}
+                                {% if media.state.name == 'publishable' %}
                                 <option value="publishable">Publishable</option>
                                 <option value="visible">Visible</option>
                                 <option value="publish">Publish</option>
@@ -68,12 +68,24 @@
                     </div> <!-- end of 5 columns meta data-->
 
                     <div class="col-sm-7">
-                        <img src="{{ MEDIA_URL }}{{ image.image}}" alt="image" class="img-responsive" width=350> <br />
+                        {% if media.mediatype == 'Image' %}
+                        <img src="{{ MEDIA_URL }}{{ media.mediafile}}" alt="image" class="img-responsive" width=350> <br />
                         <div class="form-group custom-file">
-                            <input type="file" id="image_image" name="image_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'
                                 data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the image...">
                         </div>
-                    </div> <!-- end of 7 columns images-->
+                        {% endif %}
+                        {% if media.mediatype == 'Audio' %}
+                            <iframe height="70" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ media.mediafile}}" class="margin-bottom-10"></iframe>
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='[""mp3", "wav","ogg""]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the audio...">
+                        {% endif %}
+                        {% if media.mediatype == 'Video' %}
+                            <iframe height="270" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ media.mediafile}}" class="margin-bottom-10"></iframe>
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the video...">
+                        {% endif %}
+                    </div> <!-- end of 7 columns media-->
                 </div> <!-- end of row -->
 
                 <div class="form-group">

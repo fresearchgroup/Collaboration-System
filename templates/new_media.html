@@ -40,7 +40,7 @@
       <input type='hidden' id="mediatype" name="mediatype" value="Audio">
     {% endif %}
     {% if request.POST.mediatype == 'Video' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." required>
+      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." required>
       <input type='hidden' id="mediatype" name="mediatype" value="Video">
       {% endif %}
   </div>

@@ -30,7 +30,7 @@
           {% if user.is_authenticated %} 
             {% if cmedia.media.state.name != 'publish'%}
               <li class="nav-item ">
-                <a id="media_edit_id" class="nav-link " href="">Edit</a>
+                <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' cmedia.media.pk %}">Edit</a>
               </li>
             {%endif%} 
           {% endif %}

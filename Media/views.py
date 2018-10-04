@@ -35,3 +35,41 @@ def media_view(request, pk):
 	except CommunityImages.DoesNotExist:
 		raise Http404
 	return render(request, 'view_media.html', {'cmedia':cmedia, 'canEdit':canEdit})
+
+def media_edit(request,pk):
+	if request.user.is_authenticated:
+		media = Media.objects.get(pk=pk)
+		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
+			return redirect('home')
+		community = CommunityMedia.objects.get(media=pk)
+		uid = request.user.id
+		membership = None
+		comm = Community.objects.get(pk=community.community.id)
+		errormessage = ''
+		try:
+			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
+			if membership:
+				if request.method == 'POST':
+					title = request.POST['name']
+					getstate = request.POST['change_media_state']
+					state = States.objects.get(name=getstate)
+					media.title = title
+					media.state = state
+					try:
+						mediafile = request.FILES['mediafile']
+						media.mediafile = mediafile
+					except:
+						errormessage = 'media not uploaded'
+					media.save()
+					return redirect('media_view',pk=pk)
+				else:
+					message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
+					if message != 'True':
+						return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
+					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'community':community, 'comm':comm})
+			else:
+				return redirect('media_view',pk=pk)
+		except CommunityMembership.DoesNotExist:
+			return redirect('login')
+	else:
+		return redirect('login')
