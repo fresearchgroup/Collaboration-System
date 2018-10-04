@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'Recommendation_API',
     'etherpad',
     'Image',
+    'Media',
 ] + get_machina_apps()
 
 SITE_ID = 1
