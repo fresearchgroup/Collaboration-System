@@ -20,12 +20,12 @@ class Media(models.Model):
         ('AUDIO', 'Audio'),
         ('VIDEO', 'Video'),
     )
-	mediatype = models.CharField(choices=media_types, default='IMAGE')	
+	mediatype = models.CharField(choices=media_types, max_length=10, default='IMAGE')	
 	title = models.CharField(max_length=100)
 	mediafile = models.FileField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True)
-	created_by = models.ForeignKey(User,null=True,related_name='image_author')
+	created_by = models.ForeignKey(User,null=True,related_name='media_author')
 	published_on=models.DateTimeField(null=True)
-	published_by=models.ForeignKey(User,null=True,related_name='image_publisher')
+	published_by=models.ForeignKey(User,null=True,related_name='media_publisher')
 	views = models.PositiveIntegerField(default=0)
-	state = models.ForeignKey(States, null=True,related_name='imageworkflow')
+	state = models.ForeignKey(States, null=True,related_name='media_workflow')
