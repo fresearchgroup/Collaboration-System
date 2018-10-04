@@ -1,6 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityImages
+from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
@@ -92,7 +92,7 @@ def user_dashboard(request):
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
         commcourses = CommunityCourses.objects.filter(user=request.user)
-        commimages = CommunityImages.objects.filter(user=request.user)
+        commmedia = CommunityMedia.objects.filter(user=request.user)
 
         for cart in commarticles:
             cart.type = 'article'
@@ -106,11 +106,11 @@ def user_dashboard(request):
             ccourse.type = 'course'
             ccourse.belongsto = 'community'
 
-        for cimages in commimages:
-            cimages.type = 'Image'
-            cimages.belongsto = 'community'
+        for cmedia in commmedia:
+            cmedia.type = 'Media'
+            cmedia.belongsto = 'community'
 
-        lstContent = list(commarticles) + list(grparticles) +  list(commimages) + list(commcourses)
+        lstContent = list(commarticles) + list(grparticles) +  list(commmedia) + list(commcourses)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
         grpinvitations = GroupInvitations.objects.filter(status='Invited', user=request.user)
