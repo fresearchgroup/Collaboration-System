@@ -33,7 +33,7 @@
     <label for="media">Upload {{request.POST.mediatype}}</label>
     {% if request.POST.mediatype == 'Image' %}
       <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload..." required>
-      <input type='text' id="mediatype" name="mediatype" value="Image">
+      <input type='hidden' id="mediatype" name="mediatype" value="Image">
     {% endif %}
     {% if request.POST.mediatype == 'Audio' %}
       <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["mp3", "wav","ogg"]' data-show-upload="false" data-msg-placeholder="Select an audio for upload..." required>
