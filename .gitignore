@@ -8,6 +8,8 @@ media/group
 media/profile
 media/course
 media/images
+media/audio
+media/video
 PyEtherpadLite
 
 # SQLite database files

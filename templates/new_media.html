@@ -37,10 +37,12 @@
     {% endif %}
     {% if request.POST.mediatype == 'Audio' %}
       <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["mp3", "wav","ogg"]' data-show-upload="false" data-msg-placeholder="Select an audio for upload..." required>
+      <input type='hidden' id="mediatype" name="mediatype" value="Audio">
     {% endif %}
     {% if request.POST.mediatype == 'Video' %}
       <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." required>
-    {% endif %}
+      <input type='hidden' id="mediatype" name="mediatype" value="Video">
+      {% endif %}
   </div>
   {% if status == 1 %}
   <button id="media_create" type="submit" class="btn btn-primary">Create</button>

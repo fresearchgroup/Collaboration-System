@@ -48,6 +48,12 @@
       {% if cmedia.media.mediatype == 'Image' %}
         <img src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" alt="image" class="img-responsive">
       {% endif %}
+      {% if cmedia.media.mediatype == 'Audio' %}
+        <iframe height="70" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" class="margin-bottom-10"></iframe>
+      {% endif %}
+      {% if cmedia.media.mediatype == 'Video' %}
+        <iframe height="270" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" class="margin-bottom-10"></iframe>
+      {% endif %}
     </div>
     <div class="col-md-6 col-sm-6">
       <h4> 
