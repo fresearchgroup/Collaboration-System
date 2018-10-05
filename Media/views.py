@@ -73,3 +73,25 @@ def media_edit(request,pk):
 			return redirect('login')
 	else:
 		return redirect('login')
+
+
+def display_published_media(request, mediatype):
+	try: 
+		medialist = CommunityMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
+		page = request.GET.get('page', 1)
+		paginator = Paginator(list(medialist), 5)
+		try:
+			mediaPublished = paginator.page(page)
+		except PageNotAnInteger:
+			mediaPublished = paginator.page(1)
+		except EmptyPage:
+			mediaPublished = paginator.page(paginator.num_pages)
+
+		if mediatype == 'Image':
+			return render(request, 'images_published.html',{'mediaPublished':mediaPublished})
+		elif mediatype == 'Audio':
+			return render(request, 'audio_published.html',{'mediaPublished':mediaPublished})
+		else:
+			return render(request, 'video_published.html',{'mediaPublished':mediaPublished})
+	except CommunityMedia.DoesNotExist:
+		errormessage = 'No published media in community'

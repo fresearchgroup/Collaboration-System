@@ -169,10 +169,11 @@ urlpatterns = [
     url(r'community_media_create/', communityview.community_media_create, name='community_media_create'),
     url(r'image_view/(?P<pk>\d+)/$', imageview.image_view, name='image_view'),
     url(r'image_edit/(?P<pk>\d+)/$', imageview.image_edit, name='image_edit'),
-    url(r'^images_published/$', imageview.display_published_images, name='display_published_images'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+
+    url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
 
 ]
 

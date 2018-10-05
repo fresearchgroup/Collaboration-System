@@ -144,7 +144,9 @@ $(document).ready(function() {
         <ul class="dropdown-menu" id="">
           <li><a href="{% url 'display_articles' %}">Articles</a></li>
           <li><a href="{% url 'display_courses' %}">Courses</a></li>
-          <li><a href="{% url 'display_published_images' %}">Images</a></li>
+          <li><a href="{% url 'display_published_media' 'Image' %}">Images</a></li>
+          <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
+          <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>          
         </ul>
       </li>  
       <li><a href="{% url 'contact_us' %}">Contact Us</a></li>

@@ -76,7 +76,7 @@ def image_edit(request,pk):
 	else:
 		return redirect('login')
 
-def display_published_images(request):
+def display_published_imagesg(request):
 	imagelist = CommunityImages.objects.filter(image_resource__state__name='publish')
 	page = request.GET.get('page', 1)
 	paginator = Paginator(list(imagelist), 5)

@@ -3,9 +3,9 @@
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
 <li class="breadcrumb-item active">Resources</li>
-<li class="breadcrumb-item active">Images</li>
+<li class="breadcrumb-item active">Audio</li>
 {% endblock %} {% block content %}
-<h1>Images</h1>
+<h1>Audio</h1>
 {% if not mediaPublished %}
 <div class="content-page page-404">
   <div class="number">
@@ -14,7 +14,7 @@
   <div class="details">
     <h3>No Content</h3>
     <p>
-      Sorry, currently there are no images published from any community
+      Sorry, currently there are no audio published from any community
     </p>
   </div>
 </div>
@@ -25,12 +25,16 @@
       {% for mediap in mediaPublished %}
       <div class="infinite-item">
         <div class="row margin-bottom-15">
-          <div class="col-md-2 col-sm-2">
-            <img src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" alt="image" class="img-responsive"> 
+          <div class="col-md-4 col-sm-4">
+              <audio controls>
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/mp3" />
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/wav" />
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/ogg" />
+              </audio>
           </div>
           <div class="col-md-7 col-sm-7">
             <h3>
-              <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a>
+              <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }}</a>
             </h3>
             <ul class="blog-info">
               <li>
