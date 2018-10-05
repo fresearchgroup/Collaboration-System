@@ -19,43 +19,33 @@
   </div>
 </div>
 {% endif %} {{myhtml|safe}}{% autoescape off%}
-
-<div class="row ">
-  <div class="col-md-12 col-sm-12">
-    <div class="infinite-container">
-
-      {% for mediap in mediaPublished %}
-      <div class="infinite-item">
-        <div class="row margin-bottom-15">
-          <div class="col-md-4 col-sm-4">
-              <video class="img-responsive margin-bottom-10" style="width:100%;" controls>
+<div class="main">
+  <div class="container">
+    <!-- BEGIN SIDEBAR & CONTENT -->
+    <div class="row margin-bottom-40">
+      <!-- BEGIN CONTENT -->
+      <div class="col-md-12">
+        <div class="content-page">
+          <div class="row margin-bottom-40">
+            {% for mediap in mediaPublished %}
+            <div class="col-md-4 col-sm-4 gallery-item">
+              <video class="img-responsive margin-bottom-10" style="height: 250px; width: 330px; border: 1px solid red;" controls>
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/vob" />
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/webm" />
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/avi" />
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/mp4" />
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/wmv" />
               </video>
+              <h3> <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a> </h3> 
+              <i class="fa fa-user" style="color:red;"></i> {{ mediap.media.created_by }} <br />
+              <i class="fa fa-calendar" style="color:red;"></i> {{mediap.media.created_at}} <br />
+              <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
+            </div>
+            {% endfor %}
           </div>
-          <div class="col-md-7 col-sm-7">
-            <h3>
-              <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }}</a>
-            </h3>
-            <ul class="blog-info">
-              <li>
-                <i class="fa fa-user"></i> {{ mediap.media.created_by }} </li>
-              <li>
-                <i class="fa fa-calendar"></i> {{mediap.media.created_at}} </li>
-              <li>
-                <i class="fa fa-users"></i>
-                <a href="{% url 'community_view' mediap.community.pk %}"> {{mediap.community.name}} </a> Community </li>
-            </ul>
-          </div>
-
         </div>
-
-        <hr class="blog-post-sep">
       </div>
-      {% endfor %}
+      <!-- END CONTENT -->
     </div>
   </div>
 </div>
