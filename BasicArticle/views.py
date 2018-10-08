@@ -219,6 +219,7 @@ def edit_article(request, pk):
 			cmember = ""
 			gmember = ""
 			private = ""
+			reject = ""
 			try:
 				# print ("Hello")
 				article = CommunityArticles.objects.get(article=pk)
@@ -236,11 +237,20 @@ def edit_article(request, pk):
 					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
 					sessionid = create_session_community(request, article.community.id)
 					try:
-						transition = Transitions.objects.get(from_state=article.article.state)
-						state1 = States.objects.get(name='draft')
-						state2 = States.objects.get(name='private')
-						if transition.from_state == state1 and transition.to_state ==state2:
-							transition.to_state = States.objects.get(name='visible')
+						if article.article.state.name=='publishable':
+							transitions = Transitions.objects.filter(from_state=article.article.state)
+							for trans in transitions:
+								if trans.to_state.name=='publish':
+									transition =trans
+								if trans.to_state.name=='visible':
+									reject =trans
+								 
+						else:
+							transition = Transitions.objects.get(from_state=article.article.state)
+							state1 = States.objects.get(name='draft')
+							state2 = States.objects.get(name='private')
+							if transition.from_state == state1 and transition.to_state ==state2:
+								transition.to_state = States.objects.get(name='visible')
 
 					except Transitions.DoesNotExist:
 						message = "transition doesn't exist"
@@ -288,7 +298,7 @@ def edit_article(request, pk):
 
 					raise Http404
 			padid = get_pad_id(article.article.id)
-			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition, 'private':private,'url':settings.SERVERURL, 'padid':padid})
+			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition,'reject':reject, 'private':private,'url':settings.SERVERURL, 'padid':padid})
 			response.set_cookie('sessionID', sessionid)
 			return response
 	else:

@@ -71,6 +71,7 @@
                       <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='{{reject.to_state.name}}' id = "rejectcomarticle">Reject</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
             {% endif %}
         {%elif cmember.role%}
