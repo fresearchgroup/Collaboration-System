@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('Media', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('Community', '0027_auto_20181003_0839'),
+        ('Community', '0024_auto_20180614_0125'),
     ]
 
     operations = [

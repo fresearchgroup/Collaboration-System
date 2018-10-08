@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityImages, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -31,7 +31,6 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Image.views import create_image
 from Media.views import create_media
 
 def display_communities(request):

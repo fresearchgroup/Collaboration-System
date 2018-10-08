@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'wiki.plugins.macros.apps.MacrosConfig',
     'Recommendation_API',
     'etherpad',
-    'Image',
     'Media',
 ] + get_machina_apps()
 

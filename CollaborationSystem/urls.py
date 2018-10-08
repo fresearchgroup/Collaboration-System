@@ -33,7 +33,6 @@ from Group import viewsets as groupviewsets
 import notifications.urls
 from Dashboard import views as dashboardview
 from Recommendation_API import views
-from Image import views as imageview
 from Media import views as mediaview
 
 router = routers.DefaultRouter()
@@ -167,8 +166,6 @@ urlpatterns = [
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
     url(r'community_media_create/', communityview.community_media_create, name='community_media_create'),
-    url(r'image_view/(?P<pk>\d+)/$', imageview.image_view, name='image_view'),
-    url(r'image_edit/(?P<pk>\d+)/$', imageview.image_edit, name='image_edit'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
