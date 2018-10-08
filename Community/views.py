@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityImages
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -31,7 +31,7 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Image.views import create_image
+from Media.views import create_media
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -469,7 +469,7 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username, workflow_states.name as state from workflow_states, Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.state_id=workflow_states.id and course.id=ccourses.course_id and ccourses.community_id=%s and course.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
-			cimages = CommunityImages.objects.raw('select "resource_image" as type, images.id, images.title, images.image, images.created_at, username, workflow_states.name as state from workflow_states, Image_images as images, Community_communityimages as cimages, auth_user au where au.id=images.created_by_id and images.state_id=workflow_states.id and images.id=cimages.image_resource_id and cimages.community_id=%s and images.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			cmedia = CommunityMedia.objects.raw('select "media" as type, media.id, media.title, media.mediafile as image, media.mediatype, media.created_at, username, workflow_states.name as state from workflow_states, Media_media as media, Community_communitymedia as cmedia, auth_user au where au.id=media.created_by_id and media.state_id=workflow_states.id and media.id=cmedia.media_id and cmedia.community_id=%s and media.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ch5p = []
 			print('new test')
 			try:
@@ -484,7 +484,7 @@ def community_content(request, pk):
 			except Exception as e:
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
-			lstfinal = list(carticles) +  list(cimages) + list(ccourse) + list(ch5p)
+			lstfinal = list(carticles) +  list(cmedia) + list(ccourse) + list(ch5p)
 
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
@@ -675,18 +675,18 @@ def create_wiki_for_community(community):
 
 	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
 
-def community_image_create(request):
+def community_media_create(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
 			if status=='1':
-				image = create_image(request)
-				CommunityImages.objects.create(image_resource=image, user=request.user, community=community)
-				return redirect('image_view', image.pk)
+				media = create_media(request)
+				CommunityMedia.objects.create(media=media, user=request.user, community=community)
+				return redirect('media_view', media.pk)
 			else:
-				return render(request, 'new_image.html', {'community':community, 'status':1})
+				return render(request, 'new_media.html', {'community':community, 'status':1})
 		else:
 			return redirect('home')
 	else:
