@@ -147,22 +147,22 @@ $(document).ready(function() {
           <li><a href="{% url 'display_courses' %}">Courses</a></li>
           <li><a href="{% url 'display_published_media' 'Image' %}">Images</a></li>
           <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
-          <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>          
+          <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>
         </ul>
-      </li>  
+      </li>
       <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
 			{% if user.is_authenticated %}
 
-				<li class="dropdown" id="invtab">
+				<!--li class="dropdown" id="invtab">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
 						My Invitations
 					</a>
 					<ul class="dropdown-menu myinvitations" id="myinvitations">
 
 					</ul>
-				</li>
+				</li-->
 
         <li class="dropdown">
          <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
@@ -229,7 +229,7 @@ $(document).ready(function() {
           {% endblock %}
         </ol>
         {% block content %}
-        
+
 
         {% endblock %}
   </div>
