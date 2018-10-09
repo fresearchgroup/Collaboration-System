@@ -44,7 +44,7 @@
 
     {%if belongs_to == 'community' %}
        {%if transition.to_state.name == 'publish' %}
-            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
+            {%if cmember.role.name == 'publisher' and  article.article.created_by != request.user or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
 
 
                       <form method="post" enctype="multipart/form-data">
