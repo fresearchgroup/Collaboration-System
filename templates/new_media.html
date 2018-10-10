@@ -44,6 +44,12 @@
       <input type='hidden' id="mediatype" name="mediatype" value="Video">
       {% endif %}
   </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" required>
+      
+    </textarea>
+  </div>
   {% if status == 1 %}
   <button id="media_create" type="submit" class="btn btn-primary">Create</button>
   {% endif %}

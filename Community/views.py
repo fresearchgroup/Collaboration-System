@@ -32,6 +32,8 @@ import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 from Media.views import create_media
+from metadata.views import create_metadata
+from metadata.models import MediaMetadata
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -617,7 +619,7 @@ def create_wiki_for_community(community):
 			"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
 			"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		)
-
+MediaMetadata
 	cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
 	url_rght = cursor.fetchone()[0]
 
@@ -683,7 +685,9 @@ def community_media_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				media = create_media(request)
+				metadata = create_metadata(request)
 				CommunityMedia.objects.create(media=media, user=request.user, community=community)
+				MediaMetadata.objects.create(media=media, metadata=metadata)
 				return redirect('media_view', media.pk)
 			else:
 				return render(request, 'new_media.html', {'community':community, 'status':1})
