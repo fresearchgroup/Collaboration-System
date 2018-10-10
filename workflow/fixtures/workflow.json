@@ -39,5 +39,9 @@
   "pk": 5,
    "fields": {"name": "Publish", "from_state": 5, "to_state": 3}
 
+},
+{"model": "workflow.transitions",
+  "pk": 6,
+   "fields": {"name": "Publish", "from_state": 5, "to_state": 2}
 }
 ]
