@@ -4,6 +4,7 @@ from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from metadata.models import MediaMetadata
 
 def create_media(request):
 	if request.user.is_authenticated:
@@ -26,15 +27,16 @@ def create_media(request):
 def media_view(request, pk):
 	try:
 		cmedia = CommunityMedia.objects.get(media=pk)
+		mediametadata = MediaMetadata.objects.get(media=pk)
 		if cmedia.media.state == States.objects.get(name='draft') and cmedia.media.created_by != request.user:
 			return redirect('home')
 		canEdit = ""
 		if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
 			membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 			canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
-	except CommunityImages.DoesNotExist:
+	except CommunityMedia.DoesNotExist:
 		raise Http404
-	return render(request, 'view_media.html', {'cmedia':cmedia, 'canEdit':canEdit})
+	return render(request, 'view_media.html', {'cmedia':cmedia, 'canEdit':canEdit, 'mediametadata':mediametadata})
 
 def media_edit(request,pk):
 	if request.user.is_authenticated:
