@@ -619,7 +619,7 @@ def create_wiki_for_community(community):
 			"INSERT INTO wiki_urlpath (id, slug, lft, rght, tree_id, level, article_id, parent_id, site_id)"
 			"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		)
-MediaMetadata
+
 	cursor.execute(''' select rght from wiki_urlpath order by rght DESC limit 1''')
 	url_rght = cursor.fetchone()[0]
 
