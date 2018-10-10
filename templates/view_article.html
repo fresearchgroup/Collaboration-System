@@ -72,16 +72,13 @@
         <div class="reputation-icons blog-item">
           <ul class="reputation-icons-list blog-info">
             <li>
-              <i class="fa fa-thumbs-up" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
-              <span class="upvote-count"></span>
+              <i class="fa fa-thumbs-o-up" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
             </li>
             <li>
-              <i class="fa fa-thumbs-down" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>   
-              <span class="downvote-count"></span>
+              <i class="fa fa-thumbs-o-down" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>   
             </li>
             <li>
-              <i class="fa fa-flag" id="reputation-reported" onclick="updateReputationStat('reported')"></i>
-              <span class="reported-count"></span>
+              <i class="fa fa-flag-o" id="reputation-reported" onclick="updateReputationStat('reported')"></i>
             </li>
           </ul>
         </div>
@@ -138,15 +135,25 @@
 var id = {{article.article.id}};
 
 function updateReputationStat(update_type) {
+  var updates = { 
+    update_type: update_type
+  };
+
   $.ajax({
     url: '/api/reputation/reputation_stats/' + id + '/',
     type: 'POST',
-    data: {type: update_type},
+    data: updates,
     beforeSend: function(xhr) {
       xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'))
     },
     success: function(data) {
-      $('.' + update_type + '-count').text(data[update_type]);        
+      $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
+      $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
+      $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
+
+      $('#reputation-upvote').toggleClass('fa-thumbs-up', data.upvoted);
+      $('#reputation-downvote').toggleClass('fa-thumbs-down', data.downvoted);
+      $('#reputation-reported').toggleClass('fa-flag', data.reported);    
     }
   });
 }
@@ -156,9 +163,13 @@ $(document).ready(function() {
     url: '/api/reputation/reputation_stats/' + id + '/',
     type: 'GET',
     success: function(data) {
-      $('.upvote-count').text(data.upvote);
-      $('.downvote-count').text(data.downvote);
-      $('.reported-count').text(data.reported);
+      $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
+      $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
+      $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
+
+      $('#reputation-upvote').toggleClass('fa-thumbs-up', data.upvoted);
+      $('#reputation-downvote').toggleClass('fa-thumbs-down', data.downvoted);
+      $('#reputation-reported').toggleClass('fa-flag', data.reported);    
     }
   })
 })
