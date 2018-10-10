@@ -29,7 +29,7 @@ class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['POST'])
 def ArticlePublishScore(request):
-    articleid = reqxuest.data['pk']
+    articleid = request.data['pk']
     article = ArticleScoreLog.objects.get(article=articleid)
 
     if not article.publish and article.article.state.name == 'publish':
