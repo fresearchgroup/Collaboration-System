@@ -3,7 +3,10 @@
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
 <li class="breadcrumb-item active">
-  <a href="{% url 'display_courses' %}">Courses</a>
+  <a href="{% url 'home' %}">Home </a>
+  <li class="breadcrumb-item ">Resources</li>
+  <li class="breadcrumb-item active">
+<a href="{% url 'display_courses' %}">Courses</a> </li>
 </li>
 {% endblock %} {% block content %}
 <h1>Courses</h1>
@@ -67,7 +70,7 @@
 {% endif %}
 
 <div class="loading" style="display: none;">
-  
+
 </div>
 
 {% endblock %} {% block javascript %}

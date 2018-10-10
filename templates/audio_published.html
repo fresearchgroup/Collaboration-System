@@ -2,8 +2,9 @@
 <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
-<li class="breadcrumb-item active">Resources</li>
-<li class="breadcrumb-item active">Audio</li>
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">Resources</li>
+<li class="breadcrumb-item ">Audio</li>
 {% endblock %} {% block content %}
 <h1>Audio</h1>
 {% if not mediaPublished %}
@@ -62,7 +63,7 @@
 {% endif %}
 
 <div class="loading" style="display: none;">
-  
+
 </div>
 
 {% endblock %} {% block javascript %}
