@@ -2,8 +2,9 @@
 <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
-<li class="breadcrumb-item active">Resources</li>
-<li class="breadcrumb-item active">Video</li>
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">Resources</li>
+<li class="breadcrumb-item ">Video</li>
 {% endblock %} {% block content %}
 <h1>Video</h1>
 {% if not mediaPublished %}
@@ -36,7 +37,7 @@
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/mp4" />
                 <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="video/wmv" />
               </video>
-              <h3> <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a> </h3> 
+              <h3> <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a> </h3>
               <i class="fa fa-user" style="color:red;"></i> {{ mediap.media.created_by }} <br />
               <i class="fa fa-calendar" style="color:red;"></i> {{mediap.media.created_at}} <br />
               <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
@@ -56,7 +57,7 @@
 {% endif %}
 
 <div class="loading" style="display: none;">
-  
+
 </div>
 
 {% endblock %} {% block javascript %}
