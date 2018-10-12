@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
+
 {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">My Profile</li>
+{% endblock %}
+
+
+
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{user.username}}'s Dashboard </li>
   {% endif %}
-{% endblock %}
 
 {% block content %}
 <div class="row recent-work margin-bottom-40">
