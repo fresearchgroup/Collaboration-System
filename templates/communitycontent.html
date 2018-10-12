@@ -10,6 +10,7 @@
 {% load comments_xtd %}
 
 {% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
   <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
