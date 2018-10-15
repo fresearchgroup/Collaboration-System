@@ -40,6 +40,15 @@
   </li>
 </ul>
 </div>
+{% if messages %}
+<div class="alert alert-warning" role="alert">
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
 <br/>
 
     {%if belongs_to == 'community' %}
