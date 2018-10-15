@@ -23,7 +23,8 @@ from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
-from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id
+from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id, get_pad_usercount
+from django.contrib import messages
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -152,67 +153,71 @@ def edit_article(request, pk):
 				notify_edit_article(request.user,article, current_state)
 				return redirect('article_view',pk=article.pk)
 			else:
-				article = Articles.objects.get(pk=pk)
-				title = request.POST['title']
-				body = getHTML(article)
-				current_state = request.POST['current']
-				try:
-					current_state = States.objects.get(name=current_state)
-					if 'private' in request.POST:
-						to_state = States.objects.get(name='private')
-						article.state = to_state
-						#Article got rejected
-						notify_update_article_state(request.user, article, 'rejected')
-						create_resource_feed(article, "article_edit", request.user)
-
-					else:
-						to_state = request.POST['state']
-						to_state = States.objects.get(name=to_state)
-
-						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
+				if get_pad_usercount(pk) <= 1:
+					article = Articles.objects.get(pk=pk)
+					title = request.POST['title']
+					body = getHTML(article)
+					current_state = request.POST['current']
+					try:
+						current_state = States.objects.get(name=current_state)
+						if 'private' in request.POST:
+							to_state = States.objects.get(name='private')
 							article.state = to_state
-							create_resource_feed(article,'article_edit',request.user)
-
-						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
-							article.state = to_state
+							#Article got rejected
+							notify_update_article_state(request.user, article, 'rejected')
+							create_resource_feed(article, "article_edit", request.user)
 
 						else:
-							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
-							article.state = to_state
+							to_state = request.POST['state']
+							to_state = States.objects.get(name=to_state)
 
-							if(to_state.name=='publishable'):
-								notify_update_article_state(request.user,article,'publishable')
-								create_resource_feed(article,"article_no_edit",request.user)
+							if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
+								article.state = to_state
+								create_resource_feed(article,'article_edit',request.user)
 
-							# sending group feed and personal notificaions when an article goes from draft to private state.
-							if(to_state.name=='private'):
-								create_resource_feed(article, "article_edit",request.user)
-								notify_update_article_state(request.user, article, 'private')
+							elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
+								article.state = to_state
 
-							# sending group feed and personal notification to all publishers and admins of group.
-							if(current_state.name == 'private' and to_state.name=='visible'):
-								create_resource_feed(article,"article_no_edit",request.user)
-								notify_update_article_state(request.user, article, 'visible')
+							else:
+								transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+								article.state = to_state
+
+								if(to_state.name=='publishable'):
+									notify_update_article_state(request.user,article,'publishable')
+									create_resource_feed(article,"article_no_edit",request.user)
+
+								# sending group feed and personal notificaions when an article goes from draft to private state.
+								if(to_state.name=='private'):
+									create_resource_feed(article, "article_edit",request.user)
+									notify_update_article_state(request.user, article, 'private')
+
+								# sending group feed and personal notification to all publishers and admins of group.
+								if(current_state.name == 'private' and to_state.name=='visible'):
+									create_resource_feed(article,"article_no_edit",request.user)
+									notify_update_article_state(request.user, article, 'visible')
 
 
-					article.title = title
-					article.body = body
-					try:
-						article.image = request.FILES['article_image']
-						article.save(update_fields=["title","body", "image", "state"])
-					except:
-						article.save(update_fields=["title","body", "state"])
-				except Transitions.DoesNotExist:
-					message = "transition doesn' exist"
-				except States.DoesNotExist:
-					message = "state doesn' exist"
-				if to_state.name == 'publish':
-					article.published_on = datetime.datetime.now()
-					article.published_by=request.user
-					article.save()
-					create_resource_feed(article,'article_published',article.created_by)
-					notify_update_article_state(request.user, article,'published')
-				return redirect('article_view',pk=pk)
+						article.title = title
+						article.body = body
+						try:
+							article.image = request.FILES['article_image']
+							article.save(update_fields=["title","body", "image", "state"])
+						except:
+							article.save(update_fields=["title","body", "state"])
+					except Transitions.DoesNotExist:
+						message = "transition doesn' exist"
+					except States.DoesNotExist:
+						message = "state doesn' exist"
+					if to_state.name == 'publish':
+						article.published_on = datetime.datetime.now()
+						article.published_by=request.user
+						article.save()
+						create_resource_feed(article,'article_published',article.created_by)
+						notify_update_article_state(request.user, article,'published')
+					return redirect('article_view',pk=pk)
+				else:
+					messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing the article. You can save your changes.')
+					return redirect('article_edit', pk=pk)
 		else:
 			message=""
 			transition =""
