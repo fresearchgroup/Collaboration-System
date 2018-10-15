@@ -216,7 +216,7 @@ def edit_article(request, pk):
 						notify_update_article_state(request.user, article,'published')
 					return redirect('article_view',pk=pk)
 				else:
-					messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing the article. You can save your changes.')
+					messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes.')
 					return redirect('article_edit', pk=pk)
 		else:
 			message=""
