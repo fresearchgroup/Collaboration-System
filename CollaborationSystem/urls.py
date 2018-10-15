@@ -34,6 +34,7 @@ import notifications.urls
 from Dashboard import views as dashboardview
 from Recommendation_API import views
 from Media import views as mediaview
+from TaskQueue import views as taskview
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -171,6 +172,7 @@ urlpatterns = [
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
+    url(r'^upload_task/', taskview.upload_task, name='upload_task'),
 
 ]
 
