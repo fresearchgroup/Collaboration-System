@@ -173,6 +173,7 @@ urlpatterns = [
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),
+    url(r'^run_task/', taskview.run_task, name='run_task'),
 
 ]
 

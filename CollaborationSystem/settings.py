@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'etherpad',
     'Media',
     'metadata',
+    'TaskQueue',
 ] + get_machina_apps()
 
 SITE_ID = 1
@@ -301,3 +302,5 @@ WIKI_ACCOUNT_SIGNUP_ALLOWED = True
 
 COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
+
+CELERY_BROKER_URL = 'amqp://localhost'
