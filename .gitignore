@@ -10,6 +10,7 @@ media/course
 media/images
 media/audio
 media/video
+media/task
 PyEtherpadLite
 
 # SQLite database files
