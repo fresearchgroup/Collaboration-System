@@ -27,15 +27,15 @@ class UserScore(models.Model):
 
 #it will store score of a particular article
 class ArticleScoreLog(models.Model):
-    article = models.OneToOneField(Articles ,on_delete = models.CASCADE)
+    resource = models.OneToOneField(Articles ,on_delete = models.CASCADE)
     upvote = models.IntegerField(null = True, default=0)
     downvote = models.IntegerField(null = True, default=0)
     reported = models.IntegerField(null = True, default=0)
     publish = models.BooleanField(default=False)
 
-class ArticleVotedByLogs(models.Model):
+class ArticleUserScoreLogs(models.Model):
     user = models.ForeignKey(User ,on_delete = models.CASCADE)
-    article = models.ForeignKey(Articles ,on_delete = models.CASCADE)
+    resource = models.ForeignKey(Articles ,on_delete = models.CASCADE)
     upvoted = models.BooleanField(default=False)
     downvoted = models.BooleanField(default=False)
     reported = models.BooleanField(default=False)

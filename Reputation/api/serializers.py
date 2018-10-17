@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Reputation.models import CommunityReputaion
-from Reputation.models import ArticleScoreLog, ArticleVotedByLogs
+from Reputation.models import ArticleScoreLog, ArticleUserScoreLogs
 
 class CommunityReputaionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,17 +15,17 @@ class ArticleScoreLogSerializaer(serializers.ModelSerializer):
     class Meta:
         model = ArticleScoreLog
         fields = [
-            'article',
+            'resource',
             'upvote',
             'downvote',
             'reported',
             'publish'
         ]
-class ArticleVotedByLogsSerializer(serializers.ModelSerializer):
+class ArticleUserScoreLogsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ArticleVotedByLogs
+        model = ArticleUserScoreLogs
         fields = [
-            'article',
+            'resource',
             'user',
             'upvoted',
             'downvoted',
