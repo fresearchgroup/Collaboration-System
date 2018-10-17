@@ -10,6 +10,7 @@
 {% load comments_xtd %}
 
 {% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
   <li class="breadcrumb-item active">{{ community.name }}</li>
 {% endblock %}
@@ -75,7 +76,11 @@
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
       {% if article.image %}
-        <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+        {% if article.mediatype == 'Audio' or article.mediatype == 'Video' %}
+          <iframe style="width:100%" class="embed-responsive-item" src="{{ MEDIA_URL }}{{ article.image}}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        {% else %}
+          <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+        {% endif %}
       {% else %}
         {% if article.type == 'article' %}
           <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
@@ -88,9 +93,17 @@
         {% endif %}
       {%endif%}
     </div>
-    <div class="col-md-10 col-sm-10">
+    <div class="col-md-10 col-sm-10"> 
       {% if article.type == 'article' %}
         <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
+      {% endif %}
+      {% if article.type == 'media' %}
+        <h3>
+          {% if article.mediatype == 'Image' %}<i class="fa fa-picture-o" style="color:red;"></i> {% endif %}
+          {% if article.mediatype == 'Audio' %}<i class="fa fa-music" style="color:red;"></i> {% endif %}
+          {% if article.mediatype == 'Video' %}<i class="fa fa-film" style="color:red;"></i> {% endif %}
+          <a href="{% url 'media_view' article.id %}">{{ article.title }}</a>
+        </h3>
       {% endif %}
       {% if article.type == 'course' %}
         <h3><i class="fa fa-briefcase" style="color:red;"></i> <a href="{% url 'course_view' article.id %}">{{ article.title }}</a></h3>

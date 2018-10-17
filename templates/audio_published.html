@@ -1,0 +1,80 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">Resources</li>
+<li class="breadcrumb-item ">Audio</li>
+{% endblock %} {% block content %}
+<h1>Audio</h1>
+{% if not mediaPublished %}
+<div class="content-page page-404">
+  <div class="number">
+    Oops!
+  </div>
+  <div class="details">
+    <h3>No Content</h3>
+    <p>
+      Sorry, currently there are no audio published from any community
+    </p>
+  </div>
+</div>
+{% endif %} {{myhtml|safe}}{% autoescape off%}
+<div class="row ">
+  <div class="col-md-10 col-sm-10">
+    <div class="infinite-container">
+      {% for mediap in mediaPublished %}
+      <div class="infinite-item">
+        <div class="row margin-bottom-15">
+          <div class="col-md-4 col-sm-4">
+              <audio controls>
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/mp3" />
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/wav" />
+                <source src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" type="audio/ogg" />
+              </audio>
+          </div>
+          <div class="col-md-7 col-sm-7">
+            <h3>
+              <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }}</a>
+            </h3>
+            <ul class="blog-info">
+              <li>
+                <i class="fa fa-user"></i> {{ mediap.media.created_by }} </li>
+              <li>
+                <i class="fa fa-calendar"></i> {{mediap.media.created_at}} </li>
+              <li>
+                <i class="fa fa-users"></i>
+                <a href="{% url 'community_view' mediap.community.pk %}"> {{mediap.community.name}} </a> Community </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <hr class="blog-post-sep">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endautoescape%} {% if mediaPublished.has_next %}
+<a class="infinite-more-link" href="?page={{ mediaPublished.next_page_number }}">
+  <i class="fa fa-spinner fa-spin" style="font-size:24px;color:red"></i> Loading...
+</a>
+{% endif %}
+
+<div class="loading" style="display: none;">
+
+</div>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script> {% endblock %}

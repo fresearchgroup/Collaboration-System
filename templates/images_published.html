@@ -1,0 +1,76 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">Resources</li>
+<li class="breadcrumb-item ">Images</li>
+{% endblock %} {% block content %}
+<h1>Images</h1>
+{% if not mediaPublished %}
+<div class="content-page page-404">
+  <div class="number">
+    Oops!
+  </div>
+  <div class="details">
+    <h3>No Content</h3>
+    <p>
+      Sorry, currently there are no images published from any community
+    </p>
+  </div>
+</div>
+{% endif %} {{myhtml|safe}}{% autoescape off%}
+
+    <div class="main">
+      <div class="container">
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+          <!-- BEGIN CONTENT -->
+          <div class="col-md-12">
+            <div class="content-page">
+              <div class="row margin-bottom-40">
+                {% for mediap in mediaPublished %}
+                <div class="col-md-3 col-sm-4 gallery-item">
+                  <a data-rel="fancybox-button"
+                    title=""
+                    href="{{ MEDIA_URL }}{{ mediap.media.mediafile}}"
+                    class="fancybox-button"
+                    text = "{{ mediap.media.title }}">
+                    <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ mediap.media.mediafile}}" class="img-responsive">
+                    <div class="zoomix"><i class="fa fa-search"></i></div>
+                  </a>
+                  <h3> <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a> </h3>
+                  <i class="fa fa-user" style="color:red;"></i> {{ mediap.media.created_by }} <br />
+                  <i class="fa fa-calendar" style="color:red;"></i> {{mediap.media.created_at}} <br />
+                  <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- END CONTENT -->
+        </div>
+      </div>
+    </div>
+{% endautoescape%} {% if mediaPublished.has_next %}
+<a class="infinite-more-link" href="?page={{ mediaPublished.next_page_number }}">
+  <i class="fa fa-spinner fa-spin" style="font-size:24px;color:red"></i> Loading...
+</a>
+{% endif %}
+
+<div class="loading" style="display: none;">
+
+</div>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script> {% endblock %}

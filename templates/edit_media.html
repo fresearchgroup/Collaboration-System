@@ -1,0 +1,106 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+    #liclr {
+        background-color: #FE642E;
+
+    }
+
+    #clr {
+        color: black;
+    }
+</style>
+{% endblock %} {% load mptt_tags %} {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' comm.pk %}"> {{comm}} </a></li>
+<li class="breadcrumb-item active">{{ media.title }} </li>
+{% endblock %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item ">
+                    <a class="nav-link " href="{% url 'media_view' media.pk %}">View</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link " href="{% url 'media_edit' media.pk %}">Edit</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <br/>
+        <div class="col-sm-12">
+            {% if user.is_authenticated %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-5">
+
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{media.title}}" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="10" cols="50" required>
+{{mediametadata.metadata.description}}
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="State">State</label>
+                            <select id="change_media_state" name="change_media_state" class="btn btn-primary">
+                                {% for state in states %}
+                                <option value="{{ state }}">{{ state }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div> <!-- end of 5 columns meta data-->
+
+                    <div class="col-sm-7">
+                        {% if media.mediatype == 'Image' %}
+                        <img src="{{ MEDIA_URL }}{{ media.mediafile}}" alt="image" class="img-responsive" width=350> <br />
+                        <div class="form-group custom-file">
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the image...">
+                        </div>
+                        {% endif %}
+                        {% if media.mediatype == 'Audio' %}
+                            <iframe height="70" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ media.mediafile}}" class="margin-bottom-10"></iframe>
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='[""mp3", "wav","ogg""]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the audio...">
+                        {% endif %}
+                        {% if media.mediatype == 'Video' %}
+                            <iframe height="270" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ media.mediafile}}" class="margin-bottom-10"></iframe>
+                            <input type="file" id="mediafile" name="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]'
+                                data-show-upload="false" data-show-preview="true" data-msg-placeholder="Browse to update the video...">
+                        {% endif %}
+                    </div> <!-- end of 7 columns media-->
+                </div> <!-- end of row -->
+
+                <div class="form-group">
+                    <button id="update_id" type="submit" name="status" value="update" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            {% endif %}
+            <!-- user authenticated -->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script> {% endblock %}

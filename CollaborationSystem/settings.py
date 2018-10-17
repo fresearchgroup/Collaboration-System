@@ -79,6 +79,10 @@ INSTALLED_APPS = [
     'wiki.plugins.macros.apps.MacrosConfig',
     'Recommendation_API',
     'Reputation',
+    'etherpad',
+    'Media',
+    'metadata',
+    'TaskQueue',
 ] + get_machina_apps()
 
 SITE_ID = 1
@@ -269,6 +273,10 @@ REST_FRAMEWORK = {
       'rest_framework.authentication.TokenAuthentication',
       'rest_framework.authentication.BasicAuthentication',
       'rest_framework.authentication.SessionAuthentication',
+    ),
+    
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
 
@@ -295,3 +303,5 @@ WIKI_ACCOUNT_SIGNUP_ALLOWED = True
 
 COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
+
+CELERY_BROKER_URL = 'amqp://localhost'

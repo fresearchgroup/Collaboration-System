@@ -1,6 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses
+from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
@@ -21,6 +21,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from datetime import date
 from decouple import config
+from etherpad.views import create_ether_user
 
 def signup(request):
     """
@@ -58,6 +59,7 @@ def signup(request):
             else:
                 user = form.save()
                 assign_role(user, Author)
+                create_ether_user(user)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('user_dashboard')
         else:
@@ -90,6 +92,7 @@ def user_dashboard(request):
         commarticles = CommunityArticles.objects.filter(user=request.user)
         grparticles = GroupArticles.objects.filter(user=request.user)
         commcourses = CommunityCourses.objects.filter(user=request.user)
+        commmedia = CommunityMedia.objects.filter(user=request.user)
 
         for cart in commarticles:
             cart.type = 'article'
@@ -103,7 +106,11 @@ def user_dashboard(request):
             ccourse.type = 'course'
             ccourse.belongsto = 'community'
 
-        lstContent = list(commarticles) + list(grparticles) + list(commcourses)
+        for cmedia in commmedia:
+            cmedia.type = 'Media'
+            cmedia.belongsto = 'community'
+
+        lstContent = list(commarticles) + list(grparticles) +  list(commmedia) + list(commcourses)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
         grpinvitations = GroupInvitations.objects.filter(status='Invited', user=request.user)

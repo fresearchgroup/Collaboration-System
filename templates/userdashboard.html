@@ -175,6 +175,11 @@ var articlesContributed = [{{total}}];
               {% if content.type == 'course' %}
                 <i class="fa fa-briefcase" style="color:red;"></i> Course
               {% endif %}
+              {% if content.type == 'Media' %}
+                {% if content.media.mediatype == 'Image' %}<i class="fa fa-picture-o" style="color:red;"></i> Image {% endif %}
+                {% if content.media.mediatype == 'Audio' %}<i class="fa fa-music" style="color:red;"></i> Audio {% endif %}
+                {% if content.media.mediatype == 'Video' %}<i class="fa fa-film" style="color:red;"></i> Video {% endif %}
+              {% endif %}
             </td>
             <td>
               {% if content.type == 'article' %}
@@ -183,6 +188,9 @@ var articlesContributed = [{{total}}];
               {% if content.type == 'course' %}
                 <a href="{% url 'course_view' content.course.pk %}"> {{ content.course }}  </a>
               {% endif %}
+              {% if content.type == 'Media' %}
+                <a href="{% url 'media_view' content.media.pk %}"> {{ content.media.title }}  </a>
+              {% endif %}
             </td>
             <td>
               {% if content.type == 'article' %}
@@ -190,6 +198,9 @@ var articlesContributed = [{{total}}];
               {% endif %}
               {% if content.type == 'course' %}
                 {{content.course.state.name}}
+              {% endif %}
+              {% if content.type == 'Media' %}
+                {{content.media.state.name}}
               {% endif %}
             </td>
             <td>
@@ -206,6 +217,9 @@ var articlesContributed = [{{total}}];
               {% endif %}
               {% if content.type == 'course' %}
                 {{content.course.created_at}}
+              {% endif %}
+              {% if content.type == 'Media' %}
+                {{content.media.created_at}}
               {% endif %}
             </td>
           </tr>

@@ -32,6 +32,8 @@ The system allows individual users to form communities, create groups, participa
 * [Pillow](https://pypi.org/project/Pillow/)
 * [Requests](https://pypi.org/project/requests/)
 * [Elasticsearch](https://pypi.org/project/elasticsearch/)
+* [Celery](https://pypi.org/project/django-celery/)
+* [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server)
 
 ## For development installation (Virtual Environment)
 

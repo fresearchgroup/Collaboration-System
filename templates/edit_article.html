@@ -40,11 +40,20 @@
   </li>
 </ul>
 </div>
+{% if messages %}
+<div class="alert alert-warning" role="alert">
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
 <br/>
 
     {%if belongs_to == 'community' %}
        {%if transition.to_state.name == 'publish' %}
-            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
+            {%if cmember.role.name == 'publisher' and  article.article.created_by != request.user or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
 
 
                       <form method="post" enctype="multipart/form-data">
@@ -56,7 +65,7 @@
                       </div>
                       <div class="form-group">
                         <label for="body">Body</label>
-                        <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                        <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                         <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                         </div>
                         {% if article.article.image %}
@@ -71,6 +80,7 @@
                       <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='{{reject.to_state.name}}' id = "rejectcomarticle">Reject</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
             {% endif %}
         {%elif cmember.role%}
@@ -83,7 +93,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -114,7 +124,7 @@
             </div>
             <div class="form-group">
               <label for="body">Body</label>
-              <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+              <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
               <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
               </div>
               {% if article.article.image %}
@@ -144,7 +154,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -171,7 +181,7 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -198,7 +208,7 @@
               </div>
               <div class="form-group">
                 <label for="body">Body</label>
-                <iframe src="{{url}}/p/{{article.article.pk}}?userName={{uname}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
                 <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                 </div>
                 {% if article.article.image %}
@@ -235,34 +245,6 @@
 {% endblock %}
 {% block javascript %}
 
-
-<script>
-      var id = '{{article.article.id}}';
-        setInterval(function(){
-          $.ajax({
-            type:'POST',
-            url: '/ajax/article_autosave/'+id+'/',
-            data: {
-             csrfmiddlewaretoken: '{{csrf_token}}'
-            },
-            dataType: 'json',
-            success: function (data) {
-              if (data.success) {
-                console.log("Done");
-                console.log(data.html);
-              }
-            }
-         });
-        },3000);
-      // ClassicEditor
-      //   .create( document.querySelector( '#editor' ) )
-      //   .then( editor => {
-      //     console.log( editor );
-      //   } )
-      //   .catch( error => {
-      //     console.error( error );
-      //   } );
-    </script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

@@ -6,9 +6,15 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-{% endblock %}
+<li class="breadcrumb-item ">Create FAQs</a></li>
 
-{% block content %}
+  {% endblock %}
+
+
+  {% block content %}
+
+
+
 
 {% if user.is_authenticated %}
 {% if message %}

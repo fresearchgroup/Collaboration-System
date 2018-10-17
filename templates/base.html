@@ -44,6 +44,7 @@
   <!-- Theme styles START -->
   <link href="{% static 'assets/pages/css/components.css' %}" rel="stylesheet">
   <link href="{% static 'assets/pages/css/slider.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/gallery.css' %}" rel="stylesheet">
   <link href="{% static 'assets/corporate/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'assets/corporate/css/style-responsive.css' %}" rel="stylesheet">
   <link href="{% static 'assets/corporate/css/themes/red.css' %}" rel="stylesheet" id="style-color">
@@ -144,11 +145,14 @@ $(document).ready(function() {
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
           Resources
         </a>
-        <ul class="dropdown-menu myinvitations" id="myinvitations">
+        <ul class="dropdown-menu" id="">
           <li><a href="{% url 'display_articles' %}">Articles</a></li>
           <li><a href="{% url 'display_courses' %}">Courses</a></li>
+          <li><a href="{% url 'display_published_media' 'Image' %}">Images</a></li>
+          <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
+          <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>
         </ul>
-      </li>  
+      </li>
       <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
@@ -173,9 +177,10 @@ $(document).ready(function() {
             <li><a href="{% url 'create_community' %}">Create Community</a></li>
             <li><a href="{% url 'manage_reputation' %}">Manage Reputation</a></li>
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
-						<li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
+            <li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
+            <li><a href="{% url 'upload_task' %}">Create Task</a></li>
             {% endif%}
-						{% if user.is_authenticated %}
+						{% if user.is_authenticated and not request.user.is_superuser %}
 						  <li><a href="{% url 'request_community_creation' %}">Request Community Creation</a></li>
 						{%endif%}
 
@@ -186,7 +191,7 @@ $(document).ready(function() {
         </li>
         {% load notifications_tags %}
         <!--{% notifications_unread as unread_count %}-->
-        {% register_notify_callbacks badge_class='badge' refresh_period='60' callbacks='fill_notification_badge' %}
+        {% register_notify_callbacks badge_class='badge' refresh_period='180' callbacks='fill_notification_badge' %}
 
         <li>
             <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% live_notify_badge badge_class='badge' %}</a>
@@ -229,7 +234,7 @@ $(document).ready(function() {
           {% endblock %}
         </ol>
         {% block content %}
-        
+
 
         {% endblock %}
   </div>
