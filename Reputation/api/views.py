@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer
 from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs
+from BasicArticle.models import Articles
 from rest_framework.permissions import IsAuthenticated
 from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups
 from Group.models import GroupArticles
@@ -68,32 +69,36 @@ class ReputationStatsDetails(APIView):
         resource_type = self.request.query_params.get('resource_type')
 
         if (resource_type == 'article'):
-            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer
+            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, Articles
 
     def get_object(self, pk):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
 
         try:
-            return scoreLogModel.objects.get(pk=pk)
+            try:
+                resource = model.objects.get(pk=pk)
+            except model.DoesNotExist:
+                raise Http404
+                
+            resource_score_log, created = scoreLogModel.objects.get_or_create(resource=resource)
+            return resource_score_log
         except scoreLogModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
-        print(resource_score_log.resource);
         resource_user_log, created = userLogModel.objects.get_or_create(
             user=request.user,
             resource=resource_score_log.resource
         )
-        
-        print(resource_user_log.resource)
+
         serializer = userLogSerializer(resource_user_log)
         return Response(serializer.data)
 
     def post(self, request, pk, format=None):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
 
