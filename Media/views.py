@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from .models import Media
 from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
-from workflow.views import canEditResourceCommunity
+from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
 
@@ -70,10 +70,11 @@ def media_edit(request,pk):
 					metadata.save()
 					return redirect('media_view',pk=pk)
 				else:
+					states = getStatesCommunity(media.state.name)
 					message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
 					if message != 'True':
 						return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
-					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'community':community, 'comm':comm, 'mediametadata':mediametadata})
+					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'community':community, 'comm':comm, 'mediametadata':mediametadata, 'states':states})
 			else:
 				return redirect('media_view',pk=pk)
 		except CommunityMembership.DoesNotExist:

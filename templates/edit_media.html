@@ -57,19 +57,9 @@
                         <div class="form-group">
                             <label for="State">State</label>
                             <select id="change_media_state" name="change_media_state" class="btn btn-primary">
-                                {% if media.state.name == 'draft' %}
-                                <option value="draft">Draft</option>
-                                <option value="visible">Visible</option>
-                                {% endif %} 
-                                {% if media.state.name == 'visible' %}
-                                <option value="visible">Visible</option>
-                                <option value="publishable">Publishable</option>
-                                {% endif %} 
-                                {% if media.state.name == 'publishable' %}
-                                <option value="publishable">Publishable</option>
-                                <option value="visible">Visible</option>
-                                <option value="publish">Publish</option>
-                                {% endif %}
+                                {% for state in states %}
+                                <option value="{{ state }}">{{ state }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div> <!-- end of 5 columns meta data-->
