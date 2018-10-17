@@ -3,6 +3,10 @@
 {% load comments_xtd %}
 {% load static %}
 
+{% block css %}
+<link href="{% static 'css/quill.snow.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
      <li class="breadcrumb-item active">{{ article.article.title }} </li>
@@ -65,10 +69,9 @@
             {% endif %}
             
           </ul>
-        <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;">
-          {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
-          
-        </p>
+        </div>
+        <div id="toolbar"></div>
+        <div id="editor"></div>
         <div class="reputation-icons blog-item">
           <ul class="reputation-icons-list blog-info">
             <li>
@@ -81,7 +84,7 @@
               <i class="fa fa-flag-o" id="reputation-reported" onclick="updateReputationStat('reported')"></i>
             </li>
           </ul>
-        </div>
+
       </div>
     </div>
     <div class="col-sm-3"><br/><br/>
@@ -129,11 +132,10 @@
 
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'js/favourite.js' %}"></script>
-
 <script type="text/javascript">
 var id = {{article.article.id}};
 var resource_type = 'article';
+console.log(id);
 
 function updateReputationStat(update_type) {
   var updates = { 
@@ -149,6 +151,7 @@ function updateReputationStat(update_type) {
       xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'))
     },
     success: function(data) {
+      console.log(data);
       $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
       $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
       $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
@@ -165,6 +168,7 @@ $(document).ready(function() {
     url: '/api/reputation/reputation_stats/' + id + '/?resource_type=' + resource_type,
     type: 'GET',
     success: function(data) {
+      console.log(data);
       $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
       $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
       $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
@@ -174,58 +178,6 @@ $(document).ready(function() {
       $('#reputation-reported').toggleClass('fa-flag', data.reported);    
     }
   })
-})
-
-$(function(){
-        $.ajax({
-                  url: '/ajax/article_text/'+id,
-                  type: 'GET',
-                  data: {'pk':id},
-                  success: function (data) {
-                      // alert(data);
-                      // console.log(data.article_id);
-                      // check();
-                      // console.log("Done checkin")
-                       $.ajax({
-                                url: 'http://192.168.43.175:3000/?topic='+data.body,
-                                type: 'GET',
-                                data: {},
-                                success: function (data) {
-                                    // alert(data);
-                                    // console.log(data.article_id);
-                                    // console.log("!");
-                                    // console.log(data.inappropriates);
-                                    status= data.inappropriates;
-                                    // check();
-                                    // console.log("Done checkin")
-                                },
-                                complete:function(data){
-                                 // $(".overlay")[0].style.display="none";
-
-                                 if(status==1)
-                                  {
-                                    // alert("Sorry the article is not appropriate. Consider reviewing your article.");
-                                    $("#appropriateness").text("Appropriate : No");
-                                  }
-                                  else if(status == 0)
-                                  {
-                                    // alert("Good job");
-                                     $("#appropriateness").text("Appropriate : Yes");
-                                  }
-                                  else 
-                                  {
-                                    $("#appropriateness").text("Appropriate : Unknown");
-                                  }
-                                },
-                                cache: false,
-                                contentType: false,
-                                processData: false
-                            });
-                  },
-                  cache: false,
-                  contentType: false,
-                  processData: false
-              });
 })
 
 $(window).load(function() {
@@ -245,5 +197,9 @@ $(window).load(function() {
                       
                     });
           });
+  var articleBody = {{article.article.body | safe }};
 </script>
+
+<script src="{% static 'js/dist/article-view.js' %}"></script>
+<script src="{% static 'js/favourite.js' %}"></script>
 {% endblock %}

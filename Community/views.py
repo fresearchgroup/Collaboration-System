@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from BasicArticle.views import create_article, view_article, getHTML
+from BasicArticle.views import create_article, view_article
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
@@ -30,10 +30,11 @@ from django.conf import settings
 from ast import literal_eval
 import json
 import requests
-from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
+from decouple import config
+# Create your views here.
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -107,27 +108,10 @@ def community_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def community_article_create_body(request, article, community):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article.body = getHTML(article)
-			article.save()
-			data={
-				'article_id':article.pk,
-				'body':article.body
-			}
-			return JsonResponse(data)
-			# return redirect('article_view', article.pk)
-			# else:
-			# 	article.creation_complete = True
-			# 	article.save()
-			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
 def community_article_create(request):
+	SHAREDB_SERVER_IP = config('SHAREDB_SERVER_IP')
+	SHAREDB_SERVER_PORT = config('SHAREDB_SERVER_PORT')
+
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
@@ -135,54 +119,20 @@ def community_article_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				article = create_article(request)
-				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+				obj = CommunityArticles.objects.create(article=article, user = request.user , community =community )
 
-				#create the ether id for artcile blonging to this community
-				padid = create_article_ether_community(cid, article)
+				requests.post(
+					f'http://{SHAREDB_SERVER_IP}:{SHAREDB_SERVER_PORT}/api/article/{article.pk}/', 
+					data={'body': article.body})
 
-				# return community_article_create_body(request, article, community)
-				data={
-					'article_id':article.id,
-					'community_or_group_id':community.pk,
-					'user_id':request.user.id,
-					'username':request.user.username,
-					'url':settings.SERVERURL,
-					'articleof':'community',
-					'padid':padid
-				}
-				return JsonResponse(data)
-				# return redirect('article_edit', article.pk)
-
-
-			elif status == '2' or status=='3':
-				pk=''
-				# print(status)
-				if status == '2':
-					pk = request.POST.get('pk','')
-					article = Articles.objects.get(pk=pk)
-					return community_article_create_body(request, article, community)
-				elif status == '3':
-					pk = request.POST.get('pk','3')
-					article= Articles.objects.get(pk=pk)
-					article.title=request.POST['title']
-					try:
-						image = request.FILES['article_image']
-					except:
-						image = None
-					article.image=image
-					article.save()
-					data={}
-					return JsonResponse(data)
+				return redirect('article_view', article.pk)
 			else:
-				#create the session for this article in ether pad
-				sid = create_session_community(request, cid)
-				response = render(request, 'new_article.html', {'community':community, 'status':1})
-				response.set_cookie('sessionID', sid)
-				return response
+				return render(request, 'new_article.html', {'community':community, 'status':1})
 		else:
 			return redirect('home')
 	else:
 		return redirect('login')
+
 
 def community_group(request):
 	if request.user.is_authenticated:
@@ -447,9 +397,6 @@ def create_community(request):
 					)
 				remove_or_add_user_feed(usr,community,'community_created')
 				notify_remove_or_add_user(request.user, usr,community,'community_created')
-
-				#create the ether id for community
-				create_community_ether(community)
 
 				create_wiki_for_community(community)
 

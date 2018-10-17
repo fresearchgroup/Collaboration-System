@@ -11,7 +11,7 @@ class CommunityReputaionSerializer(serializers.ModelSerializer):
             'score'
         ]
         
-class ArticleScoreLogSerializaer(serializers.ModelSerializer):
+class ArticleScoreLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArticleScoreLog
         fields = [

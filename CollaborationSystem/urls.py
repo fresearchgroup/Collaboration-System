@@ -62,7 +62,6 @@ urlpatterns = [
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
-    url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
     url(r'^article-edit/(?P<pk>\d*)/$', articleview.edit_article, name='article_edit'),
@@ -75,8 +74,7 @@ urlpatterns = [
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
     url(r'^group-unsubscribe/$', group_views.group_unsubscribe, name='group_unsubscribe'),
-    url(r'^group-article-create/1$', group_views.group_article_create, name='group_article_create'),
-    url(r'^group-article-create/2/(?P<pk>\d+)/$', group_views.group_article_create_body, name='group_article_create_body'),
+    url(r'^group-article-create/$', group_views.group_article_create, name='group_article_create'),
     url(r'^handle-group-invitations/$', group_views.handle_group_invitations, name='handle_group_invitations'),
 
     url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),

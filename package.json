@@ -1,0 +1,34 @@
+{
+  "name": "collaboration-system",
+  "version": "1.0.0",
+  "description": "[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![CodeFactor](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system/badge)](https://www.codefactor.io/repository/github/fresearchgroup/collaboration-system) [![Build Status](https://travis-ci.org/fresearchgroup/Collaboration-System.svg?branch=master)](https://travis-ci.org/fresearchgroup/Collaboration-System)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-create-js": "./node_modules/.bin/browserify nodejs/article-create.js -o static/js/dist/article-create.js",
+    "build-edit-js": "./node_modules/.bin/browserify nodejs/article-edit.js -o static/js/dist/article-edit.js",
+    "build-view-js": "./node_modules/.bin/browserify nodejs/article-view.js -o static/js/dist/article-view.js",
+    "build": "npm run -s build-edit-js && npm run -s build-view-js && npm run -s build-create-js",
+    "start": "node editor-server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "morgan": "^1.9.0",
+    "quill": "^1.3.6",
+    "quill-delta": "^3.6.2",
+    "quill-delta-to-html": "^0.8.4",
+    "rich-text": "^3.1.0",
+    "sharedb": "^1.0.0-beta.9",
+    "sharedb-mongo": "^1.0.0-beta.4",
+    "websocket-json-stream": "0.0.3",
+    "ws": "^5.2.2"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2"
+  }
+}

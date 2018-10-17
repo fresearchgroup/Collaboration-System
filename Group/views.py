@@ -14,11 +14,10 @@ from feeds.views import remove_or_add_user_feed, update_role_feed
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
-from BasicArticle.views import getHTML
 from django.conf import settings
 import json
 import requests
-from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
+from decouple import config
 
 def create_group(request):
 	if request.method == 'POST':
@@ -109,27 +108,10 @@ def group_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def group_article_create_body(request,article, group):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article.body = getHTML(article)
-			article.save()
-			data={
-				'article_id':article.pk,
-				'body':article.body
-			}
-			return JsonResponse(data)
-			# return redirect('article_view', article.pk)
-			# else:
-			# 	article.creation_complete = True
-			# 	article.save()
-			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
 def group_article_create(request):
+	SHAREDB_SERVER_IP = config('SHAREDB_SERVER_IP')
+	SHAREDB_SERVER_PORT = config('SHAREDB_SERVER_PORT')
+	
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			status = request.POST['status']
@@ -137,44 +119,11 @@ def group_article_create(request):
 			group = Group.objects.get(pk=gid)
 			if status=='1':
 				article = create_article(request)
-				GroupArticles.objects.create(article=article, user = request.user , group =group )
-
-				#create ether id for the article belonging to the group
-				padid = create_article_ether_group(gid, article)
-
-				# return community_article_create_body(request, article, community)
-				data={
-					'article_id':article.id,
-					'community_or_group_id':group.pk,#see this thing
-					'user_id':request.user.id,
-					'username':request.user.username,
-					'url':settings.SERVERURL,
-					'articleof':'group',
-					'padid':padid
-				}
-				return JsonResponse(data)
-				# return redirect('article_edit', article.pk)
-
-
-			elif status == '2' or status=='3':
-				pk=''
-				# print(status)
-				if status == '2':
-					pk = request.POST.get('pk','')
-					article = Articles.objects.get(pk=pk)
-					return group_article_create_body(request, article, group)
-				elif status == '3':
-					pk = request.POST.get('pk','3')
-					article= Articles.objects.get(pk=pk)
-					article.title=request.POST['title']
-					try:
-						image = request.FILES['article_image']
-					except:
-						image = None
-					article.image=image
-					article.save()
-					data={}
-					return JsonResponse(data)
+				obj = GroupArticles.objects.create(article=article, user=request.user, group=group)
+				requests.post(
+					f'http://{SHAREDB_SERVER_IP}:{SHAREDB_SERVER_PORT}/api/article/{article.pk}/', 
+					data={'body': article.body})
+				return redirect('article_view', article.pk)
 			else:
 				#create session for this group article in ether pad
 				sid = create_session_group(request, gid)

@@ -2,6 +2,7 @@
 {% load static %}
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/quill.snow.css' %}" rel="stylesheet">
 {% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
@@ -65,7 +66,9 @@
                       </div>
                       <div class="form-group">
                         <label for="body">Body</label>
-                        <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                        <div id="toolbar"></div>
+                        <div id="editor"></div>
+                        <input id ="editor-textarea" class="form-control" type="hidden" name="body">
                         <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                         </div>
                         {% if article.article.image %}
@@ -81,7 +84,7 @@
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
                       <button type="submit" class="btn btn-outline-info"  name="state" value='{{reject.to_state.name}}' id = "rejectcomarticle">Reject</button>
-                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
+                      <button type="submit"  class="btn btn-outline-info state-change-btn"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
             {% endif %}
         {%elif cmember.role%}
                 <form method="post" enctype="multipart/form-data">
@@ -93,7 +96,9 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <div id="toolbar"></div>
+                  <div id="editor"></div>
+                  <input id ="editor-textarea" class="form-control" type="hidden" name="body">
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -108,7 +113,7 @@
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
+                <button type="submit"  class="btn btn-outline-info state-change-btn"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
         {% endif %}
     {% endif %}
 
@@ -124,7 +129,9 @@
             </div>
             <div class="form-group">
               <label for="body">Body</label>
-              <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+              <div id="toolbar"></div>
+              <div id="editor"></div>
+              <input id ="editor-textarea" class="form-control" type="hidden" name="body">
               <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
               </div>
               {% if article.article.image %}
@@ -139,7 +146,7 @@
               <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
             <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
             <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-            <button type="submit" id="state_change_id"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
+            <button type="submit" id="state_change_id"  class="btn btn-outline-info state-change-btn"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
             <button type="submit"  class="btn btn-outline-info"  name="private" value='{{private}}' id = "reject"> Reject </button>
         {%endif%}
 
@@ -154,7 +161,9 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <div id="toolbar"></div>
+                  <div id="editor"></div>
+                  <input id ="editor-textarea" class="form-control" type="hidden" name="body">
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -168,7 +177,7 @@
                   </div>    
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">             {{transition.to_state.name}}</button>
+                <button type="submit"  class="btn btn-outline-info state-change-btn"  name="state" value='{{transition.to_state.name}}' id = "publish">             {{transition.to_state.name}}</button>
             {%endif%}
            {%endif%}
             {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
@@ -181,7 +190,9 @@
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <div id="toolbar"></div>
+                  <div id="editor"></div>
+                  <input id ="editor-textarea" class="form-control" type="hidden" name="body">
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
                   {% if article.article.image %}
@@ -208,7 +219,9 @@
               </div>
               <div class="form-group">
                 <label for="body">Body</label>
-                <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                <div id="toolbar"></div>
+                <div id="editor"></div>
+                <input id ="editor-textarea" class="form-control" type="hidden" name="body">
                 <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                 </div>
                 {% if article.article.image %}
@@ -222,7 +235,7 @@
                   </div>
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'id = "visible">
+                <button type="submit"  class="btn btn-outline-info state-change-btn"  name="state" value='{{transition.to_state.name}}'id = "visible">
                    {{transition.to_state.name}}</button>
              {%endif%}
 
@@ -244,7 +257,11 @@
 
 {% endblock %}
 {% block javascript %}
-
+<script type="text/javascript">
+  var articleBody = {{ article.article.body | safe }};
+  var id = {{article.article.id}};
+</script>
+<script src="{% static 'js/dist/article-edit.js' %}"></script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

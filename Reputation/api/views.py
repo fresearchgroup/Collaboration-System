@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializaer, ArticleUserScoreLogsSerializer
+from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer
 from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs
 from rest_framework.permissions import IsAuthenticated
 from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups
@@ -58,7 +58,7 @@ class ReputationStats(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     queryset = ArticleScoreLog.objects.all()
-    serializer_class = ArticleScoreLogSerializaer
+    serializer_class = ArticleScoreLogSerializer
 
 
 class ReputationStatsDetails(APIView):
@@ -68,7 +68,7 @@ class ReputationStatsDetails(APIView):
         resource_type = self.request.query_params.get('resource_type')
 
         if (resource_type == 'article'):
-            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializaer, ArticleUserScoreLogsSerializer
+            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer
 
     def get_object(self, pk):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
@@ -82,10 +82,13 @@ class ReputationStatsDetails(APIView):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
-        resource_user_log = userLogModel.objects.get(
+        print(resource_score_log.resource);
+        resource_user_log, created = userLogModel.objects.get_or_create(
             user=request.user,
             resource=resource_score_log.resource
         )
+        
+        print(resource_user_log.resource)
         serializer = userLogSerializer(resource_user_log)
         return Response(serializer.data)
 
