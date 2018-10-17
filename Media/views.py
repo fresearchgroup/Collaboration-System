@@ -5,6 +5,7 @@ from Community.models import CommunityMedia, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
+from Group.models import GroupMedia
 
 def create_media(request):
 	if request.user.is_authenticated:
@@ -26,17 +27,18 @@ def create_media(request):
 
 def media_view(request, pk):
 	try:
-		cmedia = CommunityMedia.objects.get(media=pk)
-		mediametadata = MediaMetadata.objects.get(media=pk)
-		if cmedia.media.state == States.objects.get(name='draft') and cmedia.media.created_by != request.user:
-			return redirect('home')
-		canEdit = ""
-		if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
-			membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
-			canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
+		gcmedia = CommunityMedia.objects.get(media=pk)
 	except CommunityMedia.DoesNotExist:
-		raise Http404
-	return render(request, 'view_media.html', {'cmedia':cmedia, 'canEdit':canEdit, 'mediametadata':mediametadata})
+		gcmedia = GroupMedia.objects.get(media=pk)
+	mediametadata = MediaMetadata.objects.get(media=pk)
+	if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
+		return redirect('home')
+	# canEdit = ""
+	# if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
+	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
+	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
+
+	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'mediametadata':mediametadata})
 
 def media_edit(request,pk):
 	if request.user.is_authenticated:

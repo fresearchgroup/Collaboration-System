@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Group, GroupMembership, GroupArticles, GroupInvitations
+from .models import Group, GroupMembership, GroupArticles, GroupInvitations, GroupMedia
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups

@@ -10,6 +10,9 @@
 {% if request.POST.mediaof == "community" %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
 {% endif %}
+{% if request.POST.mediaof == "group" %}
+  <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
+{% endif %}
   <li class="breadcrumb-item active">Upload {{request.POST.mediatype}}</li>
 {% endblock %}
 
@@ -27,6 +30,9 @@
   </div>
       {% if request.POST.mediaof == "community" %}
         <input type = 'hidden' name = 'cid' value = {{community.pk}}>
+      {% endif %}
+      {% if request.POST.mediaof == "group" %}
+        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
       {% endif %}
     <input type="hidden" name="status" value={{status}}>
   <div class="form-group custom-file">
