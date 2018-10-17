@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializaer, ArticleVotedByLogsSerializer
-from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleVotedByLogs
+from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializaer, ArticleUserScoreLogsSerializer
+from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs
 from rest_framework.permissions import IsAuthenticated
 from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups
 from Group.models import GroupArticles
@@ -64,23 +64,35 @@ class ReputationStats(generics.ListCreateAPIView):
 class ReputationStatsDetails(APIView):
     permission_classes = (IsAuthenticated,)
 
+    def get_models_and_serializers(self, request):
+        resource_type = self.request.query_params.get('resource_type')
+
+        if (resource_type == 'article'):
+            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializaer, ArticleUserScoreLogsSerializer
+
     def get_object(self, pk):
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+
         try:
-            return ArticleScoreLog.objects.get(pk=pk)
-        except ArticleScoreLog.DoesNotExist:
+            return scoreLogModel.objects.get(pk=pk)
+        except scoreLogModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        article_score_log = self.get_object(pk)
-        article_user_log = ArticleVotedByLogs.objects.get(
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+
+        resource_score_log = self.get_object(pk)
+        resource_user_log = userLogModel.objects.get(
             user=request.user,
-            article=article_score_log.article
+            resource=resource_score_log.resource
         )
-        serializer = ArticleVotedByLogsSerializer(article_user_log)
+        serializer = userLogSerializer(resource_user_log)
         return Response(serializer.data)
 
     def post(self, request, pk, format=None):
-        article_score_log = self.get_object(pk)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer = self.get_models_and_serializers(self.request)
+
+        resource_score_log = self.get_object(pk)
 
         updates = {
             'upvote': request.data.get('update_type') == 'upvote',
@@ -88,48 +100,48 @@ class ReputationStatsDetails(APIView):
             'reported': request.data.get('update_type') == 'reported'
         }
 
-        article_user_log, created = ArticleVotedByLogs.objects.get_or_create(
+        resource_user_log, created = userLogModel.objects.get_or_create(
             user=request.user,
-            article=article_score_log.article
+            resource=resource_score_log.resource
         )
 
         if (updates['upvote']):
-            if (not article_user_log.upvoted):
-                article_score_log.upvote = F('upvote') + 1
-                article_user_log.upvoted = True
+            if (not resource_user_log.upvoted):
+                resource_score_log.upvote = F('upvote') + 1
+                resource_user_log.upvoted = True
 
-                if (article_user_log.downvoted):
-                    article_user_log.downvoted = False
-                    article_score_log.downvote = F('downvote') - 1
+                if (resource_user_log.downvoted):
+                    resource_user_log.downvoted = False
+                    resource_score_log.downvote = F('downvote') - 1
             else:
-                article_user_log.upvoted = False
-                article_score_log.upvote = F('upvote') - 1
+                resource_user_log.upvoted = False
+                resource_score_log.upvote = F('upvote') - 1
 
         if (updates['downvote']):
-            if (not article_user_log.downvoted):
-                article_score_log.downvote = F('downvote') + 1
-                article_user_log.downvoted = True
+            if (not resource_user_log.downvoted):
+                resource_score_log.downvote = F('downvote') + 1
+                resource_user_log.downvoted = True
 
-                if (article_user_log.upvoted):
-                    article_user_log.upvoted = False
-                    article_score_log.upvote = F('upvote') - 1
+                if (resource_user_log.upvoted):
+                    resource_user_log.upvoted = False
+                    resource_score_log.upvote = F('upvote') - 1
             else:
-                article_user_log.downvoted = False
-                article_score_log.downvote = F('downvote') - 1
+                resource_user_log.downvoted = False
+                resource_score_log.downvote = F('downvote') - 1
 
         if (updates['reported']):
-            if (not article_user_log.reported):
-                article_score_log.reported = F('reported') + 1
-                article_user_log.reported = True
+            if (not resource_user_log.reported):
+                resource_score_log.reported = F('reported') + 1
+                resource_user_log.reported = True
             else:
-                article_user_log.reported = False
-                article_score_log.reported = F('reported') - 1
+                resource_user_log.reported = False
+                resource_score_log.reported = F('reported') - 1
 
-        article_user_log.save()
-        article_user_log.refresh_from_db()
+        resource_user_log.save()
+        resource_user_log.refresh_from_db()
 
-        article_score_log.save()
-        article_score_log.refresh_from_db()
+        resource_score_log.save()
+        resource_score_log.refresh_from_db()
 
-        serializer = ArticleVotedByLogsSerializer(article_user_log)
+        serializer = userLogSerializer(resource_user_log)
         return Response(serializer.data)

@@ -133,14 +133,16 @@
 
 <script type="text/javascript">
 var id = {{article.article.id}};
+var resource_type = 'article';
 
 function updateReputationStat(update_type) {
   var updates = { 
+    resource_type: resource_type,
     update_type: update_type
   };
 
   $.ajax({
-    url: '/api/reputation/reputation_stats/' + id + '/',
+    url: '/api/reputation/reputation_stats/' + id + '/?resource_type=' + resource_type,
     type: 'POST',
     data: updates,
     beforeSend: function(xhr) {
@@ -160,7 +162,7 @@ function updateReputationStat(update_type) {
 
 $(document).ready(function() {
   $.ajax({
-    url: '/api/reputation/reputation_stats/' + id + '/',
+    url: '/api/reputation/reputation_stats/' + id + '/?resource_type=' + resource_type,
     type: 'GET',
     success: function(data) {
       $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
