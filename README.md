@@ -198,5 +198,11 @@ git clone https://github.com/fresearchgroup/Collaboration-System.git
 git checkout cc-quilljs-sharedb
 npm install
 npm run build
-node editor-server.js
+npm start
+```
+
+Add following to env variables to .env
+```
+SHAREDB_SERVER_IP=10.129.132.101
+SHAREDB_SERVER_PORT=8080
 ```
