@@ -19,6 +19,9 @@ from django.conf import settings
 import json
 import requests
 from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
+from Media.views import create_media
+from metadata.views import create_metadata
+from metadata.models import MediaMetadata
 
 def create_group(request):
 	if request.method == 'POST':
@@ -391,3 +394,21 @@ def feed_content(request, pk):
 		return redirect('group_view', group.pk)
 	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
 
+def group_media_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
+			if status=='1':
+				media = create_media(request)
+				metadata = create_metadata(request)
+				GroupMedia.objects.create(media=media, user=request.user, group=group)
+				MediaMetadata.objects.create(media=media, metadata=metadata)
+				return redirect('media_view', media.pk)
+			else:
+				return render(request, 'new_media.html', {'group':group, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
