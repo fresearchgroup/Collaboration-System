@@ -21,9 +21,8 @@ def run_task(request):
     if request.user.is_superuser:
         if request.method == 'POST':
             taskid = request.POST['task']
-            task = Task.objects.get(pk=taskid)
-            createbulkcommunity.delay(task)
-            messages.success(self.request, 'We are generating your random users! Wait a moment and refresh this page.')
+            createbulkcommunity.delay(taskid)
+            messages.success(request, "We are processing your request. Please wait a moment and refresh this page.")
             return redirect('upload_task')
         else:
             return redirect('upload_task')

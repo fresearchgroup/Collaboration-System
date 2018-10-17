@@ -11,9 +11,11 @@ from Community.models import Community, CommunityMembership
 from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from etherpad.models import EtherCommunity
+from .models import Task
 
 @shared_task
-def createbulkcommunity(task):
+def createbulkcommunity(taskid):
+	task = Task.objects.get(pk=taskid)
 	path = task.tfile.path
 	f = open(path,'r', encoding='utf-8')
 	data = json.load(f)
@@ -61,4 +63,6 @@ def createbulkcommunity(task):
 					)
 		result =  epclient.createGroupIfNotExistsFor(community.id)
 		EtherCommunity.objects.create(community=community, community_ether_id=result['groupID'])
-	return 'Task completed with success!'
+	task.status = True
+	task.save()
+	return "Task completed with success!"
