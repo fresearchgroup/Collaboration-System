@@ -73,12 +73,15 @@
           <ul class="reputation-icons-list blog-info">
             <li>
               <i class="fa fa-thumbs-o-up" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
+              <span class="upvote-count"></span>
             </li>
             <li>
               <i class="fa fa-thumbs-o-down" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>   
+              <span class="downvote-count"></span>
             </li>
             <li>
               <i class="fa fa-flag-o" id="reputation-reported" onclick="updateReputationStat('reported')"></i>
+              <span class="reported-count"></span>
             </li>
           </ul>
         </div>
@@ -135,7 +138,12 @@
 var id = {{article.article.id}};
 var resource_type = 'article';
 
+var allow_reputation_stat_update = true;
+
 function updateReputationStat(update_type) {
+  if (!allow_reputation_stat_update) return;
+  allow_reputation_stat_update = false;
+
   var updates = { 
     resource_type: resource_type,
     update_type: update_type
@@ -149,13 +157,7 @@ function updateReputationStat(update_type) {
       xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'))
     },
     success: function(data) {
-      $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
-      $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
-      $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
-
-      $('#reputation-upvote').toggleClass('fa-thumbs-up', data.upvoted);
-      $('#reputation-downvote').toggleClass('fa-thumbs-down', data.downvoted);
-      $('#reputation-reported').toggleClass('fa-flag', data.reported);    
+      updateStats(data); 
     }
   });
 }
@@ -165,16 +167,29 @@ $(document).ready(function() {
     url: '/api/reputation/reputation_stats/' + id + '/?resource_type=' + resource_type,
     type: 'GET',
     success: function(data) {
-      $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !data.upvoted);
-      $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !data.downvoted);
-      $('#reputation-reported').toggleClass('fa-flag-o', !data.reported);
-
-      $('#reputation-upvote').toggleClass('fa-thumbs-up', data.upvoted);
-      $('#reputation-downvote').toggleClass('fa-thumbs-down', data.downvoted);
-      $('#reputation-reported').toggleClass('fa-flag', data.reported);    
+      updateStats(data);
     }
   })
-})
+});
+
+function updateStats(data) {
+  var user_log = data['user_log'];
+  $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !user_log.upvoted);
+  $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !user_log.downvoted);
+  $('#reputation-reported').toggleClass('fa-flag-o', !user_log.reported);
+
+  $('#reputation-upvote').toggleClass('fa-thumbs-up', user_log.upvoted);
+  $('#reputation-downvote').toggleClass('fa-thumbs-down', user_log.downvoted);
+  $('#reputation-reported').toggleClass('fa-flag', user_log.reported);    
+
+  var resource_log = data['resource_log'];
+
+  $('.upvote-count').text(resource_log.upvote);
+  $('.downvote-count').text(resource_log.downvote);
+  $('.reported-count').text(resource_log.reported);
+
+  allow_reputation_stat_update = true;
+}
 
 $(function(){
         $.ajax({
