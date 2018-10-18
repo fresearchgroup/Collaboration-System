@@ -24,5 +24,3 @@ PyEtherpadLite
 src/
 .vscode/
 *.pyc
-node_modules/
-static/js/dist/

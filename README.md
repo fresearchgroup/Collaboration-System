@@ -186,23 +186,3 @@ https://github.com/fresearchgroup/Community-Content-Tools
 This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
 https://github.com/fresearchgroup/Community-Recommendation
 
-### Collaborative Editing using QuillJS and ShareDB
-Requirements
-* [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
-* Node.js and npm (use [nvm](https://github.com/creationix/nvm) to install both)
-
-Instructions to start node.js (ShareDB) server
-> MongoDB should to be running on port 27017 (default port)
-```
-git clone https://github.com/fresearchgroup/Collaboration-System.git
-git checkout cc-quilljs-sharedb
-npm install
-npm run build
-npm start
-```
-
-Add following to env variables to .env
-```
-SHAREDB_SERVER_IP=10.129.132.101
-SHAREDB_SERVER_PORT=8080
-```
