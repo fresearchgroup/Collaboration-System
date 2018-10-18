@@ -94,8 +94,12 @@ class ReputationStatsDetails(APIView):
             resource=resource_score_log.resource
         )
 
-        serializer = userLogSerializer(resource_user_log)
-        return Response(serializer.data)
+        resource_log_serializer = scoreLogSerializer(resource_score_log)
+        user_log_serializer = userLogSerializer(resource_user_log)
+        return Response({
+            'resource_log': resource_log_serializer.data,
+            'user_log': user_log_serializer.data
+        })
 
     def post(self, request, pk, format=None):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
@@ -151,5 +155,9 @@ class ReputationStatsDetails(APIView):
         resource_score_log.save()
         resource_score_log.refresh_from_db()
 
-        serializer = userLogSerializer(resource_user_log)
-        return Response(serializer.data)
+        resource_log_serializer = scoreLogSerializer(resource_score_log)
+        user_log_serializer = userLogSerializer(resource_user_log)
+        return Response({
+            'resource_log': resource_log_serializer.data,
+            'user_log': user_log_serializer.data
+        })
