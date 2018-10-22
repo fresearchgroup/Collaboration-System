@@ -16,7 +16,7 @@
   <div class="details">
     <h3>No Content</h3>
     <p>
-      Sorry, currently there are no videos published from any community
+      Sorry, currently there are no videos published from any community or group
     </p>
   </div>
 </div>
@@ -41,7 +41,12 @@
               <h3> <a href="{% url 'media_view' mediap.media.pk %}">{{ mediap.media.title }} </a> </h3>
               <i class="fa fa-user" style="color:red;"></i> {{ mediap.media.created_by }} <br />
               <i class="fa fa-calendar" style="color:red;"></i> {{mediap.media.created_at}} <br />
-              <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
+              {% if mediap.belongsto == 'community' %}
+                <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
+              {% endif %}
+              {% if mediap.belongsto == 'group' %}
+                <a href="{% url 'group_view' mediap.group.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.group.name}}</a>
+              {% endif %}
             </div>
             {% endfor %}
           </div>
