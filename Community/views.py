@@ -509,6 +509,7 @@ def community_group_content(request, pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
 			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgmedia = CommunityGroups.objects.raw('select "media" as type, username, media.id, media.title, media.mediafile as image, media.created_at, gg.name from auth_user au, Media_media as media join (select * from Group_groupmedia where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on media.id=t.media_id join Group_group gg on gg.id=group_id and gg.visibility=1 where media.state_id=2 and au.id=media.created_by_id;', [community.pk])
 			cgh5p = []
 			try:
 				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
@@ -529,7 +530,7 @@ def community_group_content(request, pk):
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 
-			lstfinal = list(cgarticles) + list(cgh5p)
+			lstfinal = list(cgarticles) + list(cgmedia) + list(cgh5p)
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
 			try:
