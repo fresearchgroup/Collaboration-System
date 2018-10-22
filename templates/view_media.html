@@ -95,6 +95,9 @@
         {% if gcmedia.media.state.name == 'draft' %}
           <i class="fa fa-cut"></i> Draft 
         {% endif %} 
+        {% if gcmedia.media.state.name == 'private' %}
+          <i class="fa fa-eye-slash"></i> Private 
+        {% endif %} 
         {% if gcmedia.media.state.name == 'visible' %}
           <i class="fa fa-bullhorn"></i> Visible 
         {% endif %} 

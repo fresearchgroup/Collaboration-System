@@ -1,11 +1,11 @@
 from django.shortcuts import redirect, render
 from .models import Media
 from workflow.models import States
-from Community.models import CommunityMedia, CommunityMembership, Community
-from workflow.views import canEditResourceCommunity, getStatesCommunity
+from Community.models import CommunityMedia, CommunityMembership, Community, CommunityGroups
+from workflow.views import canEditResourceCommunity, getStatesCommunity, getStatesGroup, canEditResourceGroup
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
-from Group.models import GroupMedia
+from Group.models import GroupMedia, Group, GroupMembership
 
 def create_media(request):
 	if request.user.is_authenticated:
@@ -47,43 +47,63 @@ def media_edit(request,pk):
 		metadata = Metadata.objects.get(pk=mediametadata.metadata.pk)
 		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
 			return redirect('home')
-		community = CommunityMedia.objects.get(media=pk)
 		uid = request.user.id
 		membership = None
-		comm = Community.objects.get(pk=community.community.id)
-		errormessage = ''
-		try:
-			membership = CommunityMembership.objects.get(user=uid, community=comm.id)
-			if membership:
-				if request.method == 'POST':
-					title = request.POST['name']
-					getstate = request.POST['change_media_state']
-					state = States.objects.get(name=getstate)
-					description = request.POST['description']
-					media.title = title
-					media.state = state
-					metadata.description = description
-					try:
-						mediafile = request.FILES['mediafile']
-						media.mediafile = mediafile
-					except:
-						errormessage = 'media not uploaded'
-					media.save()
-					metadata.save()
-					return redirect('media_view',pk=pk)
-				else:
+		message = 'True'
+		states = ['']
+		belongsto, commgrp, membership = get_belongsto(pk, request.user.id)
+		if membership:
+			if request.method == 'POST':
+				title = request.POST['name']
+				getstate = request.POST['change_media_state']
+				state = States.objects.get(name=getstate)
+				description = request.POST['description']
+				media.title = title
+				media.state = state
+				metadata.description = description
+				try:
+					mediafile = request.FILES['mediafile']
+					media.mediafile = mediafile
+				except:
+					message = 'media not uploaded'
+				media.save()
+				metadata.save()
+				return redirect('media_view',pk=pk)
+			else:
+				if belongsto == 'community':
 					states = getStatesCommunity(media.state.name)
 					message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
-					if message != 'True':
-						return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
-					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'community':community, 'comm':comm, 'mediametadata':mediametadata, 'states':states})
-			else:
-				return redirect('media_view',pk=pk)
-		except CommunityMembership.DoesNotExist:
-			return redirect('login')
+				if belongsto == 'group':
+					cmembership = get_comm_membership(commgrp.pk, request.user.id)
+					states = getStatesGroup(media.state.name, membership.role.name)
+					message = canEditResourceGroup(media.state.name, membership.role.name, cmembership.role.name, media, request)
+				if message != 'True':
+					return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
+				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states, 'belongsto':belongsto})
+		else:
+			return redirect('media_view',pk=pk)
 	else:
 		return redirect('login')
 
+def get_belongsto(pk, uid):
+	belongsto = ''
+	try:
+		community = CommunityMedia.objects.get(media=pk)
+		commgrp = Community.objects.get(pk=community.community.id)
+		membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
+		belongsto = 'community'
+	except CommunityMedia.DoesNotExist:
+		group = GroupMedia.objects.get(media=pk)
+		commgrp = Group.objects.get(pk=group.group.id)
+		membership = GroupMembership.objects.get(user=uid, group=commgrp.id)
+		belongsto = 'group'
+	return belongsto, commgrp, membership
+
+def get_comm_membership(pk, uid):
+	group = Group.objects.get(pk=pk)
+	community = CommunityGroups.objects.get(group=group)
+	cmembership = CommunityMembership.objects.get(user=uid, community=community.community)
+	return cmembership
 
 def display_published_media(request, mediatype):
 	try: 
