@@ -5,7 +5,7 @@ from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles, Group, GroupInvitations
+from Group.models import GroupMembership, GroupArticles, Group, GroupInvitations, GroupMedia
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
@@ -93,6 +93,7 @@ def user_dashboard(request):
         grparticles = GroupArticles.objects.filter(user=request.user)
         commcourses = CommunityCourses.objects.filter(user=request.user)
         commmedia = CommunityMedia.objects.filter(user=request.user)
+        grpmedia = GroupMedia.objects.filter(user=request.user)
 
         for cart in commarticles:
             cart.type = 'article'
@@ -110,7 +111,11 @@ def user_dashboard(request):
             cmedia.type = 'Media'
             cmedia.belongsto = 'community'
 
-        lstContent = list(commarticles) + list(grparticles) +  list(commmedia) + list(commcourses)
+        for gmedia in grpmedia:
+            gmedia.type = 'Media'
+            gmedia.belongsto = 'group'
+
+        lstContent = list(commarticles) + list(grparticles) +  list(commmedia) + list(grpmedia) + list(commcourses)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
         grpinvitations = GroupInvitations.objects.filter(status='Invited', user=request.user)
