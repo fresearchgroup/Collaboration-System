@@ -110,7 +110,7 @@
       </h4>
 
       <h4>
-          {{mediametadata.metadata.description}}
+        {{myhtml|safe}}{% autoescape off%} {{mediametadata.metadata.description}} {% endautoescape%}
       </h4>
     </div>
   </div>

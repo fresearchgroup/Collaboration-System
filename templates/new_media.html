@@ -64,7 +64,17 @@
 {% endif %}
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#description' ) )
+    .then( description => {
+      console.log( description );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
