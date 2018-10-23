@@ -14,7 +14,12 @@
     }
 </style>
 {% endblock %} {% load mptt_tags %} {% block breadcrumb %}
-<li class="breadcrumb-item active"><a href="{% url 'community_view' comm.pk %}"> {{comm}} </a></li>
+{% if belongsto == 'community' %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' commgrp.pk %}"> {{commgrp}} </a></li>
+{% endif %}
+{% if belongsto == 'group' %}
+<li class="breadcrumb-item active"><a href="{% url 'group_view' commgrp.pk %}"> {{commgrp}} </a></li>
+{% endif %}
 <li class="breadcrumb-item active">{{ media.title }} </li>
 {% endblock %} {% block content %}
 
@@ -97,7 +102,17 @@
 
 
 {% endblock %} {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#description' ) )
+    .then( description => {
+      console.log( description );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

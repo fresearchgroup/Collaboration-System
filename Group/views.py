@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Group, GroupMembership, GroupArticles, GroupInvitations
+from .models import Group, GroupMembership, GroupArticles, GroupInvitations, GroupMedia
 from BasicArticle.models import Articles
 from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups
@@ -19,6 +19,9 @@ from django.conf import settings
 import json
 import requests
 from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
+from Media.views import create_media
+from metadata.views import create_metadata
+from metadata.models import MediaMetadata
 
 def create_group(request):
 	if request.method == 'POST':
@@ -321,6 +324,7 @@ def group_content(request, pk):
 		membership = GroupMembership.objects.get(user=uid, group=group.pk)
 		if membership:
 			garticles = GroupArticles.objects.raw('select "article" as type , ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Group_grouparticles as ga  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ga.article_id =ba.id and ga.group_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
+			gmedia = GroupMedia.objects.raw('select "media" as type, media.id, media.title, media.mediafile as image, media.mediatype, media.created_at, username, workflow_states.name as state from workflow_states, Media_media as media, Group_groupmedia as gmedia, auth_user au where au.id=media.created_by_id and media.state_id=workflow_states.id and media.id=gmedia.media_id and gmedia.group_id=%s and media.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="private");', [group.pk])
 
 			gh5p = []
 			try:
@@ -335,7 +339,7 @@ def group_content(request, pk):
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 
-			lstfinal = list(garticles) + list(gh5p)
+			lstfinal = list(garticles) + list(gmedia) + list(gh5p)
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
 			try:
@@ -391,3 +395,21 @@ def feed_content(request, pk):
 		return redirect('group_view', group.pk)
 	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
 
+def group_media_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			gid = request.POST['gid']
+			group = Group.objects.get(pk=gid)
+			if status=='1':
+				media = create_media(request)
+				metadata = create_metadata(request)
+				GroupMedia.objects.create(media=media, user=request.user, group=group)
+				MediaMetadata.objects.create(media=media, metadata=metadata)
+				return redirect('media_view', media.pk)
+			else:
+				return render(request, 'new_media.html', {'group':group, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
