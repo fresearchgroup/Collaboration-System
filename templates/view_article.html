@@ -70,7 +70,7 @@
           
         </p>
         
-        {% include "includes/reputation_buttons.html" with id="{{article.article.id}}" resource_type="article" %}
+        {% include "includes/reputation_buttons.html" with id=article.article.id resource_type="article" %}
       </div>
     </div>
     <div class="col-sm-3"><br/><br/>
@@ -119,7 +119,6 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/favourite.js' %}"></script>
-<script src="{% static 'js/reputation_update.js' %}"></script>
 
 <script type="text/javascript">
 var id = {{article.article.id}};

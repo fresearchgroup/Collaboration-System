@@ -18,8 +18,12 @@
 </div>
 
 {% block javascript %}
+<script language="JavaScript" type="text/javascript" src="{% static 'assets/plugins/jquery.min.js' %}" ></script>
+
 <script>
   var id = "{{id}}";
-  var resource_type = "{{resource_type}}";
+  var resource_type = "{{resource_type}}";  
 </script>
+
+<script src="{% static 'js/reputation_update.js' %}"></script>
 {% endblock %}
