@@ -1,6 +1,3 @@
-var id = "{{article.article.id}}";
-var resource_type = 'article';
-
 var allow_reputation_stat_update = true;
 
 function updateReputationStat(update_type) {

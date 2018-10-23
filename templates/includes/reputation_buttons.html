@@ -1,0 +1,25 @@
+{% load static %}
+
+<div class="reputation-icons blog-item">
+  <ul class="reputation-icons-list blog-info">
+    <li>
+      <i class="fa fa-thumbs-o-up" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
+      <span class="upvote-count"></span>
+    </li>
+    <li>
+      <i class="fa fa-thumbs-o-down" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>   
+      <span class="downvote-count"></span>
+    </li>
+    <li>
+      <i class="fa fa-flag-o" id="reputation-reported" onclick="updateReputationStat('reported')"></i>
+      <span class="reported-count"></span>
+    </li>
+  </ul>
+</div>
+
+{% block javascript %}
+<script>
+  var id = "{{id}}";
+  var resource_type = "{{resource_type}}";
+</script>
+{% endblock %}
