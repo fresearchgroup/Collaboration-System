@@ -2,6 +2,7 @@ from django.db import models
 from Community.models import Community
 from django.contrib.auth.models import User
 from BasicArticle.models import Articles
+from Media.models import Media
 
 #score of a user in different communities
 class CommunityReputaion(models.Model): 
@@ -39,3 +40,20 @@ class ArticleUserScoreLogs(models.Model):
     upvoted = models.BooleanField(default=False)
     downvoted = models.BooleanField(default=False)
     reported = models.BooleanField(default=False)
+
+class MediaScoreLog(models.Model):
+    resource = models.OneToOneField(Media ,on_delete = models.CASCADE)
+    upvote = models.IntegerField(null = True, default=0)
+    downvote = models.IntegerField(null = True, default=0)
+    reported = models.IntegerField(null = True, default=0)
+    publish = models.BooleanField(default=False)
+
+class MediaUserScoreLogs(models.Model):
+    user = models.ForeignKey(User ,on_delete = models.CASCADE)
+    resource = models.ForeignKey(Media ,on_delete = models.CASCADE)
+    upvoted = models.BooleanField(default=False)
+    downvoted = models.BooleanField(default=False)
+    reported = models.BooleanField(default=False)
+
+class FlagReason(models.Model):
+    reason = models.CharField(max_length=200)

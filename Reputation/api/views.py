@@ -3,8 +3,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer
-from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs
+from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, FlagReasonSerializer
+from .serializers import MediaScoreLogSerializer, MediaUserScoreLogsSerializer
+from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs, FlagReason
+from Reputation.models import MediaScoreLog, MediaUserScoreLogs
+from Media.models import Media
 from BasicArticle.models import Articles
 from rest_framework.permissions import IsAuthenticated
 from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups
@@ -70,6 +73,8 @@ class ReputationStatsDetails(APIView):
 
         if (resource_type == 'article'):
             return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, Articles
+        elif (resource_type == 'media'):
+            return MediaScoreLog, MediaUserScoreLogs, MediaScoreLogSerializer, MediaUserScoreLogsSerializer, Media
 
     def get_object(self, pk):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
@@ -161,3 +166,9 @@ class ReputationStatsDetails(APIView):
             'resource_log': resource_log_serializer.data,
             'user_log': user_log_serializer.data
         })
+
+class FlagReasons(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    queryset = FlagReason.objects.all()
+    serializer_class = FlagReasonSerializer
