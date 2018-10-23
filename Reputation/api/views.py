@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import CommunityReputaionSerializer, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, FlagReasonSerializer
 from .serializers import MediaScoreLogSerializer, MediaUserScoreLogsSerializer
-from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs, FlagReason
-from Reputation.models import MediaScoreLog, MediaUserScoreLogs
+from Reputation.models import CommunityReputaion, ArticleScoreLog, ResourceScore, ArticleUserScoreLogs, ArticleFlagLogs, FlagReason
+from Reputation.models import MediaScoreLog, MediaUserScoreLogs, MediaFlagLogs
 from Media.models import Media
 from BasicArticle.models import Articles
 from rest_framework.permissions import IsAuthenticated
@@ -72,12 +72,12 @@ class ReputationStatsDetails(APIView):
         resource_type = self.request.query_params.get('resource_type')
 
         if (resource_type == 'article'):
-            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, Articles
+            return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, ArticleFlagLogs, Articles
         elif (resource_type == 'media'):
-            return MediaScoreLog, MediaUserScoreLogs, MediaScoreLogSerializer, MediaUserScoreLogsSerializer, Media
+            return MediaScoreLog, MediaUserScoreLogs, MediaScoreLogSerializer, MediaUserScoreLogsSerializer, MediaFlagLogs, Media
 
     def get_object(self, pk):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
 
         try:
             try:
@@ -91,7 +91,7 @@ class ReputationStatsDetails(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
         resource_user_log, created = userLogModel.objects.get_or_create(
@@ -107,7 +107,7 @@ class ReputationStatsDetails(APIView):
         })
 
     def post(self, request, pk, format=None):
-        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, model = self.get_models_and_serializers(self.request)
+        scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
 
@@ -148,11 +148,19 @@ class ReputationStatsDetails(APIView):
 
         if (updates['reported']):
             if (not resource_user_log.reported):
-                resource_score_log.reported = F('reported') + 1
-                resource_user_log.reported = True
+                try:
+                    report_reason = FlagReason.objects.get(pk=request.data.get('reason')) 
+                    flagModel.objects.create(resource=resource_score_log.resource, user=request.user, reason=report_reason)
+                    resource_user_log.reported = True
+                except:
+                    pass
             else:
+                try:
+                    flagModel.objects.get(resource=resource_score_log.resource, user=request.user).delete()
+                except flagModel.DoesNotExist:
+                    pass
                 resource_user_log.reported = False
-                resource_score_log.reported = F('reported') - 1
+            resource_score_log.reported = flagModel.objects.filter(resource=resource_score_log.resource).count()
 
         resource_user_log.save()
         resource_user_log.refresh_from_db()

@@ -1,12 +1,14 @@
 var allow_reputation_stat_update = true;
+var user_log = {};
 
-function updateReputationStat(update_type) {
+function updateReputationStat(update_type, reason) {
   if (!allow_reputation_stat_update) return;
   allow_reputation_stat_update = false;
 
   var updates = { 
     resource_type: resource_type,
-    update_type: update_type
+    update_type: update_type,
+    reason: reason
   };
 
   $.ajax({
@@ -18,6 +20,12 @@ function updateReputationStat(update_type) {
     },
     success: function(data) {
       updateStats(data); 
+    },
+    error: () => {
+      allow_reputation_stat_update = true;
+      swal({
+        title: 'Server not responding. Please try again.'
+      })
     }
   });
 }
@@ -33,7 +41,7 @@ $(document).ready(function() {
 });
 
 function updateStats(data) {
-  var user_log = data['user_log'];
+  user_log = data['user_log'];
   $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !user_log.upvoted);
   $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !user_log.downvoted);
   $('#reputation-reported').toggleClass('fa-flag-o', !user_log.reported);
