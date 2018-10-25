@@ -35,9 +35,19 @@
     <input type="hidden" name="status" value={{status}}>
     <small id="bodyhelp" class="form-text text-muted">Let people know what this group is about</small>
   </div>
+
+  <div class="form-group">
+    <label for="Category">Catetgory</label>
+    <select id="grpcategory" name="grpcategory" class="btn btn-primary">
+      {% for category in categories %}
+        <option value="{{ category.pk }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>  
+
   <div class="form-group">
   <label for="visibility">Visibility</label>
-    <select name="visibility">
+    <select name="visibility" class="btn btn-primary">
       <option value="1">Public</option>
       <option value="0">Private</option>
     </select>

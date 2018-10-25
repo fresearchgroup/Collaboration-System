@@ -34,6 +34,8 @@ from etherpad.views import create_community_ether, create_article_ether_communit
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
+from Category.models import Category
+from Category.views import create_group_category
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -190,12 +192,14 @@ def community_group(request):
 			status = request.POST['status']
 			cid = request.POST['cid']
 			community = Community.objects.get(pk=cid)
+			categories = Category.objects.all()
 			if status=='1':
 				group = create_group(request)
+				create_group_category(request, group, community)
 				obj = CommunityGroups.objects.create(group=group, user=request.user, community=community)
 				return redirect('group_view', group.pk)
 			else:
-				return render(request, 'new_group.html', {'community':community, 'status':1})
+				return render(request, 'new_group.html', {'community':community, 'status':1, 'categories':categories})
 		else:
 			return redirect('home')
 	else:
