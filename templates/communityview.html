@@ -87,6 +87,14 @@
                 {% endfor %}
               </ul>
               <!-- Contributors END -->
+              <!-- Categories START -->
+              <h2 class="">Categories</h2>
+              <ul class="nav sidebar-categories margin-bottom-40">
+                {% for category in categories %}
+                <li><a href="{% url 'category_view' category.pk  %}">{{category.name}}</a></li>
+                {% endfor %}
+              </ul>
+              <!-- Categories END -->
             </div>
             <!-- END RIGHT SIDEBAR -->
           </div>
