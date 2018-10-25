@@ -35,6 +35,7 @@ from Dashboard import views as dashboardview
 from Recommendation_API import views
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from Category import views as categoryview
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -176,6 +177,7 @@ urlpatterns = [
     url(r'^run_task/', taskview.run_task, name='run_task'),
     url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
 
+    url(r'category_view/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.category_view, name='category_view'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
