@@ -62,6 +62,7 @@ urlpatterns = [
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
+    url(r'^article-reports/(?P<pk>\d*)/$', articleview.reports_article, name='article_reports'),
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
@@ -171,6 +172,7 @@ urlpatterns = [
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+    url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),

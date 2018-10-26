@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {%load static %} {% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+  #liclr {
+    background-color: #FE642E;
+
+  }
+
+  #clr {
+    color: black;
+  }
+</style>
+{% endblock %} {% load mptt_tags %} {% block breadcrumb %}
+{% if gcmedia.community.name %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' gcmedia.community.pk %}"> {{ gcmedia.community.name }} </a></li>
+{% endif %}
+{% if gcmedia.group.name %}
+<li class="breadcrumb-item active"><a href="{% url 'group_view' gcmedia.group.pk %}"> {{ gcmedia.group.name }} </a></li>
+{% endif %}
+
+<li class="breadcrumb-item active">{{ gcmedia.media.mediatype }} </li>
+<li class="breadcrumb-item active">{{ gcmedia.media.title }} </li>
+{% endblock %} {% block content %}
+
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link " href="{% url 'media_view' gcmedia.media.pk %}">View</a>
+          </li>
+          {% if user.is_authenticated %} 
+            {% if gcmedia.media.state.name != 'publish'%}
+              <li class="nav-item ">
+                <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' gcmedia.media.pk %}">Edit</a>
+              </li>
+            {%endif%} 
+          {% endif %}
+          <li class="nav-item active">
+            <a href="{% url 'media_reports' gcmedia.media.pk%}" id="media_reports_id" class="nav-link">Reports</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br/>
+
+  {% include "includes/resource_reports_table.html" with pk=gcmedia.media.pk resource_type="media" %}
+
+</div>
+<br />
+{% endblock %} 
+{% block javascript %} 
+{% endblock %}

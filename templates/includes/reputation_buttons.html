@@ -6,20 +6,24 @@
   .swal2-radio {
     display: grid !important;
   }
+
+  .reputation-button {
+    cursor: pointer;
+  }
 </style>
 {% endblock %}
 <div class="reputation-icons blog-item">
   <ul class="reputation-icons-list blog-info">
     <li>
-      <i class="fa fa-thumbs-o-up" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
+      <i class="fa fa-thumbs-o-up reputation-button" id="reputation-upvote" onclick="updateReputationStat('upvote')"></i>
       <span class="upvote-count"></span>
     </li>
     <li>
-      <i class="fa fa-thumbs-o-down" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>
+      <i class="fa fa-thumbs-o-down reputation-button" id="reputation-downvote" onclick="updateReputationStat('downvote')"></i>
       <span class="downvote-count"></span>
     </li>
     <li>
-      <i class="fa fa-flag-o" id="reputation-reported" onclick="flagResource()"></i>
+      <i class="fa fa-flag-o reputation-button" id="reputation-reported" onclick="flagResource()"></i>
       <span class="reported-count"></span>
     </li>
   </ul>
@@ -63,19 +67,21 @@
             title: 'Select reason for reporting this ' + resource_type,
             input: 'radio',
             inputOptions: inputOptions,
-
             inputValidator: (value) => {
               return !value && 'You need to choose something!'
-            }
+            },
+            showCancelButton: true
           }).then((result) => {
             var reason = result.value;
             updateReputationStat('reported', reason);
-          }).then(() => {
-            swal(
-              'Reported!',
-              'Thank you for reporting this ' + resource_type,
-              'success'
-            )
+
+            if (resone) {
+              swal(
+                'Reported!',
+                'Thank you for reporting this ' + resource_type,
+                'success'
+              )
+            }
           });
         },
         error: () => {

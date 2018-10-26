@@ -180,3 +180,28 @@ class FlagReasons(generics.ListCreateAPIView):
 
     queryset = FlagReason.objects.all()
     serializer_class = FlagReasonSerializer
+
+class ResourceReports(APIView):
+    def get_models(self, request):
+        resource_type = self.request.query_params.get('resource_type')
+
+        if (resource_type == 'article'):
+            return Articles, ArticleFlagLogs
+        elif (resource_type == 'media'):
+            return Media, MediaFlagLogs
+
+    def get(self, request):
+        resourceModel, flagLogsModel = self.get_models(request)
+        pk = self.request.query_params.get('pk')
+
+        resource = resourceModel.objects.get(pk=pk)
+        reasons = FlagReason.objects.get_queryset()
+
+        response = {}
+
+        for reason in reasons:
+            response[reason.reason] = flagLogsModel.objects.filter(resource=resource, reason=reason).count()
+
+        return Response(response)
+
+

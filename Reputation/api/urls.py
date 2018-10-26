@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import FetchCommunityReputation, ArticlePublishScore, ReputationStats, ReputationStatsDetails, FlagReasons
+from .views import FetchCommunityReputation, ArticlePublishScore, ReputationStats, ReputationStatsDetails, FlagReasons, ResourceReports
 
 urlpatterns = [
 
@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^reputation_stats/$', ReputationStats.as_view()),
     url(r'^reputation_stats/(?P<pk>[0-9]+)/$', ReputationStatsDetails.as_view()),
     url(r'^flag_reasons/$', FlagReasons.as_view()),
+    url(r'^resource_reports/$', ResourceReports.as_view())
 ]

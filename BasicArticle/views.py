@@ -131,7 +131,19 @@ def view_article(request, pk):
 
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
 
-
+def reports_article(request, pk):
+	try:
+		article = CommunityArticles.objects.get(article=pk)
+		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+			return redirect('home')
+	except CommunityArticles.DoesNotExist:
+		try:
+			article = GroupArticles.objects.get(article=pk)
+			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+				return redirect('home')
+		except GroupArticles.DoesNotExist:
+			raise Http404
+	return render(request, 'reports_article.html', {'article': article})
 
 def edit_article(request, pk):
 	"""
