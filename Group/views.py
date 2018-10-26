@@ -22,6 +22,8 @@ from etherpad.views import create_group_ether, create_article_ether_group, creat
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
+from Category.models import Category
+from Category.views import update_group_category
 
 def create_group(request):
 	if request.method == 'POST':
@@ -292,6 +294,7 @@ def update_group_info(request,pk):
 		uid = request.user.id
 		try:
 			membership = GroupMembership.objects.get(user=uid, group=group.pk)
+			categories = Category.objects.all()
 			if membership.role.name == 'group_admin':
 				if request.method == 'POST':
 					name = request.POST['name']
@@ -306,9 +309,10 @@ def update_group_info(request,pk):
 					except:
 						errormessage = 'image not uploaded'
 					group.save()
+					update_group_category(request, group)
 					return redirect('group_view',pk=pk)
 				else:
-					return render(request, 'updategroupinfo.html', {'group':group,'membership':membership})
+					return render(request, 'updategroupinfo.html', {'group':group,'membership':membership, 'categories':categories})
 			else:
 				return redirect('group_view',pk=pk)
 		except GroupMembership.DoesNotExist:

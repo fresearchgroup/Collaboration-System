@@ -25,3 +25,10 @@ def category_view(request, catid, commid):
 		groups = paginator.page(paginator.num_pages)
 
 	return render(request, 'categoryview.html',{'groups':groups, 'category':category, 'community':community})
+
+def update_group_category(request, group):
+	groupcategory = GroupCategory.objects.get(group=group)
+	categoryid = request.POST['grpcategory']
+	category = Category.objects.get(pk=categoryid)
+	groupcategory.category = category
+	groupcategory.save()
