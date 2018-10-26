@@ -11,6 +11,7 @@ media/images
 media/audio
 media/video
 media/task
+media/category
 PyEtherpadLite
 
 # SQLite database files
