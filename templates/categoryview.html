@@ -1,6 +1,4 @@
-{% extends 'base.html' %} 
-{%load static %} 
-{% block css %}
+{% extends 'base.html' %} {%load static %} {% block css %}
 
 <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
@@ -9,10 +7,7 @@
 <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
 <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a></li>
 <li class="breadcrumb-item active"> {{ category.name }} </li>
-{% endblock %} 
-
-
-{% block content %}
+{% endblock %} {% block content %}
 <h1>Groups</h1>
 {% if not groups %}
 <div class="content-page page-404">
@@ -26,40 +21,36 @@
         </p>
     </div>
 </div>
-{% endif %} {{myhtml|safe}}{% autoescape off%}
+{% endif %} 
 
-<div class="main">
-    <div class="container">
-        <!-- BEGIN SIDEBAR & CONTENT -->
-        <div class="row margin-bottom-40">
-            <!-- BEGIN CONTENT -->
-            <div class="col-md-12">
-                <div class="content-page">
-                    <div class="row margin-bottom-40">
-                        {% for group in groups %}
-                        <div class="col-md-3 col-sm-4 gallery-item">
-                            {% if group.group.image %}
-                                <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}{{ group.group.image}}" class="fancybox-button" text="{{ group.group.name }}">
-                                    <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ group.group.image}}" class="img-responsive">
-                                    <div class="zoomix"><i class="fa fa-search"></i></div>
-                                </a>
-                            {% else %}
-                                <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}default/group_image_default.png" class="fancybox-button" text="{{ group.group.name }}">
-                                    <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}default/group_image_default.png" class="img-responsive">
-                                    <div class="zoomix"><i class="fa fa-search"></i></div>
-                                </a>
-                            {% endif %}
-                            <h3> <a href="{% url 'group_view' group.group.pk %}">{{ group.group.name }} </a> </h3>
-                        </div>
-                        {% endfor %}
-                    </div>
+<div class = "main">
+<div class="infinite-container">
+    {{myhtml|safe}}{% autoescape off%}
+    <div class="row">
+        {% for group in groups %}
+            <div class="infinite-item">
+                <div class="col-md-3 col-sm-4 gallery-item">
+                    {% if group.group.image %}
+                    <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}{{ group.group.image}}" class="fancybox-button" text="{{ group.group.name }}">
+                        <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ group.group.image}}" class="img-responsive">
+                        <div class="zoomix"><i class="fa fa-search"></i></div>
+                    </a>
+                    {% else %}
+                    <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}default/group_image_default.png" class="fancybox-button" text="{{ group.group.name }}">
+                        <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}default/group_image_default.png" class="img-responsive">
+                        <div class="zoomix"><i class="fa fa-search"></i></div>
+                    </a>
+                    {% endif %}
+                    <h3> <a href="{% url 'group_view' group.group.pk %}">{{ group.group.name }} </a> </h3>
                 </div>
             </div>
-            <!-- END CONTENT -->
-        </div>
+        {% endfor %}
     </div>
+    {% endautoescape%}
 </div>
-{% endautoescape%} {% if groups.has_next %}
+</div>
+
+ {% if groups.has_next %}
 <a class="infinite-more-link" href="?page={{ groups.next_page_number }}">
     <i class="fa fa-spinner fa-spin" style="font-size:24px;color:red"></i> Loading...
 </a>

@@ -16,7 +16,7 @@ def category_view(request, catid, commid):
 	groupscategory = GroupCategory.objects.filter(category=category, community=community)
 		
 	page = request.GET.get('page', 1)
-	paginator = Paginator(list(groupscategory), 5)
+	paginator = Paginator(list(groupscategory), 4)
 	try:
 		groups = paginator.page(page)
 	except PageNotAnInteger:
