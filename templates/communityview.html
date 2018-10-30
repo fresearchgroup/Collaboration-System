@@ -489,15 +489,15 @@
           <div class="content-page">
             <div class="row margin-bottom-10">
               {% for category in categories %}
-              <div class="col-md-2 col-sm-2 gallery-item">
+              <div class="col-md-3 col-sm-3 gallery-item">
                 <a data-rel="fancybox-button"
                   title="{{ category.name }}: {{ category.desc }}"
-                  href="{{ MEDIA_URL }}{{category.image}}"
+                  href="{% url 'category_view' category.pk  community.pk %}"
                   class="fancybox-button">
-                  <img style="height: 150px; width: 150px; border: 1px solid red;" src="{{ MEDIA_URL }}{{category.image}}" class="img-responsive">
+                  <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{category.image}}" class="img-responsive">
                   <div class="zoomix"><i class="fa fa-search"></i></div>
                 </a>
-                <h3> <a href="{% url 'category_view' category.pk  community.pk %}">{{category.name|truncatewords:1}}</a> </h3>
+                <h3> <a href="{% url 'category_view' category.pk  community.pk %}">{{category.name}}</a> </h3>
               </div>
               {% endfor %}
             </div>
