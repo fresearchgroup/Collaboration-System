@@ -60,7 +60,11 @@
           <label for="Category">Catetgory</label>
           <select id="grpcategory" name="grpcategory" class="btn btn-primary">
             {% for category in categories %}
-              <option value="{{ category.pk }}">{{ category.name }}</option>
+              {% if category.name == groupcategory.category.name %}
+                <option value="{{ category.pk }}" selected>{{ category.name }}</option>
+              {% else %}
+                <option value="{{ category.pk }}">{{ category.name }}</option>
+              {% endif %}
             {% endfor %}
           </select>
         </div> 

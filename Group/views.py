@@ -22,7 +22,7 @@ from etherpad.views import create_group_ether, create_article_ether_group, creat
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
-from Category.models import Category
+from Category.models import Category, GroupCategory
 from Category.views import update_group_category
 
 def create_group(request):
@@ -295,6 +295,7 @@ def update_group_info(request,pk):
 		try:
 			membership = GroupMembership.objects.get(user=uid, group=group.pk)
 			categories = Category.objects.all()
+			groupcategory = GroupCategory.objects.get(group=group)
 			if membership.role.name == 'group_admin':
 				if request.method == 'POST':
 					name = request.POST['name']
@@ -312,7 +313,7 @@ def update_group_info(request,pk):
 					update_group_category(request, group)
 					return redirect('group_view',pk=pk)
 				else:
-					return render(request, 'updategroupinfo.html', {'group':group,'membership':membership, 'categories':categories})
+					return render(request, 'updategroupinfo.html', {'group':group,'membership':membership, 'categories':categories, 'groupcategory':groupcategory})
 			else:
 				return redirect('group_view',pk=pk)
 		except GroupMembership.DoesNotExist:
