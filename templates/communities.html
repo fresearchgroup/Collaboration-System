@@ -2,7 +2,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities </a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{ message }}</li>
   {% endif %}
