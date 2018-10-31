@@ -104,3 +104,9 @@ def get_pad_usercount(article_id):
     count = epclient.padUsersCount(padid)
     return count['padUsersCount']
 
+def get_read_only_padid(article_id):
+    epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+    padid = get_pad_id(article_id)
+    readonlyid = epclient.getReadOnlyID(padid)
+    return readonlyid['readOnlyID']
+
