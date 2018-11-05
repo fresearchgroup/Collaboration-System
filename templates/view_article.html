@@ -120,6 +120,7 @@
 {% block javascript %}
 <script type="text/javascript">
   var articleBody = {{article.article.body | safe }};
+  console.log("{% url 'favourites' %}");
 </script>
 
 <script src="{% static 'js/dist/article-view.js' %}"></script>

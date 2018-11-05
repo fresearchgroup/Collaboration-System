@@ -57,6 +57,7 @@ urlpatterns = [
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
+    url(r'^articles/save-image/$', articleview.save_image, name='article_save_image'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),

@@ -23,6 +23,10 @@ from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
 import json
+from django.http import JsonResponse
+import uuid
+import pathlib
+import base64
 
 def display_articles(request):
 	"""
@@ -320,3 +324,16 @@ def article_watch(request, article):
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
+
+def save_image(request):
+	filename = request.POST.get('filename')
+	image_base64 = request.POST.get('image_base64')
+	image_base64 = image_base64[image_base64.find(',')+1:]
+	print(image_base64)
+	extension = pathlib.Path(filename).suffix
+	random_filename = f'{str(uuid.uuid4())}{extension}'
+
+	with open(f'static/image/{random_filename}', 'wb') as f:
+		f.write(base64.b64decode(image_base64))
+
+	return JsonResponse({'url': f'/static/image/{random_filename}'})
