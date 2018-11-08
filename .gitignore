@@ -24,3 +24,5 @@ PyEtherpadLite
 src/
 .vscode/
 *.pyc
+
+.DS_Store/

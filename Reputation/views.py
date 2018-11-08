@@ -11,8 +11,8 @@ def manage_reputation(request):
         if UserScore.objects.filter(role_score='role_score').exists():
             scr = UserScore.objects.get(role_score='role_score')
         return render(request, 'manage_reputation.html', {'res':res, 'scr':scr})
-    else:
-        return redirect('home')
+    
+    return redirect('home')
 
 
 def manage_resource_score(request):

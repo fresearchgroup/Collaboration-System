@@ -93,8 +93,8 @@ def media_reports(request, pk):
 		except CommunityMedia.DoesNotExist:
 			gcmedia = GroupMedia.objects.get(media=pk)
 		return render(request, 'reports_media.html', {'gcmedia':gcmedia })
-	else:
-		return redirect('login')
+	
+	return redirect('login')
 
 def get_belongsto(pk, uid):
 	belongsto = ''

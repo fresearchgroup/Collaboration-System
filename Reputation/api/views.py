@@ -75,6 +75,8 @@ class ReputationStatsDetails(APIView):
             return ArticleScoreLog, ArticleUserScoreLogs, ArticleScoreLogSerializer, ArticleUserScoreLogsSerializer, ArticleFlagLogs, Articles
         elif (resource_type == 'media'):
             return MediaScoreLog, MediaUserScoreLogs, MediaScoreLogSerializer, MediaUserScoreLogsSerializer, MediaFlagLogs, Media
+        else:
+            raise Http404
 
     def get_object(self, pk):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
@@ -106,7 +108,7 @@ class ReputationStatsDetails(APIView):
             'user_log': user_log_serializer.data
         })
 
-    def post(self, request, pk, format=None):
+    def post(self, request, pk):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
 
         resource_score_log = self.get_object(pk)
@@ -152,7 +154,7 @@ class ReputationStatsDetails(APIView):
                     report_reason = FlagReason.objects.get(pk=request.data.get('reason')) 
                     flagModel.objects.create(resource=resource_score_log.resource, user=request.user, reason=report_reason)
                     resource_user_log.reported = True
-                except:
+                except FlagReason.DoesNotExist:
                     pass
             else:
                 try:
@@ -189,6 +191,8 @@ class ResourceReports(APIView):
             return Articles, ArticleFlagLogs
         elif (resource_type == 'media'):
             return Media, MediaFlagLogs
+        else:
+            raise Http404
 
     def get(self, request):
         resourceModel, flagLogsModel = self.get_models(request)
@@ -203,5 +207,3 @@ class ResourceReports(APIView):
             response[reason.reason] = flagLogsModel.objects.filter(resource=resource, reason=reason).count()
 
         return Response(response)
-
-

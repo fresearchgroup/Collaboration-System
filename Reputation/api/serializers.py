@@ -57,3 +57,4 @@ class FlagReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlagReason
         fields = ['id', 'reason']
+        

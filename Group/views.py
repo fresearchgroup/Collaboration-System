@@ -413,3 +413,4 @@ def group_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+		
