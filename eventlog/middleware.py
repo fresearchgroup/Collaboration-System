@@ -20,7 +20,7 @@ class Middleware:
         data['view_kwargs'] = view_kwargs
         utils.ilog(self.LOG_CLASS, data['request'].META['PATH_INFO'])
         utils.ilog(self.LOG_CLASS, data['request'].method)
-        utils.ilog(self.LOG_CLASS, data['request'].POST)
+        #utils.ilog(self.LOG_CLASS, data['request'].POST)
         utils.ilog(self.LOG_CLASS, data['request'].GET)
         utils.ilog(self.LOG_CLASS, data['request'].COOKIES)
         self.eventlogger.sendRequestData(data)
