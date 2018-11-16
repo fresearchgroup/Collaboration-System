@@ -22,6 +22,7 @@ class Community(models.Model):
         created_at = models.DateTimeField(null=True, auto_now_add=True)
         created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
         forum_link = models.CharField(null=True, max_length=100)
+        forum = models.PositiveIntegerField(null=True)
 
         def __str__(self):
             return self.name
