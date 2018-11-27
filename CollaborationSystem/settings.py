@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'wiki.plugins.images.apps.ImagesConfig',
     'wiki.plugins.macros.apps.MacrosConfig',
     'Recommendation_API',
+    'Reputation',
     'etherpad',
     'Media',
     'metadata',

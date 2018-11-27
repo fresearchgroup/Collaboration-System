@@ -65,6 +65,9 @@
 <script src="{% static 'js/Chart.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/notify.js' %}" type="text/javascript"></script>
 
+<!-- JavaScript Cookie Library -->
+<script src="{% static 'js/js.cookie.js' %}"></script>
+
 <!-- c3.js  c3.css and d3.js-->
   <link rel="stylesheet" href="{% static 'css/c3.min.css'%}">
   <script src = "{% static 'js/d3.v5.min.js' %}"></script>
@@ -171,7 +174,8 @@ $(document).ready(function() {
 
           <ul class="dropdown-menu">
             {% if request.user.is_superuser %}
-						<li><a href="{% url 'create_community' %}">Create Community</a></li>
+            <li><a href="{% url 'create_community' %}">Create Community</a></li>
+            <li><a href="{% url 'manage_reputation' %}">Manage Reputation</a></li>
             <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
             <li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             <li><a href="{% url 'upload_task' %}">Create Task</a></li>

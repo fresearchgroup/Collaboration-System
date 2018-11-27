@@ -1,0 +1,42 @@
+{% load static %}
+
+<div class="row">
+  <div class="col-sm-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Reasons</th>
+          <th scope="col">Count</th>
+        </tr>
+      </thead>
+      <tbody id="resource-reports">
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'assets/plugins/jquery.min.js' %}"></script>
+
+<script>
+  var resource_type = "{{resource_type}}";
+  var pk = "{{pk}}";
+  
+  $(document).ready(function () {
+    $.ajax({
+      method: 'GET',
+      url: '/api/reputation/resource_reports?resource_type=' + resource_type + '&pk=' + pk,
+      success: (res) => {
+        var i = 0;
+        var reasons = Object.keys(res);
+        for (i = 0; i < reasons.length; i++) {
+          var reason = reasons[i];
+          $('#resource-reports').append('<tr><th scope="row">' + reason + '</th><td>' + res[reason] +
+            '</td></tr>');
+        }
+      }
+    })
+  })
+</script>
+{% endblock %}

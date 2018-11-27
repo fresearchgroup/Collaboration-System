@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load comments_xtd %}
+{% load static %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+     <li class="breadcrumb-item active">{{ article.article.title }} </li>
+    {% endblock %}
+    {% block content %}
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-sm-9">
+      <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+       {% if article.article.state.name != 'publish'%}
+        <li class="nav-item ">
+          <a id="article_edit_id" class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+        </li>
+
+    {%endif%}
+        
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+              <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
+        </li>
+      </ul>
+      </div>
+      <br/>
+  
+      {% include "includes/resource_reports_table.html" with pk=article.article.pk resource_type="article" %}
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+{% endblock %}

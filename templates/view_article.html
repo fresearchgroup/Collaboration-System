@@ -31,6 +31,9 @@
         <li class="nav-item">
               <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
+        </li>
       </ul>
       </div>
       <br/>
@@ -69,6 +72,8 @@
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
           
         </p>
+        
+        {% include "includes/reputation_buttons.html" with id=article.article.id resource_type="article" %}
       </div>
     </div>
     <div class="col-sm-3"><br/><br/>
@@ -120,6 +125,7 @@
 
 <script type="text/javascript">
 var id = {{article.article.id}};
+
 $(function(){
         $.ajax({
                   url: '/ajax/article_text/'+id,

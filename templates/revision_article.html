@@ -23,6 +23,9 @@
   <li class="nav-item active">
     <a class="nav-link active " href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>
+  <li class="nav-item">
+      <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
+  </li>
   {% endif %}
 </ul>
 <br/>

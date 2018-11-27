@@ -33,6 +33,7 @@ from Group import viewsets as groupviewsets
 import notifications.urls
 from Dashboard import views as dashboardview
 from Recommendation_API import views
+from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
 
@@ -61,6 +62,7 @@ urlpatterns = [
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
     url(r'^article-view/(?P<pk>\d*)/$', articleview.view_article, name='article_view'),
+    url(r'^article-reports/(?P<pk>\d*)/$', articleview.reports_article, name='article_reports'),
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
@@ -170,11 +172,18 @@ urlpatterns = [
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+    url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),
     url(r'^run_task/', taskview.run_task, name='run_task'),
     url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
+
+    url(r'manage_reputation/',repuationview.manage_reputation , name = 'manage_reputation'),
+    url(r'manage_resource_score/',repuationview.manage_resource_score , name = 'manage_resource_score'),
+    url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
+
+    url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
 ]
 

@@ -6,6 +6,7 @@ from workflow.views import canEditResourceCommunity, getStatesCommunity, getStat
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
 from Group.models import GroupMedia, Group, GroupMembership
+import requests
 
 def create_media(request):
 	if request.user.is_authenticated:
@@ -84,6 +85,16 @@ def media_edit(request,pk):
 			return redirect('media_view',pk=pk)
 	else:
 		return redirect('login')
+
+def media_reports(request, pk):
+	if request.user.is_authenticated:
+		try:
+			gcmedia = CommunityMedia.objects.get(media=pk)
+		except CommunityMedia.DoesNotExist:
+			gcmedia = GroupMedia.objects.get(media=pk)
+		return render(request, 'reports_media.html', {'gcmedia':gcmedia })
+	
+	return redirect('login')
 
 def get_belongsto(pk, uid):
 	belongsto = ''
