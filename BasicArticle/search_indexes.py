@@ -6,7 +6,7 @@ from django.utils import timezone
 
 class ArticlesIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    created_by = indexes.CharField(model_attr='created_by')
+    # created_by = indexes.CharField(model_attr='created_by')
     published_on = indexes.DateTimeField(model_attr='published_on')
 
     def get_model(self):
