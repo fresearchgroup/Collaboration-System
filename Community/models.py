@@ -5,7 +5,6 @@ from BasicArticle.models import Articles
 from Group.models import Group
 from Course.models import Course
 import os, uuid
-from Image.models import Images
 from Media.models import Media
 
 def get_file_path(instance, filename):
@@ -63,12 +62,6 @@ class CommunityCourses(models.Model):
 	course = models.ForeignKey(Course, null=True, related_name='communitycourses')
 	user = models.ForeignKey(User, null=True, related_name='communitycourses')
 	community = models.ForeignKey(Community, null=True, related_name='communitycourses')
-
-
-class CommunityImages(models.Model):
-	image_resource = models.ForeignKey(Images, null=True, related_name='communityimages')
-	user = models.ForeignKey(User, null=True, related_name='communityimages')
-	community = models.ForeignKey(Community, null=True, related_name='communityimages')
 
 class CommunityMedia(models.Model):
 	media = models.ForeignKey(Media, null=True, related_name='communitymedia')

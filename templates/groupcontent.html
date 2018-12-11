@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
+
 {% load comments %}
 {% load comments_xtd %}
 
@@ -49,22 +56,37 @@
    </div>
 </div>
 {% endif %}
+<div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
 {% for article in grparticles %}
+<div class="infinite-item">
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
       {% if article.image %}
-      <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+        {% if article.mediatype == 'Audio' or article.mediatype == 'Video' %}
+          <iframe style="width:100%" class="embed-responsive-item" src="{{ MEDIA_URL }}{{ article.image}}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        {% else %}
+        <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+        {% endif %}      
       {% else %}
       <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
       {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
       {% if article.type == 'article' %}
-      <h3><a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
-      {% else %}
-      <h3><i class="fa fa-camera-retro" style="color:red;"></i><a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
+        <h3><i class="fa fa-file-text" style="color:red;"></i> <a href="{% url 'article_view' article.id %}">{{ article.title }}</a></h3>
       {% endif %}
+      {% if article.type == 'media' %}
+        <h3>
+          {% if article.mediatype == 'Image' %}<i class="fa fa-picture-o" style="color:red;"></i> {% endif %}
+          {% if article.mediatype == 'Audio' %}<i class="fa fa-music" style="color:red;"></i> {% endif %}
+          {% if article.mediatype == 'Video' %}<i class="fa fa-film" style="color:red;"></i> {% endif %}
+          <a href="{% url 'media_view' article.id %}">{{ article.title }}</a>
+        </h3>
+      {% endif %}
+      {% if article.type == 'h5p' %}
+        <h3><i class="fa fa-camera-retro" style="color:red;"></i> <a href="{% url 'h5p_view' article.content_id %}">{{ article.title }}</a></h3>
+      {% endif %}      
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
         <li><i class="fa fa-eye"></i> {{article.views}} views </li>
@@ -78,40 +100,37 @@
       </ul>
       <p>
         {{ article.body|striptags|truncatewords:50 }}
-        <a href="{% url 'article_view' article.id %}" class="more"> ... Read more <i class="icon-angle-right"></i></a>
+        {% if article.type == 'article' %}
+          <a href="{% url 'article_view' article.id %}" class="more"> ... Read more <i class="icon-angle-right"></i></a>
+        {% endif %}
       </p>
     </div>
   </div>
   <hr class="blog-post-sep">
-
+</div>
 {% endfor %}
 {% endautoescape%}
+</div>
 
-{% if grparticles.has_other_pages %}
-<div class="row">
-  <div class="col-md-4 col-sm-4 items-info">{{grparticles}}</div>
-  <div class="col-md-8 col-sm-8">
-    <ul class="pagination pull-right">
-    {% if grparticles.has_previous %}
-      <li><a href="?page={{ grparticles.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in grparticles.paginator.page_range %}
-      {% if grparticles.number == i %}
-        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if grparticles.has_next %}
-      <li><a href="?page={{ grparticles.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-</div>
-</div>
-<br />
+{% if grparticles.has_next %}
+  <a class="infinite-more-link" href="?page={{ grparticles.next_page_number }}">More</a>
 {% endif %}
+
+<div class="loading" style="display: none;">
+  Loading...
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script>
 {% endblock %}

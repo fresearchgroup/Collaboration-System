@@ -19,4 +19,5 @@ RUN cp temp/notifications/settings.py /usr/local/lib/python3.6/site-packages/not
 RUN cp temp/base_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/base.html
 RUN cp temp/article_menu_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/includes/article_menu.html
 RUN cp temp/article_wiki.html /usr/local/lib/python3.6/site-packages/wiki/templates/wiki/article.html
+RUN cp temp/forum_views.py /usr/local/lib/python3.6/site-packages/machina/apps/forum/views.py
 RUN cp .env.docker .env
