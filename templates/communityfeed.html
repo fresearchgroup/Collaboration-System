@@ -30,9 +30,6 @@
   <li class="nav-item active">
     <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
-  </li>
   {%endif%}
   {% if community.parent == None %}
   <li class="nav-item">
