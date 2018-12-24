@@ -32,9 +32,11 @@
     <a class="nav-link" href="{% url 'community_group_content' community.pk %}">Group Content</a>
   </li>
   {%endif%}
+  {% if community.parent == None %}
   <li class="nav-item">
-	<a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>          </li>
-
+	  <a class="nav-link" href="/forum/forum/{{ community.forum_link }}">Forums</a>          
+  </li>
+  {% endif %}
 </ul>
 <br/>
 
