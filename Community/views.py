@@ -5,9 +5,9 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
-from .models import CommunityGroups
+# from .models import CommunityGroups
 from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
@@ -66,11 +66,10 @@ def community_view(request, pk):
 	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
 	pubarticlescount = len(list(pubarticles))
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
-	groups = CommunityGroups.objects.filter(community = pk, group__visibility='1')
-	groupcount = groups.count()
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
 	children = community.get_children()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children})
+	childrencount = children.count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'users':users, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
@@ -528,50 +527,6 @@ def community_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
-
-def community_group_content(request, pk):
-	commgrparticles = ''
-	try:
-		community = Community.objects.get(pk=pk)
-		uid = request.user.id
-		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-		if membership:
-			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
-			cgmedia = CommunityGroups.objects.raw('select "media" as type, username, media.id, media.title, media.mediafile as image, media.created_at, gg.name from auth_user au, Media_media as media join (select * from Group_groupmedia where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on media.id=t.media_id join Group_group gg on gg.id=group_id and gg.visibility=1 where media.state_id=2 and au.id=media.created_by_id;', [community.pk])
-			cgh5p = []
-			try:
-				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
-				json_data = json.loads(response.text)
-				print(json_data)
-
-				from django.db import connection
-				cursor = connection.cursor()
-				stmt = "select group_id from Community_communitygroups where community_id=%s"
-				cursor.execute(stmt, [community.pk])
-				groups_in_this_community = cursor.fetchall()
-				groups_in_this_community = list(sum(groups_in_this_community, ()))
-
-				for obj in json_data:
-					if obj['group_id'] in groups_in_this_community:
-						cgh5p.append(obj)
-			except Exception as e:
-				print(e)
-				print("H5P server down...Sorry!! We will be back soon")
-
-			lstfinal = list(cgarticles) + list(cgmedia) + list(cgh5p)
-			page = request.GET.get('page', 1)
-			paginator = Paginator(list(lstfinal), 5)
-			try:
-				commgrparticles = paginator.page(page)
-			except PageNotAnInteger:
-				commgrparticles = paginator.page(1)
-			except EmptyPage:
-				commgrparticles = paginator.page(paginator.num_pages)
-
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view', community.pk)
-	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
-
 
 
 def h5p_view(request, pk):
