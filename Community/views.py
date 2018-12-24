@@ -38,15 +38,15 @@ def display_communities(request):
 	if request.method == 'POST':
 		sortby = request.POST['sortby']
 		if sortby == 'a_to_z':
-			communities=Community.objects.all().order_by('name')
+			communities=Community.objects.filter(parent=None).order_by('name')
 		if sortby == 'z_to_a':
-			communities=Community.objects.all().order_by('-name')
+			communities=Community.objects.filter(parent=None).order_by('-name')
 		if sortby == 'oldest':
-			communities=Community.objects.all().order_by('created_at')
+			communities=Community.objects.filter(parent=None).order_by('created_at')
 		if sortby == 'latest':
-			communities=Community.objects.all().order_by('-created_at')
+			communities=Community.objects.filter(parent=None).order_by('-created_at')
 	else:
-		communities=Community.objects.all().order_by('name')
+		communities=Community.objects.filter(parent=None).order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
 
 def community_view(request, pk):
