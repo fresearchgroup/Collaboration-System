@@ -8,7 +8,6 @@ from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 from .models import CommunityGroups
-from Group.views import create_group
 from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
@@ -184,22 +183,48 @@ def community_article_create(request):
 	else:
 		return redirect('login')
 
-def community_group(request):
+def community_group(request, pk):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				group = create_group(request)
-				obj = CommunityGroups.objects.create(group=group, user=request.user, community=community)
-				return redirect('group_view', group.pk)
-			else:
-				return render(request, 'new_group.html', {'community':community, 'status':1})
+			community = create_group(request)
+			return redirect('community_view', community.pk)
 		else:
-			return redirect('home')
+			community = Community.objects.get(pk=pk)
+			return render(request, 'new_community.html', {'community':community})
 	else:
 		return redirect('login')
+
+def create_group(request):
+	if request.method == 'POST':
+		cid = request.POST['parent']
+		parent = Community.objects.get(pk=cid)
+		name = request.POST['name']
+		desc = request.POST['desc']
+		try:
+			image = request.FILES['community_image']
+		except:
+			image = None
+		user = request.user
+		#visibility = request.POST['visibility']
+		community = Community.objects.create(
+			name = name,
+			desc  = desc,
+			image = image,
+			created_by = user,
+			parent = parent
+			)
+		role = Roles.objects.get(name='community_admin')
+		CommunityMembership.objects.create(user=user, community=community, role=role)
+
+		#create ether id for the group 
+		try:
+			create_community_ether(community)
+		except:
+			error = ""
+		
+		#notify_remove_or_add_user(request.user, user, group, 'group_created')
+		#remove_or_add_user_feed(request.user, group, "group_created")
+		return community
 
 def request_community_creation(request):
 	if request.user.is_authenticated:
@@ -449,9 +474,11 @@ def create_community(request):
 				notify_remove_or_add_user(request.user, usr,community,'community_created')
 
 				#create the ether id for community
-				create_community_ether(community)
-
-				create_wiki_for_community(community)
+				try:
+					create_community_ether(community)
+					create_wiki_for_community(community)
+				except:
+					error =""
 
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:

@@ -6,13 +6,14 @@ from Group.models import Group
 from Course.models import Course
 import os, uuid
 from Media.models import Media
+from mptt.models import MPTTModel, TreeForeignKey
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('community', filename)
 
-class Community(models.Model):
+class Community(MPTTModel):
 
         name = models.CharField(max_length=100)
         desc = models.TextField()
@@ -23,6 +24,7 @@ class Community(models.Model):
         created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
         forum_link = models.CharField(null=True, max_length=100)
         forum = models.PositiveIntegerField(null=True)
+        parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
         def __str__(self):
             return self.name

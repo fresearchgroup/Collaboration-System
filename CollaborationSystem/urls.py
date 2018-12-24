@@ -71,7 +71,7 @@ urlpatterns = [
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
-    url(r'^community-group-create/$', communityview.community_group, name='community_group'),
+    url(r'^community-group-create/(?P<pk>\d*)/$', communityview.community_group, name='community_group'),
 
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),

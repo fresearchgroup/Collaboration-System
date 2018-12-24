@@ -360,11 +360,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method = "post" action ="{% url 'community_group' %}">
+            <form method = "get" action ="{% url 'community_group' community.pk%}">
               <div class="form-group">
-                {% csrf_token %}
-	          <input type="hidden" name="cid" value={{ community.pk}}>
-	          <input type="hidden" name="status" value=0>
                 <h4>I confirm that I understand the following terms.</h4>
                 <ul>
 		            <li> Since I am creating a group, I shall be the group admin and will manage my group appropriately</li>
@@ -470,15 +467,6 @@
         </div>
       </div>
     </div>
-  <!--<b> <form method = "post" action ="{% url 'community_group' %}">
-    <div class="form-group">
-          {% csrf_token %}
-          <input type="hidden" name="cid" value={{ community.pk}}>
-          <input type="hidden" name="status" value=0>
-    </div>
-    <button type="submit" class="btn btn-primary"><i class="fa fa-soccer-ball-o margin-right-10"></i>Create Group</button>
-  </form>
-</b>-->
     {% endif %}
     <!-- activities END -->
   </div>

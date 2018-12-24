@@ -19,7 +19,7 @@
 {{errormessage}}
 
 {% if user.is_authenticated %}
-<form method="post" name = "form" action="{% url 'create_community' %}" enctype="multipart/form-data">
+<form method="post" name = "form" action="" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
@@ -56,6 +56,9 @@
       <span class="custom-file-control"></span>
     </label>
   </div>
+  {% if community %}
+  <input type="hidden" class="form-control" name="parent" value = "{{community.pk}}">
+  {% endif %}
   <button id="create" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Create</button>
 </form>
 <br />
