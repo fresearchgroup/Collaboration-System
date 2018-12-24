@@ -69,7 +69,8 @@ def community_view(request, pk):
 	groups = CommunityGroups.objects.filter(community = pk, group__visibility='1')
 	groupcount = groups.count()
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
+	children = community.get_children()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children})
 
 def community_subscribe(request):
 	cid = request.POST['cid']

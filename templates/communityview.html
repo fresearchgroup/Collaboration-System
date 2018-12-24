@@ -498,8 +498,8 @@
               <!-- groups START -->
               <h2 class="">Groups</h2>
               <ul class="nav sidebar-categories margin-bottom-40">
-                {% for group in groups %}
-                <li><a href="{% url 'group_view' group.group.pk  %}">{{group.group.name}}</a></li>
+                {% for child in children %}
+                  <li><a href="{% url 'community_view' child.pk %}">{{child.name}}</a></li>
                 {% endfor %}
               </ul>
               <!-- groups END -->
