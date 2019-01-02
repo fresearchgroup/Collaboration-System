@@ -27,6 +27,7 @@ from Reputation.models import ArticleScoreLog
 import requests
 from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id, get_pad_usercount
 from django.contrib import messages
+from Reputation.models import CommunityReputaion
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -198,6 +199,15 @@ def edit_article(request, pk):
 								article.state = to_state
 
 								if(to_state.name=='publishable'):
+									community_resource = CommunityArticles.objects.get(article=article)
+									commuinty_user_reputation = CommunityReputaion.objects.get_or_create(
+										community=community_resource.article,
+										user=community_resource.user
+									)
+
+									commuinty_user_reputation.published_count = F('published_count') + 1
+									commuinty_user_reputation.save()
+									
 									notify_update_article_state(request.user,article,'publishable')
 									create_resource_feed(article,"article_no_edit",request.user)
 

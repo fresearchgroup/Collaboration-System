@@ -10,7 +10,7 @@ from Reputation.models import MediaScoreLog, MediaUserScoreLogs, MediaFlagLogs
 from Media.models import Media
 from BasicArticle.models import Articles
 from rest_framework.permissions import IsAuthenticated
-from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups
+from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups, CommunityMedia
 from Group.models import GroupArticles
 from django.http import Http404
 from django.db.models import F
@@ -91,6 +91,17 @@ class ReputationStatsDetails(APIView):
             return resource_score_log
         except scoreLogModel.DoesNotExist:
             raise Http404
+    
+    def get_community_resource(self, request, resource):
+        resource_type = self.request.query_params.get('resource_type')
+
+        if (resource_type == 'article'):
+            return CommunityArticles.objects.get(article=resource)
+        elif (resource_type == 'media'):
+            return CommunityMedia.objects.get(media=resource) 
+        else:
+            raise Http404
+
 
     def get(self, request, pk, format=None):
         scoreLogModel, userLogModel, scoreLogSerializer, userLogSerializer, flagModel, model = self.get_models_and_serializers(self.request)
@@ -113,6 +124,8 @@ class ReputationStatsDetails(APIView):
 
         resource_score_log = self.get_object(pk)
 
+        community_resource = self.get_community_resource(request, resource_score_log.resource)
+
         updates = {
             'upvote': request.data.get('update_type') == 'upvote',
             'downvote': request.data.get('update_type') == 'downvote',
@@ -124,29 +137,47 @@ class ReputationStatsDetails(APIView):
             resource=resource_score_log.resource
         )
 
+        # get resource's user's reputation stat in the community
+        community_user_reputation, created = CommunityReputaion.objects.get_or_create(
+            community=community_resource.community,
+            user=community_resource.user
+        )
+
         if (updates['upvote']):
             if (not resource_user_log.upvoted):
                 resource_score_log.upvote = F('upvote') + 1
                 resource_user_log.upvoted = True
 
+                community_user_reputation.upvote_count = F('upvote_count') + 1
+
                 if (resource_user_log.downvoted):
                     resource_user_log.downvoted = False
                     resource_score_log.downvote = F('downvote') - 1
+
+                    community_user_reputation.downvote_count = F('downvote_count') - 1
             else:
                 resource_user_log.upvoted = False
                 resource_score_log.upvote = F('upvote') - 1
+
+                community_user_reputation.upvote_count = F('upvote_count') - 1
 
         if (updates['downvote']):
             if (not resource_user_log.downvoted):
                 resource_score_log.downvote = F('downvote') + 1
                 resource_user_log.downvoted = True
 
+                community_user_reputation.downvote_count = F('downvote_count') + 1
+
                 if (resource_user_log.upvoted):
                     resource_user_log.upvoted = False
                     resource_score_log.upvote = F('upvote') - 1
+
+                    community_user_reputation.upvote_count = F('upvote_count') - 1
             else:
                 resource_user_log.downvoted = False
                 resource_score_log.downvote = F('downvote') - 1
+
+                community_user_reputation.downvote_count = F('downvote_count') - 1
 
         if (updates['reported']):
             if (not resource_user_log.reported):
@@ -170,8 +201,11 @@ class ReputationStatsDetails(APIView):
         resource_score_log.save()
         resource_score_log.refresh_from_db()
 
+        community_user_reputation.save()
+
         resource_log_serializer = scoreLogSerializer(resource_score_log)
         user_log_serializer = userLogSerializer(resource_user_log)
+        
         return Response({
             'resource_log': resource_log_serializer.data,
             'user_log': user_log_serializer.data
@@ -207,3 +241,19 @@ class ResourceReports(APIView):
             response[reason.reason] = flagLogsModel.objects.filter(resource=resource, reason=reason).count()
 
         return Response(response)
+
+class ReputationScore(APIView):
+    def get(self, request):
+        reputation_score = []
+
+        community_reputations = CommunityReputaion.objects.filter(user=request.user)
+        resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
+
+        for repu in community_reputations:
+            reputation_score.append({
+                'community_id': repu.community.id,
+                'community_name': repu.community.name,
+                'score': repu.upvote_count * resource_score.upvote_value - repu.downvote_count * resource_score.downvote_value + repu.published_count * resource_score.publish_value
+            })
+        
+        return Response(json.dumps(reputation_score))

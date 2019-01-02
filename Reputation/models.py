@@ -6,17 +6,19 @@ from Media.models import Media
 
 #score of a user in different communities
 class CommunityReputaion(models.Model): 
-	community = models.ForeignKey(Community ,on_delete = models.CASCADE, null=True)
-	user = models.ForeignKey(User , on_delete = models.CASCADE,null=True)
-	score = models.IntegerField(null=True)
+    community = models.ForeignKey(Community ,on_delete = models.CASCADE, null=True)
+    user = models.ForeignKey(User , on_delete = models.CASCADE,null=True)
+    upvote_count = models.IntegerField(default=0)
+    downvote_count = models.IntegerField(default=0)
+    published_count = models.IntegerField(default=0)
 
 #reputation values and operation for any resource in the system
 class ResourceScore(models.Model):
     can_vote_unpublished = models.BooleanField(default=True)
-    upvote_value = models.IntegerField(null=True)
-    downvote_value = models.IntegerField(null=True)
+    upvote_value = models.IntegerField(null=True, default=0)
+    downvote_value = models.IntegerField(null=True, default=0)
     can_report = models.BooleanField(default=True)
-    publish_value = models.IntegerField(null = True)
+    publish_value = models.IntegerField(null = True, default=0)
     resource_type = models.CharField(max_length=20, default='resource')
 
 

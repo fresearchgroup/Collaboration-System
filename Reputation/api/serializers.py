@@ -8,7 +8,9 @@ class CommunityReputaionSerializer(serializers.ModelSerializer):
         fields = [
             'community',
             'user',
-            'score'
+            'upvote_count',
+            'downvote_count',
+            'published_count'
         ]
         
 class ArticleScoreLogSerializer(serializers.ModelSerializer):
