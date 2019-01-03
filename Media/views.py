@@ -29,9 +29,9 @@ def create_media(request):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
+		mediametadata = MediaMetadata.objects.get(media=pk)
 	except CommunityMedia.DoesNotExist:
-		gcmedia = GroupMedia.objects.get(media=pk)
-	mediametadata = MediaMetadata.objects.get(media=pk)
+		return redirect('home')
 	if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
 		return redirect('home')
 	# canEdit = ""

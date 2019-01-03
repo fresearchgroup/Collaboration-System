@@ -17,9 +17,6 @@
 {% if gcmedia.community.name %}
 <li class="breadcrumb-item active"><a href="{% url 'community_view' gcmedia.community.pk %}"> {{ gcmedia.community.name }} </a></li>
 {% endif %}
-{% if gcmedia.group.name %}
-<li class="breadcrumb-item active"><a href="{% url 'group_view' gcmedia.group.pk %}"> {{ gcmedia.group.name }} </a></li>
-{% endif %}
 
 <li class="breadcrumb-item active">{{ gcmedia.media.mediatype }} </li>
 <li class="breadcrumb-item active">{{ gcmedia.media.title }} </li>
