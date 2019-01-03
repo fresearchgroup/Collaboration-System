@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
 from .models import Media
 from workflow.models import States
-from Community.models import CommunityMedia, CommunityMembership, Community, CommunityGroups
-from workflow.views import canEditResourceCommunity, getStatesCommunity, getStatesGroup, canEditResourceGroup
+from Community.models import CommunityMedia, CommunityMembership, Community
+from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
 import requests
