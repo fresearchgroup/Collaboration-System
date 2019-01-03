@@ -74,13 +74,8 @@ def media_edit(request,pk):
 				metadata.save()
 				return redirect('media_view',pk=pk)
 			else:
-				# if belongsto == 'community':
 				states = getStatesCommunity(media.state.name)
 				message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
-				# if belongsto == 'group':
-				# 	cmembership = get_comm_membership(commgrp.pk, request.user.id)
-				# 	states = getStatesGroup(media.state.name, membership.role.name)
-				# 	message = canEditResourceGroup(media.state.name, membership.role.name, cmembership.role.name, media, request)
 				if message != 'True':
 					return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
 				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
@@ -104,12 +99,6 @@ def get_belongsto(pk, uid):
 	commgrp = Community.objects.get(pk=community.community.id)
 	membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
 	return commgrp, membership
-
-# def get_comm_membership(pk, uid):
-# 	group = Group.objects.get(pk=pk)
-# 	community = CommunityGroups.objects.get(group=group)
-# 	cmembership = CommunityMembership.objects.get(user=uid, community=community.community)
-# 	return cmembership
 
 def display_published_media(request, mediatype):
 	try: 
