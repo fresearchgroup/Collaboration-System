@@ -5,7 +5,6 @@ from Community.models import CommunityMedia, CommunityMembership, Community, Com
 from workflow.views import canEditResourceCommunity, getStatesCommunity, getStatesGroup, canEditResourceGroup
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
-from Group.models import GroupMedia, Group, GroupMembership
 import requests
 
 def create_media(request):
