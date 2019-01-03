@@ -89,7 +89,7 @@ def media_reports(request, pk):
 		try:
 			gcmedia = CommunityMedia.objects.get(media=pk)
 		except CommunityMedia.DoesNotExist:
-			gcmedia = GroupMedia.objects.get(media=pk)
+			return redirect('home')
 		return render(request, 'reports_media.html', {'gcmedia':gcmedia })
 	
 	return redirect('login')
