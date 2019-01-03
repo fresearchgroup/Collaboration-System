@@ -43,7 +43,10 @@ def media_view(request, pk):
 
 def media_edit(request,pk):
 	if request.user.is_authenticated:
-		media = Media.objects.get(pk=pk)
+		try:
+			media = Media.objects.get(pk=pk)
+		except Media.DoesNotExist:
+			return redirect('home')			
 		mediametadata = MediaMetadata.objects.get(media=media)
 		metadata = Metadata.objects.get(pk=mediametadata.metadata.pk)
 		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
@@ -52,7 +55,7 @@ def media_edit(request,pk):
 		membership = None
 		message = 'True'
 		states = ['']
-		belongsto, commgrp, membership = get_belongsto(pk, request.user.id)
+		commgrp, membership = get_belongsto(pk, request.user.id)
 		if membership:
 			if request.method == 'POST':
 				title = request.POST['name']
@@ -71,16 +74,16 @@ def media_edit(request,pk):
 				metadata.save()
 				return redirect('media_view',pk=pk)
 			else:
-				if belongsto == 'community':
-					states = getStatesCommunity(media.state.name)
-					message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
-				if belongsto == 'group':
-					cmembership = get_comm_membership(commgrp.pk, request.user.id)
-					states = getStatesGroup(media.state.name, membership.role.name)
-					message = canEditResourceGroup(media.state.name, membership.role.name, cmembership.role.name, media, request)
+				# if belongsto == 'community':
+				states = getStatesCommunity(media.state.name)
+				message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
+				# if belongsto == 'group':
+				# 	cmembership = get_comm_membership(commgrp.pk, request.user.id)
+				# 	states = getStatesGroup(media.state.name, membership.role.name)
+				# 	message = canEditResourceGroup(media.state.name, membership.role.name, cmembership.role.name, media, request)
 				if message != 'True':
 					return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
-				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states, 'belongsto':belongsto})
+				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
 		else:
 			return redirect('media_view',pk=pk)
 	else:
@@ -97,24 +100,16 @@ def media_reports(request, pk):
 	return redirect('login')
 
 def get_belongsto(pk, uid):
-	belongsto = ''
-	try:
-		community = CommunityMedia.objects.get(media=pk)
-		commgrp = Community.objects.get(pk=community.community.id)
-		membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
-		belongsto = 'community'
-	except CommunityMedia.DoesNotExist:
-		group = GroupMedia.objects.get(media=pk)
-		commgrp = Group.objects.get(pk=group.group.id)
-		membership = GroupMembership.objects.get(user=uid, group=commgrp.id)
-		belongsto = 'group'
-	return belongsto, commgrp, membership
+	community = CommunityMedia.objects.get(media=pk)
+	commgrp = Community.objects.get(pk=community.community.id)
+	membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
+	return commgrp, membership
 
-def get_comm_membership(pk, uid):
-	group = Group.objects.get(pk=pk)
-	community = CommunityGroups.objects.get(group=group)
-	cmembership = CommunityMembership.objects.get(user=uid, community=community.community)
-	return cmembership
+# def get_comm_membership(pk, uid):
+# 	group = Group.objects.get(pk=pk)
+# 	community = CommunityGroups.objects.get(group=group)
+# 	cmembership = CommunityMembership.objects.get(user=uid, community=community.community)
+# 	return cmembership
 
 def display_published_media(request, mediatype):
 	try: 
