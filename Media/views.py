@@ -119,15 +119,8 @@ def get_comm_membership(pk, uid):
 def display_published_media(request, mediatype):
 	try: 
 		cmedialist = CommunityMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
-		gmedialist = GroupMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
-		
-		for cmedia in cmedialist:
-			cmedia.belongsto = 'community'
 
-		for gmedia in gmedialist:
-			gmedia.belongsto = 'group'
-			
-		medialist = list(cmedialist) +  list(gmedialist)
+		medialist = list(cmedialist)
 		
 		page = request.GET.get('page', 1)
 		paginator = Paginator(list(medialist), 5)
