@@ -117,18 +117,11 @@ def view_article(request, pk):
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
-		try:
-			article = GroupArticles.objects.get(article=pk)
-			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-				return redirect('home')
-			count = article_watch(request, article.article)
-		except GroupArticles.DoesNotExist:
-			raise Http404
+		raise Http404
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
 	
-
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
 
 def reports_article(request, pk):
@@ -137,12 +130,7 @@ def reports_article(request, pk):
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 			return redirect('home')
 	except CommunityArticles.DoesNotExist:
-		try:
-			article = GroupArticles.objects.get(article=pk)
-			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-				return redirect('home')
-		except GroupArticles.DoesNotExist:
-			raise Http404
+		raise Http404
 	return render(request, 'reports_article.html', {'article': article})
 
 def edit_article(request, pk):
