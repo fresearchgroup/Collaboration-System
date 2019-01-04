@@ -70,7 +70,7 @@ var articlesContributed = [{{total}}];
   <div class="content-page">
     <div class="row margin-bottom-40">
 
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Communities</h3>
@@ -89,24 +89,6 @@ var articlesContributed = [{{total}}];
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="pricing hover-effect">
-          <div class="pricing-head">
-            <h3>My Groups</h3>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-              <div class="data-container"></div>
-              <div id="pagination-mygroups"></div>
-            </span>
-            </h4>
-          </div>
-<!--      <div class="pricing-footer">
-            <a href="javascript:;" class="btn btn-primary">
-               Sign Up <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-          </div>-->
-        </div>
-      </div>
 
       <div class="col-md-4">
         {% if pendingcommunities %}
@@ -118,22 +100,6 @@ var articlesContributed = [{{total}}];
         {{myhtml|safe}}{% autoescape off%}
         {% for pending in pendingcommunities %}
               {{ pending.name }}  <br />
-        {% endfor %}
-        {% endautoescape%}
-            </span>
-            </h4>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-        {{myhtml|safe}}{% autoescape off%}
-        {% for invite in grpinvitations %}
-              <form method="post" action="{% url 'handle_group_invitations' %}">
-                   {% csrf_token %}
-                   <a href="{% url 'group_view' invite.group.id %}"> {{ invite.group.name  }} </a>
-                   <input type='hidden' name = 'pk' value ={{invite.pk}} />
-                   <button type="radio" name ="status" value="Accept" class="btn btn-success" >Accept  </button>
-                   <button type="radio" name ="status" value="Reject" class="btn btn-danger"> Reject</button>
-              </form>
-                <br />
         {% endfor %}
         {% endautoescape%}
             </span>
@@ -160,7 +126,7 @@ var articlesContributed = [{{total}}];
           <th style="color:white">Type</th>
           <th style="color:white">Content</th>
           <th style="color:white">Status</th>
-          <th style="color:white">Community / Group</th>
+          <th style="color:white">Community</th>
           <th style="color:white">Created</th>
         </tr>
     </thead>
@@ -207,9 +173,6 @@ var articlesContributed = [{{total}}];
               {% if content.belongsto == 'community' %}
                 <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
               {% endif %}
-              {% if content.belongsto == 'group' %}
-                <a href="{% url 'group_view' content.group.pk  %}">{{ content.group }}</a>
-              {% endif %}
             </td>
             <td>
               {% if content.type == 'article' %}
@@ -236,48 +199,6 @@ var articlesContributed = [{{total}}];
   <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
   <script>
     $(function() {
-      (function(name) {
-        var container = $('#pagination-mygroups');
-
-        var sources = function () {
-          var result = [];
-          {% for grp in mygroups %}
-            var temp = ''
-            {% if grp.role.name == 'author' %}
-              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
-            {% elif grp.role.name == 'publisher' %}
-              temp += '<i class="fa fa-print" style="top:3px;"></i> '
-            {% else %}
-              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
-            {% endif %}
-            temp += '<a href="{% url 'group_view' grp.group.pk %}">' + '{{ grp.group }}' + '</a>';
-            result.push(temp);
-          {% endfor %}
-          return result;
-        }();
-
-        var options = {
-          dataSource: sources,
-          pageSize: 5,
-          showGoInput: true,
-          showGoButton: true,
-          showPageNumbers: false,
-          showNavigator: true,
-
-          callback: function (data, pagination) {
-            var dataHtml = '';
-            //Get the datasource (item)
-            $.each(data, function (index, item) {
-              dataHtml += item + '<br />';
-            });
-            dataHtml += '<br />'
-            //Add data to container
-            container.prev().html(dataHtml);
-          }
-        };
-        container.pagination(options);
-      })('mygroups-pagination');
-
       (function(name) {
         var container = $('#pagination-mycommunities');
 
