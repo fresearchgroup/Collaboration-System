@@ -23,8 +23,12 @@ class Community(models.Model):
     created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
     forum_link = models.CharField(null=True, max_length=100)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('community_view', kwargs={'pk': self.id})
+
     def __str__(self):
-            return self.name
+        return self.name
 
 
 class CommunityMembership(models.Model):
