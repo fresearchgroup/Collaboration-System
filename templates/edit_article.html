@@ -38,13 +38,25 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
   </li>
+  <li class="nav-item">
+      <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
+  </li>
 </ul>
 </div>
+{% if messages %}
+<div class="alert alert-warning" role="alert">
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
 <br/>
 
     {%if belongs_to == 'community' %}
        {%if transition.to_state.name == 'publish' %}
-            {%if cmember.role.name == 'publisher' or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
+            {%if cmember.role.name == 'publisher' and  article.article.created_by != request.user or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
 
 
                       <form method="post" enctype="multipart/form-data">
@@ -71,6 +83,7 @@
                       <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                       <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
                       <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                      <button type="submit" class="btn btn-outline-info"  name="state" value='{{reject.to_state.name}}' id = "rejectcomarticle">Reject</button>
                       <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
             {% endif %}
         {%elif cmember.role%}

@@ -10,6 +10,9 @@
 {% if request.POST.mediaof == "community" %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
 {% endif %}
+{% if request.POST.mediaof == "group" %}
+  <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
+{% endif %}
   <li class="breadcrumb-item active">Upload {{request.POST.mediatype}}</li>
 {% endblock %}
 
@@ -28,6 +31,9 @@
       {% if request.POST.mediaof == "community" %}
         <input type = 'hidden' name = 'cid' value = {{community.pk}}>
       {% endif %}
+      {% if request.POST.mediaof == "group" %}
+        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
+      {% endif %}
     <input type="hidden" name="status" value={{status}}>
   <div class="form-group custom-file">
     <label for="media">Upload {{request.POST.mediatype}}</label>
@@ -44,6 +50,12 @@
       <input type='hidden' id="mediatype" name="mediatype" value="Video">
       {% endif %}
   </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" required>
+      
+    </textarea>
+  </div>
   {% if status == 1 %}
   <button id="media_create" type="submit" class="btn btn-primary">Create</button>
   {% endif %}
@@ -52,7 +64,17 @@
 {% endif %}
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#description' ) )
+    .then( description => {
+      console.log( description );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

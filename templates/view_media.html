@@ -14,9 +14,15 @@
   }
 </style>
 {% endblock %} {% load mptt_tags %} {% block breadcrumb %}
-<li class="breadcrumb-item active"><a href="{% url 'community_view' cmedia.community.pk %}"> {{ cmedia.community.name }} </a></li>
-<li class="breadcrumb-item active">{{ cmedia.media.mediatype }} </li>
-<li class="breadcrumb-item active">{{ cmedia.media.title }} </li>
+{% if gcmedia.community.name %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' gcmedia.community.pk %}"> {{ gcmedia.community.name }} </a></li>
+{% endif %}
+{% if gcmedia.group.name %}
+<li class="breadcrumb-item active"><a href="{% url 'group_view' gcmedia.group.pk %}"> {{ gcmedia.group.name }} </a></li>
+{% endif %}
+
+<li class="breadcrumb-item active">{{ gcmedia.media.mediatype }} </li>
+<li class="breadcrumb-item active">{{ gcmedia.media.title }} </li>
 {% endblock %} {% block content %}
 
 <div class="container-fluid ">
@@ -25,15 +31,18 @@
       <div>
         <ul class="nav nav-tabs">
           <li class="nav-item active">
-            <a class="nav-link " href="{% url 'media_view' cmedia.media.pk %}">View</a>
+            <a class="nav-link " href="{% url 'media_view' gcmedia.media.pk %}">View</a>
           </li>
           {% if user.is_authenticated %} 
-            {% if cmedia.media.state.name != 'publish'%}
+            {% if gcmedia.media.state.name != 'publish'%}
               <li class="nav-item ">
-                <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' cmedia.media.pk %}">Edit</a>
+                <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' gcmedia.media.pk %}">Edit</a>
               </li>
             {%endif%} 
           {% endif %}
+          <li class="nav-item">
+            <a href="{% url 'media_reports' gcmedia.media.pk%}" id="media_reports_id" class="nav-link">Reports</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -41,56 +50,75 @@
   <br/>
 
   <div class="blog-item">
-      <h2><a href="#">{{ cmedia.media.title }} </a></h2>
+      <h2><a href="#">{{ gcmedia.media.title }} </a></h2>
   </div>
   <div class="row">
     <div class="col-md-6 col-sm-6">
-      {% if cmedia.media.mediatype == 'Image' %}
-        <img src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" alt="image" class="img-responsive">
+      {% if gcmedia.media.mediatype == 'Image' %}
+        <img src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" alt="image" class="img-responsive">
       {% endif %}
-      {% if cmedia.media.mediatype == 'Audio' %}
-        <iframe height="70" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" class="margin-bottom-10"></iframe>
+      {% if gcmedia.media.mediatype == 'Audio' %}
+        <audio controls>
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+        </audio>
       {% endif %}
-      {% if cmedia.media.mediatype == 'Video' %}
-        <iframe height="270" allowfullscreen="" style="width:100%; border:0" src="{{ MEDIA_URL }}{{ cmedia.media.mediafile}}" class="margin-bottom-10"></iframe>
+      {% if gcmedia.media.mediatype == 'Video' %}
+        <video class="img-responsive margin-bottom-10" style="width: 100%; border: 1px solid red;" controls>
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
+          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
+        </video>      
       {% endif %}
     </div>
     <div class="col-md-6 col-sm-6">
       <h4> 
         <i class="fa fa-user"></i> 
-        <a href="{% url 'display_user_profile' cmedia.media.created_by %}">
-          {{cmedia.media.created_by}}
+        <a href="{% url 'display_user_profile' gcmedia.media.created_by %}">
+          {{gcmedia.media.created_by}}
         </a> 
       </h4>
       <h4> 
-        <i class="fa fa-calendar"></i> {{cmedia.media.created_at}} 
+        <i class="fa fa-calendar"></i> {{gcmedia.media.created_at}} 
       </h4>
 
       <h4>
-      {% if cmedia.community.name %}
-        <i class="fa fa-users"></i> <a href="{% url 'community_view' cmedia.community.pk %}">{{cmedia.community.name}}</a> Community
+      {% if gcmedia.community.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'community_view' gcmedia.community.pk %}">{{gcmedia.community.name}}</a> Community
       {% endif %}
-      {% if cmedia.group.name %}
-        <i class="fa fa-users"></i> <a href="{% url 'group_view' cmedia.group.pk %}">{{cmedia.group.name}}</a> Group
+      {% if gcmedia.group.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'group_view' gcmedia.group.pk %}">{{gcmedia.group.name}}</a> Group
       {% endif %}      
       </h4>
 
       <h4>
-        {% if cmedia.media.state.name == 'draft' %}
+        {% if gcmedia.media.state.name == 'draft' %}
           <i class="fa fa-cut"></i> Draft 
         {% endif %} 
-        {% if cmedia.media.state.name == 'visible' %}
+        {% if gcmedia.media.state.name == 'private' %}
+          <i class="fa fa-eye-slash"></i> Private 
+        {% endif %} 
+        {% if gcmedia.media.state.name == 'visible' %}
           <i class="fa fa-bullhorn"></i> Visible 
         {% endif %} 
-        {% if cmedia.media.state.name == 'publishable' %}
+        {% if gcmedia.media.state.name == 'publishable' %}
           <i class="fa fa-bell"></i> Publishable 
         {% endif %} 
-        {% if cmedia.media.state.name == 'publish' %}
+        {% if gcmedia.media.state.name == 'publish' %}
           <i class="fa fa-save"></i> Published 
         {% endif %}
       </h4>
+
+      <h4>
+        {{myhtml|safe}}{% autoescape off%} {{mediametadata.metadata.description}} {% endautoescape%}
+      </h4>
     </div>
   </div>
+  {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %}
+
 </div>
 <br />
 {% endblock %} 

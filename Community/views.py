@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityImages, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -31,8 +31,9 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Image.views import create_image
 from Media.views import create_media
+from metadata.views import create_metadata
+from metadata.models import MediaMetadata
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -470,7 +471,7 @@ def community_content(request, pk):
 		if membership:
 			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username, workflow_states.name as state from workflow_states, Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.state_id=workflow_states.id and course.id=ccourses.course_id and ccourses.community_id=%s and course.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
-			cmedia = CommunityImages.objects.raw('select "media" as type, media.id, media.title, media.mediafile as image, media.mediatype, media.created_at, username, workflow_states.name as state from workflow_states, Media_media as media, Community_communitymedia as cmedia, auth_user au where au.id=media.created_by_id and media.state_id=workflow_states.id and media.id=cmedia.media_id and cmedia.community_id=%s and media.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+			cmedia = CommunityMedia.objects.raw('select "media" as type, media.id, media.title, media.mediafile as image, media.mediatype, media.created_at, username, workflow_states.name as state from workflow_states, Media_media as media, Community_communitymedia as cmedia, auth_user au where au.id=media.created_by_id and media.state_id=workflow_states.id and media.id=cmedia.media_id and cmedia.community_id=%s and media.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
 			ch5p = []
 			print('new test')
 			try:
@@ -508,6 +509,7 @@ def community_group_content(request, pk):
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
 			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
+			cgmedia = CommunityGroups.objects.raw('select "media" as type, username, media.id, media.title, media.mediafile as image, media.created_at, gg.name from auth_user au, Media_media as media join (select * from Group_groupmedia where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on media.id=t.media_id join Group_group gg on gg.id=group_id and gg.visibility=1 where media.state_id=2 and au.id=media.created_by_id;', [community.pk])
 			cgh5p = []
 			try:
 				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
@@ -528,7 +530,7 @@ def community_group_content(request, pk):
 				print(e)
 				print("H5P server down...Sorry!! We will be back soon")
 
-			lstfinal = list(cgarticles) + list(cgh5p)
+			lstfinal = list(cgarticles) + list(cgmedia) + list(cgh5p)
 			page = request.GET.get('page', 1)
 			paginator = Paginator(list(lstfinal), 5)
 			try:
@@ -684,7 +686,9 @@ def community_media_create(request):
 			community = Community.objects.get(pk=cid)
 			if status=='1':
 				media = create_media(request)
+				metadata = create_metadata(request)
 				CommunityMedia.objects.create(media=media, user=request.user, community=community)
+				MediaMetadata.objects.create(media=media, metadata=metadata)
 				return redirect('media_view', media.pk)
 			else:
 				return render(request, 'new_media.html', {'community':community, 'status':1})
@@ -692,3 +696,4 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+		

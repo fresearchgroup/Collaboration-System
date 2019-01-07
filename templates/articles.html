@@ -3,7 +3,9 @@
 {% load comments_xtd %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">Resources</li>
+<li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +18,7 @@
    <div class="details">
       <h3>No Content</h3>
       <p>
-         Sorry, currently there are no published articles from any community or group. 
+         Sorry, currently there are no published articles from any community or group.
       </p>
    </div>
 </div>
@@ -58,7 +60,7 @@
   <hr class="blog-post-sep">
 {% endfor %}
 </div>
-{%if favs != ''%}
+{% if not favs %}
 <div class="col-md-2 col-sm-2">
                 <div class="card" style="width: 18rem;">
                   <div class="card-header alert alert-warning">

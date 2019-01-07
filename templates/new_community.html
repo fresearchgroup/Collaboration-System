@@ -6,9 +6,9 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item">Community Creation</li>
   {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+  <!--li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></-->
   {% endif %}
 
 {% endblock %}

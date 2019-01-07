@@ -1,5 +1,6 @@
 /* Reset rounded corners for all elements */
-div,
+/* Commented this because it was causing problems with sweetalert2's css */
+/* div,
 input,
 select,
 textarea,
@@ -19,7 +20,7 @@ li {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
-}
+} */
 
 a,
 a:focus,

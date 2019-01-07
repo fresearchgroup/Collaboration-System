@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as Roles
 from BasicArticle.models import Articles
 import os, uuid
+from Media.models import Media
 
 # Create your models here.
 def get_file_path(instance, filename):
@@ -41,3 +42,8 @@ class GroupInvitations(models.Model):
     role = models.ForeignKey(Roles, null=True, related_name='groupinvitations')
     status = models.CharField(null=True, max_length=100)
     group = models.ForeignKey(Group, related_name='groupinvitations')
+
+class GroupMedia(models.Model):
+	media = models.ForeignKey(Media, null=True, related_name='groupmedia')
+	user = models.ForeignKey(User, null=True, related_name='groupmedia')
+	group = models.ForeignKey(Group, null=True, related_name='groupmedia')	
