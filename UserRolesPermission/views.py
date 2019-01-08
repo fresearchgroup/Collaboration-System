@@ -22,6 +22,7 @@ from django.core import serializers
 from datetime import date
 from decouple import config
 from etherpad.views import create_ether_user
+from django.db.models import Q
 
 def signup(request):
     """
@@ -140,11 +141,11 @@ def home(request):
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
-	countcommunity = Community.objects.all().count()
-	countgroup = Group.objects.all().count()
+	countcommunity = Community.objects.filter(parent = None).count()
+	countsubcomm = Community.objects.filter(~Q(parent = None)).count()
 	countarticles = Articles.objects.filter(state=state).count()
 	countusers = User.objects.all().count()
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countgroup':countgroup, 'countarticles':countarticles, 'countusers':countusers})
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:
