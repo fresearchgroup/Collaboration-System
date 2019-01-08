@@ -236,13 +236,3 @@ def favourites(request):
                 return HttpResponse('removed')
         return HttpResponse('ok')
 
-@csrf_exempt
-def group_invitations(request):
-    userid = request.GET.get('userid', None)
-    try:
-        user = User.objects.get(id=userid)
-        grpinvitations = GroupInvitations.objects.filter(status='Invited', user=user).values('id', 'status', 'group__name', 'group__id', 'group__image')
-        grpinvitations_list = list(grpinvitations)
-        return JsonResponse(grpinvitations_list, safe=False)
-    except User.DoesNotExist:
-        return JsonResponse('', safe=False)

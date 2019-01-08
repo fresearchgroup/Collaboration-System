@@ -141,7 +141,6 @@ urlpatterns = [
 
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
-    url(r'^group-invitations/$', user_views.group_invitations, name='group_invitations'),
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
