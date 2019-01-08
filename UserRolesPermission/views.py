@@ -1,11 +1,10 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles, Group, GroupInvitations, GroupMedia
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
