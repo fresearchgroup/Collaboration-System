@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect
-
+from django.contrib import messages
 
 
 def canEditResourceCommunity(state, role, resource, request):
-	errormessage = 'True'
 	if state=='publishable' and role=='author':
-		errormessage = 'Since it is publishable only the publishers can edit this'
+		messages.warning(request, 'Since it is publishable only the publishers can edit this')
+		return False
 	if state=='publishable' and request.user == resource.created_by:
-		errormessage = 'You cannot edit your own content when it is publishable state'
+		messages.warning(request, 'You cannot edit your own content when it is publishable state')
+		return False
 	if state=='publish':
-		errormessage = 'You cannot edit content which is already published'
-	return errormessage
+		messages.warning(request, 'You cannot edit content which is already published')
+		return False
+	return True
 
 def getStatesCommunity(current_state):
 	states = []
