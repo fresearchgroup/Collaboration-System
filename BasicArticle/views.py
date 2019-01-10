@@ -171,8 +171,16 @@ class ArticleEditView(UpdateView):
 		"""
 		If the form is valid, save the associated model.
 		"""
-		self.object = form.save()
-		return super(ModelFormMixin, self).form_valid(form)
+		self.object = form.save(commit=False)
+		self.object.body = getHTML(self.object)
+		self.object.save()
+		if self.is_visible():
+			self.process_visible()
+		if self.is_publishable():
+			self.process_publishable()
+		if self.object.state.final:
+			self.process_final()
+        return super(ArticleEditView, self).form_valid(form)
 
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
@@ -185,6 +193,31 @@ class ArticleEditView(UpdateView):
 		community = CommunityMembership.objects.get(user =request.user, community = community)
 		return community.role
 
+	def is_visible(slef):
+		if self.object.state == States.objects.get(name='visible'):
+			return True
+		return False
+
+	def is_publishable(slef):
+		if self.object.state == States.objects.get(name='publishable'):
+			return True
+		return False
+
+	def process_final(self):
+		self.object.published_on = datetime.datetime.now()
+		self.object.published_by=self.request.user
+		self.object.save()
+		create_resource_feed(self.object,'article_published',self.object.created_by)
+		notify_update_article_state(self.request.user, self.object,'published')
+		return
+
+	def process_visible(self):
+		return
+
+	def process_publishable(self):
+		notify_update_article_state(self.request.user,self.object,'publishable')
+		create_resource_feed(self.object,"article_no_edit",self.request.user)
+		return
 
 def delete_article(request, pk):
 	"""
