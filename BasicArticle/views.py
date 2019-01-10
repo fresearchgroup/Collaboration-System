@@ -28,6 +28,7 @@ import requests
 from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id, get_pad_usercount
 from django.contrib import messages
 from workflow.views import canEditResourceCommunity
+from django.urls import reverse
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -140,6 +141,7 @@ class ArticleEditView(UpdateView):
 	template_name = 'edit_article.html'
 	pk_url_kwarg = 'pk'
 	context_object_name = 'article'
+	success_url = 'article_view'
 
 	def get(self, request, *args, **kwargs):
 		self.object = self.get_object()
@@ -172,15 +174,18 @@ class ArticleEditView(UpdateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
-		self.object.body = getHTML(self.object)
-		self.object.save()
-		if self.is_visible():
-			self.process_visible()
-		if self.is_publishable():
-			self.process_publishable()
-		if self.object.state.final:
-			self.process_final()
-        return super(ArticleEditView, self).form_valid(form)
+		if get_pad_usercount(self.object.pk) <= 1:
+			self.object.body = getHTML(self.object)
+			self.object.save()
+			if self.is_visible():
+				self.process_visible()
+			if self.is_publishable():
+				self.process_publishable()
+			if self.object.state.final:
+				self.process_final()
+			return super(ArticleEditView, self).form_valid(form)
+		messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes.')
+		return super(ArticleEditView, self).form_invalid(form)
 
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
@@ -193,12 +198,12 @@ class ArticleEditView(UpdateView):
 		community = CommunityMembership.objects.get(user =request.user, community = community)
 		return community.role
 
-	def is_visible(slef):
+	def is_visible(self):
 		if self.object.state == States.objects.get(name='visible'):
 			return True
 		return False
 
-	def is_publishable(slef):
+	def is_publishable(self):
 		if self.object.state == States.objects.get(name='publishable'):
 			return True
 		return False
@@ -219,6 +224,7 @@ class ArticleEditView(UpdateView):
 		create_resource_feed(self.object,"article_no_edit",self.request.user)
 		return
 
+	
 def delete_article(request, pk):
 	"""
 	a function to delete an article.
