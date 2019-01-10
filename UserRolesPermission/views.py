@@ -1,11 +1,10 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles, Group, GroupInvitations, GroupMedia
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
@@ -22,6 +21,7 @@ from django.core import serializers
 from datetime import date
 from decouple import config
 from etherpad.views import create_ether_user
+from django.db.models import Q
 
 def signup(request):
     """
@@ -140,11 +140,11 @@ def home(request):
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
-	countcommunity = Community.objects.all().count()
-	countgroup = Group.objects.all().count()
+	countcommunity = Community.objects.filter(parent = None).count()
+	countsubcomm = Community.objects.filter(~Q(parent = None)).count()
 	countarticles = Articles.objects.filter(state=state).count()
 	countusers = User.objects.all().count()
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countgroup':countgroup, 'countarticles':countarticles, 'countusers':countusers})
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:
@@ -182,14 +182,12 @@ def display_user_profile(request, username):
     if request.user.is_authenticated:
         userinfo = User.objects.get(username=username)
         communities = CommunityMembership.objects.filter(user=userinfo)
-        groups = GroupMembership.objects.filter(user=userinfo)
         commarticles = CommunityArticles.objects.filter(user=userinfo)
-        grparticles = GroupArticles.objects.filter(user=userinfo)
         try:
             user_profile = ProfileImage.objects.get(user=userinfo)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
-        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'user_profile':user_profile})
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'commarticles':commarticles, 'user_profile':user_profile})
     else:
         return redirect('login')
 
@@ -237,13 +235,3 @@ def favourites(request):
                 return HttpResponse('removed')
         return HttpResponse('ok')
 
-@csrf_exempt
-def group_invitations(request):
-    userid = request.GET.get('userid', None)
-    try:
-        user = User.objects.get(id=userid)
-        grpinvitations = GroupInvitations.objects.filter(status='Invited', user=user).values('id', 'status', 'group__name', 'group__id', 'group__image')
-        grpinvitations_list = list(grpinvitations)
-        return JsonResponse(grpinvitations_list, safe=False)
-    except User.DoesNotExist:
-        return JsonResponse('', safe=False)
