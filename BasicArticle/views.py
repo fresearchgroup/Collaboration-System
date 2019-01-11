@@ -148,16 +148,16 @@ class ArticleEditView(UpdateView):
 		if self.object.state.initial and self.object.created_by != request.user:
 			return redirect('home')
 		if self.object.state.final:
-			return redirect('article_view',pk=pk)
+			return redirect('article_view',pk=self.object.pk)
 		community = self.get_community()
 		if self.is_communitymember(request, community):
 			role = self.get_communityrole(request, community)
-			if canEditResourceCommunity(self.object.state, role.name, self.object, request):
+			if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
 				response=super(ArticleEditView, self).get(request, *args, **kwargs)
 				sessionid = create_session_community(request, community.id)
 				response.set_cookie('sessionID', sessionid)
 				return response
-		return redirect('community_view',pk=community.pk)
+		return redirect('article_view',pk=self.object.pk)
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
