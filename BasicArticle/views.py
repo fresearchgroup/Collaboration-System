@@ -224,6 +224,21 @@ class ArticleEditView(UpdateView):
 		create_resource_feed(self.object,"article_no_edit",self.request.user)
 		return
 
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse('article_view',kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
 	
 def delete_article(request, pk):
 	"""
