@@ -148,6 +148,7 @@ class ArticleEditView(UpdateView):
 		if self.object.state.initial and self.object.created_by != request.user:
 			return redirect('home')
 		if self.object.state.final:
+			messages.warning(request, 'Published content are are not editable.')
 			return redirect('article_view',pk=self.object.pk)
 		community = self.get_community()
 		if self.is_communitymember(request, community):
@@ -157,7 +158,8 @@ class ArticleEditView(UpdateView):
 				sessionid = create_session_community(request, community.id)
 				response.set_cookie('sessionID', sessionid)
 				return response
-		return redirect('article_view',pk=self.object.pk)
+			return redirect('article_view',pk=self.object.pk)
+		return redirect('commnity_view',pk=community.pk)
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
