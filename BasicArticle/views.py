@@ -231,7 +231,7 @@ class ArticleEditView(UpdateView):
 		Returns the supplied URL.
 		"""
 		if self.success_url:
-			return reverse('article_view',kwargs={'pk': self.object.pk})
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
 		else:
 			try:
 				url = self.object.get_absolute_url()
