@@ -52,27 +52,6 @@ class article_createtests(TestCase):
 		self.assertTrue(view.func, create_article)
 
 
-class article_edittests(TestCase):
-	def test_article_edit_valid_post(self):
-		url = reverse('article_edit', kwargs={'pk': 1})
-		data={
-			'title':'IAS',
-			'body':'Indian Administrative Service(IAS) officer.'
-		}
-		response=self.client.post(url,data)
-		self.assertFalse(Articles.objects.exists())
-
-	def test_edit_article_view_not_found_status_code(self):
-		url = reverse('article_edit', kwargs={'pk': 99})
-		response = self.client.get(url)
-		self.assertTrue(response.status_code, 404)
-
-	def test_edit_article_url_resolves_edit_article(self):
-		view = resolve('/article-edit/1/')
-		self.assertEquals(view.func, edit_article)
-
-
-
 class article_deletetests(TestCase):
 	def test_delete_article_valid_post_data(self):
 		url = reverse('article_delete', kwargs={'pk': 1})
