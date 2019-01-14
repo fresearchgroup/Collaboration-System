@@ -186,8 +186,13 @@ class ArticleEditView(UpdateView):
 			if self.object.state.final:
 				self.process_final()
 			return super(ArticleEditView, self).form_valid(form)
-		messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes.')
-		return super(ArticleEditView, self).form_invalid(form)
+		elif self.object.state == self.model.objects.get(pk=self.object.pk).state:
+			self.object.body = getHTML(self.object)
+			self.object.save()
+			return super(ArticleEditView, self).form_valid(form)
+		else:
+			messages.success(self.request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes in current state.')
+			return super(ArticleEditView, self).form_invalid(form)
 
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
