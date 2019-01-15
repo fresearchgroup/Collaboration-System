@@ -66,12 +66,12 @@ urlpatterns = [
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
-    url(r'^article-edit/(?P<pk>\d*)/$', articleview.edit_article, name='article_edit'),
+    url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
-    url(r'^community-group-create/$', communityview.community_group, name='community_group'),
+    url(r'^community-group-create/(?P<pk>\d*)/$', communityview.community_group, name='community_group'),
 
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
@@ -137,12 +137,10 @@ urlpatterns = [
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
-    url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
 
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
-    url(r'^group-invitations/$', user_views.group_invitations, name='group_invitations'),
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),

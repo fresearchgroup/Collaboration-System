@@ -5,41 +5,41 @@
 {% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
-  <li class="breadcrumb-item active">{{ article.article.title }}</li>
+  <li class="breadcrumb-item active">{{ article.title }}</li>
 {% endblock %}
 {% load static %}
 {% block content %}
 <div>
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link " href="{% url 'article_view' article.article.pk %}">View</a>
+    <a class="nav-link " href="{% url 'article_view' article.pk %}">View</a>
   </li>
   {% if user.is_authenticated %}
-  {% if article.article.state.name != 'publish'%}
+  {% if article.state.name != 'publish' %}
         <li class="nav-item active">
-          <a class="nav-link " href="{% url 'article_edit' article.article.pk %}">Edit</a>
+          <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
         </li>
 
-        {% if cmember.role.name == 'community_admin' or gmember.role.name == 'group_admin' %}
+        {% if role.name == 'community_admin' %}
           <li class="nav-item">
-            <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
+            <a class="nav-link " href="{% url 'article_delete' article.pk %}">Delete</a>
           </li>
-          {% elif article.article.state.name == 'draft' and request.user == article.article.created_by and cmember.role.name or  article.article.state.name == 'draft' and request.user == article.article.created_by and gmember.role.name %}
+          {% elif article.state.name == 'draft' and request.user == article.created_by and role.name %}
           <li class="nav-item">
-            <a class="nav-link " href="{% url 'article_delete' article.article.pk %}">Delete</a>
+            <a class="nav-link " href="{% url 'article_delete' article.pk %}">Delete</a>
           </li>
           {% endif %}
     {%endif%}
   
   <li class="nav-item ">
-    <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
+    <a class="nav-link " href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>
   {% endif %}
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
+    <a class="nav-link" href="{% url 'article_dashboard' article.pk %}">Insights</a>
   </li>
   <li class="nav-item">
-      <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
+      <a class="nav-link" href="{% url 'article_reports' article.pk %}">Reports</a>
   </li>
 </ul>
 </div>
@@ -54,192 +54,45 @@
 {% endif %}
 <br/>
 
-    {%if belongs_to == 'community' %}
-       {%if transition.to_state.name == 'publish' %}
-            {%if cmember.role.name == 'publisher' and  article.article.created_by != request.user or cmember.role.name == 'community_admin' and  article.article.created_by != request.user%}
-
-
-                      <form method="post" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-                        <div class="invalid-feedback"></div>
-                      </div>
-                      <div class="form-group">
-                        <label for="body">Body</label>
-                        <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
-                        <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-                        </div>
-                        {% if article.article.image %}
-                        <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
-                        {% else %}
-                        <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-                        {%endif%}<br />
-                        <div class="form-group custom-file">
-                          <label for="image">Article Image</label>
-                          <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                      </div>
-                      <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                      <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
-                      <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                      <button type="submit" class="btn btn-outline-info"  name="state" value='{{reject.to_state.name}}' id = "rejectcomarticle">Reject</button>
-                      <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id="publish">{{transition.to_state.name}}</button>
-            {% endif %}
-        {%elif cmember.role%}
-                <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="title">Title</label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-                  <div class="invalid-feedback"></div>
-                </div>
-                <div class="form-group">
-                  <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
-                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-                  </div>
-                  {% if article.article.image %}
-                  <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
-                  {% else %}
-                  <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-                  {%endif%}<br />
-                   <div class="form-group custom-file">
-                    <label for="image">Article Image</label>
-                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>
-                  <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
-        {% endif %}
-    {% endif %}
-
-    {%if belongs_to == 'group' %}
-        {% if article.article.state.name == 'visible' and cmember.role.name == 'publisher' and article.article.created_by != request.user or article.article.state.name == 'visible' and cmember.role.name == 'community_admin' and article.article.created_by != request.user %}
 
             <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="title">Title</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-              <div class="invalid-feedback"></div>
-            </div>
-            <div class="form-group">
-              <label for="body">Body</label>
-              <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
-              <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-              </div>
-              {% if article.article.image %}
-              <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
-              {% else %}
-              <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-              {%endif%}<br />
-              <div class="form-group custom-file">
-                    <label for="image">Article Image</label>
-                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>
-              <input type="hidden" class="form-control"  name="belongs_to" value='{{belongs_to}}' >
-            <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-            <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-            <button type="submit" id="state_change_id"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">{{transition.to_state.name}}</button>
-            <button type="submit"  class="btn btn-outline-info"  name="private" value='{{private}}' id = "reject"> Reject </button>
-        {%endif%}
+                      {% csrf_token %}
 
-           {%if article.article.state.name == 'private' %}
-                {%if gmember.role.name == 'publisher' or gmember.role.name == 'group_admin'%}
-                <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="title">Title</label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-                  <div class="invalid-feedback"></div>
-                </div>
+                  <div class="form-group">
+                    <label for="title">Title</label>
+                    {{ form.title }}
+                    <div class="invalid-feedback">
+                      {{ form.title.errors }}
+                    </div>
+                  </div>
+
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
+                  <iframe src="{{url}}/p/{{padid}}" style="height: 50%; width: 100%; min-height: 200px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
-                  {% if article.article.image %}
-                  <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
+
+                  {% if article.image %}
+                  <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive" width="150">
                   {% else %}
                   <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
                   {%endif%}<br />
                   <div class="form-group custom-file">
                     <label for="image">Article Image</label>
-                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>    
-                <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">             {{transition.to_state.name}}</button>
-            {%endif%}
-           {%endif%}
-            {%if article.article.state.name == 'private' and gmember.role.name == 'author'%}
-                <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="title">Title</label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-                  <div class="invalid-feedback"></div>
+                      {{form.image}}
                 </div>
+
                 <div class="form-group">
-                  <label for="body">Body</label>
-                  <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
-                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-                  </div>
-                  {% if article.article.image %}
-                  <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
-                  {% else %}
-                  <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-                  {%endif%}<br />
-                  <div class="form-group custom-file">
-                    <label for="image">Article Image</label>
-                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>  
-                  <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
+                  {{form.state}}
+                </div>
 
-             {%endif%}
-
-             {%if article.article.state.name == 'draft'%}
-             <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="give a title to the content" value='{{article.article.title}}' required>
-                <div class="invalid-feedback"></div>
+                <div class="form-group">
+                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Submit</button>
               </div>
-              <div class="form-group">
-                <label for="body">Body</label>
-                <iframe src="{{url}}/p/{{padid}}" style="height: 95%; width: 100%; min-height: 500px; display: block"></iframe>
-                <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
-                </div>
-                {% if article.article.image %}
-                <img src="{{ MEDIA_URL }}{{ article.article.image}}" alt="image" class="img-responsive" width="150">
-                {% else %}
-                <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
-                {%endif%}<br />
-                <div class="form-group custom-file">
-                    <label for="image">Article Image</label>
-                    <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>
-                <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
-                <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
-                <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}'id = "visible">
-                   {{transition.to_state.name}}</button>
-             {%endif%}
-
-
-    {% endif %}
-  </form>
+              
+          </form>
+  
 <br />
-{% if belongs_to == 'community' and cmember.role == None%}
-<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not a member. Please join <a class="nav-link " href="{% url 'community_view' article.community.pk %}">{{ article.community}}</samp></div></div>
-{%endif%}
-{% if belongs_to == 'group' and gmember.role == None%}
-<div class="panel-body"><div class="alert alert-danger" role="alert"><samp>You are not a member. Please join <a class="nav-link " href="{% url 'group_view' article.group.pk %}">{{ article.group}}</samp></div></div>
-{%endif%}
-
 </div>
 
 </div>

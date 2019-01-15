@@ -45,14 +45,14 @@
     <div class="content-page">
       <div class="row">
         <!-- BEGIN LEFT most SIDEBAR -->
-        <div class="col-md-6 col-sm-6 blog-sidebar">
+        <div class="col-md-9 col-sm-9 blog-sidebar">
 
       <h2>Articles</h2>
       <table id="userArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
           <tr style="background-color:#E84D1C">
             <th style="color:white">Article</th>
-            <th style="color:white">Community / Group</th>
+            <th style="color:white">Community</th>
           </tr>
           </thead>
         <tbody>
@@ -64,19 +64,6 @@
               </td>
               <td>
                 <a href="{% url 'community_view' cart.community.pk %}">{{ cart.community }}</a>
-              </td>
-            </tr>
-          {% endfor %}
-          {% endautoescape%}
-
-          {{myhtml|safe}}{% autoescape off%}
-          {% for gart in grparticles %}
-            <tr>
-              <td>
-                <a href="{% url 'article_view' gart.article.pk %}"> {{ gart.article }} </a>
-              </td>
-              <td>
-                <a href="{% url 'group_view' gart.group.pk  %}"> {{ gart.group }} </a>
               </td>
             </tr>
           {% endfor %}
@@ -105,24 +92,6 @@
     </div>
     <!-- END LEFT most SIDEBAR -->
 
-    <!-- BEGIN right  -->
-    <div class="col-md-3 col-sm-3 blog-sidebar">
-      <h2>Groups</h2>
-      <ul class="nav sidebar-categories margin-bottom-40">
-      {{myhtml|safe}}{% autoescape off%}
-      {% for grp in groups %}
-        {% if grp.role.name == 'author' %}
-        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-pencil"></i> {{ grp.group }} </a> </li>
-        {% elif grp.role.name == 'publisher' %}
-        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-print"></i> {{ grp.group }} </a> </li>
-        {% else %}
-        <li><a href="{% url 'group_view' grp.group.pk %}"><i class="fa fa-trophy"></i> {{ grp.group }} </a> </li>
-        {% endif %}
-      {% endfor %}
-      {% endautoescape%}
-      </ul>
-    </div>
-    <!-- end right -->
   </div>
 </div></div>
 <!-- END CONTENT -->

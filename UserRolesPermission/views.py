@@ -1,11 +1,10 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
-from Group.models import GroupMembership, GroupArticles, Group, GroupInvitations, GroupMedia
 from django.contrib.auth.models import User
 from workflow.models import States
 from Community.models import Community
@@ -22,6 +21,7 @@ from django.core import serializers
 from datetime import date
 from decouple import config
 from etherpad.views import create_ether_user
+from django.db.models import Q
 
 def signup(request):
     """
@@ -87,21 +87,14 @@ def user_dashboard(request):
             user_profile = "No Image available"
 
         mycommunities = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
-        mygroups = GroupMembership.objects.filter(user=request.user).order_by('group__name')
 
         commarticles = CommunityArticles.objects.filter(user=request.user)
-        grparticles = GroupArticles.objects.filter(user=request.user)
         commcourses = CommunityCourses.objects.filter(user=request.user)
         commmedia = CommunityMedia.objects.filter(user=request.user)
-        grpmedia = GroupMedia.objects.filter(user=request.user)
 
         for cart in commarticles:
             cart.type = 'article'
             cart.belongsto = 'community'
-
-        for gart in grparticles:
-            gart.type = 'article'
-            gart.belongsto = 'group'
 
         for ccourse in commcourses:
             ccourse.type = 'course'
@@ -111,18 +104,13 @@ def user_dashboard(request):
             cmedia.type = 'Media'
             cmedia.belongsto = 'community'
 
-        for gmedia in grpmedia:
-            gmedia.type = 'Media'
-            gmedia.belongsto = 'group'
-
-        lstContent = list(commarticles) + list(grparticles) +  list(commmedia) + list(grpmedia) + list(commcourses)
+        lstContent = list(commarticles) + list(commmedia) + list(commcourses)
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
-        grpinvitations = GroupInvitations.objects.filter(status='Invited', user=request.user)
 
         ap = User.objects.raw(
-        'Select 1 id, Year, Sum(JAN) JAN,sum(FEB) FEB,sum(MAR) MAR,sum(APR) APR,sum(MAY) MAY,sum(JUN) JUN,sum(JUL) JUL,sum(AUG) AUG,sum(SEP) SEP,sum(OCT) OCT,sum(NOV) NOV,sum(DECEM) DECE, Concat(Sum(JAN) , "," , sum(FEB) , "," ,sum(MAR),",",sum(APR),",",sum(MAY),",",sum(JUN),",",sum(JUL),",",sum(AUG),",", sum(SEP) ,",",sum(OCT),",",sum(NOV),",",sum(DECEM)) Data,state_id State from (Select Year, Case when Month=1 Then 1 else 0 END JAN, Case when Month=2 Then 1 else 0 END FEB, Case when Month=3 Then 1 else 0 END MAR, Case when Month=4 Then 1 else 0 END APR, Case when Month=5 Then 1 else 0 END MAY, Case when Month=6 Then 1 else 0 END JUN, Case when Month=7 Then 1 else 0 END JUL, Case when Month=8 Then 1 else 0 END AUG, Case when Month=9 Then 1 else 0 END SEP, Case when Month=10 Then 1 else 0 END OCT, Case when Month=11 Then 1 else 0 END NOV, Case when Month=12 Then 1 else 0 END DECEM, state_id from  (select  Month(created_at) Month ,Year(created_at) Year ,state_id from BasicArticle_articles where id in (select article_id from Community_communityarticles where user_id=%s) or id in (select article_id from Group_grouparticles where user_id=%s)) T ) P group by Year,state_id having Year=%s;',
-        [request.user.id,request.user.id, yearby] )
+        'Select 1 id, Year, Sum(JAN) JAN,sum(FEB) FEB,sum(MAR) MAR,sum(APR) APR,sum(MAY) MAY,sum(JUN) JUN,sum(JUL) JUL,sum(AUG) AUG,sum(SEP) SEP,sum(OCT) OCT,sum(NOV) NOV,sum(DECEM) DECE, Concat(Sum(JAN) , "," , sum(FEB) , "," ,sum(MAR),",",sum(APR),",",sum(MAY),",",sum(JUN),",",sum(JUL),",",sum(AUG),",", sum(SEP) ,",",sum(OCT),",",sum(NOV),",",sum(DECEM)) Data,state_id State from (Select Year, Case when Month=1 Then 1 else 0 END JAN, Case when Month=2 Then 1 else 0 END FEB, Case when Month=3 Then 1 else 0 END MAR, Case when Month=4 Then 1 else 0 END APR, Case when Month=5 Then 1 else 0 END MAY, Case when Month=6 Then 1 else 0 END JUN, Case when Month=7 Then 1 else 0 END JUL, Case when Month=8 Then 1 else 0 END AUG, Case when Month=9 Then 1 else 0 END SEP, Case when Month=10 Then 1 else 0 END OCT, Case when Month=11 Then 1 else 0 END NOV, Case when Month=12 Then 1 else 0 END DECEM, state_id from  (select  Month(created_at) Month ,Year(created_at) Year ,state_id from BasicArticle_articles where id in (select article_id from Community_communityarticles where user_id=%s) ) T ) P group by Year,state_id having Year=%s;',
+        [request.user.id, yearby] )
         visiblelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         publishablelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         articlespublished = ''
@@ -142,7 +130,7 @@ def user_dashboard(request):
         for a in articlescontributed:
             total = total + ',' + a
         total=total[1:]
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'mygroups':mygroups, 'commarticles':commarticles, 'grparticles':grparticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile, 'grpinvitations':grpinvitations, 'lstContent':lstContent})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile, 'lstContent':lstContent})
     else:
         return redirect('login')
 
@@ -152,11 +140,11 @@ def home(request):
 	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
-	countcommunity = Community.objects.all().count()
-	countgroup = Group.objects.all().count()
+	countcommunity = Community.objects.filter(parent = None).count()
+	countsubcomm = Community.objects.filter(~Q(parent = None)).count()
 	countarticles = Articles.objects.filter(state=state).count()
 	countusers = User.objects.all().count()
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countgroup':countgroup, 'countarticles':countarticles, 'countusers':countusers})
+	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:
@@ -194,14 +182,12 @@ def display_user_profile(request, username):
     if request.user.is_authenticated:
         userinfo = User.objects.get(username=username)
         communities = CommunityMembership.objects.filter(user=userinfo)
-        groups = GroupMembership.objects.filter(user=userinfo)
         commarticles = CommunityArticles.objects.filter(user=userinfo)
-        grparticles = GroupArticles.objects.filter(user=userinfo)
         try:
             user_profile = ProfileImage.objects.get(user=userinfo)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
-        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'groups':groups, 'commarticles':commarticles, 'grparticles':grparticles, 'user_profile':user_profile})
+        return render(request, 'userprofile.html', {'userinfo':userinfo, 'communities':communities, 'commarticles':commarticles, 'user_profile':user_profile})
     else:
         return redirect('login')
 
@@ -249,13 +235,3 @@ def favourites(request):
                 return HttpResponse('removed')
         return HttpResponse('ok')
 
-@csrf_exempt
-def group_invitations(request):
-    userid = request.GET.get('userid', None)
-    try:
-        user = User.objects.get(id=userid)
-        grpinvitations = GroupInvitations.objects.filter(status='Invited', user=user).values('id', 'status', 'group__name', 'group__id', 'group__image')
-        grpinvitations_list = list(grpinvitations)
-        return JsonResponse(grpinvitations_list, safe=False)
-    except User.DoesNotExist:
-        return JsonResponse('', safe=False)

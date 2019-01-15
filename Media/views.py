@@ -1,11 +1,10 @@
 from django.shortcuts import redirect, render
 from .models import Media
 from workflow.models import States
-from Community.models import CommunityMedia, CommunityMembership, Community, CommunityGroups
-from workflow.views import canEditResourceCommunity, getStatesCommunity, getStatesGroup, canEditResourceGroup
+from Community.models import CommunityMedia, CommunityMembership, Community
+from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
-from Group.models import GroupMedia, Group, GroupMembership
 import requests
 
 def create_media(request):
@@ -29,9 +28,9 @@ def create_media(request):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
+		mediametadata = MediaMetadata.objects.get(media=pk)
 	except CommunityMedia.DoesNotExist:
-		gcmedia = GroupMedia.objects.get(media=pk)
-	mediametadata = MediaMetadata.objects.get(media=pk)
+		return redirect('home')
 	if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
 		return redirect('home')
 	# canEdit = ""
@@ -43,7 +42,10 @@ def media_view(request, pk):
 
 def media_edit(request,pk):
 	if request.user.is_authenticated:
-		media = Media.objects.get(pk=pk)
+		try:
+			media = Media.objects.get(pk=pk)
+		except Media.DoesNotExist:
+			return redirect('home')			
 		mediametadata = MediaMetadata.objects.get(media=media)
 		metadata = Metadata.objects.get(pk=mediametadata.metadata.pk)
 		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
@@ -52,7 +54,7 @@ def media_edit(request,pk):
 		membership = None
 		message = 'True'
 		states = ['']
-		belongsto, commgrp, membership = get_belongsto(pk, request.user.id)
+		commgrp, membership = get_belongsto(pk, request.user.id)
 		if membership:
 			if request.method == 'POST':
 				title = request.POST['name']
@@ -71,16 +73,11 @@ def media_edit(request,pk):
 				metadata.save()
 				return redirect('media_view',pk=pk)
 			else:
-				if belongsto == 'community':
-					states = getStatesCommunity(media.state.name)
-					message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
-				if belongsto == 'group':
-					cmembership = get_comm_membership(commgrp.pk, request.user.id)
-					states = getStatesGroup(media.state.name, membership.role.name)
-					message = canEditResourceGroup(media.state.name, membership.role.name, cmembership.role.name, media, request)
+				states = getStatesCommunity(media.state.name)
+				message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
 				if message != 'True':
 					return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
-				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states, 'belongsto':belongsto})
+				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
 		else:
 			return redirect('media_view',pk=pk)
 	else:
@@ -91,43 +88,22 @@ def media_reports(request, pk):
 		try:
 			gcmedia = CommunityMedia.objects.get(media=pk)
 		except CommunityMedia.DoesNotExist:
-			gcmedia = GroupMedia.objects.get(media=pk)
+			return redirect('home')
 		return render(request, 'reports_media.html', {'gcmedia':gcmedia })
 	
 	return redirect('login')
 
 def get_belongsto(pk, uid):
-	belongsto = ''
-	try:
-		community = CommunityMedia.objects.get(media=pk)
-		commgrp = Community.objects.get(pk=community.community.id)
-		membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
-		belongsto = 'community'
-	except CommunityMedia.DoesNotExist:
-		group = GroupMedia.objects.get(media=pk)
-		commgrp = Group.objects.get(pk=group.group.id)
-		membership = GroupMembership.objects.get(user=uid, group=commgrp.id)
-		belongsto = 'group'
-	return belongsto, commgrp, membership
-
-def get_comm_membership(pk, uid):
-	group = Group.objects.get(pk=pk)
-	community = CommunityGroups.objects.get(group=group)
-	cmembership = CommunityMembership.objects.get(user=uid, community=community.community)
-	return cmembership
+	community = CommunityMedia.objects.get(media=pk)
+	commgrp = Community.objects.get(pk=community.community.id)
+	membership = CommunityMembership.objects.get(user=uid, community=commgrp.id)
+	return commgrp, membership
 
 def display_published_media(request, mediatype):
 	try: 
 		cmedialist = CommunityMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
-		gmedialist = GroupMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
-		
-		for cmedia in cmedialist:
-			cmedia.belongsto = 'community'
 
-		for gmedia in gmedialist:
-			gmedia.belongsto = 'group'
-			
-		medialist = list(cmedialist) +  list(gmedialist)
+		medialist = list(cmedialist)
 		
 		page = request.GET.get('page', 1)
 		paginator = Paginator(list(medialist), 5)

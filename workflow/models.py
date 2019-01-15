@@ -6,9 +6,12 @@ from django.contrib.auth.models import Group as Roles
 class States(models.Model):
 	name = models.CharField(null=True,max_length=100)
 	desc = models.TextField(null=True)
+	initial = models.BooleanField(default=False)
+	final = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.name
+
 
 class Transitions(models.Model):
 	name = models.CharField(null=True, max_length=100)
