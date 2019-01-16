@@ -74,10 +74,9 @@ def media_edit(request,pk):
 				return redirect('media_view',pk=pk)
 			else:
 				states = getStatesCommunity(media.state.name)
-				message = canEditResourceCommunity(media.state.name, membership.role.name, media, request)
-				if message != 'True':
-					return render(request, 'error.html', {'message':message, 'url':'media_view', 'argument':pk})
-				return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
+				if canEditResourceCommunity(media.state.name, membership.role.name, media, request):
+					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
+				return redirect('media_view',pk=pk)
 		else:
 			return redirect('media_view',pk=pk)
 	else:
