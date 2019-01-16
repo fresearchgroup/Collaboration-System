@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
+    'badges'
 ] + get_machina_apps()
 
 SITE_ID = 1
