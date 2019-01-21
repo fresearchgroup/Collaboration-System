@@ -1,1 +1,9 @@
 {{ object.created_at }}
+{{ object.name }}
+{{ object.desc }}
+{{ object.image }}
+{{ object.category }}
+{{ object.tag_line }}
+{{ object.created_at }}
+{{ object.created_by }}
+{{ object.forum_link }}

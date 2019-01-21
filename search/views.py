@@ -127,6 +127,8 @@ class SearchView(object):
 
         Must return a dictionary.
         """
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", extra)
+
         return {}
 
     def get_context(self):
@@ -172,6 +174,7 @@ class FacetedSearchView(SearchView):
         # Needed to switch out the default form class.
         if kwargs.get("form_class") is None:
             kwargs["form_class"] = FacetedSearchForm
+        print ("#####################################")    
 
         super(FacetedSearchView, self).__init__(*args, **kwargs)
 
@@ -182,6 +185,7 @@ class FacetedSearchView(SearchView):
         # This way the form can always receive a list containing zero or more
         # facet expressions:
         form_kwargs["selected_facets"] = self.request.GET.getlist("selected_facets")
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
         return super(FacetedSearchView, self).build_form(form_kwargs)
 
@@ -189,6 +193,7 @@ class FacetedSearchView(SearchView):
         extra = super(FacetedSearchView, self).extra_context()
         extra["request"] = self.request
         extra["facets"] = self.results.facet_counts()
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", extra)
         return extra
 
 

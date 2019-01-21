@@ -35,6 +35,13 @@ from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 
+from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
+from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+from haystack.query import SearchQuerySet
+
+from .forms import FacetedProductSearchForm
+
 def display_communities(request):
 	if request.method == 'POST':
 		sortby = request.POST['sortby']
@@ -696,4 +703,18 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
 		
+from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
+from django.http import JsonResponse
+from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+from haystack.query import SearchQuerySet		
+# tag_analytics/views.py
+class FacetedSearchView(BaseFacetedSearchView):
+
+    form_class = FacetedProductSearchForm
+    facet_fields = ['category']
+    template_name = 'search.html'
+    paginate_by = 3
+    context_object_name = 'object_list'

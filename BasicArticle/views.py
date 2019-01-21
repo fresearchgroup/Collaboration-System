@@ -389,3 +389,6 @@ def article_watch(request, article):
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
+
+
+

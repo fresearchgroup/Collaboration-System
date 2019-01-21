@@ -14,16 +14,159 @@
             </tr>
         </table>
 
+<!-- Object_list: {{ page.object_list }} -->
+{% if  page.object_list %}
+facets: {{ facets }}
+<div class="col-md-3">
+    <h3>Filters</h3>
+        <dl>
+        {% if facets.fields.category %}
+        <dt>Filter by category</dt>
+        {% for category in facets.fields.category %}
+        {% if category.1 != 0 %}
+        <dd>
+        <input class="facet" id="{{category.0|cut:" "}}" type="checkbox" name="category" value="{{ category.0 }}" 
+        data-toggle="toggle" /> {{ category.0 }} ({{ category.1 }})
+        </dd>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        </dl>
+        <div>
+        <input class="btn btn-info btn-sm pull-right" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+        </div>
+        
+
+    </div>
+{% endif %}
+
+
+
+
+
         {% if query %}
             <h3>Results</h3>
-
+            <div class="col-md-12 col-sm-12">
+            <div class="row content-page">
+            <h3> Communities </h3>
+               
             {% for result in page.object_list %}
-                <p>
+                {% if result.object.name %}
+
+                <!-- BEGIN CONTENT -->
+                <!-- <div class="col-md-12 col-sm-12">
+                  <div class="content-page"> -->
+                    <div class="mix-grid thumbnails">
+                      {{myhtml|safe}}{% autoescape off%}
+                      <!-- <div class="infinite-item"> -->
+                       <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
+                        <div class="mix-inner">
+                          {% if result.object.image %}
+                          <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+                          {% else %}
+                          <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+                          {%endif%}
+
+                          <div class="mix-details">
+                            <h4>{{result.object.name}}</h4>
+                            <h5>{{result.object.tag_line|truncatewords:5}}</h5>
+                            <p>{{ result.object.desc |striptags|truncatewords:20}}</p>
+                            <a class="mix-link" href="{% url 'community_view' result.object.pk %}">
+                              <i class="fa fa-link"></i>View More
+                            </a>
+
+                            {% if result.object.image %}
+                            <a data-rel="fancybox-button" title="{{result.object.name}}" href="{{ MEDIA_URL }}{{ result.object.image}}" class="mix-preview fancybox-button">
+                              <i class="fa fa-search"></i>View Image
+                            </a>
+                            {% else %}
+                            <a data-rel="fancybox-button" title="{{result.object.name}}" href="{{ MEDIA_URL }}default/community_image_default.png" class="mix-preview fancybox-button">
+                              <i class="fa fa-search"></i>View Image
+                            </a>
+                            {% endif %}
+
+                          </div>
+                        <h3>{{result.object.name|truncatewords:2}}</h3>
+                        {{result.object.category|truncatewords:2 }}
+                      </div>
+                    </div>
+                      <!-- </div> -->
+                      {% endautoescape%}
+                    </div>
+                <!--   </div>
+                </div> -->
+                {% endif %}
+
+            
+                <!-- END CONTENT -->
+
+                <!-- <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }} {{ result.object.title }} {{ result.object.created_at }}</a>
-                </p>
+                </p> -->
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
+
+        </div>
+        </div>
+
+        <div class="container">
+            <h3> Articles </h3>
+            {% for result in page.object_list %}
+                {% if result.object.title %}
+                <!-- BEGIN CONTENT -->
+                <div class="infinite-container">
+                      {{myhtml|safe}}{% autoescape off%}
+                      <div class="infinite-item">
+                       <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
+                        <div class="mix-inner">
+                          {% if result.object.image %}
+                          <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+                          {% else %}
+                          <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+                          {%endif%}
+
+                          <div class="mix-details">
+                            <h4>{{result.object.title}}</h4>
+                            <h5>{{result.object.tag_line|truncatewords:5}}</h5>
+                            <p>{{ result.object.desc |striptags|truncatewords:20}}</p>
+                            <a class="mix-link" href="{% url 'article_view' result.object.pk %}">
+                              <i class="fa fa-link"></i>View More
+                            </a>
+
+                            {% if result.object.image %}
+                            <a data-rel="fancybox-button" title="{{result.object.title}}" href="{{ MEDIA_URL }}{{ result.object.image}}" class="mix-preview fancybox-button">
+                              <i class="fa fa-search"></i>View Image
+                            </a>
+                            {% else %}
+                            <a data-rel="fancybox-button" title="{{result.object.title}}" href="{{ MEDIA_URL }}default/article_image_default.png" class="mix-preview fancybox-button">
+                              <i class="fa fa-search"></i>View Image
+                            </a>
+                            {% endif %}
+
+                          </div>
+                        <h3>{{result.object.name|truncatewords:2}}</h3>
+                        {{result.object.category|truncatewords:2 }}
+                      </div>
+                      </div>
+                  </div>
+                {% endautoescape%}
+                </div>
+                {% endif %}
+
+            
+                <!-- END CONTENT -->
+
+                <!-- <p>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }} {{ result.object.title }} {{ result.object.created_at }}</a>
+                </p> -->
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+
+        </div>
+
+
 
             {% if page.has_previous or page.has_next %}
                 <div>

@@ -36,6 +36,10 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from haystack.forms import FacetedSearchForm
+from haystack.views import FacetedSearchView
+from haystack.query import SearchQuerySet
+
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -133,7 +137,10 @@ urlpatterns = [
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
-    url(r'^search/', include('haystack.urls')),
+    #url(r'^search/', include('haystack.urls')),
+    # url(r'^$', FacetedSearchView.as_view(form_class=FacetedSearchForm, facet_fields=['name'],template_name='search.html', context_object_name='page_object')),
+    #url(r'^$', FacetedSearchView.as_view(), name='haystack_search'),
+    #url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset = SearchQuerySet().facet('desc'), name='haystack_search')),
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
@@ -190,10 +197,27 @@ urlpatterns = [
 from wiki.urls import get_pattern as get_wiki_pattern
 from django_nyt.urls import get_pattern as get_nyt_pattern
 
+
+
+
+
+
+sqs = SearchQuerySet().facet('category')
+
 urlpatterns += [
     url(r'^wiki-notifications/', get_nyt_pattern()),
-    url(r'^wiki/', get_wiki_pattern())
+    url(r'^wiki/', get_wiki_pattern()),
+    #url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
+    url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
+    
 ]
+
+
+
+# urlpatterns = patterns('haystack.views',
+#     url(r'^$', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
+# )
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

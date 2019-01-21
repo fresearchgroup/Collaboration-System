@@ -202,7 +202,6 @@ $(document).ready(function() {
         <!-- BEGIN TOP SEARCH -->
         <li class="menu-search">
           <!-- <span class="sep"></span> -->
-          <form method ='post' action="/search/">
           <!-- <i class="fa fa-search search-btn"></i> -->
           <form method ='post' action="/search/">
               {% csrf_token %}
@@ -358,7 +357,15 @@ $(document).ready(function() {
 <script src="{% static 'assets/plugins/count-to.js' %}" type="text/javascript"></script><!-- number counter -->
 <script src="{% static 'assets/plugins/script.js' %}" type="text/javascript"></script><!-- number counter -->
 
+
+<script src="{% static 'js/our_search_code.js' %}"></script>
+
+
 <script>
+
+  
+
+
   $(window).load(function() {
 		temp = '<li><a href="">how are you</a></li>'
  		var url = "{% url 'group_invitations' %}";
