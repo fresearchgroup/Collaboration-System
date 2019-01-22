@@ -20,13 +20,5 @@ class FacetedProductSearchForm(FacetedSearchForm):
                     query = u''
                 query += u'"%s"' % sqs.query.clean(category)
             sqs = sqs.narrow(u'category_exact:%s' % query)
-        # if self.brands:
-        #     query = None
-        #     for brand in self.brands:
-        #         if query:
-        #             query += u' OR '
-        #         else:
-        #             query = u''
-        #         query += u'"%s"' % sqs.query.clean(brand)
-        #     sqs = sqs.narrow(u'brand_exact:%s' % query)
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Inside FacetedSearchForm sqs = "+str(sqs))
         return sqs

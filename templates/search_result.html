@@ -5,18 +5,19 @@
 
     <form method="get" action=".">
         <table>
-            {{ form.as_table }}
+            <!-- {{ form.as_table }} -->
             <tr>
                 <td>&nbsp;</td>
                 <td>
-                    <input type="submit" value="Search">
+                    <input type="text" placeholder="Search" name="q" id="q" autocomplete="off">
+                <div id="selction-ajax"></div>
                 </td>
             </tr>
         </table>
 
 <!-- Object_list: {{ page.object_list }} -->
-{% if  page.object_list %}
-facets: {{ facets }}
+{% if  query %}
+facets: {{ facets.fields.category }}
 <div class="col-md-3">
     <h3>Filters</h3>
         <dl>
@@ -50,7 +51,8 @@ facets: {{ facets }}
             <div class="row content-page">
             <h3> Communities </h3>
                
-            {% for result in page.object_list %}
+            {% for result in object_list %}
+                
                 {% if result.object.name %}
 
                 <!-- BEGIN CONTENT -->
@@ -112,7 +114,7 @@ facets: {{ facets }}
 
         <div class="container">
             <h3> Articles </h3>
-            {% for result in page.object_list %}
+            {% for result in object_list %}
                 {% if result.object.title %}
                 <!-- BEGIN CONTENT -->
                 <div class="infinite-container">

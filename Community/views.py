@@ -711,10 +711,28 @@ from django.http import JsonResponse
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.query import SearchQuerySet		
 # tag_analytics/views.py
+
+
+def autocomplete(request):
+    print("Entered auto-complete function")
+    sqs = SearchQuerySet().autocomplete(
+        content_auto=request.GET.get(
+            'query',
+            ''))[
+        :5]
+    s = []
+    for result in sqs:
+        d = {"value": result.title, "data": result.object.slug}
+        s.append(d)
+    output = {'suggestions': s}
+    
+    print("autocomplete suggestions = "+str(output))
+    return JsonResponse(output)
+
 class FacetedSearchView(BaseFacetedSearchView):
 
     form_class = FacetedProductSearchForm
     facet_fields = ['category']
-    template_name = 'search.html'
-    paginate_by = 3
-    context_object_name = 'object_list'
+    template_name = 'search_result.html'
+    #paginate_by = 3
+    #context_object_name = 'object_list'

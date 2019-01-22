@@ -36,8 +36,8 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
-from haystack.forms import FacetedSearchForm
-from haystack.views import FacetedSearchView
+from Community.forms import FacetedSearchForm
+from Community.views import FacetedSearchView, autocomplete
 from haystack.query import SearchQuerySet
 
 
@@ -202,21 +202,18 @@ from django_nyt.urls import get_pattern as get_nyt_pattern
 
 
 
-sqs = SearchQuerySet().facet('category')
+# sqs = SearchQuerySet().facet('category')
 
 urlpatterns += [
     url(r'^wiki-notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
-    #url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
-    url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
+    url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
+    url(r'^search/autocomplete/$', autocomplete),
+    #url(r'^search/find/', FacetedSearchView.as_view(), name='haystack_search'),
+    #url(r'^search/', FacetedSearchView.as_view(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
     
 ]
 
-
-
-# urlpatterns = patterns('haystack.views',
-#     url(r'^$', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
-# )
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
