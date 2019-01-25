@@ -72,3 +72,5 @@ class MediaFlagLogs(models.Model):
     resource = models.ForeignKey(Media, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reason = models.ForeignKey(FlagReason, on_delete=models.CASCADE)
+
+from .meta_badges import *
