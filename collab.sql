@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `BasicArticle_articles`;
 CREATE TABLE `BasicArticle_articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
-  `body` longtext,
+  `body` text CHARACTER SET utf8,
   `image` varchar(100) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
   `published_on` datetime(6) DEFAULT NULL,
@@ -3237,4 +3237,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-28 16:41:11
+-- Dump completed on 2019-01-28 18:19:53
