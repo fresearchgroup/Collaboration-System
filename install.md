@@ -116,14 +116,50 @@ Keep the Etherpad server running and open a new terminal. Go inside Collaboratio
 	Save the .env file and run the following commands.
 
 
-8. Do all the migrations --
+6. Do all the migrations --
 
 	```bash
 		python3 manage.py migrate
 	```
 			
-9. Runserver --
+7. Runserver --
 
     ```bash
     	python3 manage.py runserver
     ``` 
+    
+    
+    
+
+## For development installation (Docker) - 
+
+ -- Install Docker and Docker-Compose from  --
+
+	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
+
+	    Docker Compose -- https://docs.docker.com/compose/install/
+
+1. Clone the repository --
+```
+   	git clone https://github.com/fresearchgroup/Collaboration-System.git
+```
+
+2. The run the following commands inside the repository --
+ 
+	```
+
+ 		docker-compose build
+
+ 		docker-compose up db
+
+	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
+
+ 		docker-compose run web python manage.py migrate
+
+ 		docker-compose run web python manage.py createsuperuser
+
+ 		docker-compose run web python manage.py loaddata workflow roles faq
+
+		docker-compose up
+	```
+
