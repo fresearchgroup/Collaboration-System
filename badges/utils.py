@@ -84,6 +84,9 @@ class MetaBadge(with_metaclass(MetaBadgeMeta, object)):
     
     def get_user(self, instance):
         return instance.user
+    
+    def get_community(self, instance):
+        return instance.community
 
     def get_progress(self, user):
         if BadgeToUser.objects.filter(user=user, badge=self.badge).count():
@@ -105,7 +108,8 @@ class MetaBadge(with_metaclass(MetaBadgeMeta, object)):
     def award_ceremony(self, instance):
         if self._test_conditions(instance):
             user = self.get_user(instance)
-            self.badge.award_to(user)
+            community = self.get_community(instance)
+            self.badge.award_to(user, community)
 
     @property
     def badge(self):

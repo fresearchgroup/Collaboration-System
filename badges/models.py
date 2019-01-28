@@ -12,6 +12,8 @@ from django.conf import settings
 from badges.signals import badge_awarded
 from badges.managers import BadgeManager
 
+from Community.models import Community
+
 if hasattr(settings, 'BADGE_LEVEL_CHOICES'):
     LEVEL_CHOICES = settings.BADGE_LEVEL_CHOICES
 else:
@@ -53,12 +55,12 @@ class Badge(models.Model):
     def get_absolute_url(self):
         return reverse('badge_detail', kwargs={'slug': self.id})
 
-    def award_to(self, user):
+    def award_to(self, user, community):
         has_badge = self in user.badges.all()
         if self.meta_badge.one_time_only and has_badge:
             return False
 
-        BadgeToUser.objects.create(badge=self, user=user)
+        BadgeToUser.objects.create(badge=self, user=user, community=community)
 
         badge_awarded.send(sender=self.meta_badge, user=user, badge=self)
 
@@ -84,6 +86,7 @@ class BadgeToUser(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     created = models.DateTimeField(default=datetime.now)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
 
 
 from . import listeners
