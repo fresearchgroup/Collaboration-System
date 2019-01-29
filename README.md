@@ -54,3 +54,22 @@ https://github.com/fresearchgroup/Community-Content-Tools
 This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
 https://github.com/fresearchgroup/Community-Recommendation
 
+### APIs 
+
+	1. /api/community/list/
+		-- Method Allow : GET
+		-- This api returns a list of communities in the system.
+
+	2. /api/community/<COMMUNITY-ID>/articles/
+		--  Method Allow : GET
+		--  COMMUNITY-ID is the id of a particular community.
+		--  This api returns a list articles of a particular community.
+
+	3. /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
+		--  Method Allow : GET
+		--  COMMUNITY-ID is the id of a particular community.
+		--  MEDIA-TYPE is the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
+		--  This api returns a list of particular type of media(eg: IMAGE, AUDIO, VIDEO) of a particular community.
+
+
+
