@@ -38,7 +38,7 @@ from Media import views as mediaview
 from TaskQueue import views as taskview
 
 router = routers.DefaultRouter()
-router.register(r'articleapi', viewsets.ArticleViewSet)
+#router.register(r'articleapi', viewsets.ArticleViewSet)
 
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
@@ -182,6 +182,8 @@ urlpatterns = [
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+
+    url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
 
 ]
 
