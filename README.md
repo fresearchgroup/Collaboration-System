@@ -63,13 +63,13 @@ https://github.com/fresearchgroup/Community-Recommendation
 	2. /api/community/<COMMUNITY-ID>/articles/
 		--  Method Allow : GET
 		--  COMMUNITY-ID is the id of a particular community.
-		--  This api returns a list articles of a particular community.
+		--  This api returns a list published articles of a particular community.
 
 	3. /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
 		--  Method Allow : GET
 		--  COMMUNITY-ID is the id of a particular community.
 		--  MEDIA-TYPE is the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
-		--  This api returns a list of particular type of media(eg: IMAGE, AUDIO, VIDEO) of a particular community.
+		--  This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
 
 
 
