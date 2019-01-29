@@ -15,6 +15,8 @@ from Group.models import GroupArticles
 from django.http import Http404
 from django.db.models import F
 import json
+from badges.models import BadgeToUser
+from .serializers import BadgeToUserSerializer
 
 class FetchCommunityReputation(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
@@ -248,12 +250,15 @@ class ReputationScore(APIView):
 
         community_reputations = CommunityReputaion.objects.filter(user=request.user)
         resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
+        user_badges = request.user.badges.all
 
         for repu in community_reputations:
             reputation_score.append({
                 'community_id': repu.community.id,
                 'community_name': repu.community.name,
-                'score': repu.upvote_count * resource_score.upvote_value - repu.downvote_count * resource_score.downvote_value + repu.published_count * resource_score.publish_value
+                'score': repu.upvote_count * resource_score.upvote_value - repu.downvote_count * resource_score.downvote_value + repu.published_count * resource_score.publish_value,
+                'badges': BadgeToUserSerializer(BadgeToUser.objects.filter(user=request.user, community=repu.community), many=True).data
             })
+
         
         return Response(json.dumps(reputation_score))
