@@ -38,7 +38,7 @@ function onFacetChangeApplied(){
     console.log("before>>>>>"+url_with_search_query);
 	$('input:checkbox.facet').each(function () {
     	var sThisVal = (this.checked ? $(this).val() : null);
-        var sThisName = (this.checked ? $(this).attr('category') : null);
+        var sThisName = (this.checked ? $(this).attr('name') : null);
         if(sThisVal !== null){
         	url_with_search_query += '&'+encodeURIComponent(sThisName)+'='+encodeURIComponent(sThisVal);
         }

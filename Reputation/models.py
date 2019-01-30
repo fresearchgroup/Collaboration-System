@@ -31,7 +31,7 @@ class FlagReason(models.Model):
 
     def __str__(self):
         pass
-        #return f'{self.pk} - {self.reason}'
+        # return f'{self.pk} - {self.reason}'
 
 #it will store score of a particular article
 class ArticleScoreLog(models.Model):
