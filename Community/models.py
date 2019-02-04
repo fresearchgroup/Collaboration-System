@@ -57,7 +57,7 @@ class RequestCommunityCreation(models.Model):
 	purpose = models.TextField()
 	requestedby = models.ForeignKey(User, null=True)
 	email = models.CharField(null=True, max_length=100)
-	status = models.CharField(null=True, max_length=100)
+	status = models.CharField(null=True, default ='Request', max_length=100)
 
 	def __str__(self):
 		return self.name
