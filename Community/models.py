@@ -18,7 +18,7 @@ class Community(MPTTModel):
         name = models.CharField(max_length=100)
         desc = models.TextField()
         image = models.ImageField(null=True, upload_to=get_file_path)
-        category = models.CharField(max_length=100)
+        category = models.ForeignKey('categories.Category')
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
         created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
