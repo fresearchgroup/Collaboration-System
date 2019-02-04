@@ -52,38 +52,55 @@
   <div class="row">
     <div class="col-sm-12">
       {% if user.is_authenticated %}
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group" >
-          <label for="desc">Description</label>
-          <textarea  class="form-control" name="desc" rows="6">{{community.desc}}</textarea>
-          <input type="hidden" name="status" value={{status}}>
-          <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
-        </div>
-        <div class="form-group">
-          <label for="category">Category</label>
-          <input type="text" class="form-control" id="category" name="category" value="{{community.category}}" required>
-          <div class="invalid-feedback"></div>
-        </div>
-        <div class="form-group">
-          <label for="tag_line">Tag Line</label>
-          <input type="text" class="form-control" id="tag_line" name="tag_line" value="{{community.tag_line}}" required>
-          <div class="invalid-feedback"></div>
-        </div>
-        {% if community.image %}
-        <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" width=150>
-        {% else %}
-        <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" width=150>
-        {%endif%}<br />
-        <div class="form-group custom-file">
-          <label for="image">Community Image</label>
-          <input type="file"   id="community_image" name ="community_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-        </div>
+       <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
 
-        <div class="form-group">
-          <button type="submit" name ="status" value="update" class="btn btn-primary">Update</button>
-        </div>
-      </form>
+                  <div class="form-group">
+                    <label for="title">Name</label>
+                    {{ form.name }}
+                    <div class="invalid-feedback">
+                      {{ form.name.errors }}
+                    </div>
+                  </div>
+
+                <div class="form-group">
+                  <label for="title">Description</label>
+                    {{ form.desc }}
+                    <div class="invalid-feedback">
+                      {{ form.desc.errors }}
+                    </div>
+                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+                  </div>
+
+                {% if community.image %}
+                <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" width=150>
+                {% else %}
+                <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" width=150>
+                {%endif%}<br />
+                  <div class="form-group custom-file">
+                    <label for="image">Image</label>
+                      {{form.image}}
+                </div>
+                <div class="form-group">
+                    <label for="title">Category</label>
+                    {{ form.category }}
+                    <div class="invalid-feedback">
+                      {{ form.category.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Tag Line</label>
+                    {{ form.tag_line }}
+                    <div class="invalid-feedback">
+                      {{ form.tag_line.errors }}
+                    </div>
+                  </div>
+
+                <div class="form-group">
+                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Submit</button>
+              </div>
+              
+          </form>
 
       {% endif %}
     </div>

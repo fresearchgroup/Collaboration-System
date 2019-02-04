@@ -100,7 +100,7 @@ urlpatterns = [
     url(r'^userprofile/(?P<username>[\w.@+-]+)/$', user_views.display_user_profile, name='display_user_profile'),
 
     url(r'^update_group_info/(?P<pk>\d+)/$', group_views.update_group_info, name='update_group_info'),
-    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.update_community_info, name='update_community_info'),
+    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.UpdateCommunityView.as_view(), name='update_community_info'),
 
     url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
