@@ -102,7 +102,7 @@ urlpatterns = [
     url(r'^update_group_info/(?P<pk>\d+)/$', group_views.update_group_info, name='update_group_info'),
     url(r'^update_community_info/(?P<pk>\d+)/$', communityview.update_community_info, name='update_community_info'),
 
-    url(r'^create_community/$', communityview.create_community, name='create_community'),
+    url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
