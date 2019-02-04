@@ -52,7 +52,7 @@ class CommunityGroups(models.Model):
 class RequestCommunityCreation(models.Model):
 	name = models.CharField(null=True, max_length=100)
 	desc = models.TextField()
-	category = models.CharField(max_length=100)
+	category = models.ForeignKey('categories.Category')
 	tag_line = models.CharField(null=True, max_length=500)
 	purpose = models.TextField()
 	requestedby = models.ForeignKey(User, null=True)
