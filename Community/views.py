@@ -403,44 +403,13 @@ def manage_community(request,pk):
 	else:
 		return redirect('login')
 
-def update_community_info(request,pk):
-	if request.user.is_authenticated:
-		community = Community.objects.get(pk=pk)
-		errormessage = ''
-		membership = None
-		uid = request.user.id
-		try:
-			membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-			if membership.role.name == 'community_admin':
-				if request.method == 'POST':
-					desc = request.POST['desc']
-					category = request.POST['category']
-					tag_line = request.POST['tag_line']
-					community.desc = desc
-					community.category = category
-					community.tag_line = tag_line
-					try:
-						image = request.FILES['community_image']
-						community.image = image
-					except:
-						errormessage = 'image not uploaded'
-					community.save()
-					return redirect('community_view',pk=pk)
-				else:
-					return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
-			else:
-				return redirect('community_view',pk=pk)
-		except CommunityMembership.DoesNotExist:
-			return redirect('community_view',pk=pk)
-	else:
-		return redirect('login')
-
 class UpdateCommunityView(UpdateView):
 	form_class = CommunityUpdateForm
 	model = Community
 	template_name = 'updatecommunityinfo.html'
 	community_admin = Roles.objects.get(name='community_admin')
 	success_url = 'community_view'
+	pk_url_kwarg = 'pk'
 	context_object_name = 'community'
 
 	def get(self, request, *args, **kwargs):
@@ -463,7 +432,7 @@ class UpdateCommunityView(UpdateView):
 		if CommunityMembership.objects.filter(user =self.request.user, community = self.object).exists():
 			return CommunityMembership.objects.get(user =self.request.user, community = self.object)
 		return False
-		
+
 	def form_valid(self, form):
 	    """
 	    If the form is valid, save the associated model.
@@ -471,6 +440,20 @@ class UpdateCommunityView(UpdateView):
 	    self.object = form.save()
 	    return super(UpdateCommunityView, self).form_valid(form)
 
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
 
 
 class CreateCommunityView(CreateView):
