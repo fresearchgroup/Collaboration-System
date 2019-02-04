@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item">Community Creation</li>
+  {% if user.is_authenticated %}
+  <!--li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></-->
+  {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_superuser %}
+
+{% if messages %}
+<div class="alert alert-warning" role="alert">
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
+<br/>
+   <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                  <div class="form-group">
+                    <label for="title">Name</label>
+                    {{ form.name }}
+                    <div class="invalid-feedback">
+                      {{ form.name.errors }}
+                    </div>
+                  </div>
+
+                <div class="form-group">
+                  <label for="title">Description</label>
+                    {{ form.desc }}
+                    <div class="invalid-feedback">
+                      {{ form.desc.errors }}
+                    </div>
+                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+                  </div>
+
+                  <div class="form-group custom-file">
+                    <label for="image">Image</label>
+                      {{form.image}}
+                </div>
+                <div class="form-group">
+                    <label for="title">Category</label>
+                    {{ form.category }}
+                    <div class="invalid-feedback">
+                      {{ form.category.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Tag Line</label>
+                    {{ form.tag_line }}
+                    <div class="invalid-feedback">
+                      {{ form.tag_line.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Assign Admin</label>
+                    {{ form.created_by }}
+                    <div class="invalid-feedback">
+                      {{ form.created_by.errors }}
+                    </div>
+                  </div>
+
+                <div class="form-group">
+                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Submit</button>
+              </div>
+              
+          </form>
+<br />
+{% endif %}
+{% endblock %}
+{% block javascript %}
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+{% endblock %}
