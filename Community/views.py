@@ -33,8 +33,8 @@ from etherpad.views import create_community_ether, create_article_ether_communit
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
-from django.views.generic import CreateView
-from .forms import CommunityCreateForm, RequestCommunityCreateForm
+from django.views.generic import CreateView, UpdateView
+from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
@@ -434,6 +434,44 @@ def update_community_info(request,pk):
 			return redirect('community_view',pk=pk)
 	else:
 		return redirect('login')
+
+class UpdateCommunityView(UpdateView):
+	form_class = CommunityUpdateForm
+	model = Community
+	template_name = 'updatecommunityinfo.html'
+	community_admin = Roles.objects.get(name='community_admin')
+	success_url = 'community_view'
+	context_object_name = 'community'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			membership = self.get_membership()
+			if membership and membership.role == self.community_admin:
+				return super(UpdateCommunityView, self).get(request, *args, **kwargs)
+			return redirect(self.success_url, self.object.pk)
+		return redirect('home')
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		if self.request.user.is_authenticated:
+			context['membership'] = self.get_membership()
+		return context
+
+	def get_membership(self):
+		if CommunityMembership.objects.filter(user =self.request.user, community = self.object).exists():
+			return CommunityMembership.objects.get(user =self.request.user, community = self.object)
+		return False
+		
+	def form_valid(self, form):
+	    """
+	    If the form is valid, save the associated model.
+	    """
+	    self.object = form.save()
+	    return super(UpdateCommunityView, self).form_valid(form)
+
+
 
 class CreateCommunityView(CreateView):
 	form_class = CommunityCreateForm
