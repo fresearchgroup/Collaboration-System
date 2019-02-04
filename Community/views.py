@@ -697,25 +697,3 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-
-
-def create_forum(name, desc):
-		# Create Forum for this community
-		try:
-			cursor = connection.cursor()
-			cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-			tree_id = cursor.fetchone()[0] + 1
-			slug = "-".join(name.lower().split())
-			#return HttpResponse(str(tree_id))
-			insert_stmt = (
-				  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
-				  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-				)
-			data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
-			cursor.execute(insert_stmt, data)
-			cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-			fid = str(cursor.fetchone()[0])
-			forum_link = slug + '-' + fid
-			return forum_link, fid
-		except:
-			return False, False
