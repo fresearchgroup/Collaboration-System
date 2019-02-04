@@ -34,7 +34,7 @@ from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from django.views.generic import CreateView
-from .forms import CommunityCreateForm
+from .forms import CommunityCreateForm, RequestCommunityCreateForm
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
@@ -231,31 +231,43 @@ def create_group(request):
 		#remove_or_add_user_feed(request.user, group, "group_created")
 		return community
 
-def request_community_creation(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			name = request.POST['name']
-			desc = request.POST['desc']
-			category = request.POST['category']
-			tag_line = request.POST['tag_line']
-			purpose = request.POST['purpose']
-			status = request.POST['status']
-			requestcommunitycreation = RequestCommunityCreation.objects.create(
-				name = name,
-				desc  = desc,
-				category = category,
-				tag_line = tag_line,
-				purpose = purpose,
-				requestedby = request.user,
-				email = request.user.email,
-				status = status
-				)
-			return redirect('user_dashboard')
-		else:
-			return render(request, 'request_community_creation.html')
-	else:
+class RequestCommunityCreationView(CreateView):
+	form_class = RequestCommunityCreateForm
+	model = RequestCommunityCreation
+	template_name = 'request_community_creation.html'
+	success_url = 'request_community_creation'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = None
+			return super(RequestCommunityCreationView, self).get(request, *args, **kwargs)
 		return redirect('login')
 
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.requestedby = self.request.user
+		self.object.email = self.request.user.email
+		self.object.save()
+		messages.success(self.request, 'Request for community creation successfully submited.')
+		return super(RequestCommunityCreationView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url)
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
 
 def handle_community_creation_requests(request):
 
