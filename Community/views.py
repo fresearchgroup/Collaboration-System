@@ -33,6 +33,11 @@ from etherpad.views import create_community_ether, create_article_ether_communit
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
+from django.views.generic import CreateView
+from .forms import CommunityCreateForm
+from django.contrib import messages
+from django.db import connection
+from django.urls import reverse
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -418,76 +423,89 @@ def update_community_info(request,pk):
 	else:
 		return redirect('login')
 
-def create_community(request):
-	errormessage = ''
-	if request.user.is_superuser:
-		if request.method == 'POST':
-			username = request.POST['username']
-			try:
-				usr = User.objects.get(username=username)
-				name = request.POST['name']
-				desc = request.POST['desc']
-				category = request.POST['category']
-				tag_line = request.POST['tag_line']
-				role = Roles.objects.get(name='community_admin')
-				try:
-					image = request.FILES['community_image']
-				except:
-					image = None
+class CreateCommunityView(CreateView):
+	form_class = CommunityCreateForm
+	model = Community
+	template_name = 'create_community.html'
+	community_admin = Roles.objects.get(name='community_admin')
+	success_url = 'community_view'
 
-
-				# Create Forum for this community
-				from django.db import connection
-				cursor = connection.cursor()
-				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-				tree_id = cursor.fetchone()[0] + 1
-				slug = "-".join(name.lower().split())
-				#return HttpResponse(str(tree_id))
-				insert_stmt = (
-					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
-					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-					)
-				data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
-				try:
-					cursor.execute(insert_stmt, data)
-					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-					forum_link = slug + '-' + str(cursor.fetchone()[0])
-				except:
-					errormessage = 'Can not create default forum for this community'
-					return render(request, 'new_community.html', {'errormessage':errormessage})
-
-				community = Community.objects.create(
-					name=name,
-					desc=desc,
-					category = category,
-					image = image,
-					tag_line = tag_line,
-					created_by = usr,
-					forum_link = forum_link
-					)
-				communitymembership = CommunityMembership.objects.create(
-					user = usr,
-					community = community,
-					role = role
-					)
-				remove_or_add_user_feed(usr,community,'community_created')
-				notify_remove_or_add_user(request.user, usr,community,'community_created')
-
-				#create the ether id for community
-				try:
-					create_community_ether(community)
-					create_wiki_for_community(community)
-				except:
-					error =""
-
-				return redirect('community_view', community.pk)
-			except User.DoesNotExist:
-				errormessage = 'user does not exist'
-				return render(request, 'new_community.html', {'errormessage':errormessage})
-		else:
-			return render(request, 'new_community.html')
-	else:
+	def get(self, request, *args, **kwargs):
+		if request.user.is_superuser:
+			self.object = None
+			return super(CreateCommunityView, self).get(request, *args, **kwargs)
 		return redirect('home')
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+
+		forum_link, fid = self.create_forum(self.object.name, self.object.desc)
+		if forum_link is not False:
+			self.object.forum_link = forum_link
+			self.object.forum = fid
+		else:
+			messages.success(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
+			return super(CreateCommunityView, self).form_invalid(form)
+		self.object.save()
+
+		CommunityMembership.objects.create(
+			user = self.object.created_by,
+			community = self.object,
+			role = self.community_admin
+			)
+
+		#create the ether id for community
+		try:
+			create_community_ether(self.object)
+		except:
+			messages.success(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+
+		#create the ether id for community
+		try:
+			create_wiki_for_community(self.object)
+		except:
+			messages.success(self.request, 'Cannot create wiki for this Community. Please check default wiki is created.')
+
+		return super(CreateCommunityView, self).form_valid(form)
+
+	def create_forum(self, name, desc):
+		# Create Forum for this community
+		try:
+			cursor = connection.cursor()
+			cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+			tree_id = cursor.fetchone()[0] + 1
+			slug = "-".join(name.lower().split())
+			#return HttpResponse(str(tree_id))
+			insert_stmt = (
+				  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+				  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+				)
+			data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
+			cursor.execute(insert_stmt, data)
+			cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+			fid = str(cursor.fetchone()[0])
+			forum_link = slug + '-' + fid
+			return forum_link, fid
+		except:
+			return False, False
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
 
 def community_content(request, pk):
 	commarticles = ''
@@ -679,4 +697,25 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-		
+
+
+def create_forum(name, desc):
+		# Create Forum for this community
+		try:
+			cursor = connection.cursor()
+			cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+			tree_id = cursor.fetchone()[0] + 1
+			slug = "-".join(name.lower().split())
+			#return HttpResponse(str(tree_id))
+			insert_stmt = (
+				  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+				  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+				)
+			data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
+			cursor.execute(insert_stmt, data)
+			cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+			fid = str(cursor.fetchone()[0])
+			forum_link = slug + '-' + fid
+			return forum_link, fid
+		except:
+			return False, False
