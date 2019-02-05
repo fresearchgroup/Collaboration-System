@@ -480,7 +480,7 @@ class CreateCommunityView(CreateView):
 			self.object.forum_link = forum_link
 			self.object.forum = fid
 		else:
-			messages.success(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
+			messages.warning(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
 			return super(CreateCommunityView, self).form_invalid(form)
 		self.object.save()
 
@@ -494,13 +494,13 @@ class CreateCommunityView(CreateView):
 		try:
 			create_community_ether(self.object)
 		except:
-			messages.success(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
 
 		#create the ether id for community
 		try:
 			create_wiki_for_community(self.object)
 		except:
-			messages.success(self.request, 'Cannot create wiki for this Community. Please check default wiki is created.')
+			messages.warning(self.request, 'Cannot create wiki for this Community. Please check default wiki is created.')
 
 		return super(CreateCommunityView, self).form_valid(form)
 
