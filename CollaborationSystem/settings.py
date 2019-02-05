@@ -83,8 +83,7 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
-    'categories',
-    'categories.editor',
+    'Categories'
 ] + get_machina_apps()
 
 SITE_ID = 1

@@ -7,6 +7,7 @@ from Course.models import Course
 import os, uuid
 from Media.models import Media
 from mptt.models import MPTTModel, TreeForeignKey
+from Categories.models import Category
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -18,7 +19,7 @@ class Community(MPTTModel):
         name = models.CharField(max_length=100)
         desc = models.TextField()
         image = models.ImageField(null=True, upload_to=get_file_path)
-        category = models.ForeignKey('categories.Category')
+        category = models.ForeignKey(Category,null =True, related_name='communitycategory' )
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
         created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
@@ -52,7 +53,7 @@ class CommunityGroups(models.Model):
 class RequestCommunityCreation(models.Model):
 	name = models.CharField(null=True, max_length=100)
 	desc = models.TextField()
-	category = models.ForeignKey('categories.Category')
+	category = models.ForeignKey(Category,null =True)
 	tag_line = models.CharField(null=True, max_length=500)
 	purpose = models.TextField()
 	requestedby = models.ForeignKey(User, null=True)
