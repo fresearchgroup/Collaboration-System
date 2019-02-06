@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+  <li class="breadcrumb-item active">Create an Article</li>
+{% endblock %}
+{% load static %}
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+    {% endfor %}
+
+{% endif %}
+<br/>
+
+
+            <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                  <div class="form-group">
+                    <label for="title">Title</label>
+                    {{ form.title }}
+                    <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+                    <div class="invalid-feedback">
+                      {{ form.title.errors }}
+                    </div>
+                  </div>
+                {% if form.body %}
+                    <div class="form-group">
+                      <label for="title">Body</label>
+                      {{ form.body }}
+                      <div class="invalid-feedback">
+                        {{ form.body.errors }}
+                      </div>
+                    </div>
+                {% endif %}
+
+                  <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                      {{form.image}}
+                </div>
+                {{form.community}}
+                <div class="form-group">
+                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Create</button>
+              </div>
+              
+          </form>
+  
+<br />
+</div>
+
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_body' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}
