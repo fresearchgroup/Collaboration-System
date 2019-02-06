@@ -12,7 +12,10 @@ class NewArticleForm(forms.Form):
 class ArticleUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Articles
-		fields = ['title', 'image', 'state']
+		if settings.REALTIME_EDITOR:
+			fields = ['title', 'image', 'state']
+		else:
+			fields = ['title', 'body', 'image', state]
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -22,6 +25,9 @@ class ArticleUpdateForm(forms.ModelForm):
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		states = getStatesCommunity(self.instance.state.name)
 		self.fields['state'].queryset = States.objects.filter(name__in=states)
+
+		if not settings.REALTIME_EDITOR:
+			self.fields['body'].widget.attrs.update({'class': 'form-control'})
 
 class ArticleCreateForm(forms.ModelForm):
 	class Meta:
