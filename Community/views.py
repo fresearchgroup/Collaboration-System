@@ -34,7 +34,7 @@ from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from django.views.generic import CreateView, UpdateView
-from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm
+from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
@@ -187,49 +187,6 @@ def community_article_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-
-def community_group(request, pk):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			community = create_group(request)
-			return redirect('community_view', community.pk)
-		else:
-			community = Community.objects.get(pk=pk)
-			return render(request, 'new_community.html', {'community':community})
-	else:
-		return redirect('login')
-
-def create_group(request):
-	if request.method == 'POST':
-		cid = request.POST['parent']
-		parent = Community.objects.get(pk=cid)
-		name = request.POST['name']
-		desc = request.POST['desc']
-		try:
-			image = request.FILES['community_image']
-		except:
-			image = None
-		user = request.user
-		#visibility = request.POST['visibility']
-		community = Community.objects.create(
-			name = name,
-			desc  = desc,
-			image = image,
-			created_by = user,
-			parent = parent
-			)
-		role = Roles.objects.get(name='community_admin')
-		CommunityMembership.objects.create(user=user, community=community, role=role)
-
-		#create ether id for the group 
-		try:
-			create_community_ether(community)
-		except:
-			error = ""
-		
-		#notify_remove_or_add_user(request.user, user, group, 'group_created')
-		#remove_or_add_user_feed(request.user, group, "group_created")
-		return community
 
 class RequestCommunityCreationView(CreateView):
 	form_class = RequestCommunityCreateForm
@@ -407,7 +364,7 @@ class UpdateCommunityView(UpdateView):
 	form_class = CommunityUpdateForm
 	model = Community
 	template_name = 'updatecommunityinfo.html'
-	community_admin = Roles.objects.get(name='community_admin')
+	#community_admin = Roles.objects.get(name='community_admin')
 	success_url = 'community_view'
 	pk_url_kwarg = 'pk'
 	context_object_name = 'community'
@@ -416,7 +373,7 @@ class UpdateCommunityView(UpdateView):
 		if request.user.is_authenticated:
 			self.object = self.get_object()
 			membership = self.get_membership()
-			if membership and membership.role == self.community_admin:
+			if membership and membership.role == Roles.objects.get(name='community_admin'):
 				return super(UpdateCommunityView, self).get(request, *args, **kwargs)
 			return redirect(self.success_url, self.object.pk)
 		return redirect('home')
@@ -460,7 +417,7 @@ class CreateCommunityView(CreateView):
 	form_class = CommunityCreateForm
 	model = Community
 	template_name = 'create_community.html'
-	community_admin = Roles.objects.get(name='community_admin')
+	#community_admin = Roles.objects.get(name='community_admin')
 	success_url = 'community_view'
 
 	def get(self, request, *args, **kwargs):
@@ -487,7 +444,7 @@ class CreateCommunityView(CreateView):
 		CommunityMembership.objects.create(
 			user = self.object.created_by,
 			community = self.object,
-			role = self.community_admin
+			role = Roles.objects.get(name='community_admin')
 			)
 
 		#create the ether id for community
@@ -539,6 +496,78 @@ class CreateCommunityView(CreateView):
 				"No URL to redirect to.  Either provide a url or define"
 				" a get_absolute_url method on the Model.")
 		return url
+
+class CreateSubCommunityView(CreateView):
+	form_class = SubCommunityCreateForm
+	model = Community
+	template_name = 'create_community.html'
+	success_url = 'community_view'
+
+	def get_initial(self):
+		"""
+		Returns the initial data to use for forms on this view.
+		"""
+		initial= self.initial.copy()
+		initial.update({'parent': self.model.objects.get(pk=self.kwargs['pk']) })
+		return initial
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			if self.is_member_of_parent():
+				self.object = None
+				return super(CreateSubCommunityView, self).get(request, *args, **kwargs)
+			messages.warning(self.request, 'You are not a member of this community.')
+			return redirect(self.success_url, self.kwargs['pk'])
+		return redirect('home')
+
+	def is_member_of_parent(self):
+		community = self.model.objects.get(pk=self.kwargs['pk'])
+		return CommunityMembership.objects.filter(community=community, user=self.request.user).exists()
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.created_by = self.request.user
+		self.object.save()
+
+		CommunityMembership.objects.create(
+			user = self.object.created_by,
+			community = self.object,
+			role = Roles.objects.get(name='community_admin')
+			)
+
+		try:
+			create_community_ether(self.object)
+		except:
+			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+
+		return super(CreateSubCommunityView, self).form_valid(form)
+
+	def get_form_kwargs(self):
+		"""
+		Returns the keyword arguments for instantiating the form.
+		"""
+		kwargs = super(CreateSubCommunityView, self).get_form_kwargs()
+		kwargs.update({'community': self.model.objects.get(pk=self.kwargs['pk'])})
+		return kwargs
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
 
 def community_content(request, pk):
 	commarticles = ''
