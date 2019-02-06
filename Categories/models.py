@@ -1,5 +1,6 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+import os, uuid
 # Create your models here.
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
