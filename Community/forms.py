@@ -1,6 +1,7 @@
 from django import forms
 from .models import Community, RequestCommunityCreation
 from Categories.models import Category
+from mptt.forms import TreeNodeChoiceField
 
 class CommunityCreateForm(forms.ModelForm):
 	class Meta:
@@ -16,6 +17,8 @@ class CommunityCreateForm(forms.ModelForm):
 		self.fields['category'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
 		self.fields['created_by'].widget.attrs.update({'class': 'form-control'})
+		self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
+
 
 class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
@@ -67,6 +70,6 @@ class SubCommunityCreateForm(forms.ModelForm):
 		if community:
 			self.fields['parent'].queryset = Community.objects.filter(pk=community.pk)
 		if community.category:
-			self.fields['category'].queryset = community.category.get_descendants(include_self=False)
+			self.fields['category'] = TreeNodeChoiceField(community.category.get_descendants(include_self=False))
 		else:
 			self.fields['category'].queryset = Category.objects.none()
