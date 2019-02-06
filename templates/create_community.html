@@ -17,7 +17,6 @@
 
 {% block content %}
 
-{% if user.is_superuser %}
 
 {% if messages %}
     {% for message in messages %}
@@ -64,6 +63,7 @@
                       {{ form.tag_line.errors }}
                     </div>
                   </div>
+                  {% if form.created_by %}
                   <div class="form-group">
                     <label for="title">Assign Admin</label>
                     {{ form.created_by }}
@@ -71,6 +71,17 @@
                       {{ form.created_by.errors }}
                     </div>
                   </div>
+                  {% endif %}
+
+                  {% if form.parent %}
+                  <div class="form-group">
+                    <label for="title">Group of</label>
+                    {{ form.parent }}
+                    <div class="invalid-feedback">
+                      {{ form.parent.errors }}
+                    </div>
+                  </div>
+                  {% endif %}
 
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Submit</button>
@@ -78,7 +89,6 @@
               
           </form>
 <br />
-{% endif %}
 {% endblock %}
 {% block javascript %}
 
