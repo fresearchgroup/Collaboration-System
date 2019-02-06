@@ -447,13 +447,13 @@ class CreateCommunityView(CreateView):
 		#create the ether id for community
 		try:
 			create_community_ether(self.object)
-		except:
+		except Exception as e:
 			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
 
 		#create the ether id for community
 		try:
 			create_wiki_for_community(self.object)
-		except:
+		except Exception as e:
 			messages.warning(self.request, 'Cannot create wiki for this Community. Please check default wiki is created.')
 
 		return super(CreateCommunityView, self).form_valid(form)
@@ -537,7 +537,7 @@ class CreateSubCommunityView(CreateView):
 
 		try:
 			create_community_ether(self.object)
-		except:
+		except Exception as e:
 			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
 
 		return super(CreateSubCommunityView, self).form_valid(form)
