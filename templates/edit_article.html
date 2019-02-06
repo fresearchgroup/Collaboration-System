@@ -44,13 +44,10 @@
 </ul>
 </div>
 {% if messages %}
-<div class="alert alert-warning" role="alert">
-<ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
     {% endfor %}
-</ul>
-</div>
+
 {% endif %}
 <br/>
 
@@ -66,11 +63,23 @@
                     </div>
                   </div>
 
+                {% if form.body %}
+                    <div class="form-group">
+                      <label for="title">Body</label>
+                      {{ form.body }}
+                      <div class="invalid-feedback">
+                        {{ form.body.errors }}
+                      </div>
+                    </div>
+                {% else %}
+
                 <div class="form-group">
                   <label for="body">Body</label>
                   <iframe src="{{url}}/p/{{padid}}" style="height: 50%; width: 100%; min-height: 200px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
+                  
+                  {% endif %}
 
                   {% if article.image %}
                   <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive" width="150">
@@ -100,7 +109,17 @@
 
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_body' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

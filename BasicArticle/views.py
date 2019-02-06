@@ -211,8 +211,9 @@ class ArticleEditView(UpdateView):
 			role = self.get_communityrole(request, community)
 			if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
 				response=super(ArticleEditView, self).get(request, *args, **kwargs)
-				sessionid = create_session_community(request, community.id)
-				response.set_cookie('sessionID', sessionid)
+				if settings.REALTIME_EDITOR:
+					sessionid = create_session_community(request, community.id)
+					response.set_cookie('sessionID', sessionid)
 				return response
 			return redirect('article_view',pk=self.object.pk)
 		return redirect('commnity_view',pk=community.pk)
@@ -223,8 +224,9 @@ class ArticleEditView(UpdateView):
 		community = self.get_community()
 		if self.is_communitymember(self.request, community):
 			context['role'] = self.get_communityrole(self.request, community)
-			context['url'] = settings.SERVERURL
-			context['padid'] = get_pad_id(self.object.pk)
+			if settings.REALTIME_EDITOR:
+				context['url'] = settings.SERVERURL
+				context['padid'] = get_pad_id(self.object.pk)
 		return context
 
 	def form_valid(self, form):
