@@ -3,12 +3,10 @@ from BasicArticle.views import create_article, view_article, getHTML
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import render
 from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 # from .models import CommunityGroups
-from django.contrib.auth.models import Group as Roles
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
@@ -237,7 +235,6 @@ def handle_community_creation_requests(request):
 			if status=='approve' and rcommunity.status!='approved':
 
 				# Create Forum for this community
-				from django.db import connection
 				cursor = connection.cursor()
 				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
 				tree_id = cursor.fetchone()[0] + 1
@@ -674,7 +671,6 @@ def community_h5p_create(request):
 
 def create_wiki_for_community(community):
 
-	from django.db import connection
 	cursor = connection.cursor()
 	wiki_slug = str(community.name) + str(community.pk)
 	#Create wiki for this community
