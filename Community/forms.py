@@ -2,7 +2,6 @@ from django import forms
 from .models import Community, RequestCommunityCreation
 from Categories.models import Category
 
-
 class CommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = Community
@@ -60,10 +59,14 @@ class SubCommunityCreateForm(forms.ModelForm):
 		self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
 		self.fields['image'].required = False
 		self.fields['category'].widget.attrs.update({'class': 'form-control'})
-		self.fields['category'].empty_label = None
+		self.fields['category'].required = False
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
+		self.fields['tag_line'].required = False
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
 		if community:
 			self.fields['parent'].queryset = Community.objects.filter(pk=community.pk)
+		if community.category:
 			self.fields['category'].queryset = community.category.get_descendants(include_self=False)
+		else:
+			self.fields['category'].queryset = Category.objects.none()
