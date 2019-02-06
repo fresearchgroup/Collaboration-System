@@ -82,32 +82,6 @@ def display_articles(request):
 		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
-def create_article(request):
-	"""
-	create a new article. This function will be called for creating an
-	article in community or group.
-	"""
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			state = States.objects.get(name='draft')
-			title = request.POST['title']
-			body  = ""
-			try:
-				image = request.FILES['article_image']
-			except:
-				image = None
-			article = Articles.objects.create(
-				title = title,
-				body  = body,
-				image = image,
-				created_by = request.user,
-				state = state
-				)
-				
-			return article
-	else:
-		return redirect('login')
-
 def view_article(request, pk):
 	"""
 	A function to view an article. The function will check if the article belongs to group or

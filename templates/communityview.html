@@ -195,13 +195,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method = "post" action ="{% url 'community_article_create' %}">
+            <form method = "get" action ="{% url 'community_article_create' community.pk %}">
               <div class="form-group">
-                {% csrf_token %}
-                <input type="hidden" name="cid" value={{ community.pk}}>
-                <input type="hidden" name="status" value='0'>
-                <input type="hidden" name="articleof" value='community'>
-                <input type="hidden" name="new" value='0'>
                 <h4>I confirm that I understand the following terms.</h4>
                 <ul>
                 <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>

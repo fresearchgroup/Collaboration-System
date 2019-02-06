@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
-from BasicArticle.views import create_article, view_article, getHTML
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from BasicArticle.models import Articles
 from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 # from .models import CommunityGroups
@@ -106,83 +104,6 @@ def community_unsubscribe(request):
 				#notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
-	else:
-		return redirect('login')
-
-def community_article_create_body(request, article, community):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article.body = getHTML(article)
-			article.save()
-			data={
-				'article_id':article.pk,
-				'body':article.body
-			}
-			return JsonResponse(data)
-			# return redirect('article_view', article.pk)
-			# else:
-			# 	article.creation_complete = True
-			# 	article.save()
-			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
-def community_article_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				article = create_article(request)
-				CommunityArticles.objects.create(article=article, user = request.user , community =community )
-
-				#create the ether id for artcile blonging to this community
-				padid = create_article_ether_community(cid, article)
-
-				# return community_article_create_body(request, article, community)
-				data={
-					'article_id':article.id,
-					'community_or_group_id':community.pk,
-					'user_id':request.user.id,
-					'username':request.user.username,
-					'url':settings.SERVERURL,
-					'articleof':'community',
-					'padid':padid
-				}
-				return JsonResponse(data)
-				# return redirect('article_edit', article.pk)
-
-
-			elif status == '2' or status=='3':
-				pk=''
-				# print(status)
-				if status == '2':
-					pk = request.POST.get('pk','')
-					article = Articles.objects.get(pk=pk)
-					return community_article_create_body(request, article, community)
-				elif status == '3':
-					pk = request.POST.get('pk','3')
-					article= Articles.objects.get(pk=pk)
-					article.title=request.POST['title']
-					try:
-						image = request.FILES['article_image']
-					except:
-						image = None
-					article.image=image
-					article.save()
-					data={}
-					return JsonResponse(data)
-			else:
-				#create the session for this article in ether pad
-				sid = create_session_community(request, cid)
-				response = render(request, 'new_article.html', {'community':community, 'status':1})
-				response.set_cookie('sessionID', sid)
-				return response
-		else:
-			return redirect('home')
 	else:
 		return redirect('login')
 
