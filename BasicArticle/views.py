@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import NewArticleForm, ArticleUpdateForm
+from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm
 from django.http import Http404, HttpResponse, JsonResponse
 from .models import Articles, ArticleViewLogs
-from django.views.generic.edit import UpdateView
+from django.views.generic import CreateView, UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -29,6 +29,7 @@ from etherpad.views import getHTML, getText, deletePad, create_session_community
 from django.contrib import messages
 from workflow.views import canEditResourceCommunity
 from django.urls import reverse
+from etherpad.views import create_article_ether_community
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -134,6 +135,61 @@ def reports_article(request, pk):
 	except CommunityArticles.DoesNotExist:
 		raise Http404
 	return render(request, 'reports_article.html', {'article': article})
+
+class ArticleCreateView(CreateView):
+	form_class = ArticleCreateForm
+	model = Articles
+	template_name = 'create_article.html'
+	context_object_name = 'article'
+	success_url = 'article_view'
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		context['community'] = Community.objects.get(pk=self.kwargs['pk'])
+		return context
+
+	def get(self, request, *args, **kwargs):
+		if Community.objects.filter(pk=self.kwargs['pk']).exists():
+			if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+				self.object = None
+				return super(ArticleCreateView, self).get(request, *args, **kwargs)
+		return redirect('home')
+
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.created_by = self.request.user
+		self.object.state = States.objects.get(initial=True)
+		self.object.save()
+		community = Community.objects.get(pk=self.kwargs['pk'])
+		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
+		
+		if settings.REALTIME_EDITOR:
+			try:
+				create_article_ether_community(community.pk, self.object)
+			except Exception as e:
+				messages.success(self.request, 'Reatime services are down.')
+			return redirect('article_edit', self.object.pk)
+		return super(ArticleCreateView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
+
 
 class ArticleEditView(UpdateView):
 	form_class = ArticleUpdateForm
