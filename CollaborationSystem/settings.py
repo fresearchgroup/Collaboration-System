@@ -306,3 +306,5 @@ COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)

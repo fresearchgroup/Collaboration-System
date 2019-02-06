@@ -57,7 +57,7 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
-    url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/(?P<pk>\d+)/$', articleview.ArticleCreateView.as_view(), name='community_article_create'),
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
