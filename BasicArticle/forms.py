@@ -15,7 +15,7 @@ class ArticleUpdateForm(forms.ModelForm):
 		if settings.REALTIME_EDITOR:
 			fields = ['title', 'image', 'state']
 		else:
-			fields = ['title', 'body', 'image', state]
+			fields = ['title', 'body', 'image', 'state']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

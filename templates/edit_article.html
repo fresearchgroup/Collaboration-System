@@ -52,7 +52,7 @@
 <br/>
 
 
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" novalidate>
                       {% csrf_token %}
 
                   <div class="form-group">
@@ -78,7 +78,7 @@
                   <iframe src="{{url}}/p/{{padid}}" style="height: 50%; width: 100%; min-height: 200px; display: block"></iframe>
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
-                  
+
                   {% endif %}
 
                   {% if article.image %}
