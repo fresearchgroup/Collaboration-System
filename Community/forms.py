@@ -48,6 +48,10 @@ class CommunityUpdateForm(forms.ModelForm):
 		self.fields['category'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
 
+		if self.instance.parent:
+			self.fields['category'] = TreeNodeChoiceField(self.instance.parent.category.get_descendants(include_self=False))
+		else:
+			self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
 
 class SubCommunityCreateForm(forms.ModelForm):
 	class Meta:
