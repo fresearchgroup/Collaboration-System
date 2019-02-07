@@ -124,11 +124,15 @@ class ArticleCreateView(CreateView):
 		return context
 
 	def get(self, request, *args, **kwargs):
-		if Community.objects.filter(pk=self.kwargs['pk']).exists():
-			if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
-				self.object = None
-				return super(ArticleCreateView, self).get(request, *args, **kwargs)
-		return redirect('home')
+		if request.user.is_authenticated:
+			if Community.objects.filter(pk=self.kwargs['pk']).exists():
+				if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+					self.object = None
+					return super(ArticleCreateView, self).get(request, *args, **kwargs)
+				messages.success(self.request, 'Please join this community to create article.')
+				return redirect('community_view', self.kwargs['pk'])
+			return redirect('home')
+		return redirect('login')
 
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
@@ -174,23 +178,25 @@ class ArticleEditView(UpdateView):
 	success_url = 'article_view'
 
 	def get(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		if self.object.state.initial and self.object.created_by != request.user:
-			return redirect('home')
-		if self.object.state.final:
-			messages.warning(request, 'Published content are are not editable.')
-			return redirect('article_view',pk=self.object.pk)
-		community = self.get_community()
-		if self.is_communitymember(request, community):
-			role = self.get_communityrole(request, community)
-			if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
-				response=super(ArticleEditView, self).get(request, *args, **kwargs)
-				if settings.REALTIME_EDITOR:
-					sessionid = create_session_community(request, community.id)
-					response.set_cookie('sessionID', sessionid)
-				return response
-			return redirect('article_view',pk=self.object.pk)
-		return redirect('commnity_view',pk=community.pk)
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			if self.object.state.initial and self.object.created_by != request.user:
+				return redirect('home')
+			if self.object.state.final:
+				messages.warning(request, 'Published content are are not editable.')
+				return redirect('article_view',pk=self.object.pk)
+			community = self.get_community()
+			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
+				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+					response=super(ArticleEditView, self).get(request, *args, **kwargs)
+					if settings.REALTIME_EDITOR:
+						sessionid = create_session_community(request, community.id)
+						response.set_cookie('sessionID', sessionid)
+					return response
+				return redirect('article_view',pk=self.object.pk)
+			return redirect('commnity_view',pk=community.pk)
+		return redirect('login')
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
