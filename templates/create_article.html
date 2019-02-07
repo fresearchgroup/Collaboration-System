@@ -2,6 +2,11 @@
 {% load static %}
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<style>
+.ck-editor__editable {
+    min-height: 200px;
+}
+</style>
 {% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>

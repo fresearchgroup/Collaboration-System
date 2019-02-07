@@ -41,6 +41,12 @@
   </li>
   {% endif %}
 </ul>
+{% if messages %}
+    {% for message in messages %}
+      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+    {% endfor %}
+
+{% endif %}
 <br/>
 
 <div class="main">
