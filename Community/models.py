@@ -8,6 +8,7 @@ import os, uuid
 from Media.models import Media
 from mptt.models import MPTTModel, TreeForeignKey
 from Categories.models import Category
+from django.db import connection
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -31,6 +32,7 @@ class Community(MPTTModel):
 		def __str__(self):
 			return self.name
 
+		@classmethod
 		def create_forum(cls, name, desc):
 			try:
 				cursor = connection.cursor()
