@@ -57,7 +57,7 @@
   <div class="row">
     <div class="col-sm-12">
       {% if user.is_authenticated %}
-       <form method="post" enctype="multipart/form-data">
+       <form method="post" enctype="multipart/form-data" novalidate>
                       {% csrf_token %}
 
                   <div class="form-group">
