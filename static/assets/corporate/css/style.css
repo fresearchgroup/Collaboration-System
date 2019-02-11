@@ -1436,19 +1436,19 @@ div.content-form-page .checkbox-list {
 Pre-Footer and pre-footer elements
 ***/
 .pre-footer {
-	background: #313030;
-	color: #b0b0b0;
+	background: #ffddca;
+	color: #e6400c;
 }
 .pre-footer .container {
-	padding-top: 45px;
+	padding-top: 5px;
 }
 .pre-footer a {
-	color: #57c8eb;
+	color: #e6400c;
 }
 .pre-footer h2,
 .ecommerce .pre-footer h2 {
 	font-size: 21px;
-	color: #c2c1c1;
+	color: #e6400c;
 }
 .pre-footer p {
 	margin-bottom: 20px;
@@ -1700,7 +1700,7 @@ Pre-Footer and pre-footer elements
 
 /* footer */
 .footer {
-	background: #272626;
+	background: red;
 	color: #fff;
 	font-size: 12px;
 	padding: 15px 0;
@@ -2067,7 +2067,7 @@ Demo Utils
 /* Blockquote Box */
 .quote-v1 {
   background: #7C858E;
-  padding: 10px 0;
+  padding: 0px 0px 0px 0px;
   margin-left: 0;
   margin-right: 0;
 }
@@ -2077,7 +2077,7 @@ Demo Utils
 }
 .quote-v1 span {
   color: #fff;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 300;
   margin: 13px 5px 8px;
   line-height: 26px;
