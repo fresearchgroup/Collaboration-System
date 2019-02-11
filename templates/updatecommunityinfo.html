@@ -2,6 +2,11 @@
 {% load static %}
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<style>
+.ck-editor__editable {
+    min-height: 200px;
+}
+</style>
 {% endblock %}
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
@@ -110,7 +115,17 @@
 
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_desc' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
