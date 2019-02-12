@@ -2,6 +2,7 @@ from django import forms
 from .models import Community, RequestCommunityCreation
 from Categories.models import Category
 from mptt.forms import TreeNodeChoiceField
+from haystack.forms import FacetedSearchForm
 
 class CommunityCreateForm(forms.ModelForm):
 
@@ -93,3 +94,29 @@ class SubCommunityCreateForm(forms.ModelForm):
 			self.fields['category'] = TreeNodeChoiceField(community.category.get_descendants(include_self=False))
 		else:
 			self.fields['category'].queryset = Category.objects.none()
+
+
+
+
+class FacetedProductSearchForm(FacetedSearchForm):
+
+    def __init__(self, *args, **kwargs):
+        data = dict(kwargs.get("data", []))
+        self.categorys = data.get('category', [])
+        #self.brands = data.get('brand', [])
+        super(FacetedProductSearchForm, self).__init__(*args, **kwargs)
+
+    def search(self):
+        sqs = super(FacetedProductSearchForm, self).search()
+        if self.categorys:
+            query = None
+            for category in self.categorys:
+                if query:
+                    query += u' OR '
+                else:
+                    query = u''
+                query += u'"%s"' % sqs.query.clean(category)
+            sqs = sqs.narrow(u'category_exact:%s' % query)
+        print ("2.>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Inside FacetedSearchForm sqs = "+str(sqs.query))
+        return sqs
+
