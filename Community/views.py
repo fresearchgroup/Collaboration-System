@@ -316,7 +316,7 @@ class UpdateCommunityView(UpdateView):
 		self.object = form.save(commit=False)
 		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
-		
+
 		if self.object.image_thumbnail:
 			x = form.cleaned_data.get('x')
 			y = form.cleaned_data.get('y')
@@ -473,7 +473,18 @@ class CreateSubCommunityView(CreateView):
 		"""
 		self.object = form.save(commit=False)
 		self.object.created_by = self.request.user
+		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
 
 		CommunityMembership.objects.create(
 			user = self.object.created_by,
