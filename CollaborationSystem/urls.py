@@ -42,7 +42,7 @@ from haystack.query import SearchQuerySet
 
 
 router = routers.DefaultRouter()
-router.register(r'articleapi', viewsets.ArticleViewSet)
+#router.register(r'articleapi', viewsets.ArticleViewSet)
 
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
@@ -61,7 +61,7 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
-    url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/(?P<pk>\d+)/$', articleview.ArticleCreateView.as_view(), name='community_article_create'),
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
@@ -70,12 +70,12 @@ urlpatterns = [
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
-    url(r'^article-edit/(?P<pk>\d*)/$', articleview.edit_article, name='article_edit'),
+    url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
-    url(r'^community-group-create/$', communityview.community_group, name='community_group'),
+    url(r'^community-group-create/(?P<pk>\d+)/$', communityview.CreateSubCommunityView.as_view(), name='community_group'),
 
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
@@ -89,7 +89,7 @@ urlpatterns = [
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 
-    url(r'^request_community_creation/$', communityview.request_community_creation, name='request_community_creation'),
+    url(r'^request_community_creation/$', communityview.RequestCommunityCreationView.as_view(), name='request_community_creation'),
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
@@ -104,9 +104,9 @@ urlpatterns = [
     url(r'^userprofile/(?P<username>[\w.@+-]+)/$', user_views.display_user_profile, name='display_user_profile'),
 
     url(r'^update_group_info/(?P<pk>\d+)/$', group_views.update_group_info, name='update_group_info'),
-    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.update_community_info, name='update_community_info'),
+    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.UpdateCommunityView.as_view(), name='update_community_info'),
 
-    url(r'^create_community/$', communityview.create_community, name='create_community'),
+    url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
@@ -144,12 +144,10 @@ urlpatterns = [
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
-    url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
 
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
-    url(r'^group-invitations/$', user_views.group_invitations, name='group_invitations'),
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
@@ -191,6 +189,8 @@ urlpatterns = [
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+
+    url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
 
 ]
 

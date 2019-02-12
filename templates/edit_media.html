@@ -14,12 +14,7 @@
     }
 </style>
 {% endblock %} {% load mptt_tags %} {% block breadcrumb %}
-{% if belongsto == 'community' %}
 <li class="breadcrumb-item active"><a href="{% url 'community_view' commgrp.pk %}"> {{commgrp}} </a></li>
-{% endif %}
-{% if belongsto == 'group' %}
-<li class="breadcrumb-item active"><a href="{% url 'group_view' commgrp.pk %}"> {{commgrp}} </a></li>
-{% endif %}
 <li class="breadcrumb-item active">{{ media.title }} </li>
 {% endblock %} {% block content %}
 
@@ -36,7 +31,7 @@
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a href="{% url 'media_reports' gcmedia.media.pk" id="media_reports_id" class="nav-link">Reports</a>
+                    <a href="{% url 'media_reports' media.pk %}" id="media_reports_id" class="nav-link">Reports</a>
                 </li>
             </ul>
         </div>

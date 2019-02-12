@@ -7,9 +7,16 @@
     text-transform: uppercase;
     text-align:center;
     line-height:80px;
-    /* font-family: 'Oswald', sans-serif; */
+    //font-family: 'Oswald', sans-serif;
 }
 
-.reputation-icons-list li i {
-    cursor: pointer;
+.container{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.content-page{
+    padding: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
 }

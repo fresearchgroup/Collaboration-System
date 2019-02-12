@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import NewArticleForm
+from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm
 from django.http import Http404, HttpResponse, JsonResponse
 from .models import Articles, ArticleViewLogs
-from django.views.generic.edit import UpdateView
+from django.views.generic import CreateView, UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -27,6 +27,9 @@ from Reputation.models import ArticleScoreLog
 import requests
 from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id, get_pad_usercount
 from django.contrib import messages
+from workflow.views import canEditResourceCommunity
+from django.urls import reverse
+from etherpad.views import create_article_ether_community
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -79,32 +82,6 @@ def display_articles(request):
 		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
-def create_article(request):
-	"""
-	create a new article. This function will be called for creating an
-	article in community or group.
-	"""
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			state = States.objects.get(name='draft')
-			title = request.POST['title']
-			body  = ""
-			try:
-				image = request.FILES['article_image']
-			except:
-				image = None
-			article = Articles.objects.create(
-				title = title,
-				body  = body,
-				image = image,
-				created_by = request.user,
-				state = state
-				)
-				
-			return article
-	else:
-		return redirect('login')
-
 def view_article(request, pk):
 	"""
 	A function to view an article. The function will check if the article belongs to group or
@@ -117,18 +94,11 @@ def view_article(request, pk):
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
-		try:
-			article = GroupArticles.objects.get(article=pk)
-			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-				return redirect('home')
-			count = article_watch(request, article.article)
-		except GroupArticles.DoesNotExist:
-			raise Http404
+		raise Http404
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
 	
-
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
 
 def reports_article(request, pk):
@@ -137,195 +107,184 @@ def reports_article(request, pk):
 		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 			return redirect('home')
 	except CommunityArticles.DoesNotExist:
-		try:
-			article = GroupArticles.objects.get(article=pk)
-			if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-				return redirect('home')
-		except GroupArticles.DoesNotExist:
-			raise Http404
+		raise Http404
 	return render(request, 'reports_article.html', {'article': article})
 
-def edit_article(request, pk):
-	"""
-	A function to edit an article. The function check whether the method is post,
-	if not it will check if the article belong to group or community and
-	whether the user is a member of that group or cummunity. If the user is not a member,
-	he will not be allowed to edit this article. If the user is a member of the group and not the community
-	than he will not be allowed to edit this article
-	"""
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			if 'state' in request.POST and request.POST['state'] == 'save':
-				article = Articles.objects.get(pk=pk)
-				article.title = request.POST['title']
-				article.body = getHTML(article)
-				try:
-					article.image = request.FILES['article_image']
-					article.save(update_fields=["title","body","image"])
-				except:
-					article.save(update_fields=["title","body"])
-				current_state = request.POST['current']
-				notify_edit_article(request.user,article, current_state)
-				return redirect('article_view',pk=article.pk)
-			else:
-				if get_pad_usercount(pk) <= 1:
-					article = Articles.objects.get(pk=pk)
-					title = request.POST['title']
-					body = getHTML(article)
-					current_state = request.POST['current']
-					try:
-						current_state = States.objects.get(name=current_state)
-						if 'private' in request.POST:
-							to_state = States.objects.get(name='private')
-							article.state = to_state
-							#Article got rejected
-							notify_update_article_state(request.user, article, 'rejected')
-							create_resource_feed(article, "article_edit", request.user)
+class ArticleCreateView(CreateView):
+	form_class = ArticleCreateForm
+	model = Articles
+	template_name = 'create_article.html'
+	context_object_name = 'article'
+	success_url = 'article_view'
 
-						else:
-							to_state = request.POST['state']
-							to_state = States.objects.get(name=to_state)
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		context['community'] = Community.objects.get(pk=self.kwargs['pk'])
+		return context
 
-							if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
-								article.state = to_state
-								create_resource_feed(article,'article_edit',request.user)
-
-							elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
-								article.state = to_state
-
-							else:
-								transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
-								article.state = to_state
-
-								if(to_state.name=='publishable'):
-									notify_update_article_state(request.user,article,'publishable')
-									create_resource_feed(article,"article_no_edit",request.user)
-
-								# sending group feed and personal notificaions when an article goes from draft to private state.
-								if(to_state.name=='private'):
-									create_resource_feed(article, "article_edit",request.user)
-									notify_update_article_state(request.user, article, 'private')
-
-								# sending group feed and personal notification to all publishers and admins of group.
-								if(current_state.name == 'private' and to_state.name=='visible'):
-									create_resource_feed(article,"article_no_edit",request.user)
-									notify_update_article_state(request.user, article, 'visible')
-
-
-						article.title = title
-						article.body = body
-						try:
-							article.image = request.FILES['article_image']
-							article.save(update_fields=["title","body", "image", "state"])
-						except:
-							article.save(update_fields=["title","body", "state"])
-					except Transitions.DoesNotExist:
-						message = "transition doesn' exist"
-					except States.DoesNotExist:
-						message = "state doesn' exist"
-					if to_state.name == 'publish':
-						article.published_on = datetime.datetime.now()
-						article.published_by=request.user
-						article.save()
-						create_resource_feed(article,'article_published',article.created_by)
-						notify_update_article_state(request.user, article,'published')
-					return redirect('article_view',pk=pk)
-				else:
-					messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes.')
-					return redirect('article_edit', pk=pk)
-		else:
-			message=""
-			transition =""
-			cmember = ""
-			gmember = ""
-			private = ""
-			reject = ""
-			try:
-				# print ("Hello")
-				article = CommunityArticles.objects.get(article=pk)
-				# print ("Hello2")
-				
-				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-					return redirect('home')
-				if article.article.state == States.objects.get(name='publish'):
-					return redirect('article_view',pk=pk)
-				belongs_to = 'community'
-				# print ("Hello3")
-				
-
-				try:
-					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
-					sessionid = create_session_community(request, article.community.id)
-					try:
-						if article.article.state.name=='publishable':
-							transitions = Transitions.objects.filter(from_state=article.article.state)
-							for trans in transitions:
-								if trans.to_state.name=='publish':
-									transition =trans
-								if trans.to_state.name=='visible':
-									reject =trans
-								 
-						else:
-							transition = Transitions.objects.get(from_state=article.article.state)
-							state1 = States.objects.get(name='draft')
-							state2 = States.objects.get(name='private')
-							if transition.from_state == state1 and transition.to_state ==state2:
-								transition.to_state = States.objects.get(name='visible')
-
-					except Transitions.DoesNotExist:
-						message = "transition doesn't exist"
-					except States.DoesNotExist:
-						message = "state doesn't exist"
-				except CommunityMembership.DoesNotExist:
-					cmember = 'FALSE'
-			except CommunityArticles.DoesNotExist:
-				try:
-					# print ("Hello4")
-
-					article = GroupArticles.objects.get(article=pk)
-					if article.article.state == States.objects.get(name='publish'):
-						return redirect('article_view',pk=pk)
-					if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-						return redirect('home')
-					belongs_to = 'group'
-					private =''
-					try:
-						# print ("Hello5")
-
-						communitygroup = CommunityGroups.objects.get(group=article.group.pk)
-						cmember = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
-						try:
-							gmember =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
-							sessionid = create_session_group(request, article.group.id)
-						except GroupMembership.DoesNotExist:
-							gmember = 'FALSE'
-						try:
-							transition = Transitions.objects.get(from_state=article.article.state)
-							state1 = States.objects.get(name='visible')
-							state2 = States.objects.get(name='publishable')
-							if transition.from_state == state1 and transition.to_state ==state2:
-								transition.to_state = States.objects.get(name='publish')
-								private = States.objects.get(name='private')
-
-
-
-						except Transitions.DoesNotExist:
-							message = "transition doesn't exist"
-					except CommunityMembership.DoesNotExist:
-						message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
-				except GroupArticles.DoesNotExist:
-					# print ("Hello6")
-
-					raise Http404
-			padid = get_pad_id(article.article.id)
-			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition,'reject':reject, 'private':private,'url':settings.SERVERURL, 'padid':padid})
-			response.set_cookie('sessionID', sessionid)
-			return response
-	else:
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			if Community.objects.filter(pk=self.kwargs['pk']).exists():
+				if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+					self.object = None
+					return super(ArticleCreateView, self).get(request, *args, **kwargs)
+				messages.success(self.request, 'Please join this community to create article.')
+				return redirect('community_view', self.kwargs['pk'])
+			return redirect('home')
 		return redirect('login')
 
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.created_by = self.request.user
+		self.object.state = States.objects.get(initial=True)
+		self.object.save()
+		community = Community.objects.get(pk=self.kwargs['pk'])
+		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
+		
+		if settings.REALTIME_EDITOR:
+			try:
+				create_article_ether_community(community.pk, self.object)
+			except Exception as e:
+				messages.success(self.request, 'Reatime services are down.')
+			return redirect('article_edit', self.object.pk)
+		return super(ArticleCreateView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
 
 
+class ArticleEditView(UpdateView):
+	form_class = ArticleUpdateForm
+	model = Articles
+	template_name = 'edit_article.html'
+	pk_url_kwarg = 'pk'
+	context_object_name = 'article'
+	success_url = 'article_view'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			if self.object.state.initial and self.object.created_by != request.user:
+				return redirect('home')
+			if self.object.state.final:
+				messages.warning(request, 'Published content are are not editable.')
+				return redirect('article_view',pk=self.object.pk)
+			community = self.get_community()
+			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
+				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+					response=super(ArticleEditView, self).get(request, *args, **kwargs)
+					if settings.REALTIME_EDITOR:
+						sessionid = create_session_community(request, community.id)
+						response.set_cookie('sessionID', sessionid)
+					return response
+				return redirect('article_view',pk=self.object.pk)
+			return redirect('commnity_view',pk=community.pk)
+		return redirect('login')
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		community = self.get_community()
+		if self.is_communitymember(self.request, community):
+			context['role'] = self.get_communityrole(self.request, community)
+			if settings.REALTIME_EDITOR:
+				context['url'] = settings.SERVERURL
+				context['padid'] = get_pad_id(self.object.pk)
+		return context
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		if get_pad_usercount(self.object.pk) <= 1:
+			self.object.body = getHTML(self.object)
+			self.object.save()
+			if self.is_visible():
+				self.process_visible()
+			if self.is_publishable():
+				self.process_publishable()
+			if self.object.state.final:
+				self.process_final()
+			return super(ArticleEditView, self).form_valid(form)
+		elif self.object.state == self.model.objects.get(pk=self.object.pk).state:
+			self.object.body = getHTML(self.object)
+			self.object.save()
+			return super(ArticleEditView, self).form_valid(form)
+		else:
+			messages.success(self.request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes in current state.')
+			return super(ArticleEditView, self).form_invalid(form)
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
+
+	def get_community(self):
+		article= CommunityArticles.objects.get(article=self.object)
+		return article.community
+
+	def get_communityrole(self, request, community):
+		community = CommunityMembership.objects.get(user =request.user, community = community)
+		return community.role
+
+	def is_visible(self):
+		if self.object.state == States.objects.get(name='visible'):
+			return True
+		return False
+
+	def is_publishable(self):
+		if self.object.state == States.objects.get(name='publishable'):
+			return True
+		return False
+
+	def process_final(self):
+		self.object.published_on = datetime.datetime.now()
+		self.object.published_by=self.request.user
+		self.object.save()
+		create_resource_feed(self.object,'article_published',self.object.created_by)
+		notify_update_article_state(self.request.user, self.object,'published')
+		return
+
+	def process_visible(self):
+		return
+
+	def process_publishable(self):
+		notify_update_article_state(self.request.user,self.object,'publishable')
+		create_resource_feed(self.object,"article_no_edit",self.request.user)
+		return
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+	
 def delete_article(request, pk):
 	"""
 	a function to delete an article.
@@ -353,20 +312,7 @@ def delete_article(request, pk):
 					except CommunityMembership.DoesNotExist:
 						membership = 'FALSE'
 				except CommunityArticles.DoesNotExist:
-					try:
-						article = GroupArticles.objects.get(article=pk)
-						try:
-							membership =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
-							try:
-								communitygroup = CommunityGroups.objects.get(group=article.group.pk)
-								membership = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
-							except CommunityMembership.DoesNotExist:
-								membership = 'FALSE'
-								message = 'You are not a member of <h3>%s</h3> community. Please subscribe to the community.'%(communitygroup.community.name)
-						except GroupMembership.DoesNotExist:
-							membership ='FALSE'
-					except GroupArticles.DoesNotExist:
-						raise Http404
+					raise Http404
 				return render(request, 'delete_article.html', {'article': article,'membership':membership})
 		else:
 			return redirect('article_view',pk=pk)

@@ -13,6 +13,7 @@ class CommunityIndex(indexes.SearchIndex, indexes.Indexable):
     category = indexes.CharField(model_attr='category', faceted=True)
     # name = indexes.CharField(model_attr='name', faceted=True)
     # id = indexes.CharField(model_attr='id')
+
     created_at = indexes.DateTimeField(model_attr='created_at')
 
     # for spelling suggestions

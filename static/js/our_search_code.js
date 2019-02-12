@@ -2,7 +2,8 @@ $(function () {
     console.log("Hiiiiiiiii")
     'use strict';
 
-    $("#q").autocomplete({
+
+    $('#q').autocomplete({
     serviceUrl: "http://127.0.0.1:8000/search/autocomplete/",
     minChars: 2,
     dataType: 'json',

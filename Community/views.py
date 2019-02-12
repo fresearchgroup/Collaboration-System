@@ -1,15 +1,10 @@
 from django.shortcuts import render, redirect
-from BasicArticle.views import create_article, view_article, getHTML
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import render
-from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
-from .models import CommunityGroups
-from Group.views import create_group
-from django.contrib.auth.models import Group as Roles
+# from .models import CommunityGroups
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
@@ -34,11 +29,18 @@ from etherpad.views import create_community_ether, create_article_ether_communit
 from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
-
+from django.views.generic import CreateView, UpdateView
+from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm
+from django.contrib import messages
+from django.db import connection
+from django.urls import reverse
+from PIL import Image
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
+from django.http import JsonResponse
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.query import SearchQuerySet
+
 
 from .forms import FacetedProductSearchForm
 
@@ -46,15 +48,15 @@ def display_communities(request):
 	if request.method == 'POST':
 		sortby = request.POST['sortby']
 		if sortby == 'a_to_z':
-			communities=Community.objects.all().order_by('name')
+			communities=Community.objects.filter(parent=None).order_by('name')
 		if sortby == 'z_to_a':
-			communities=Community.objects.all().order_by('-name')
+			communities=Community.objects.filter(parent=None).order_by('-name')
 		if sortby == 'oldest':
-			communities=Community.objects.all().order_by('created_at')
+			communities=Community.objects.filter(parent=None).order_by('created_at')
 		if sortby == 'latest':
-			communities=Community.objects.all().order_by('-created_at')
+			communities=Community.objects.filter(parent=None).order_by('-created_at')
 	else:
-		communities=Community.objects.all().order_by('name')
+		communities=Community.objects.filter(parent=None).order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
 
 def community_view(request, pk):
@@ -74,10 +76,10 @@ def community_view(request, pk):
 	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
 	pubarticlescount = len(list(pubarticles))
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
-	groups = CommunityGroups.objects.filter(community = pk, group__visibility='1')
-	groupcount = groups.count()
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'groups':groups, 'users':users, 'groupcount':groupcount, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem})
+	children = community.get_children()
+	childrencount = children.count()
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'users':users, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
@@ -114,125 +116,43 @@ def community_unsubscribe(request):
 	else:
 		return redirect('login')
 
-def community_article_create_body(request, article, community):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			article.body = getHTML(article)
-			article.save()
-			data={
-				'article_id':article.pk,
-				'body':article.body
-			}
-			return JsonResponse(data)
-			# return redirect('article_view', article.pk)
-			# else:
-			# 	article.creation_complete = True
-			# 	article.save()
-			# 	return render(request, 'new_article_body.html', {'article':article,'community':community, 'status':2, 'url':settings.SERVERURL, 'articleof':'community'})
-		else:
-			return redirect('home')
-	else:
+class RequestCommunityCreationView(CreateView):
+	form_class = RequestCommunityCreateForm
+	model = RequestCommunityCreation
+	template_name = 'request_community_creation.html'
+	success_url = 'request_community_creation'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = None
+			return super(RequestCommunityCreationView, self).get(request, *args, **kwargs)
 		return redirect('login')
 
-def community_article_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				article = create_article(request)
-				CommunityArticles.objects.create(article=article, user = request.user , community =community )
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.requestedby = self.request.user
+		self.object.email = self.request.user.email
+		self.object.save()
+		messages.success(self.request, 'Request for community creation successfully submited.')
+		return super(RequestCommunityCreationView, self).form_valid(form)
 
-				#create the ether id for artcile blonging to this community
-				padid = create_article_ether_community(cid, article)
-
-				# return community_article_create_body(request, article, community)
-				data={
-					'article_id':article.id,
-					'community_or_group_id':community.pk,
-					'user_id':request.user.id,
-					'username':request.user.username,
-					'url':settings.SERVERURL,
-					'articleof':'community',
-					'padid':padid
-				}
-				return JsonResponse(data)
-				# return redirect('article_edit', article.pk)
-
-
-			elif status == '2' or status=='3':
-				pk=''
-				# print(status)
-				if status == '2':
-					pk = request.POST.get('pk','')
-					article = Articles.objects.get(pk=pk)
-					return community_article_create_body(request, article, community)
-				elif status == '3':
-					pk = request.POST.get('pk','3')
-					article= Articles.objects.get(pk=pk)
-					article.title=request.POST['title']
-					try:
-						image = request.FILES['article_image']
-					except:
-						image = None
-					article.image=image
-					article.save()
-					data={}
-					return JsonResponse(data)
-			else:
-				#create the session for this article in ether pad
-				sid = create_session_community(request, cid)
-				response = render(request, 'new_article.html', {'community':community, 'status':1})
-				response.set_cookie('sessionID', sid)
-				return response
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url)
 		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
-def community_group(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				group = create_group(request)
-				obj = CommunityGroups.objects.create(group=group, user=request.user, community=community)
-				return redirect('group_view', group.pk)
-			else:
-				return render(request, 'new_group.html', {'community':community, 'status':1})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-
-def request_community_creation(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			name = request.POST['name']
-			desc = request.POST['desc']
-			category = request.POST['category']
-			tag_line = request.POST['tag_line']
-			purpose = request.POST['purpose']
-			status = request.POST['status']
-			requestcommunitycreation = RequestCommunityCreation.objects.create(
-				name = name,
-				desc  = desc,
-				category = category,
-				tag_line = tag_line,
-				purpose = purpose,
-				requestedby = request.user,
-				email = request.user.email,
-				status = status
-				)
-			return redirect('user_dashboard')
-		else:
-			return render(request, 'request_community_creation.html')
-	else:
-		return redirect('login')
-
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
 
 def handle_community_creation_requests(request):
 
@@ -245,7 +165,6 @@ def handle_community_creation_requests(request):
 			if status=='approve' and rcommunity.status!='approved':
 
 				# Create Forum for this community
-				from django.db import connection
 				cursor = connection.cursor()
 				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
 				tree_id = cursor.fetchone()[0] + 1
@@ -368,106 +287,249 @@ def manage_community(request,pk):
 	else:
 		return redirect('login')
 
-def update_community_info(request,pk):
-	if request.user.is_authenticated:
-		community = Community.objects.get(pk=pk)
-		errormessage = ''
-		membership = None
-		uid = request.user.id
-		try:
-			membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-			if membership.role.name == 'community_admin':
-				if request.method == 'POST':
-					desc = request.POST['desc']
-					category = request.POST['category']
-					tag_line = request.POST['tag_line']
-					community.desc = desc
-					community.category = category
-					community.tag_line = tag_line
-					try:
-						image = request.FILES['community_image']
-						community.image = image
-					except:
-						errormessage = 'image not uploaded'
-					community.save()
-					return redirect('community_view',pk=pk)
-				else:
-					return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
-			else:
-				return redirect('community_view',pk=pk)
-		except CommunityMembership.DoesNotExist:
-			return redirect('community_view',pk=pk)
-	else:
-		return redirect('login')
+class UpdateCommunityView(UpdateView):
+	form_class = CommunityUpdateForm
+	model = Community
+	template_name = 'updatecommunityinfo.html'
+	#community_admin = Roles.objects.get(name='community_admin')
+	success_url = 'community_view'
+	pk_url_kwarg = 'pk'
+	context_object_name = 'community'
 
-def create_community(request):
-	errormessage = ''
-	if request.user.is_superuser:
-		if request.method == 'POST':
-			username = request.POST['username']
-			try:
-				usr = User.objects.get(username=username)
-				name = request.POST['name']
-				desc = request.POST['desc']
-				category = request.POST['category']
-				tag_line = request.POST['tag_line']
-				role = Roles.objects.get(name='community_admin')
-				try:
-					image = request.FILES['community_image']
-				except:
-					image = None
-
-
-				# Create Forum for this community
-				from django.db import connection
-				cursor = connection.cursor()
-				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-				tree_id = cursor.fetchone()[0] + 1
-				slug = "-".join(name.lower().split())
-				#return HttpResponse(str(tree_id))
-				insert_stmt = (
-					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
-					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-					)
-				data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
-				try:
-					cursor.execute(insert_stmt, data)
-					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-					forum_link = slug + '-' + str(cursor.fetchone()[0])
-				except:
-					errormessage = 'Can not create default forum for this community'
-					return render(request, 'new_community.html', {'errormessage':errormessage})
-
-				community = Community.objects.create(
-					name=name,
-					desc=desc,
-					category = category,
-					image = image,
-					tag_line = tag_line,
-					created_by = usr,
-					forum_link = forum_link
-					)
-				communitymembership = CommunityMembership.objects.create(
-					user = usr,
-					community = community,
-					role = role
-					)
-				remove_or_add_user_feed(usr,community,'community_created')
-				notify_remove_or_add_user(request.user, usr,community,'community_created')
-
-				#create the ether id for community
-				create_community_ether(community)
-
-				create_wiki_for_community(community)
-
-				return redirect('community_view', community.pk)
-			except User.DoesNotExist:
-				errormessage = 'user does not exist'
-				return render(request, 'new_community.html', {'errormessage':errormessage})
-		else:
-			return render(request, 'new_community.html')
-	else:
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			membership = self.get_membership()
+			if membership and membership.role == Roles.objects.get(name='community_admin'):
+				return super(UpdateCommunityView, self).get(request, *args, **kwargs)
+			return redirect(self.success_url, self.object.pk)
 		return redirect('home')
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		if self.request.user.is_authenticated:
+			context['membership'] = self.get_membership()
+		return context
+
+	def get_membership(self):
+		if CommunityMembership.objects.filter(user =self.request.user, community = self.object).exists():
+			return CommunityMembership.objects.get(user =self.request.user, community = self.object)
+		return False
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.image_thumbnail = form.cleaned_data.get('image')
+		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
+
+		return super(UpdateCommunityView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+
+class CreateCommunityView(CreateView):
+	form_class = CommunityCreateForm
+	model = Community
+	template_name = 'create_community.html'
+	#community_admin = Roles.objects.get(name='community_admin')
+	success_url = 'community_view'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_superuser:
+			self.object = None
+			return super(CreateCommunityView, self).get(request, *args, **kwargs)
+		return redirect('home')
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.image_thumbnail = form.cleaned_data.get('image')
+
+		forum_link, fid = self.create_forum(self.object.name, self.object.desc)
+		if forum_link is not False:
+			self.object.forum_link = forum_link
+			self.object.forum = fid
+		else:
+			messages.warning(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
+			return super(CreateCommunityView, self).form_invalid(form)
+		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
+
+		CommunityMembership.objects.create(
+			user = self.object.created_by,
+			community = self.object,
+			role = Roles.objects.get(name='community_admin')
+			)
+
+		#create the ether id for community
+		try:
+			create_community_ether(self.object)
+		except Exception as e:
+			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+
+		#create the ether id for community
+		try:
+			create_wiki_for_community(self.object)
+		except Exception as e:
+			messages.warning(self.request, 'Cannot create wiki for this Community. Please check default wiki is created.')
+
+		return super(CreateCommunityView, self).form_valid(form)
+
+	def create_forum(self, name, desc):
+		# Create Forum for this community
+		try:
+			cursor = connection.cursor()
+			cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+			tree_id = cursor.fetchone()[0] + 1
+			slug = "-".join(name.lower().split())
+			#return HttpResponse(str(tree_id))
+			insert_stmt = (
+				  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+				  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+				)
+			data = (name, slug, desc, 0,0,0,1,1,2,tree_id,0,0,0)
+			cursor.execute(insert_stmt, data)
+			cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+			fid = str(cursor.fetchone()[0])
+			forum_link = slug + '-' + fid
+			return forum_link, fid
+		except:
+			return False, False
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+class CreateSubCommunityView(CreateView):
+	form_class = SubCommunityCreateForm
+	model = Community
+	template_name = 'create_community.html'
+	success_url = 'community_view'
+
+	def get_initial(self):
+		"""
+		Returns the initial data to use for forms on this view.
+		"""
+		initial= self.initial.copy()
+		initial.update({'parent': self.model.objects.get(pk=self.kwargs['pk']) })
+		return initial
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			if self.is_member_of_parent():
+				self.object = None
+				return super(CreateSubCommunityView, self).get(request, *args, **kwargs)
+			messages.warning(self.request, 'You are not a member of this community.')
+			return redirect(self.success_url, self.kwargs['pk'])
+		return redirect('home')
+
+	def is_member_of_parent(self):
+		community = self.model.objects.get(pk=self.kwargs['pk'])
+		return CommunityMembership.objects.filter(community=community, user=self.request.user).exists()
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.created_by = self.request.user
+		self.object.image_thumbnail = form.cleaned_data.get('image')
+		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
+
+		CommunityMembership.objects.create(
+			user = self.object.created_by,
+			community = self.object,
+			role = Roles.objects.get(name='community_admin')
+			)
+
+		try:
+			create_community_ether(self.object)
+		except Exception as e:
+			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+
+		return super(CreateSubCommunityView, self).form_valid(form)
+
+	def get_form_kwargs(self):
+		"""
+		Returns the keyword arguments for instantiating the form.
+		"""
+		kwargs = super(CreateSubCommunityView, self).get_form_kwargs()
+		kwargs.update({'community': self.model.objects.get(pk=self.kwargs['pk'])})
+		return kwargs
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
 
 def community_content(request, pk):
 	commarticles = ''
@@ -507,50 +569,6 @@ def community_content(request, pk):
 	except CommunityMembership.DoesNotExist:
 		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
-
-def community_group_content(request, pk):
-	commgrparticles = ''
-	try:
-		community = Community.objects.get(pk=pk)
-		uid = request.user.id
-		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
-		if membership:
-			cgarticles = CommunityGroups.objects.raw('select "article" as type, username, bs.id, bs.title, bs.body, bs.image, bs.views, bs.created_at, gg.name from auth_user au, BasicArticle_articles bs join (select * from Group_grouparticles where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on bs.id=t.article_id join Group_group gg on gg.id=group_id and gg.visibility=1 where bs.state_id=2 and au.id=bs.created_by_id;', [community.pk])
-			cgmedia = CommunityGroups.objects.raw('select "media" as type, username, media.id, media.title, media.mediafile as image, media.created_at, gg.name from auth_user au, Media_media as media join (select * from Group_groupmedia where group_id in (select group_id from Community_communitygroups where community_id=%s)) t on media.id=t.media_id join Group_group gg on gg.id=group_id and gg.visibility=1 where media.state_id=2 and au.id=media.created_by_id;', [community.pk])
-			cgh5p = []
-			try:
-				response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
-				json_data = json.loads(response.text)
-				print(json_data)
-
-				from django.db import connection
-				cursor = connection.cursor()
-				stmt = "select group_id from Community_communitygroups where community_id=%s"
-				cursor.execute(stmt, [community.pk])
-				groups_in_this_community = cursor.fetchall()
-				groups_in_this_community = list(sum(groups_in_this_community, ()))
-
-				for obj in json_data:
-					if obj['group_id'] in groups_in_this_community:
-						cgh5p.append(obj)
-			except Exception as e:
-				print(e)
-				print("H5P server down...Sorry!! We will be back soon")
-
-			lstfinal = list(cgarticles) + list(cgmedia) + list(cgh5p)
-			page = request.GET.get('page', 1)
-			paginator = Paginator(list(lstfinal), 5)
-			try:
-				commgrparticles = paginator.page(page)
-			except PageNotAnInteger:
-				commgrparticles = paginator.page(1)
-			except EmptyPage:
-				commgrparticles = paginator.page(paginator.num_pages)
-
-	except CommunityMembership.DoesNotExist:
-		return redirect('community_view', community.pk)
-	return render(request, 'communitygroupcontent.html', {'community': community, 'membership':membership, 'commgrparticles':commgrparticles})
-
 
 
 def h5p_view(request, pk):
@@ -618,7 +636,6 @@ def community_h5p_create(request):
 
 def create_wiki_for_community(community):
 
-	from django.db import connection
 	cursor = connection.cursor()
 	wiki_slug = str(community.name) + str(community.pk)
 	#Create wiki for this community
@@ -703,14 +720,6 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-
-		
-from django.views.generic import TemplateView
-from django.views.generic.detail import DetailView
-from django.http import JsonResponse
-from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
-from haystack.query import SearchQuerySet		
-# tag_analytics/views.py
 
 
 def autocomplete(request):
