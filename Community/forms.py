@@ -5,10 +5,10 @@ from mptt.forms import TreeNodeChoiceField
 
 class CommunityCreateForm(forms.ModelForm):
 
-	x = forms.FloatField(widget=forms.HiddenInput())
-	y = forms.FloatField(widget=forms.HiddenInput())
-	width = forms.FloatField(widget=forms.HiddenInput())
-	height = forms.FloatField(widget=forms.HiddenInput())
+	x = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	y = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	width = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
 	class Meta:
 		model = Community
@@ -39,6 +39,12 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
 
 class CommunityUpdateForm(forms.ModelForm):
+
+	x = forms.FloatField(widget=forms.HiddenInput())
+	y = forms.FloatField(widget=forms.HiddenInput())
+	width = forms.FloatField(widget=forms.HiddenInput())
+	height = forms.FloatField(widget=forms.HiddenInput())
+
 	class Meta:
 		model = Community
 		fields = ['name', 'desc', 'image', 'category', 'tag_line']
@@ -59,6 +65,11 @@ class CommunityUpdateForm(forms.ModelForm):
 			self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
 
 class SubCommunityCreateForm(forms.ModelForm):
+	x = forms.FloatField(widget=forms.HiddenInput())
+	y = forms.FloatField(widget=forms.HiddenInput())
+	width = forms.FloatField(widget=forms.HiddenInput())
+	height = forms.FloatField(widget=forms.HiddenInput())
+
 	class Meta:
 		model = Community
 		fields = ['name', 'desc', 'image', 'category', 'tag_line', 'parent']
