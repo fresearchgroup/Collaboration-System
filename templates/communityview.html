@@ -496,12 +496,12 @@
               <div class="col-md-3 col-sm-3 gallery-item">
                 <a data-rel="fancybox-button"
                   title=""
-                  href="{% url 'category_view' cat.pk  community.pk %}"
+                  href="{% url 'categorized_communities' cat.pk  community.pk %}"
                   class="fancybox-button">
                   <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{cat.image}}" class="img-responsive">
                   <div class="zoomix"><i class="fa fa-search"></i></div>
                 </a>
-                <h3> <a href="{% url 'category_view' cat.pk  community.pk %}">{{cat.name}}</a> </h3>
+                <h3> <a href="{% url 'categorized_communities' cat.pk  community.pk %}">{{cat.name}}</a> </h3>
               </div>
               {% endfor %}
             </div>

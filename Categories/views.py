@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 # Create your views here.
-def category_view(request, catid, commid):
+def categorized_communities(request, catid, commid):
 	category = Category.objects.get(pk=catid)
 	community = Community.objects.get(pk=commid)
 	communities = Community.objects.filter(category=category, parent=community)
