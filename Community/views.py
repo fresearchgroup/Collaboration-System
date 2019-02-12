@@ -35,6 +35,7 @@ from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
 from Categories.models import Category
+from PIL import Image
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -315,11 +316,24 @@ class UpdateCommunityView(UpdateView):
 		return False
 
 	def form_valid(self, form):
-	    """
-	    If the form is valid, save the associated model.
-	    """
-	    self.object = form.save()
-	    return super(UpdateCommunityView, self).form_valid(form)
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.image_thumbnail = form.cleaned_data.get('image')
+		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
+
+		return super(UpdateCommunityView, self).form_valid(form)
 
 	def get_success_url(self):
 		"""
@@ -355,6 +369,7 @@ class CreateCommunityView(CreateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
+		self.object.image_thumbnail = form.cleaned_data.get('image')
 
 		forum_link, fid = self.create_forum(self.object.name, self.object.desc)
 		if forum_link is not False:
@@ -364,6 +379,16 @@ class CreateCommunityView(CreateView):
 			messages.warning(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
 			return super(CreateCommunityView, self).form_invalid(form)
 		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
 
 		CommunityMembership.objects.create(
 			user = self.object.created_by,
@@ -454,7 +479,18 @@ class CreateSubCommunityView(CreateView):
 		"""
 		self.object = form.save(commit=False)
 		self.object.created_by = self.request.user
+		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
+
+		if self.object.image_thumbnail:
+			x = form.cleaned_data.get('x')
+			y = form.cleaned_data.get('y')
+			w = form.cleaned_data.get('width')
+			h = form.cleaned_data.get('height')
+			image = Image.open(self.object.image_thumbnail)
+			cropped_image = image.crop((x, y, w+x, h+y))
+			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+			resized_image.save(self.object.image_thumbnail.path)
 
 		CommunityMembership.objects.create(
 			user = self.object.created_by,
