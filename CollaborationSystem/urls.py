@@ -36,6 +36,7 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from Categories import views as categoryview
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -184,6 +185,7 @@ urlpatterns = [
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
     url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
+    url(r'category_view/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.category_view, name='category_view'),
 
 ]
 
