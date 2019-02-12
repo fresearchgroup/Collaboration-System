@@ -186,6 +186,7 @@ urlpatterns = [
 
     url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
     url(r'category_view/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.category_view, name='category_view'),
+    url(r'categories/$', categoryview.categories, name='categories'),
 
 ]
 

@@ -34,18 +34,24 @@ from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpd
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
+from Categories.models import Category
 
 def display_communities(request):
 	if request.method == 'POST':
-		sortby = request.POST['sortby']
-		if sortby == 'a_to_z':
-			communities=Community.objects.filter(parent=None).order_by('name')
-		if sortby == 'z_to_a':
-			communities=Community.objects.filter(parent=None).order_by('-name')
-		if sortby == 'oldest':
-			communities=Community.objects.filter(parent=None).order_by('created_at')
-		if sortby == 'latest':
-			communities=Community.objects.filter(parent=None).order_by('-created_at')
+		if 'sortby' in request.POST:
+			sortby = request.POST['sortby']
+			if sortby == 'a_to_z':
+				communities=Community.objects.filter(parent=None).order_by('name')
+			if sortby == 'z_to_a':
+				communities=Community.objects.filter(parent=None).order_by('-name')
+			if sortby == 'oldest':
+				communities=Community.objects.filter(parent=None).order_by('created_at')
+			if sortby == 'latest':
+				communities=Community.objects.filter(parent=None).order_by('-created_at')
+		elif 'category' in request.POST:
+			category = request.POST['category']
+			category = Category.objects.get(pk=category)
+			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.filter(parent=None).order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
