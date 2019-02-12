@@ -4,6 +4,12 @@ from Categories.models import Category
 from mptt.forms import TreeNodeChoiceField
 
 class CommunityCreateForm(forms.ModelForm):
+
+	x = forms.FloatField(widget=forms.HiddenInput())
+	y = forms.FloatField(widget=forms.HiddenInput())
+	width = forms.FloatField(widget=forms.HiddenInput())
+	height = forms.FloatField(widget=forms.HiddenInput())
+
 	class Meta:
 		model = Community
 		fields = ['name', 'desc', 'image', 'category', 'tag_line', 'created_by']
@@ -18,7 +24,6 @@ class CommunityCreateForm(forms.ModelForm):
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
 		self.fields['created_by'].widget.attrs.update({'class': 'form-control'})
 		self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
-
 
 class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
