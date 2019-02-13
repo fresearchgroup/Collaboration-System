@@ -313,11 +313,10 @@ class UpdateCommunityView(UpdateView):
 		"""
 		If the form is valid, save the associated model.
 		"""
-		self.object = form.save(commit=False)
-		self.object.image_thumbnail = form.cleaned_data.get('image')
-		self.object.save()
+		self.object = form.save()
 
-		if self.object.image_thumbnail:
+		if form.cleaned_data.get('x'):
+			self.object.image_thumbnail = form.cleaned_data.get('image')
 			x = form.cleaned_data.get('x')
 			y = form.cleaned_data.get('y')
 			w = form.cleaned_data.get('width')
