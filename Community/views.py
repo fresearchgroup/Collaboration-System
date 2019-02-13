@@ -26,7 +26,7 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Media.views import create_media
+#from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from django.views.generic import CreateView, UpdateView
@@ -34,19 +34,25 @@ from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpd
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
+from Categories.models import Category
 from PIL import Image
 
 def display_communities(request):
 	if request.method == 'POST':
-		sortby = request.POST['sortby']
-		if sortby == 'a_to_z':
-			communities=Community.objects.filter(parent=None).order_by('name')
-		if sortby == 'z_to_a':
-			communities=Community.objects.filter(parent=None).order_by('-name')
-		if sortby == 'oldest':
-			communities=Community.objects.filter(parent=None).order_by('created_at')
-		if sortby == 'latest':
-			communities=Community.objects.filter(parent=None).order_by('-created_at')
+		if 'sortby' in request.POST:
+			sortby = request.POST['sortby']
+			if sortby == 'a_to_z':
+				communities=Community.objects.filter(parent=None).order_by('name')
+			if sortby == 'z_to_a':
+				communities=Community.objects.filter(parent=None).order_by('-name')
+			if sortby == 'oldest':
+				communities=Community.objects.filter(parent=None).order_by('created_at')
+			if sortby == 'latest':
+				communities=Community.objects.filter(parent=None).order_by('-created_at')
+		elif 'category' in request.POST:
+			category = request.POST['category']
+			category = Category.objects.get(pk=category)
+			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.filter(parent=None).order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
@@ -692,22 +698,3 @@ def create_wiki_for_community(community):
 
 
 	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
-
-def community_media_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				media = create_media(request)
-				metadata = create_metadata(request)
-				CommunityMedia.objects.create(media=media, user=request.user, community=community)
-				MediaMetadata.objects.create(media=media, metadata=metadata)
-				return redirect('media_view', media.pk)
-			else:
-				return render(request, 'new_media.html', {'community':community, 'status':1})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')

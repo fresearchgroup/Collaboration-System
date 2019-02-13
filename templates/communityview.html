@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {%load static %}
+{% load mptt_tags %}
 {% block css %}
   <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
@@ -7,7 +8,12 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  <li class="breadcrumb-item active">{{ community.name }}</li>
+  {% for cat in community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
+
+
 {% endblock %}
 
 {% block content %}
@@ -237,13 +243,8 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form method = "post" action ="{% url 'community_media_create' %}">
+                            <form method = "get" action ="{% url 'community_media_create' community.pk 'IMAGE'%}">
                               <div class="form-group">
-                                {% csrf_token %}
-                                <input type="hidden" name="cid" value={{ community.pk}}>
-                                <input type="hidden" name="status" value='0'>
-                                <input type="hidden" name="mediaof" value='community'>
-                                <input type="hidden" name="mediatype" value='Image'>
                                 <h4>I confirm that I understand the following terms.</h4>
                                 <ul>
                                 <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
@@ -278,13 +279,8 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form method = "post" action ="{% url 'community_media_create' %}">
+                              <form method = "get" action ="{% url 'community_media_create' community.pk 'AUDIO' %}">
                                 <div class="form-group">
-                                  {% csrf_token %}
-                                  <input type="hidden" name="cid" value={{ community.pk}}>
-                                  <input type="hidden" name="status" value='0'>
-                                  <input type="hidden" name="mediaof" value='community'>
-                                  <input type="hidden" name="mediatype" value='Audio'>
                                   <h4>I confirm that I understand the following terms.</h4>
                                   <ul>
                                   <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
@@ -319,13 +315,8 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form method = "post" action ="{% url 'community_media_create' %}">
+                                <form method = "get" action ="{% url 'community_media_create' community.pk 'VIDEO' %}">
                                   <div class="form-group">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="cid" value={{ community.pk}}>
-                                    <input type="hidden" name="status" value='0'>
-                                    <input type="hidden" name="mediaof" value='community'>
-                                    <input type="hidden" name="mediatype" value='Video'>
                                     <h4>I confirm that I understand the following terms.</h4>
                                     <ul>
                                     <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
@@ -480,6 +471,30 @@
     </div>
     <!-- END SIDEBAR & CONTENT -->
 
+    <!-- BEGIN SIDEBAR & CONTENT -->
+    <div class="row">
+        <!-- BEGIN CONTENT -->
+        <div class="col-md-12">
+          <div class="content-page">
+            <div class="row margin-bottom-10">
+              {% for cat in community.category.get_children %}
+              <div class="col-md-3 col-sm-3 gallery-item">
+                <a data-rel="fancybox-button"
+                  title=""
+                  href="{% url 'categorized_communities' cat.pk  community.pk %}"
+                  class="fancybox-button">
+                  <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{cat.image}}" class="img-responsive">
+                  <div class="zoomix"><i class="fa fa-search"></i></div>
+                </a>
+                <h3> <a href="{% url 'categorized_communities' cat.pk  community.pk %}">{{cat.name}}</a> </h3>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <!-- END CONTENT -->
+      </div>
+    <!-- END SIDEBAR & CONTENT -->
 
     <!-- BEGIN SIDEBAR & CONTENT -->
     <div class="row ">

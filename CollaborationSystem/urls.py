@@ -36,6 +36,7 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from Categories import views as categoryview
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -166,7 +167,7 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
-    url(r'community_media_create/', communityview.community_media_create, name='community_media_create'),
+    url(r'^community_media_create/(?P<pk>\d+)/(?P<mediatype>[\w\-]+)$', mediaview.MediaCreateView.as_view(), name='community_media_create'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
@@ -175,7 +176,6 @@ urlpatterns = [
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),
     url(r'^run_task/', taskview.run_task, name='run_task'),
-    url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
 
     url(r'manage_reputation/',repuationview.manage_reputation , name = 'manage_reputation'),
     url(r'manage_resource_score/',repuationview.manage_resource_score , name = 'manage_resource_score'),
@@ -184,6 +184,8 @@ urlpatterns = [
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
     url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
+    url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
+    url(r'categories/$', categoryview.categories, name='categories'),
 
 ]
 

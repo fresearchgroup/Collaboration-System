@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'categories' %}">POW</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{ message }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <!-- BEGIN CONTENT -->
+        <div class="col-md-12">
+          <h2></h2>
+          <div class="content-page">
+            <div class="row margin-bottom-10">
+              {% for category in categories %}
+              <div class="col-md-3 col-sm-3 gallery-item">
+                <form id="display_community{{category.pk}}" method="post" action="{% url 'display_communities' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="category" value="{{category.pk}}">
+                <a href="#"
+                  onclick="document.getElementById('display_community{{category.pk}}').submit()">
+                  <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{category.image}}" class="img-responsive">
+                </a>
+            
+                <h3> <a href="#" onclick="document.getElementById('display_community{{category.pk}}').submit()">{{category.name}}</a> </h3>
+            </form>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <!-- END CONTENT -->
+      </div>
+</div>
+
+
+
+<br /><br />
+{% endblock %}
