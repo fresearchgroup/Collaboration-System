@@ -23,7 +23,6 @@ var articlesContributed = [{{total}}];
 
 {% block content %}
 
-
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-4" style="width: 350px">
       <div class="recent-work-item">
@@ -114,6 +113,16 @@ var articlesContributed = [{{total}}];
         {% endif %}
       </div>
 
+    </div>
+  </div>
+</div>
+<div class="row margin-bottom-40">
+  <div class="col-md-12">
+    <div class="pricing hover-effect">
+      <div class="pricing-head">
+        <h3>Badges</h3>
+        <h4>fsdf</h4>
+      </div>
     </div>
   </div>
 </div>
@@ -240,6 +249,16 @@ var articlesContributed = [{{total}}];
         };
         container.pagination(options);
       })('mycommunities-pagination');
+    })
+  </script>
+
+  <script>
+    $.ajax({
+      url: '/api/reputation/score',
+      type: 'GET',
+      success: function(data) {
+        console.log(data);
+      }
     })
   </script>
 {% endblock %}
