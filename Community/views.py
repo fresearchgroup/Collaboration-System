@@ -26,7 +26,7 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Media.views import create_media
+#from Media.views import create_media
 from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from django.views.generic import CreateView, UpdateView
@@ -699,22 +699,3 @@ def create_wiki_for_community(community):
 
 
 	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
-
-def community_media_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			cid = request.POST['cid']
-			community = Community.objects.get(pk=cid)
-			if status=='1':
-				media = create_media(request)
-				metadata = create_metadata(request)
-				CommunityMedia.objects.create(media=media, user=request.user, community=community)
-				MediaMetadata.objects.create(media=media, metadata=metadata)
-				return redirect('media_view', media.pk)
-			else:
-				return render(request, 'new_media.html', {'community':community, 'status':1})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')

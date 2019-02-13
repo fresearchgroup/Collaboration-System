@@ -6,24 +6,82 @@ from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import MediaMetadata, Metadata
 import requests
+from django.urls import reverse
+from django.contrib import messages
+from django.views.generic import CreateView
+from workflow.models import States
+from .forms import MediaCreateForm
 
-def create_media(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			state = States.objects.get(name='draft')
-			title = request.POST['title']
-			mediatype = request.POST['mediatype']
-			mediafile = request.FILES['mediafile']
-			media_resource = Media.objects.create(
-				title = title,
-				mediatype = mediatype,
-				mediafile = mediafile,
-				created_by = request.user,
-				state = state
-				)
-			return media_resource
-	else:
+class MediaCreateView(CreateView):
+	form_class = MediaCreateForm
+	model = Media
+	template_name = 'new_media.html'
+	context_object_name = 'media'
+	success_url = 'media_view'
+
+	def get_initial(self):
+		"""
+		Returns the initial data to use for forms on this view.
+		"""
+		initial= self.initial.copy()
+		initial.update({'mediatype': self.kwargs['mediatype'] })
+		return initial
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		context['community'] = Community.objects.get(pk=self.kwargs['pk'])
+		return context
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			if self.kwargs['mediatype'] in dict(self.model.media_types):
+				if Community.objects.filter(pk=self.kwargs['pk']).exists():
+					if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+						self.object = None
+						return super(MediaCreateView, self).get(request, *args, **kwargs)
+					messages.success(self.request, 'Please join this community to create content')
+					return redirect('community_view', self.kwargs['pk'])
+				return redirect('home')
+			messages.warning(self.request, 'Media type not available')
+			return redirect('community_view', self.kwargs['pk']) 
 		return redirect('login')
+
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.mediatype = self.kwargs['mediatype']
+		self.object.created_by = self.request.user
+		self.object.state = States.objects.get(initial=True)
+		self.object.save()
+        
+		community = Community.objects.get(pk=self.kwargs['pk'])
+		CommunityMedia.objects.create(media=self.object, user=self.request.user, community=community)
+
+		description = self.request.POST['description']
+		metadata = Metadata.objects.create(description=description)		
+		MediaMetadata.objects.create(media=self.object, metadata=metadata)
+
+		return super(MediaCreateView, self).form_valid(form)
+
+	def get_form_kwargs(self):
+		kwargs = super(MediaCreateView, self).get_form_kwargs()
+		kwargs.update({'mediatype': self.kwargs['mediatype']})
+		return kwargs
+
+	def get_success_url(self):
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
 
 def media_view(request, pk):
 	try:
@@ -64,11 +122,19 @@ def media_edit(request,pk):
 				media.title = title
 				media.state = state
 				metadata.description = description
-				try:
-					mediafile = request.FILES['mediafile']
-					media.mediafile = mediafile
-				except:
-					message = 'media not uploaded'
+				uploadOrLink = request.POST['uploadOrLink']
+				if uploadOrLink == 'upload':
+					try:
+						mediafile = request.FILES['mediafile']
+						media.mediafile = mediafile
+					except:
+						message = 'media not uploaded'
+				if uploadOrLink == 'link':
+					try:
+						mediafile = request.POST['medialink']
+						media.medialink = medialink
+					except:
+						message = 'no media link'
 				media.save()
 				metadata.save()
 				return redirect('media_view',pk=pk)

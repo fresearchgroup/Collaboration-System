@@ -243,13 +243,8 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form method = "post" action ="{% url 'community_media_create' %}">
+                            <form method = "get" action ="{% url 'community_media_create' community.pk 'IMAGE'%}">
                               <div class="form-group">
-                                {% csrf_token %}
-                                <input type="hidden" name="cid" value={{ community.pk}}>
-                                <input type="hidden" name="status" value='0'>
-                                <input type="hidden" name="mediaof" value='community'>
-                                <input type="hidden" name="mediatype" value='Image'>
                                 <h4>I confirm that I understand the following terms.</h4>
                                 <ul>
                                 <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
@@ -284,13 +279,8 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form method = "post" action ="{% url 'community_media_create' %}">
+                              <form method = "get" action ="{% url 'community_media_create' community.pk 'AUDIO' %}">
                                 <div class="form-group">
-                                  {% csrf_token %}
-                                  <input type="hidden" name="cid" value={{ community.pk}}>
-                                  <input type="hidden" name="status" value='0'>
-                                  <input type="hidden" name="mediaof" value='community'>
-                                  <input type="hidden" name="mediatype" value='Audio'>
                                   <h4>I confirm that I understand the following terms.</h4>
                                   <ul>
                                   <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
@@ -325,13 +315,8 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form method = "post" action ="{% url 'community_media_create' %}">
+                                <form method = "get" action ="{% url 'community_media_create' community.pk 'VIDEO' %}">
                                   <div class="form-group">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="cid" value={{ community.pk}}>
-                                    <input type="hidden" name="status" value='0'>
-                                    <input type="hidden" name="mediaof" value='community'>
-                                    <input type="hidden" name="mediatype" value='Video'>
                                     <h4>I confirm that I understand the following terms.</h4>
                                     <ul>
                                     <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
