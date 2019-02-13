@@ -139,6 +139,7 @@ class ArticleCreateView(CreateView):
 		self.object.created_by = self.request.user
 		self.object.state = States.objects.get(initial=True)
 		self.object.save()
+		form.save_m2m()
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
 		
@@ -221,6 +222,7 @@ class ArticleEditView(UpdateView):
 				messages.warning(self.request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes in present state.')
 				return super(ArticleEditView, self).form_invalid(form)
 		self.object.save()
+		form.save_m2m()
 		if self.is_visible():
 			self.process_visible()
 		if self.is_publishable():
