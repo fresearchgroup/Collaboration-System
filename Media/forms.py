@@ -1,6 +1,8 @@
 
 from django import forms
 from .models import Media
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit, Hidden
 
 class MediaCreateForm(forms.ModelForm):
 	description = forms.CharField(widget=forms.Textarea)
@@ -30,4 +32,18 @@ class MediaCreateForm(forms.ModelForm):
 		self.fields['medialink'].widget.attrs.update({'class': 'form-control'})
 		self.fields['medialink'].hidden = True
 		self.fields['medialink'].required = False
+		self.fields['media_type'].initial = 'Upload'
+
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Div(
+                Field('title'),
+                Field('description'),
+                Field('media_type'),
+                Field('medialink','value'),
+                Field('mediafile'),
+                HTML("<br>"),
+                ButtonHolder(Submit('submit', 'Create')),
+                )
+		)
 
