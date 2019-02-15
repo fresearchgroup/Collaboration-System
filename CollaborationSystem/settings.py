@@ -83,8 +83,11 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
-    'Categories'
+    'Categories',
+    'crispy_forms'
 ] + get_machina_apps()
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 SITE_ID = 1
 
