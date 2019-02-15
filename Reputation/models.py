@@ -30,7 +30,7 @@ class FlagReason(models.Model):
     reason = models.CharField(max_length=200)
 
     def __str__(self):
-        return f'{self.pk} - {self.reason}'
+        return self.reason
 
 #it will store score of a particular article
 class ArticleScoreLog(models.Model):

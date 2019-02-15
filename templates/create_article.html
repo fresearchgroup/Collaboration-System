@@ -2,6 +2,8 @@
 {% load static %}
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
 <style>
 .ck-editor__editable {
     min-height: 200px;
@@ -48,7 +50,14 @@
                     <label for="image">Article Image</label>
                       {{form.image}}
                 </div>
-                {{form.community}}
+                <div class="form-group">
+                    <label for="title">Tags</label>
+                    <small id="bodyhelp" class="form-text text-muted"><p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;" >Clear</a></p></small>
+                    {{ form.tags }}
+                    <div class="invalid-feedback">
+                      {{ form.tags.errors }}
+                    </div>
+                  </div>
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Create</button>
               </div>
@@ -75,7 +84,22 @@
     } );
 </script>
 
-<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+  (function($) {
+    if (!$.curCSS) {
+       $.curCSS = $.css;
+    }
+})(jQuery);
+
+  $("#id_tags").tagit({
+
+    caseSensitive: false,
+    allowDuplicates: false,
+
+});
+</script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
