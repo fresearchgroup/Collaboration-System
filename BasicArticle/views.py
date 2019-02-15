@@ -261,6 +261,7 @@ class ArticleEditView(UpdateView):
 		return
 
 	def process_visible(self):
+		create_resource_feed(self.object,'article_edit',self.request.user)
 		return
 
 	def process_publishable(self):
