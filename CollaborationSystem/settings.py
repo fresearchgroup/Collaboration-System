@@ -84,8 +84,12 @@ INSTALLED_APPS = [
     'metadata',
     'TaskQueue',
     'badges',
-    'Categories'
+    'Categories',
+    'crispy_forms',
+    'taggit',
 ] + get_machina_apps()
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 SITE_ID = 1
 
@@ -309,3 +313,5 @@ H5P_ROOT = config('H5P_ROOT')
 CELERY_BROKER_URL = 'amqp://localhost'
 
 REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
+
+TAGGIT_CASE_INSENSITIVE = True

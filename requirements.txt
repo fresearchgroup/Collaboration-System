@@ -31,3 +31,4 @@ wiki==0.3.1
 celery==4.2.1
 future==0.17.1
 django-categories==1.6
+django-crispy-forms

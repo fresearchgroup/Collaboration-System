@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
+{% load crispy_forms_tags %}
 
 {% load static %}
 {% block css %}
@@ -21,48 +22,13 @@
 
 
 {% if user.is_authenticated %}
-<form method="post" enctype="multipart/form-data" >
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="title">Name</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="give a title to your media" required>
-    <div class="invalid-feedback"></div>
-  </div>
-      {% if request.POST.mediaof == "community" %}
-        <input type = 'hidden' name = 'cid' value = {{community.pk}}>
-      {% endif %}
-      {% if request.POST.mediaof == "group" %}
-        <input type = 'hidden' name = 'gid' value = {{group.pk}}>
-      {% endif %}
-    <input type="hidden" name="status" value={{status}}>
-  <div class="form-group custom-file">
-    <label for="media">Upload {{request.POST.mediatype}}</label>
-    {% if request.POST.mediatype == 'Image' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload..." required>
-      <input type='hidden' id="mediatype" name="mediatype" value="Image">
-    {% endif %}
-    {% if request.POST.mediatype == 'Audio' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["mp3", "wav","ogg"]' data-show-upload="false" data-msg-placeholder="Select an audio for upload..." required>
-      <input type='hidden' id="mediatype" name="mediatype" value="Audio">
-    {% endif %}
-    {% if request.POST.mediatype == 'Video' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." required>
-      <input type='hidden' id="mediatype" name="mediatype" value="Video">
-      {% endif %}
-  </div>
-  <div class="form-group">
-    <label for="description">Description</label>
-    <textarea class="form-control" id="description" name="description" required>
-      
-    </textarea>
-  </div>
-  {% if status == 1 %}
-  <button id="media_create" type="submit" class="btn btn-primary">Create</button>
-  {% endif %}
-</form>
-<br />
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% crispy form %}
+  </form>
 {% endif %}
 {% endblock %}
+
 {% block javascript %}
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
 <script>
@@ -80,4 +46,24 @@
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+
+<script>
+$(function() {
+    $('input[name="media_type"]').on('click', function() {
+        if ($(this).val() == 'Link') {
+          $('#div_id_medialink').show();
+          $('#div_id_mediafile').hide();
+        }
+        if ($(this).val() == 'Upload') {
+            $('#div_id_medialink').hide();
+            $('#div_id_mediafile').show();
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+		jQuery(document).ready(function() {
+      $('#div_id_medialink').hide();
+		});
+</script>
 {% endblock %}

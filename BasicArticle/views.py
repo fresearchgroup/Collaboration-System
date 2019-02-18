@@ -139,6 +139,7 @@ class ArticleCreateView(CreateView):
 		self.object.created_by = self.request.user
 		self.object.state = States.objects.get(initial=True)
 		self.object.save()
+		form.save_m2m()
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
 		
@@ -183,7 +184,7 @@ class ArticleEditView(UpdateView):
 			if self.object.state.initial and self.object.created_by != request.user:
 				return redirect('home')
 			if self.object.state.final:
-				messages.warning(request, 'Published content are are not editable.')
+				messages.warning(request, 'Published content are not editable.')
 				return redirect('article_view',pk=self.object.pk)
 			community = self.get_community()
 			if self.is_communitymember(request, community):
@@ -214,23 +215,21 @@ class ArticleEditView(UpdateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
-		if get_pad_usercount(self.object.pk) <= 1:
-			self.object.body = getHTML(self.object)
-			self.object.save()
-			if self.is_visible():
-				self.process_visible()
-			if self.is_publishable():
-				self.process_publishable()
-			if self.object.state.final:
-				self.process_final()
-			return super(ArticleEditView, self).form_valid(form)
-		elif self.object.state == self.model.objects.get(pk=self.object.pk).state:
-			self.object.body = getHTML(self.object)
-			self.object.save()
-			return super(ArticleEditView, self).form_valid(form)
-		else:
-			messages.success(self.request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes in current state.')
-			return super(ArticleEditView, self).form_invalid(form)
+		if settings.REALTIME_EDITOR:
+			if get_pad_usercount(self.object.pk) <= 1 or self.object.state == self.model.objects.get(pk=self.object.pk).state:
+				self.object.body = getHTML(self.object)
+			else:
+				messages.warning(self.request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes in present state.')
+				return super(ArticleEditView, self).form_invalid(form)
+		self.object.save()
+		form.save_m2m()
+		if self.is_visible():
+			self.process_visible()
+		if self.is_publishable():
+			self.process_publishable()
+		if self.object.state.final:
+			self.process_final()
+		return super(ArticleEditView, self).form_valid(form)
 
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
@@ -262,6 +261,7 @@ class ArticleEditView(UpdateView):
 		return
 
 	def process_visible(self):
+		create_resource_feed(self.object,'article_edit',self.request.user)
 		return
 
 	def process_publishable(self):
