@@ -26,9 +26,6 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-#from Media.views import create_media
-from metadata.views import create_metadata
-from metadata.models import MediaMetadata
 from django.views.generic import CreateView, UpdateView
 from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm
 from django.contrib import messages
