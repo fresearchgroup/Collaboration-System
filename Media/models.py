@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from workflow.models import States
 import os, uuid
 from django.conf import settings
+from metadata.models import Metadata
 
 def get_file_path(instance, filename):
 	ext = filename.split('.')[-1]
@@ -24,6 +25,7 @@ class Media(models.Model):
 	title = models.CharField(max_length=100)
 	mediafile = models.FileField(null=True,upload_to=get_file_path)
 	medialink = models.CharField(max_length=300, null=True)
+	metadata = models.ForeignKey(Metadata, null=True,related_name='media_metadata')
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='media_author')
 	published_on=models.DateTimeField(null=True)
