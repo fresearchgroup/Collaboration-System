@@ -222,4 +222,4 @@ class ReputationScore(APIView):
                 'badges': BadgeToUserSerializer(BadgeToUser.objects.filter(user=request.user, community=repu.community), many=True).data
             })
 
-        return Response(json.dumps(reputation_score))
+        return Response(reputation_score)
