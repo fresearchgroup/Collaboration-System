@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import NewArticleForm, ArticleUpdateForm
+from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm
 from django.http import Http404, HttpResponse, JsonResponse
 from .models import Articles, ArticleViewLogs
-from django.views.generic.edit import UpdateView
+from django.views.generic import CreateView, UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -29,6 +29,7 @@ from etherpad.views import getHTML, getText, deletePad, create_session_community
 from django.contrib import messages
 from workflow.views import canEditResourceCommunity
 from django.urls import reverse
+from etherpad.views import create_article_ether_community
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -81,32 +82,6 @@ def display_articles(request):
 		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
-def create_article(request):
-	"""
-	create a new article. This function will be called for creating an
-	article in community or group.
-	"""
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			state = States.objects.get(name='draft')
-			title = request.POST['title']
-			body  = ""
-			try:
-				image = request.FILES['article_image']
-			except:
-				image = None
-			article = Articles.objects.create(
-				title = title,
-				body  = body,
-				image = image,
-				created_by = request.user,
-				state = state
-				)
-				
-			return article
-	else:
-		return redirect('login')
-
 def view_article(request, pk):
 	"""
 	A function to view an article. The function will check if the article belongs to group or
@@ -135,6 +110,65 @@ def reports_article(request, pk):
 		raise Http404
 	return render(request, 'reports_article.html', {'article': article})
 
+class ArticleCreateView(CreateView):
+	form_class = ArticleCreateForm
+	model = Articles
+	template_name = 'create_article.html'
+	context_object_name = 'article'
+	success_url = 'article_view'
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		context['community'] = Community.objects.get(pk=self.kwargs['pk'])
+		return context
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			if Community.objects.filter(pk=self.kwargs['pk']).exists():
+				if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+					self.object = None
+					return super(ArticleCreateView, self).get(request, *args, **kwargs)
+				messages.success(self.request, 'Please join this community to create article.')
+				return redirect('community_view', self.kwargs['pk'])
+			return redirect('home')
+		return redirect('login')
+
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.created_by = self.request.user
+		self.object.state = States.objects.get(initial=True)
+		self.object.save()
+		community = Community.objects.get(pk=self.kwargs['pk'])
+		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
+		
+		if settings.REALTIME_EDITOR:
+			try:
+				create_article_ether_community(community.pk, self.object)
+			except Exception as e:
+				messages.success(self.request, 'Reatime services are down.')
+			return redirect('article_edit', self.object.pk)
+		return super(ArticleCreateView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
+
+
 class ArticleEditView(UpdateView):
 	form_class = ArticleUpdateForm
 	model = Articles
@@ -144,22 +178,25 @@ class ArticleEditView(UpdateView):
 	success_url = 'article_view'
 
 	def get(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		if self.object.state.initial and self.object.created_by != request.user:
-			return redirect('home')
-		if self.object.state.final:
-			messages.warning(request, 'Published content are are not editable.')
-			return redirect('article_view',pk=self.object.pk)
-		community = self.get_community()
-		if self.is_communitymember(request, community):
-			role = self.get_communityrole(request, community)
-			if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
-				response=super(ArticleEditView, self).get(request, *args, **kwargs)
-				sessionid = create_session_community(request, community.id)
-				response.set_cookie('sessionID', sessionid)
-				return response
-			return redirect('article_view',pk=self.object.pk)
-		return redirect('commnity_view',pk=community.pk)
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			if self.object.state.initial and self.object.created_by != request.user:
+				return redirect('home')
+			if self.object.state.final:
+				messages.warning(request, 'Published content are are not editable.')
+				return redirect('article_view',pk=self.object.pk)
+			community = self.get_community()
+			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
+				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+					response=super(ArticleEditView, self).get(request, *args, **kwargs)
+					if settings.REALTIME_EDITOR:
+						sessionid = create_session_community(request, community.id)
+						response.set_cookie('sessionID', sessionid)
+					return response
+				return redirect('article_view',pk=self.object.pk)
+			return redirect('commnity_view',pk=community.pk)
+		return redirect('login')
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
@@ -167,8 +204,9 @@ class ArticleEditView(UpdateView):
 		community = self.get_community()
 		if self.is_communitymember(self.request, community):
 			context['role'] = self.get_communityrole(self.request, community)
-			context['url'] = settings.SERVERURL
-			context['padid'] = get_pad_id(self.object.pk)
+			if settings.REALTIME_EDITOR:
+				context['url'] = settings.SERVERURL
+				context['padid'] = get_pad_id(self.object.pk)
 		return context
 
 	def form_valid(self, form):

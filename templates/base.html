@@ -141,6 +141,7 @@ $(document).ready(function() {
       <ul>
       <li><a href="#">About Us</a></li>
       <li><a href="{% url 'display_communities' %}">Communities</a></li>
+      <li><a href="{% url 'categories' %}">Categories</a></li>
       <li class="dropdown" id="resources">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
           Resources
@@ -234,18 +235,28 @@ $(document).ready(function() {
 {% block extra_js %}
     {% endblock extra_js %}
 <!-- BEGIN FOOTER -->
-<div class="footer">
+<div class="pre-footer">
   <div class="container">
     <div class="row">
       <!-- BEGIN COPYRIGHT -->
-      <div class="col-md-4 col-sm-4 padding-top-10">
-        <a href="javascript:;">Privacy Policy</a> | <a href="javascript:;">Terms of Service</a> | <a href="{% url 'provide_feedback' %}">Feedback</a>
+      <div class="col-md-4 col-sm-4 padding-top-10 pre-footer-col">
+        <h2>Sitemap</h2>
+        <ul>
+            <li><a href="{% url 'display_communities' %}">Communities</a></li>
+            <li><a href="{% url 'display_articles' %}">Articles</a></li>
+            <li><a href="{% url 'display_published_media' 'Image' %}">Images</a></li>
+            <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
+            <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>
+            <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+            <li><a href="{% url 'FAQs' %}">FAQs</a></li>
+        </ul>        
       </div>
       <!-- END COPYRIGHT -->
       <!-- BEGIN PAYMENTS -->
-      <div class="col-md-4 col-sm-4">
+      <div class="col-md-5 col-sm-5 padding-top-10 pre-footer-col">
         <ul class="social-footer list-unstyled list-inline">
-					<li><a href="https://github.com/fresearchgroup/Collaboration-System" target="_blank"><i class="fa fa-github"></i></a></li>
+          <h2>Other Links</h2>
+					<li><h4>Github: <a href="https://github.com/fresearchgroup/Collaboration-System" target="_blank"><i class="fa fa-github"></i></a></h4></li>
           <!--<li><a href="javascript:;"><i class="fa fa-facebook"></i></a></li>
           <li><a href="javascript:;"><i class="fa fa-google-plus"></i></a></li>
           <li><a href="javascript:;"><i class="fa fa-dribbble"></i></a></li>
@@ -258,8 +269,16 @@ $(document).ready(function() {
       </div>
       <!-- END PAYMENTS -->
       <!-- BEGIN POWERED -->
-      <div class="col-md-4 col-sm-4 text-right">
-        <p class="powered">Powered by: <a href="http://www.keenthemes.com/">KeenThemes.com</a></p>
+      <div class="col-md-3 col-sm-3 padding-top-10 pre-footer-col">
+        <h2>More Information</h2>
+        <ul>
+          <li><a href="javascript:;">Privacy Policy</a></li>
+          <li><a href="javascript:;">Terms of Service</a> </li>
+          <li><a href="{% url 'provide_feedback' %}">Feedback</a></li>
+        </ul>
+        <br />
+        <h2>Site Theme by</h2>
+          <p style="padding-left: 15px;"><a href="http://www.keenthemes.com/">KeenThemes.com</a></p>
       </div>
       <!-- END POWERED -->
     </div>

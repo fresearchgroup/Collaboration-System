@@ -36,9 +36,10 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from Categories import views as categoryview
 
 router = routers.DefaultRouter()
-router.register(r'articleapi', viewsets.ArticleViewSet)
+#router.register(r'articleapi', viewsets.ArticleViewSet)
 
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
@@ -57,7 +58,7 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
-    url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/(?P<pk>\d+)/$', articleview.ArticleCreateView.as_view(), name='community_article_create'),
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
@@ -71,7 +72,7 @@ urlpatterns = [
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
-    url(r'^community-group-create/(?P<pk>\d*)/$', communityview.community_group, name='community_group'),
+    url(r'^community-group-create/(?P<pk>\d+)/$', communityview.CreateSubCommunityView.as_view(), name='community_group'),
 
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
@@ -85,7 +86,7 @@ urlpatterns = [
     url(r'^forum/', include(board.urls)),
     url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 
-    url(r'^request_community_creation/$', communityview.request_community_creation, name='request_community_creation'),
+    url(r'^request_community_creation/$', communityview.RequestCommunityCreationView.as_view(), name='request_community_creation'),
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
@@ -100,9 +101,9 @@ urlpatterns = [
     url(r'^userprofile/(?P<username>[\w.@+-]+)/$', user_views.display_user_profile, name='display_user_profile'),
 
     url(r'^update_group_info/(?P<pk>\d+)/$', group_views.update_group_info, name='update_group_info'),
-    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.update_community_info, name='update_community_info'),
+    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.UpdateCommunityView.as_view(), name='update_community_info'),
 
-    url(r'^create_community/$', communityview.create_community, name='create_community'),
+    url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
@@ -183,6 +184,10 @@ urlpatterns = [
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
     url(r'^badges/', include('badges.urls')),
+
+    url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
+    url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
+    url(r'categories/$', categoryview.categories, name='categories'),
 
 ]
 

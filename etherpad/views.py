@@ -34,9 +34,9 @@ def create_article_ether_group(group_id, article):
 
 def create_ether_user(user):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
-    result =  epclient.createAuthorIfNotExistsFor(user.id, user.username)
-    EtherUser.objects.create(user=user, user_ether_id= result['authorID'])
-    return
+    result = epclient.createAuthorIfNotExistsFor(user.id, user.username)
+    user = EtherUser.objects.create(user=user, user_ether_id= result['authorID'])
+    return user
 
 
 
@@ -46,7 +46,10 @@ def create_session_community(request, community_id):
     epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
     ether_com = EtherCommunity.objects.get(community=community_id)
     ether_com = str(ether_com.community_ether_id)
-    ether_user = EtherUser.objects.get(user=request.user)
+    try:
+        ether_user = EtherUser.objects.get(user=request.user)
+    except Exception as e:
+        ether_user = create_ether_user(request.user)
     ether_user = str(ether_user.user_ether_id)
     validUntil = int(time())+28800
     result = epclient.createSession(ether_com, ether_user, validUntil)

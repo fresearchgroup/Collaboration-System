@@ -83,7 +83,8 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
-    'badges'
+    'badges',
+    'Categories'
 ] + get_machina_apps()
 
 SITE_ID = 1
@@ -306,3 +307,5 @@ COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
