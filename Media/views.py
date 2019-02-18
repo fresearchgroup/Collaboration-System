@@ -4,7 +4,7 @@ from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from metadata.models import MediaMetadata, Metadata
+from metadata.models import Metadata
 import requests
 from django.urls import reverse
 from django.contrib import messages
@@ -52,14 +52,14 @@ class MediaCreateView(CreateView):
 		self.object.mediatype = self.kwargs['mediatype']
 		self.object.created_by = self.request.user
 		self.object.state = States.objects.get(initial=True)
+
+		description = self.request.POST['description']
+		metadata = Metadata.objects.create(description=description)		
+		self.object.metadata = metadata
 		self.object.save()
         
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityMedia.objects.create(media=self.object, user=self.request.user, community=community)
-
-		description = self.request.POST['description']
-		metadata = Metadata.objects.create(description=description)		
-		MediaMetadata.objects.create(media=self.object, metadata=metadata)
 
 		return super(MediaCreateView, self).form_valid(form)
 
@@ -86,7 +86,6 @@ class MediaCreateView(CreateView):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
-		mediametadata = MediaMetadata.objects.get(media=pk)
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
 	if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
@@ -96,7 +95,7 @@ def media_view(request, pk):
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'mediametadata':mediametadata})
+	return render(request, 'view_media.html', {'gcmedia':gcmedia})
 
 def media_edit(request,pk):
 	if request.user.is_authenticated:
@@ -104,8 +103,7 @@ def media_edit(request,pk):
 			media = Media.objects.get(pk=pk)
 		except Media.DoesNotExist:
 			return redirect('home')			
-		mediametadata = MediaMetadata.objects.get(media=media)
-		metadata = Metadata.objects.get(pk=mediametadata.metadata.pk)
+		metadata = Metadata.objects.get(pk=media.metadata.pk)
 		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
 			return redirect('home')
 		uid = request.user.id
@@ -141,7 +139,7 @@ def media_edit(request,pk):
 			else:
 				states = getStatesCommunity(media.state.name)
 				if canEditResourceCommunity(media.state.name, membership.role.name, media, request):
-					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
+					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'states':states})
 				return redirect('media_view',pk=pk)
 		else:
 			return redirect('media_view',pk=pk)
