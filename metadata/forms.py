@@ -17,6 +17,6 @@ class MetadataForm(forms.ModelForm):
 			Div(
                 Field('description'),
                 HTML("<br>"),
-                ButtonHolder(Submit('submit', 'Create')),
+                ButtonHolder(Submit('submit', 'Save')),
                 )
 		)
