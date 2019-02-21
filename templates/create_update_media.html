@@ -63,7 +63,15 @@ $(function() {
 </script>
 <script type="text/javascript">
 		jQuery(document).ready(function() {
-      $('#div_id_medialink').hide();
+      {% if not media.title %}
+        $('#div_id_medialink').hide();
+      {% else %}
+        {% if media.mediafile %}
+          $('#div_id_medialink').hide();
+        {% else %}
+          $('#div_id_mediafile').hide();
+        {% endif %}
+      {% endif %}
 		});
 </script>
 {% endblock %}

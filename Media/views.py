@@ -8,14 +8,14 @@ from metadata.models import Metadata
 import requests
 from django.urls import reverse
 from django.contrib import messages
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from workflow.models import States
-from .forms import MediaCreateForm
+from .forms import *
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
 	model = Media
-	template_name = 'new_media.html'
+	template_name = 'create_update_media.html'
 	context_object_name = 'media'
 	success_url = 'media_view'
 
@@ -93,54 +93,78 @@ def media_view(request, pk):
 
 	return render(request, 'view_media.html', {'gcmedia':gcmedia})
 
-def media_edit(request,pk):
-	if request.user.is_authenticated:
-		try:
-			media = Media.objects.get(pk=pk)
-		except Media.DoesNotExist:
-			return redirect('home')			
-		metadata = Metadata.objects.get(pk=media.metadata.pk)
-		if media.state == States.objects.get(name='draft') and media.created_by != request.user:
-			return redirect('home')
-		uid = request.user.id
-		membership = None
-		message = 'True'
-		states = ['']
-		commgrp, membership = get_belongsto(pk, request.user.id)
-		if membership:
-			if request.method == 'POST':
-				title = request.POST['name']
-				getstate = request.POST['change_media_state']
-				state = States.objects.get(name=getstate)
-				description = request.POST['description']
-				media.title = title
-				media.state = state
-				metadata.description = description
-				uploadOrLink = request.POST['uploadOrLink']
-				if uploadOrLink == 'upload':
-					try:
-						mediafile = request.FILES['mediafile']
-						media.mediafile = mediafile
-					except:
-						message = 'media not uploaded'
-				if uploadOrLink == 'link':
-					try:
-						mediafile = request.POST['medialink']
-						media.medialink = medialink
-					except:
-						message = 'no media link'
-				media.save()
-				metadata.save()
-				return redirect('media_view',pk=pk)
-			else:
-				states = getStatesCommunity(media.state.name)
-				if canEditResourceCommunity(media.state.name, membership.role.name, media, request):
-					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'states':states})
-				return redirect('media_view',pk=pk)
-		else:
-			return redirect('media_view',pk=pk)
-	else:
+class MediaUpdateView(UpdateView):
+	form_class = MediaUpdateForm
+	model = Media
+	template_name = 'create_update_media.html'
+	pk_url_kwarg = 'pk'
+	context_object_name = 'media'
+	success_url = 'media_view'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			if self.object.state.initial and self.object.created_by != request.user:
+				return redirect('home')
+			if self.object.state.final:
+				messages.warning(request, 'Published content are not editable.')
+				return redirect('media_view',pk=self.object.pk)
+			community = self.get_community()
+			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
+				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+					response=super(MediaUpdateView, self).get(request, *args, **kwargs)
+					return response
+				return redirect('media_view',pk=self.object.pk)
+			return redirect('commnity_view',pk=community.pk)
 		return redirect('login')
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		community = self.get_community()
+		if self.is_communitymember(self.request, community):
+			context['role'] = self.get_communityrole(self.request, community)
+		return context
+
+	def get_form_kwargs(self):
+		kwargs = super(MediaUpdateView, self).get_form_kwargs()
+		kwargs.update({'mediatype': self.object.mediatype})
+		return kwargs
+
+	def form_valid(self, form):
+		"""
+		If the form is valid, save the associated model.
+		"""
+		self.object = form.save(commit=False)
+		self.object.save()
+		return super(MediaUpdateView, self).form_valid(form)
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
+
+	def get_community(self):
+		media= CommunityMedia.objects.get(media=self.object)
+		return media.community
+
+	def get_communityrole(self, request, community):
+		community = CommunityMembership.objects.get(user=request.user, community=community)
+		return community.role
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
 
 def media_reports(request, pk):
 	if request.user.is_authenticated:
