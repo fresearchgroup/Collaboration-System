@@ -22,6 +22,7 @@ from rest_framework import routers
 from UserRolesPermission import views as user_views
 from Community import views as communityview
 from Community import viewsets as communityviewsets
+from workflow import views as workflowview
 from Group import views as group_views
 from machina.app import board
 from UserRolesPermission import viewsets as user_viewsets
@@ -36,6 +37,7 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from django.views.generic import TemplateView
 
 router = routers.DefaultRouter()
 router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -183,6 +185,9 @@ urlpatterns = [
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
 
+    url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
+
+    url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern

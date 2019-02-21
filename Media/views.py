@@ -73,7 +73,7 @@ def media_edit(request,pk):
 				metadata.save()
 				return redirect('media_view',pk=pk)
 			else:
-				states = getStatesCommunity(media.state.name)
+				states = getStatesCommunity(media.state.name, membership.role.name)
 				if canEditResourceCommunity(media.state.name, membership.role.name, media, request):
 					return render(request, 'edit_media.html', {'media':media, 'membership':membership, 'commgrp':commgrp, 'mediametadata':mediametadata, 'states':states})
 				return redirect('media_view',pk=pk)

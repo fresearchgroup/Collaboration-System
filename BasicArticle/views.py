@@ -143,6 +143,14 @@ class ArticleEditView(UpdateView):
 	context_object_name = 'article'
 	success_url = 'article_view'
 
+	def get_form_kwargs(self):
+		"""
+		Returns the keyword arguments for instantiating the form.
+		"""
+		kwargs = super(ArticleEditView, self).get_form_kwargs()
+		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
+		return kwargs
+
 	def get(self, request, *args, **kwargs):
 		self.object = self.get_object()
 		if self.object.state.initial and self.object.created_by != request.user:
@@ -152,7 +160,6 @@ class ArticleEditView(UpdateView):
 			return redirect('article_view',pk=self.object.pk)
 		community = self.get_community()
 		if self.is_communitymember(request, community):
-			role = self.get_communityrole(request, community)
 			if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
 				response=super(ArticleEditView, self).get(request, *args, **kwargs)
 				sessionid = create_session_community(request, community.id)
@@ -283,17 +290,17 @@ def delete_article(request, pk):
 
 
 def article_watch(request, article):
-    if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
-    	view = ArticleViewLogs(
-    		article=article,ip=request.META['REMOTE_ADDR'],
-    		session=request.session.session_key
-    		)
-    	view.save()
-    	article = Articles.objects.get(pk=article.pk)
-    	article.views += 1
-    	article.save()
+	if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
+		view = ArticleViewLogs(
+			article=article,ip=request.META['REMOTE_ADDR'],
+			session=request.session.session_key
+			)
+		view.save()
+		article = Articles.objects.get(pk=article.pk)
+		article.views += 1
+		article.save()
 
-    return article.views
+	return article.views
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
-    model = Articles
+	model = Articles
