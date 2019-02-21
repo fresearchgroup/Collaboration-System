@@ -116,7 +116,7 @@ class MediaUpdateView(UpdateView):
 					response=super(MediaUpdateView, self).get(request, *args, **kwargs)
 					return response
 				return redirect('media_view',pk=self.object.pk)
-			return redirect('commnity_view',pk=community.pk)
+			return redirect('community_view',pk=community.pk)
 		return redirect('login')
 
 	def get_context_data(self, **kwargs):
