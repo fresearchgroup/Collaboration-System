@@ -189,6 +189,7 @@ urlpatterns = [
     url(r'categories/$', categoryview.categories, name='categories'),
 
     url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
+    url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern

@@ -135,7 +135,7 @@
       {% if user.is_authenticated %} 
         {% if gcmedia.media.state.name != 'publish'%}
           {% if gcmedia.media.metadata %}
-            <h5><a id="metadata_edit_id" class="nav-link" href="">Update metadata</a></h5>
+            <h5><a id="metadata_edit_id" class="nav-link" href="{% url 'metadata_update' gcmedia.media.pk gcmedia.media.metadata.pk %}">Update metadata</a></h5>
           {% else %}
             <h5><a id="metadata_create_id" class="nav-link" href="{% url 'metadata_create' gcmedia.community.pk gcmedia.media.pk%}">Add metadata</a></h5>
           {% endif %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Metadata
-from django.views.generic import CreateView
-from Community.models import CommunityMembership, Community
+from django.views.generic import CreateView, UpdateView
+from Community.models import CommunityMembership, Community, CommunityMedia
 from Media.models import Media
 from django.urls import reverse
 from django.contrib import messages
@@ -87,6 +87,75 @@ class MetadataCreateView(CreateView):
 
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
+
+class MetadataUpdateView(UpdateView):
+	form_class = MetadataForm
+	model = Metadata
+	template_name = 'create_update_metadata.html'
+	pk_url_kwarg = 'pk'
+	context_object_name = 'metadata'
+	success_url = 'media_view'
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			media = get_media(self.kwargs['mdpk'])
+			if media.state.initial and media.created_by != request.user:
+				return redirect('home')
+			community = self.get_community(media)
+			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
+				if canEditResourceCommunity(media.state.name, role.name, self.object, request):
+					response=super(MetadataUpdateView, self).get(request, *args, **kwargs)
+					return response
+				return redirect('media_view',pk=media.pk)
+			return redirect('community_view',pk=community.pk)
+		return redirect('login')
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super().get_context_data(**kwargs)
+		media = Media.objects.get(pk=self.kwargs['mdpk'])
+		context['media'] = media
+		community = self.get_community(media)
+		context['community'] = community
+		return context
+
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.save()
+		return super(MetadataUpdateView, self).form_valid(form)
+
+	def is_communitymember(self, request, community):
+		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
+
+	def get_community(self, media):
+		media = CommunityMedia.objects.get(media=media)
+		return media.community
+
+	def get_communityrole(self, request, community):
+		community = CommunityMembership.objects.get(user=request.user, community=community)
+		return community.role
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			mdpk = self.kwargs['mdpk']
+			return reverse(self.success_url,kwargs={'pk': mdpk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+
+
+
+
 
 def get_media(pk):
 	return Media.objects.get(pk=pk)
