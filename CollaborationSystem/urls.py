@@ -37,6 +37,7 @@ from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
 from Categories import views as categoryview
+from metadata import views as metadataview
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -187,6 +188,7 @@ urlpatterns = [
     url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
     url(r'categories/$', categoryview.categories, name='categories'),
 
+    url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern

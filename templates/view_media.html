@@ -132,6 +132,15 @@
       <h4>
         {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.metadata.description}} {% endautoescape%}
       </h4>
+      {% if user.is_authenticated %} 
+        {% if gcmedia.media.state.name != 'publish'%}
+          {% if gcmedia.media.metadata %}
+            <h5><a id="metadata_edit_id" class="nav-link" href="">Update metadata</a></h5>
+          {% else %}
+            <h5><a id="metadata_create_id" class="nav-link" href="{% url 'metadata_create' gcmedia.community.pk gcmedia.media.pk%}">Add metadata</a></h5>
+          {% endif %}
+        {%endif%} 
+      {% endif %}
     </div>
   </div>
   {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %}

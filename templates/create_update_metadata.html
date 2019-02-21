@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<style>
+.ck-editor__editable {
+    min-height: 200px;
+}
+</style>
+{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'media_view' media.pk %}">{{media.title}}</a></li>
+  <li class="breadcrumb-item active">Create Metadata</li>
+{% endblock %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% crispy form %}
+  </form>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_description' ) )
+    .then( id_description => {
+      console.log( id_description );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+{% endblock %}
