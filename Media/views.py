@@ -52,10 +52,6 @@ class MediaCreateView(CreateView):
 		self.object.mediatype = self.kwargs['mediatype']
 		self.object.created_by = self.request.user
 		self.object.state = States.objects.get(initial=True)
-
-		description = self.request.POST['description']
-		metadata = Metadata.objects.create(description=description)		
-		self.object.metadata = metadata
 		self.object.save()
         
 		community = Community.objects.get(pk=self.kwargs['pk'])

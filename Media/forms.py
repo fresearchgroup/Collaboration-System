@@ -5,7 +5,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit, Hidden
 
 class MediaCreateForm(forms.ModelForm):
-	description = forms.CharField(widget=forms.Textarea)
 	upload_or_link = (
 		('Upload', 'Upload'),
         ('Link', 'Link'),
@@ -19,7 +18,6 @@ class MediaCreateForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		mtype = kwargs.pop('mediatype', None)
 		super().__init__(*args, **kwargs)
-		self.fields['description'].widget.attrs.update({'class': 'form-control'})
 		self.fields['title'].widget.attrs.update({'class': 'form-control'})
 		self.fields['mediafile'].required = False
 		if mtype == 'IMAGE':
@@ -38,7 +36,6 @@ class MediaCreateForm(forms.ModelForm):
 		self.helper.layout = Layout(
 			Div(
                 Field('title'),
-                Field('description'),
                 Field('media_type'),
                 Field('medialink','value'),
                 Field('mediafile'),
