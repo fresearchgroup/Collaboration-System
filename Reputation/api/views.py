@@ -75,6 +75,7 @@ class ReputationStatsDetails(APIView):
         resource_log_serializer = scoreLogSerializer(resource_score_log)
         user_log_serializer = userLogSerializer(resource_user_log)
         return Response({
+            'success': True,
             'resource_log': resource_log_serializer.data,
             'user_log': user_log_serializer.data
         })
@@ -85,6 +86,9 @@ class ReputationStatsDetails(APIView):
         resource_score_log = self.get_object(pk)
 
         community_resource = self.get_community_resource(request, resource_score_log.resource)
+
+        # contians flags for checking if user can upvote or report a content
+        resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
 
         updates = {
             'upvote': request.data.get('update_type') == 'upvote',
@@ -104,6 +108,12 @@ class ReputationStatsDetails(APIView):
         )
 
         if (updates['upvote']):
+            if (not resource_score.can_vote_unpublished):
+                return Response({
+                    'success': False,
+                    'message': 'Upvote/downvote not allowed'
+                })
+
             if (not resource_user_log.upvoted):
                 resource_score_log.upvote = F('upvote') + 1
                 resource_user_log.upvoted = True
@@ -122,6 +132,12 @@ class ReputationStatsDetails(APIView):
                 community_user_reputation.upvote_count = F('upvote_count') - 1
 
         if (updates['downvote']):
+            if (not resource_score.can_vote_unpublished):
+                return Response({
+                    'success': False,
+                    'message': 'Upvote/downvote not allowed'
+                })
+                
             if (not resource_user_log.downvoted):
                 resource_score_log.downvote = F('downvote') + 1
                 resource_user_log.downvoted = True
@@ -140,6 +156,12 @@ class ReputationStatsDetails(APIView):
                 community_user_reputation.downvote_count = F('downvote_count') - 1
 
         if (updates['reported']):
+            if (not resource_score.can_report):
+                return Response({
+                    'success': False,
+                    'message': 'Reporting not allowed'
+                })
+                
             if (not resource_user_log.reported):
                 try:
                     report_reason = FlagReason.objects.get(pk=request.data.get('reason')) 
@@ -167,6 +189,7 @@ class ReputationStatsDetails(APIView):
         user_log_serializer = userLogSerializer(resource_user_log)
         
         return Response({
+            'success': True,
             'resource_log': resource_log_serializer.data,
             'user_log': user_log_serializer.data
         })
