@@ -18,9 +18,6 @@ from django.conf import settings
 import json
 import requests
 from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
-#from Media.views import create_media
-from metadata.views import create_metadata
-from metadata.models import MediaMetadata
 
 def create_group(request):
 	if request.method == 'POST':
