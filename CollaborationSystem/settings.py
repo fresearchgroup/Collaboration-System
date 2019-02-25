@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
+    'Categories'
 ] + get_machina_apps()
 
 SITE_ID = 1
@@ -96,15 +97,15 @@ ACTSTREAM_SETTINGS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reversion.middleware.RevisionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'eventlog.middleware.Middleware',
@@ -243,6 +244,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 COMMENTS_APP='django_comments_xtd'
 
@@ -305,3 +307,5 @@ COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)

@@ -11,43 +11,58 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
-<form method="post" name = "form" action ="{% url 'request_community_creation' %}">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-z A-Z ()]*$/" placeholder="Suggest a name for your community" required>
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
-    <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this community</span>
-    </div>
 
-  </div>
-  <div class="form-group">
-    <label for="tag_line">Tag line</label>
-    <input type="text" class="form-control" id="tag_line" name="tag_line" ng-model="tag_line" ng-pattern="/^[a-z A-Z0-9 !&()':-]*$/" placeholder="Suggest a tag line for your community" required>
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
-  </div>
-  <div class="form-group">
-    <label for="desc">Description</label>
-    <textarea  class="form-control" name="desc" rows="6"></textarea>
-    <small id="bodyhelp" class="form-text text-muted">Suggest a description about your community</small>
-  </div>
-  <div class="form-group">
-    <label for="category">Category</label>
-    <input type="text" class="form-control" id="category" name="category" placeholder="Suggest a category for your community" required>
-    <div class="invalid-feedback"></div>
-  </div>
-  <div class="form-group">
-    <label for="purpose">Purpose</label>
-    <textarea  class="form-control" name="purpose" rows="6" ng-model="purpose" ng-pattern="/^[a-z A-Z0-9 !&()':-]*$/"></textarea>
-    <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
-    <input type="hidden" name="status" value="Request" />
-    <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphanumeric content are allowed</span></div>
-  </div>
-  <button id="submit" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
-</form>
+{% if messages %}
+    {% for message in messages %}
+      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+    {% endfor %}
+
 {% endif %}
-<br />
+<br/>
+   <form name = "form" method="post" enctype="multipart/form-data" action="{% url 'request_community_creation' %}">
+                      {% csrf_token %}
+
+                  <div class="form-group">
+                    <label for="title">Name</label>
+                    {{ form.name }}
+                   <div class="invalid-feedback"><span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
+                  <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this community</span>
+                  </div>
+                  </div>
+
+                <div class="form-group">
+                  <label for="title">Description</label>
+                    {{ form.desc }}
+                    <div class="invalid-feedback">
+                      {{ form.desc.errors }}
+                    </div>
+                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+                  </div>
+
+                <div class="form-group">
+                    <label for="title">Category</label>
+                    {{ form.category }}
+                    <div class="invalid-feedback">
+                      {{ form.category.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Tag Line</label>
+                    {{ form.tag_line }}
+                    <div class="invalid-feedback">{{ form.tag_line.errors }}<span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Purpose</label>
+                    {{ form.purpose }}
+                    <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
+                   <div class="invalid-feedback">{{ form.purpose.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit" ng-disabled="form.$invalid">Submit</button>
+              </div>
+              
+          </form>
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/angular.min.js' %}"></script>

@@ -15,7 +15,7 @@
   <div class="details">
     <h3>No Content</h3>
     <p>
-      Sorry, currently there are no audio published from any community or group
+      Sorry, currently there are no audio published from any community
     </p>
   </div>
 </div>
@@ -43,12 +43,7 @@
               <li>
                 <i class="fa fa-calendar"></i> {{mediap.media.created_at}} </li>
                 <li>
-                  {% if mediap.belongsto == 'community' %}
                     <a href="{% url 'community_view' mediap.community.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.community.name}}</a>
-                  {% endif %}
-                  {% if mediap.belongsto == 'group' %}
-                    <a href="{% url 'group_view' mediap.group.pk %}"><i class="fa fa-users" style="color:red;"></i> {{mediap.group.name}}</a>
-                  {% endif %}
                 </li>
             </ul>
           </div>

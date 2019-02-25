@@ -23,6 +23,7 @@ class Media(models.Model):
 	mediatype = models.CharField(choices=media_types, max_length=10, default='IMAGE')	
 	title = models.CharField(max_length=100)
 	mediafile = models.FileField(null=True,upload_to=get_file_path)
+	medialink = models.CharField(max_length=300, null=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='media_author')
 	published_on=models.DateTimeField(null=True)
