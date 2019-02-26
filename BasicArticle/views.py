@@ -206,7 +206,7 @@ class ArticleEditView(UpdateView):
 		if self.is_communitymember(self.request, community):
 			context['role'] = self.get_communityrole(self.request, community)
 			if settings.REALTIME_EDITOR:
-				context['url'] = settings.SERVERURL
+				context['url'] = settings.ETHERPAD_URL
 				context['padid'] = get_pad_id(self.object.pk)
 		return context
 
