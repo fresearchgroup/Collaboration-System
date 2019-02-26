@@ -7,7 +7,7 @@ from workflow.models import States
 from Media.models import Media
 from Categories.models import Category
 from Community.views import create_wiki_for_community
-from metadata.models import Metadata, MediaMetadata
+from metadata.models import Metadata
 
 def migrate_communities():
 	cursor=connection.cursor()
@@ -33,8 +33,8 @@ def migrate_communities():
 				cursor.execute("select * from temples.BasicArticle_articles where id=%s;",[a['article_id']])
 				a = dictfetchall(cursor)
 				state = States.objects.get(pk=a[0]['state_id'])
-				if state == State.objects.get(name='private'):
-					state = State.objects.get(name='visible')
+				if state == States.objects.get(name='private'):
+					state = States.objects.get(name='visible')
 				user = User.objects.get(pk=a[0]['created_by_id'])
 				a=Articles.objects.create(title=a[0]['title'], body=a[0]['body'], image=a[0]['image'], created_by=user, state=state )
 				CommunityArticles.objects.create(article=a, user=user, community=com)
@@ -91,8 +91,8 @@ def migrate_communities():
 						cursor.execute("select * from temples.BasicArticle_articles where id=%s;",[a['article_id']])
 						a = dictfetchall(cursor)
 						state = States.objects.get(pk=a[0]['state_id'])
-						if state == State.objects.get(name='private'):
-							state = State.objects.get(name='visible')
+						if state == States.objects.get(name='private'):
+							state = States.objects.get(name='visible')
 						user = User.objects.get(pk=a[0]['created_by_id'])
 						a=Articles.objects.create(title=a[0]['title'], body=a[0]['body'], image=a[0]['image'], created_by=user, state=state )
 						CommunityArticles.objects.create(article=a, user=user, community=grp)

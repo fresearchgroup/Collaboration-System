@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 26, 2019 at 12:52 PM
+-- Generation Time: Feb 26, 2019 at 02:28 PM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `collaboration`
+-- Database: `temple_migration`
 --
 
 -- --------------------------------------------------------
@@ -39,7 +39,7 @@ CREATE TABLE `actstream_action` (
   `action_object_content_type_id` int(11) DEFAULT NULL,
   `actor_content_type_id` int(11) NOT NULL,
   `target_content_type_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -54,7 +54,7 @@ CREATE TABLE `actstream_follow` (
   `started` datetime(6) NOT NULL,
   `content_type_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ CREATE TABLE `authtoken_token` (
   `key` varchar(40) NOT NULL,
   `created` datetime(6) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -77,7 +77,7 @@ CREATE TABLE `authtoken_token` (
 CREATE TABLE `auth_group` (
   `id` int(11) NOT NULL,
   `name` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `auth_group`
@@ -99,7 +99,7 @@ CREATE TABLE `auth_group_permissions` (
   `id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -112,7 +112,7 @@ CREATE TABLE `auth_permission` (
   `name` varchar(255) NOT NULL,
   `content_type_id` int(11) NOT NULL,
   `codename` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `auth_permission`
@@ -370,69 +370,66 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (249, 'Can add media', 82, 'add_media'),
 (250, 'Can change media', 82, 'change_media'),
 (251, 'Can delete media', 82, 'delete_media'),
-(252, 'Can add media metadata', 83, 'add_mediametadata'),
-(253, 'Can change media metadata', 83, 'change_mediametadata'),
-(254, 'Can delete media metadata', 83, 'delete_mediametadata'),
-(255, 'Can add metadata', 84, 'add_metadata'),
-(256, 'Can change metadata', 84, 'change_metadata'),
-(257, 'Can delete metadata', 84, 'delete_metadata'),
-(258, 'Can add task', 85, 'add_task'),
-(259, 'Can change task', 85, 'change_task'),
-(260, 'Can delete task', 85, 'delete_task'),
-(261, 'Can add badge', 86, 'add_badge'),
-(262, 'Can change badge', 86, 'change_badge'),
-(263, 'Can delete badge', 86, 'delete_badge'),
-(264, 'Can add badge to user', 87, 'add_badgetouser'),
-(265, 'Can change badge to user', 87, 'change_badgetouser'),
-(266, 'Can delete badge to user', 87, 'delete_badgetouser'),
-(267, 'Can add category', 88, 'add_category'),
-(268, 'Can change category', 88, 'change_category'),
-(269, 'Can delete category', 88, 'delete_category'),
-(270, 'Can add Tag', 89, 'add_tag'),
-(271, 'Can change Tag', 89, 'change_tag'),
-(272, 'Can delete Tag', 89, 'delete_tag'),
-(273, 'Can add Tagged Item', 90, 'add_taggeditem'),
-(274, 'Can change Tagged Item', 90, 'change_taggeditem'),
-(275, 'Can delete Tagged Item', 90, 'delete_taggeditem'),
-(276, 'Can add Forum', 91, 'add_forum'),
-(277, 'Can change Forum', 91, 'change_forum'),
-(278, 'Can delete Forum', 91, 'delete_forum'),
-(279, 'Can add Post', 92, 'add_post'),
-(280, 'Can change Post', 92, 'change_post'),
-(281, 'Can delete Post', 92, 'delete_post'),
-(282, 'Can add Topic', 93, 'add_topic'),
-(283, 'Can change Topic', 93, 'change_topic'),
-(284, 'Can delete Topic', 93, 'delete_topic'),
-(285, 'Can add Attachment', 94, 'add_attachment'),
-(286, 'Can change Attachment', 94, 'change_attachment'),
-(287, 'Can delete Attachment', 94, 'delete_attachment'),
-(288, 'Can add Topic poll', 95, 'add_topicpoll'),
-(289, 'Can change Topic poll', 95, 'change_topicpoll'),
-(290, 'Can delete Topic poll', 95, 'delete_topicpoll'),
-(291, 'Can add Topic poll option', 96, 'add_topicpolloption'),
-(292, 'Can change Topic poll option', 96, 'change_topicpolloption'),
-(293, 'Can delete Topic poll option', 96, 'delete_topicpolloption'),
-(294, 'Can add Topic poll vote', 97, 'add_topicpollvote'),
-(295, 'Can change Topic poll vote', 97, 'change_topicpollvote'),
-(296, 'Can delete Topic poll vote', 97, 'delete_topicpollvote'),
-(297, 'Can add Forum track', 98, 'add_forumreadtrack'),
-(298, 'Can change Forum track', 98, 'change_forumreadtrack'),
-(299, 'Can delete Forum track', 98, 'delete_forumreadtrack'),
-(300, 'Can add Topic track', 99, 'add_topicreadtrack'),
-(301, 'Can change Topic track', 99, 'change_topicreadtrack'),
-(302, 'Can delete Topic track', 99, 'delete_topicreadtrack'),
-(303, 'Can add Forum profile', 100, 'add_forumprofile'),
-(304, 'Can change Forum profile', 100, 'change_forumprofile'),
-(305, 'Can delete Forum profile', 100, 'delete_forumprofile'),
-(306, 'Can add Forum permission', 101, 'add_forumpermission'),
-(307, 'Can change Forum permission', 101, 'change_forumpermission'),
-(308, 'Can delete Forum permission', 101, 'delete_forumpermission'),
-(309, 'Can add Group forum permission', 102, 'add_groupforumpermission'),
-(310, 'Can change Group forum permission', 102, 'change_groupforumpermission'),
-(311, 'Can delete Group forum permission', 102, 'delete_groupforumpermission'),
-(312, 'Can add User forum permission', 103, 'add_userforumpermission'),
-(313, 'Can change User forum permission', 103, 'change_userforumpermission'),
-(314, 'Can delete User forum permission', 103, 'delete_userforumpermission');
+(252, 'Can add metadata', 83, 'add_metadata'),
+(253, 'Can change metadata', 83, 'change_metadata'),
+(254, 'Can delete metadata', 83, 'delete_metadata'),
+(255, 'Can add task', 84, 'add_task'),
+(256, 'Can change task', 84, 'change_task'),
+(257, 'Can delete task', 84, 'delete_task'),
+(258, 'Can add badge', 85, 'add_badge'),
+(259, 'Can change badge', 85, 'change_badge'),
+(260, 'Can delete badge', 85, 'delete_badge'),
+(261, 'Can add badge to user', 86, 'add_badgetouser'),
+(262, 'Can change badge to user', 86, 'change_badgetouser'),
+(263, 'Can delete badge to user', 86, 'delete_badgetouser'),
+(264, 'Can add category', 87, 'add_category'),
+(265, 'Can change category', 87, 'change_category'),
+(266, 'Can delete category', 87, 'delete_category'),
+(267, 'Can add Tag', 88, 'add_tag'),
+(268, 'Can change Tag', 88, 'change_tag'),
+(269, 'Can delete Tag', 88, 'delete_tag'),
+(270, 'Can add Tagged Item', 89, 'add_taggeditem'),
+(271, 'Can change Tagged Item', 89, 'change_taggeditem'),
+(272, 'Can delete Tagged Item', 89, 'delete_taggeditem'),
+(273, 'Can add Forum', 90, 'add_forum'),
+(274, 'Can change Forum', 90, 'change_forum'),
+(275, 'Can delete Forum', 90, 'delete_forum'),
+(276, 'Can add Post', 91, 'add_post'),
+(277, 'Can change Post', 91, 'change_post'),
+(278, 'Can delete Post', 91, 'delete_post'),
+(279, 'Can add Topic', 92, 'add_topic'),
+(280, 'Can change Topic', 92, 'change_topic'),
+(281, 'Can delete Topic', 92, 'delete_topic'),
+(282, 'Can add Attachment', 93, 'add_attachment'),
+(283, 'Can change Attachment', 93, 'change_attachment'),
+(284, 'Can delete Attachment', 93, 'delete_attachment'),
+(285, 'Can add Topic poll', 94, 'add_topicpoll'),
+(286, 'Can change Topic poll', 94, 'change_topicpoll'),
+(287, 'Can delete Topic poll', 94, 'delete_topicpoll'),
+(288, 'Can add Topic poll option', 95, 'add_topicpolloption'),
+(289, 'Can change Topic poll option', 95, 'change_topicpolloption'),
+(290, 'Can delete Topic poll option', 95, 'delete_topicpolloption'),
+(291, 'Can add Topic poll vote', 96, 'add_topicpollvote'),
+(292, 'Can change Topic poll vote', 96, 'change_topicpollvote'),
+(293, 'Can delete Topic poll vote', 96, 'delete_topicpollvote'),
+(294, 'Can add Forum track', 97, 'add_forumreadtrack'),
+(295, 'Can change Forum track', 97, 'change_forumreadtrack'),
+(296, 'Can delete Forum track', 97, 'delete_forumreadtrack'),
+(297, 'Can add Topic track', 98, 'add_topicreadtrack'),
+(298, 'Can change Topic track', 98, 'change_topicreadtrack'),
+(299, 'Can delete Topic track', 98, 'delete_topicreadtrack'),
+(300, 'Can add Forum profile', 99, 'add_forumprofile'),
+(301, 'Can change Forum profile', 99, 'change_forumprofile'),
+(302, 'Can delete Forum profile', 99, 'delete_forumprofile'),
+(303, 'Can add Forum permission', 100, 'add_forumpermission'),
+(304, 'Can change Forum permission', 100, 'change_forumpermission'),
+(305, 'Can delete Forum permission', 100, 'delete_forumpermission'),
+(306, 'Can add Group forum permission', 101, 'add_groupforumpermission'),
+(307, 'Can change Group forum permission', 101, 'change_groupforumpermission'),
+(308, 'Can delete Group forum permission', 101, 'delete_groupforumpermission'),
+(309, 'Can add User forum permission', 102, 'add_userforumpermission'),
+(310, 'Can change User forum permission', 102, 'change_userforumpermission'),
+(311, 'Can delete User forum permission', 102, 'delete_userforumpermission');
 
 -- --------------------------------------------------------
 
@@ -452,14 +449,14 @@ CREATE TABLE `auth_user` (
   `is_staff` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `auth_user`
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$36000$fdnbb7H7wUj9$r1dr916dmTpUJz+B5Ki+dD7gD3oqBrrurUfnKAAD7cs=', '2019-02-26 07:09:32.832068', 1, 'admin', '', '', '', 1, 1, '2019-02-19 10:16:40.382751');
+(1, 'pbkdf2_sha256$36000$r8CujTIffhma$jnmVmCO1tuc18NIMsZrwfrdyNnxCNmIAXB+9LdVkPsE=', '2019-02-26 07:49:08.166678', 1, 'admin', '', '', 'admin@mail.com', 1, 1, '2019-02-26 07:47:48.227174');
 
 -- --------------------------------------------------------
 
@@ -471,7 +468,7 @@ CREATE TABLE `auth_user_groups` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -483,7 +480,7 @@ CREATE TABLE `auth_user_user_permissions` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -495,7 +492,7 @@ CREATE TABLE `badges_badge` (
   `id` varchar(255) NOT NULL,
   `level` varchar(1) NOT NULL,
   `icon` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `badges_badge`
@@ -517,7 +514,7 @@ CREATE TABLE `badges_badgetouser` (
   `badge_id` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `community_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -528,7 +525,7 @@ CREATE TABLE `badges_badgetouser` (
 CREATE TABLE `BasicArticle_articles` (
   `id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `body` longtext,
+  `body` text CHARACTER SET utf8,
   `image` varchar(100) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
   `published_on` datetime(6) DEFAULT NULL,
@@ -536,7 +533,7 @@ CREATE TABLE `BasicArticle_articles` (
   `created_by_id` int(11) DEFAULT NULL,
   `published_by_id` int(11) DEFAULT NULL,
   `state_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -550,7 +547,7 @@ CREATE TABLE `BasicArticle_articleviewlogs` (
   `session` varchar(40) NOT NULL,
   `created` datetime(6) NOT NULL,
   `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -568,14 +565,7 @@ CREATE TABLE `Categories_category` (
   `tree_id` int(10) UNSIGNED NOT NULL,
   `level` int(10) UNSIGNED NOT NULL,
   `parent_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `Categories_category`
---
-
-INSERT INTO `Categories_category` (`id`, `name`, `image`, `created_at`, `lft`, `rght`, `tree_id`, `level`, `parent_id`) VALUES
-(1, 'CS', 'category/d70e27e6-a4dd-486a-9d13-95e4442ca93b.jpg', '2019-02-19 10:26:23.762514', 1, 2, 1, 0, NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -600,7 +590,7 @@ CREATE TABLE `Community_community` (
   `created_by_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `image_thumbnail` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -613,7 +603,7 @@ CREATE TABLE `Community_communityarticles` (
   `article_id` int(11) NOT NULL,
   `community_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -626,7 +616,7 @@ CREATE TABLE `Community_communitycourses` (
   `community_id` int(11) DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -639,7 +629,7 @@ CREATE TABLE `Community_communitygroups` (
   `community_id` int(11) DEFAULT NULL,
   `group_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -652,7 +642,7 @@ CREATE TABLE `Community_communitymedia` (
   `community_id` int(11) DEFAULT NULL,
   `media_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -665,7 +655,7 @@ CREATE TABLE `Community_communitymembership` (
   `community_id` int(11) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -683,7 +673,7 @@ CREATE TABLE `Community_requestcommunitycreation` (
   `email` varchar(100) DEFAULT NULL,
   `status` varchar(100) DEFAULT NULL,
   `requestedby_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -699,7 +689,7 @@ CREATE TABLE `Course_course` (
   `created_at` datetime(6) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `state_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -713,7 +703,7 @@ CREATE TABLE `Course_links` (
   `desc` longtext NOT NULL,
   `types` varchar(300) DEFAULT NULL,
   `topics_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -725,7 +715,7 @@ CREATE TABLE `Course_topicarticle` (
   `id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL,
   `topics_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -742,7 +732,7 @@ CREATE TABLE `Course_topics` (
   `level` int(10) UNSIGNED NOT NULL,
   `course_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -755,7 +745,7 @@ CREATE TABLE `Course_videos` (
   `video` varchar(300) NOT NULL,
   `desc` longtext NOT NULL,
   `topics_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -772,20 +762,14 @@ CREATE TABLE `django_admin_log` (
   `change_message` longtext NOT NULL,
   `content_type_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `django_admin_log`
 --
 
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
-(1, '2019-02-19 10:18:19.645878', '1', 'Collaborative Community', 1, '[{\"added\": {}}]', 91, 1),
-(2, '2019-02-19 10:26:23.775657', '1', 'CS', 1, '[{\"added\": {}}]', 88, 1),
-(3, '2019-02-19 10:28:28.389681', '1', 'draft', 2, '[{\"changed\": {\"fields\": [\"initial\"]}}]', 31, 1),
-(4, '2019-02-19 10:28:36.331341', '3', 'publish', 2, '[{\"changed\": {\"fields\": [\"final\"]}}]', 31, 1),
-(5, '2019-02-26 07:15:21.174593', '1', 'CS', 3, '', 12, 1),
-(6, '2019-02-26 07:21:42.105309', '2', 'CS (1)', 3, '', 57, 1),
-(7, '2019-02-26 07:22:02.900985', '2', 'CS', 3, '', 91, 1);
+(1, '2019-02-26 07:49:42.065158', '1', 'Collaboration System', 1, '[{\"added\": {}}]', 90, 1);
 
 -- --------------------------------------------------------
 
@@ -807,7 +791,7 @@ CREATE TABLE `django_comments` (
   `content_type_id` int(11) NOT NULL,
   `site_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -818,7 +802,7 @@ CREATE TABLE `django_comments` (
 CREATE TABLE `django_comments_xtd_blacklisteddomain` (
   `id` int(11) NOT NULL,
   `domain` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -833,7 +817,7 @@ CREATE TABLE `django_comments_xtd_xtdcomment` (
   `level` smallint(6) NOT NULL,
   `order` int(11) NOT NULL,
   `followup` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -847,7 +831,7 @@ CREATE TABLE `django_comment_flags` (
   `flag_date` datetime(6) NOT NULL,
   `comment_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -859,7 +843,7 @@ CREATE TABLE `django_content_type` (
   `id` int(11) NOT NULL,
   `app_label` varchar(100) NOT NULL,
   `model` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `django_content_type`
@@ -873,11 +857,11 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (2, 'auth', 'permission'),
 (4, 'auth', 'user'),
 (30, 'authtoken', 'token'),
-(86, 'badges', 'badge'),
-(87, 'badges', 'badgetouser'),
+(85, 'badges', 'badge'),
+(86, 'badges', 'badgetouser'),
 (21, 'BasicArticle', 'articles'),
 (22, 'BasicArticle', 'articleviewlogs'),
-(88, 'Categories', 'category'),
+(87, 'Categories', 'category'),
 (12, 'Community', 'community'),
 (13, 'Community', 'communityarticles'),
 (14, 'Community', 'communitycourses'),
@@ -903,27 +887,26 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (79, 'etherpad', 'ethercommunity'),
 (80, 'etherpad', 'ethergroup'),
 (81, 'etherpad', 'etheruser'),
-(91, 'forum', 'forum'),
-(94, 'forum_attachments', 'attachment'),
-(92, 'forum_conversation', 'post'),
-(93, 'forum_conversation', 'topic'),
-(100, 'forum_member', 'forumprofile'),
-(101, 'forum_permission', 'forumpermission'),
-(102, 'forum_permission', 'groupforumpermission'),
-(103, 'forum_permission', 'userforumpermission'),
-(95, 'forum_polls', 'topicpoll'),
-(96, 'forum_polls', 'topicpolloption'),
-(97, 'forum_polls', 'topicpollvote'),
-(98, 'forum_tracking', 'forumreadtrack'),
-(99, 'forum_tracking', 'topicreadtrack'),
+(90, 'forum', 'forum'),
+(93, 'forum_attachments', 'attachment'),
+(91, 'forum_conversation', 'post'),
+(92, 'forum_conversation', 'topic'),
+(99, 'forum_member', 'forumprofile'),
+(100, 'forum_permission', 'forumpermission'),
+(101, 'forum_permission', 'groupforumpermission'),
+(102, 'forum_permission', 'userforumpermission'),
+(94, 'forum_polls', 'topicpoll'),
+(95, 'forum_polls', 'topicpolloption'),
+(96, 'forum_polls', 'topicpollvote'),
+(97, 'forum_tracking', 'forumreadtrack'),
+(98, 'forum_tracking', 'topicreadtrack'),
 (23, 'Group', 'group'),
 (24, 'Group', 'grouparticles'),
 (25, 'Group', 'groupinvitations'),
 (26, 'Group', 'groupmedia'),
 (27, 'Group', 'groupmembership'),
 (82, 'Media', 'media'),
-(83, 'metadata', 'mediametadata'),
-(84, 'metadata', 'metadata'),
+(83, 'metadata', 'metadata'),
 (46, 'notifications', 'notification'),
 (68, 'Reputation', 'articleflaglogs'),
 (69, 'Reputation', 'articlescorelog'),
@@ -944,9 +927,9 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (35, 'social_django', 'nonce'),
 (37, 'social_django', 'partial'),
 (36, 'social_django', 'usersocialauth'),
-(89, 'taggit', 'tag'),
-(90, 'taggit', 'taggeditem'),
-(85, 'TaskQueue', 'task'),
+(88, 'taggit', 'tag'),
+(89, 'taggit', 'taggeditem'),
+(84, 'TaskQueue', 'task'),
 (53, 'thumbnail', 'kvstore'),
 (19, 'UserRolesPermission', 'favourite'),
 (20, 'UserRolesPermission', 'profileimage'),
@@ -981,156 +964,156 @@ CREATE TABLE `django_migrations` (
   `app` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `django_migrations`
 --
 
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
-(1, 'contenttypes', '0001_initial', '2019-02-19 10:14:01.281893'),
-(2, 'taggit', '0001_initial', '2019-02-19 10:14:01.338750'),
-(3, 'taggit', '0002_auto_20150616_2121', '2019-02-19 10:14:01.349124'),
-(4, 'workflow', '0001_initial', '2019-02-19 10:14:01.396296'),
-(5, 'auth', '0001_initial', '2019-02-19 10:14:01.612942'),
-(6, 'BasicArticle', '0001_initial', '2019-02-19 10:14:01.723071'),
-(7, 'BasicArticle', '0002_articles_tags', '2019-02-19 10:14:01.736091'),
-(8, 'Categories', '0001_initial', '2019-02-19 10:14:01.801023'),
-(9, 'contenttypes', '0002_remove_content_type_name', '2019-02-19 10:14:01.849676'),
-(10, 'auth', '0002_alter_permission_name_max_length', '2019-02-19 10:14:01.874337'),
-(11, 'auth', '0003_alter_user_email_max_length', '2019-02-19 10:14:01.905671'),
-(12, 'auth', '0004_alter_user_username_opts', '2019-02-19 10:14:01.916077'),
-(13, 'auth', '0005_alter_user_last_login_null', '2019-02-19 10:14:01.944986'),
-(14, 'auth', '0006_require_contenttypes_0002', '2019-02-19 10:14:01.947504'),
-(15, 'auth', '0007_alter_validators_add_error_messages', '2019-02-19 10:14:01.961035'),
-(16, 'auth', '0008_alter_user_username_max_length', '2019-02-19 10:14:01.998110'),
-(17, 'Media', '0001_initial', '2019-02-19 10:14:02.081619'),
-(18, 'Group', '0001_initial', '2019-02-19 10:14:02.434578'),
-(19, 'Course', '0001_initial', '2019-02-19 10:14:02.801598'),
-(20, 'Community', '0001_initial', '2019-02-19 10:14:03.108248'),
-(21, 'Community', '0002_auto_20181224_0729', '2019-02-19 10:14:03.657782'),
-(22, 'Community', '0003_auto_20190204_1241', '2019-02-19 10:14:03.684579'),
-(23, 'Community', '0004_auto_20190205_1144', '2019-02-19 10:14:03.970864'),
-(24, 'Community', '0005_community_image_thumbnail', '2019-02-19 10:14:04.009092'),
-(25, 'Media', '0002_media_medialink', '2019-02-19 10:14:04.046600'),
-(26, 'Reputation', '0001_initial', '2019-02-19 10:14:04.624749'),
-(27, 'TaskQueue', '0001_initial', '2019-02-19 10:14:04.636072'),
-(28, 'UserRolesPermission', '0001_initial', '2019-02-19 10:14:04.750096'),
-(29, 'actstream', '0001_initial', '2019-02-19 10:14:05.043288'),
-(30, 'actstream', '0002_remove_action_data', '2019-02-19 10:14:05.045656'),
-(31, 'admin', '0001_initial', '2019-02-19 10:14:05.189629'),
-(32, 'admin', '0002_logentry_remove_auto_add', '2019-02-19 10:14:05.228091'),
-(33, 'authtoken', '0001_initial', '2019-02-19 10:14:05.289358'),
-(34, 'authtoken', '0002_auto_20160226_1747', '2019-02-19 10:14:05.458898'),
-(35, 'badges', '0001_initial', '2019-02-19 10:14:05.461145'),
-(36, 'badges', '0002_auto_20150513_0429', '2019-02-19 10:14:05.596192'),
-(37, 'badges', '0003_badgetouser_community', '2019-02-19 10:14:05.671408'),
-(38, 'sites', '0001_initial', '2019-02-19 10:14:05.683787'),
-(39, 'django_comments', '0001_initial', '2019-02-19 10:14:05.945223'),
-(40, 'django_comments', '0002_update_user_email_field_length', '2019-02-19 10:14:05.997630'),
-(41, 'django_comments', '0003_add_submit_date_index', '2019-02-19 10:14:06.043169'),
-(42, 'django_comments_xtd', '0001_initial', '2019-02-19 10:14:06.206419'),
-(43, 'django_comments_xtd', '0002_blacklisteddomain', '2019-02-19 10:14:06.221903'),
-(44, 'django_comments_xtd', '0003_auto_20170220_1333', '2019-02-19 10:14:06.233190'),
-(45, 'django_comments_xtd', '0004_auto_20170221_1510', '2019-02-19 10:14:06.244982'),
-(46, 'django_comments_xtd', '0005_auto_20170920_1247', '2019-02-19 10:14:06.260490'),
-(47, 'django_nyt', '0001_initial', '2019-02-19 10:14:06.320145'),
-(48, 'django_nyt', '0002_notification_settings', '2019-02-19 10:14:06.397434'),
-(49, 'django_nyt', '0003_subscription', '2019-02-19 10:14:06.499448'),
-(50, 'django_nyt', '0004_notification_subscription', '2019-02-19 10:14:06.563485'),
-(51, 'django_nyt', '0005__v_0_9_2', '2019-02-19 10:14:07.031001'),
-(52, 'django_nyt', '0006_auto_20141229_1630', '2019-02-19 10:14:07.109509'),
-(53, 'django_nyt', '0007_add_modified_and_default_settings', '2019-02-19 10:14:07.273626'),
-(54, 'django_nyt', '0008_auto_20161023_1641', '2019-02-19 10:14:07.519249'),
-(55, 'etherpad', '0001_initial', '2019-02-19 10:14:07.771955'),
-(56, 'forum', '0001_initial', '2019-02-19 10:14:07.909920'),
-(57, 'forum_conversation', '0001_initial', '2019-02-19 10:14:08.293003'),
-(58, 'forum_conversation', '0002_post_anonymous_key', '2019-02-19 10:14:08.413025'),
-(59, 'forum_conversation', '0003_auto_20160228_2051', '2019-02-19 10:14:08.448802'),
-(60, 'forum_conversation', '0004_auto_20160427_0502', '2019-02-19 10:14:08.580408'),
-(61, 'forum_conversation', '0005_auto_20160607_0455', '2019-02-19 10:14:08.657578'),
-(62, 'forum_conversation', '0006_post_enable_signature', '2019-02-19 10:14:08.717898'),
-(63, 'forum_conversation', '0007_auto_20160903_0450', '2019-02-19 10:14:08.894040'),
-(64, 'forum_conversation', '0008_auto_20160903_0512', '2019-02-19 10:14:08.946805'),
-(65, 'forum_conversation', '0009_auto_20160925_2126', '2019-02-19 10:14:08.988722'),
-(66, 'forum_conversation', '0010_auto_20170120_0224', '2019-02-19 10:14:09.115349'),
-(67, 'forum', '0002_auto_20150725_0512', '2019-02-19 10:14:09.124415'),
-(68, 'forum', '0003_remove_forum_is_active', '2019-02-19 10:14:09.157861'),
-(69, 'forum', '0004_auto_20170504_2108', '2019-02-19 10:14:09.231390'),
-(70, 'forum', '0005_auto_20170504_2113', '2019-02-19 10:14:09.344996'),
-(71, 'forum', '0006_auto_20170523_2036', '2019-02-19 10:14:09.426522'),
-(72, 'forum', '0007_auto_20170523_2140', '2019-02-19 10:14:09.474657'),
-(73, 'forum', '0008_forum_last_post', '2019-02-19 10:14:09.559610'),
-(74, 'forum', '0009_auto_20170928_2327', '2019-02-19 10:14:09.607227'),
-(75, 'forum_attachments', '0001_initial', '2019-02-19 10:14:09.691402'),
-(76, 'forum_member', '0001_initial', '2019-02-19 10:14:09.769962'),
-(77, 'forum_member', '0002_auto_20160225_0515', '2019-02-19 10:14:09.802371'),
-(78, 'forum_member', '0003_auto_20160227_2122', '2019-02-19 10:14:09.843247'),
-(79, 'forum_permission', '0001_initial', '2019-02-19 10:14:10.151262'),
-(80, 'forum_permission', '0002_auto_20160607_0500', '2019-02-19 10:14:10.357805'),
-(81, 'forum_permission', '0003_remove_forumpermission_name', '2019-02-19 10:14:10.382554'),
-(82, 'forum_polls', '0001_initial', '2019-02-19 10:14:10.601496'),
-(83, 'forum_polls', '0002_auto_20151105_0029', '2019-02-19 10:14:10.757980'),
-(84, 'forum_tracking', '0001_initial', '2019-02-19 10:14:11.006684'),
-(85, 'forum_tracking', '0002_auto_20160607_0502', '2019-02-19 10:14:11.192372'),
-(86, 'metadata', '0001_initial', '2019-02-19 10:14:11.342227'),
-(87, 'notifications', '0001_initial', '2019-02-19 10:14:11.481002'),
-(88, 'notifications', '0002_auto_20150224_1134', '2019-02-19 10:14:11.573075'),
-(89, 'notifications', '0003_notification_data', '2019-02-19 10:14:11.615992'),
-(90, 'notifications', '0004_auto_20150826_1508', '2019-02-19 10:14:11.661468'),
-(91, 'notifications', '0005_auto_20160504_1520', '2019-02-19 10:14:11.697172'),
-(92, 'notifications', '0006_indexes', '2019-02-19 10:14:12.002992'),
-(93, 'reversion', '0001_initial', '2019-02-19 10:14:12.197761'),
-(94, 'reversion', '0002_auto_20141216_1509', '2019-02-19 10:14:12.200128'),
-(95, 'reversion', '0003_auto_20160601_1600', '2019-02-19 10:14:12.202477'),
-(96, 'reversion', '0004_auto_20160611_1202', '2019-02-19 10:14:12.204562'),
-(97, 'sessions', '0001_initial', '2019-02-19 10:14:12.221423'),
-(98, 'sites', '0002_alter_domain_unique', '2019-02-19 10:14:12.237869'),
-(99, 'default', '0001_initial', '2019-02-19 10:14:12.426719'),
-(100, 'social_auth', '0001_initial', '2019-02-19 10:14:12.429168'),
-(101, 'default', '0002_add_related_name', '2019-02-19 10:14:12.523780'),
-(102, 'social_auth', '0002_add_related_name', '2019-02-19 10:14:12.526951'),
-(103, 'default', '0003_alter_email_max_length', '2019-02-19 10:14:12.549266'),
-(104, 'social_auth', '0003_alter_email_max_length', '2019-02-19 10:14:12.551936'),
-(105, 'default', '0004_auto_20160423_0400', '2019-02-19 10:14:12.584598'),
-(106, 'social_auth', '0004_auto_20160423_0400', '2019-02-19 10:14:12.595520'),
-(107, 'social_auth', '0005_auto_20160727_2333', '2019-02-19 10:14:12.609920'),
-(108, 'social_django', '0006_partial', '2019-02-19 10:14:12.629065'),
-(109, 'social_django', '0007_code_timestamp', '2019-02-19 10:14:12.650767'),
-(110, 'social_django', '0008_partial_timestamp', '2019-02-19 10:14:12.675123'),
-(111, 'thumbnail', '0001_initial', '2019-02-19 10:14:12.687748'),
-(112, 'webcontent', '0001_initial', '2019-02-19 10:14:12.714601'),
-(113, 'webcontent', '0002_auto_20180124_1328', '2019-02-19 10:14:12.793064'),
-(114, 'webcontent', '0003_auto_20180124_1452', '2019-02-19 10:14:12.835147'),
-(115, 'webcontent', '0004_delete_faq', '2019-02-19 10:14:12.844066'),
-(116, 'webcontent', '0005_faq', '2019-02-19 10:14:12.856945'),
-(117, 'webcontent', '0006_faqcategory', '2019-02-19 10:14:12.870699'),
-(118, 'webcontent', '0007_remove_faq_category', '2019-02-19 10:14:12.887336'),
-(119, 'webcontent', '0008_faq_category', '2019-02-19 10:14:12.915402'),
-(120, 'webcontent', '0009_faq_order', '2019-02-19 10:14:12.929132'),
-(121, 'webcontent', '0010_remove_faq_order', '2019-02-19 10:14:12.949752'),
-(122, 'webcontent', '0011_faq_order', '2019-02-19 10:14:13.036005'),
-(123, 'webcontent', '0012_auto_20180125_1628', '2019-02-19 10:14:13.062683'),
-(124, 'webcontent', '0013_auto_20180125_1634', '2019-02-19 10:14:13.085013'),
-(125, 'webcontent', '0014_auto_20180125_1636', '2019-02-19 10:14:13.096926'),
-(126, 'webcontent', '0015_auto_20180125_1643', '2019-02-19 10:14:13.120607'),
-(127, 'wiki', '0001_initial', '2019-02-19 10:14:14.635537'),
-(128, 'wiki', '0002_urlpath_moved_to', '2019-02-19 10:14:14.736939'),
-(129, 'wiki_attachments', '0001_initial', '2019-02-19 10:14:15.148011'),
-(130, 'wiki_attachments', '0002_auto_20151118_1816', '2019-02-19 10:14:15.174444'),
-(131, 'wiki_images', '0001_initial', '2019-02-19 10:14:15.358163'),
-(132, 'wiki_images', '0002_auto_20151118_1811', '2019-02-19 10:14:15.377668'),
-(133, 'wiki_notifications', '0001_initial', '2019-02-19 10:14:15.497449'),
-(134, 'wiki_notifications', '0002_auto_20151118_1811', '2019-02-19 10:14:15.511723'),
-(135, 'workflow', '0002_auto_20190110_1419', '2019-02-19 10:14:15.583437'),
-(136, 'reversion', '0001_squashed_0004_auto_20160611_1202', '2019-02-19 10:14:15.588072'),
-(137, 'social_django', '0002_add_related_name', '2019-02-19 10:14:15.590392'),
-(138, 'social_django', '0001_initial', '2019-02-19 10:14:15.592662'),
-(139, 'social_django', '0004_auto_20160423_0400', '2019-02-19 10:14:15.594937'),
-(140, 'social_django', '0005_auto_20160727_2333', '2019-02-19 10:14:15.597092'),
-(141, 'social_django', '0003_alter_email_max_length', '2019-02-19 10:14:15.599563'),
-(142, 'metadata', '0002_auto_20190218_1005', '2019-02-26 07:08:24.801752'),
-(143, 'Media', '0003_media_metadata', '2019-02-26 07:08:26.806266');
+(1, 'contenttypes', '0001_initial', '2019-02-26 07:41:26.492337'),
+(2, 'taggit', '0001_initial', '2019-02-26 07:41:29.032338'),
+(3, 'taggit', '0002_auto_20150616_2121', '2019-02-26 07:41:29.450448'),
+(4, 'workflow', '0001_initial', '2019-02-26 07:41:32.106100'),
+(5, 'auth', '0001_initial', '2019-02-26 07:41:41.338858'),
+(6, 'BasicArticle', '0001_initial', '2019-02-26 07:41:45.857438'),
+(7, 'BasicArticle', '0002_articles_tags', '2019-02-26 07:41:45.926853'),
+(8, 'Categories', '0001_initial', '2019-02-26 07:41:48.689139'),
+(9, 'contenttypes', '0002_remove_content_type_name', '2019-02-26 07:41:49.859244'),
+(10, 'auth', '0002_alter_permission_name_max_length', '2019-02-26 07:41:49.992798'),
+(11, 'auth', '0003_alter_user_email_max_length', '2019-02-26 07:41:50.126212'),
+(12, 'auth', '0004_alter_user_username_opts', '2019-02-26 07:41:50.182471'),
+(13, 'auth', '0005_alter_user_last_login_null', '2019-02-26 07:41:50.802683'),
+(14, 'auth', '0006_require_contenttypes_0002', '2019-02-26 07:41:50.852661'),
+(15, 'auth', '0007_alter_validators_add_error_messages', '2019-02-26 07:41:50.905140'),
+(16, 'auth', '0008_alter_user_username_max_length', '2019-02-26 07:41:51.045395'),
+(17, 'Media', '0001_initial', '2019-02-26 07:41:54.052495'),
+(18, 'Group', '0001_initial', '2019-02-26 07:42:09.278893'),
+(19, 'Course', '0001_initial', '2019-02-26 07:42:21.130104'),
+(20, 'Community', '0001_initial', '2019-02-26 07:42:32.039342'),
+(21, 'Community', '0002_auto_20181224_0729', '2019-02-26 07:42:48.160860'),
+(22, 'Community', '0003_auto_20190204_1241', '2019-02-26 07:42:48.353985'),
+(23, 'Community', '0004_auto_20190205_1144', '2019-02-26 07:42:54.612570'),
+(24, 'Community', '0005_community_image_thumbnail', '2019-02-26 07:42:55.632035'),
+(25, 'metadata', '0001_initial', '2019-02-26 07:42:58.847303'),
+(26, 'metadata', '0002_auto_20190218_1005', '2019-02-26 07:43:00.425941'),
+(27, 'Media', '0002_media_medialink', '2019-02-26 07:43:01.270782'),
+(28, 'Media', '0003_media_metadata', '2019-02-26 07:43:03.133721'),
+(29, 'Reputation', '0001_initial', '2019-02-26 07:43:21.267059'),
+(30, 'TaskQueue', '0001_initial', '2019-02-26 07:43:21.712524'),
+(31, 'UserRolesPermission', '0001_initial', '2019-02-26 07:43:24.257755'),
+(32, 'actstream', '0001_initial', '2019-02-26 07:43:32.342677'),
+(33, 'actstream', '0002_remove_action_data', '2019-02-26 07:43:32.384598'),
+(34, 'admin', '0001_initial', '2019-02-26 07:43:34.414618'),
+(35, 'admin', '0002_logentry_remove_auto_add', '2019-02-26 07:43:34.699539'),
+(36, 'authtoken', '0001_initial', '2019-02-26 07:43:35.984739'),
+(37, 'authtoken', '0002_auto_20160226_1747', '2019-02-26 07:43:37.171457'),
+(38, 'badges', '0001_initial', '2019-02-26 07:43:37.213251'),
+(39, 'badges', '0002_auto_20150513_0429', '2019-02-26 07:43:39.910836'),
+(40, 'badges', '0003_badgetouser_community', '2019-02-26 07:43:41.498222'),
+(41, 'sites', '0001_initial', '2019-02-26 07:43:41.859103'),
+(42, 'django_comments', '0001_initial', '2019-02-26 07:43:48.012129'),
+(43, 'django_comments', '0002_update_user_email_field_length', '2019-02-26 07:43:48.189025'),
+(44, 'django_comments', '0003_add_submit_date_index', '2019-02-26 07:43:48.505631'),
+(45, 'django_comments_xtd', '0001_initial', '2019-02-26 07:43:50.476377'),
+(46, 'django_comments_xtd', '0002_blacklisteddomain', '2019-02-26 07:43:51.236118'),
+(47, 'django_comments_xtd', '0003_auto_20170220_1333', '2019-02-26 07:43:51.294082'),
+(48, 'django_comments_xtd', '0004_auto_20170221_1510', '2019-02-26 07:43:51.350416'),
+(49, 'django_comments_xtd', '0005_auto_20170920_1247', '2019-02-26 07:43:51.413003'),
+(50, 'django_nyt', '0001_initial', '2019-02-26 07:43:52.648603'),
+(51, 'django_nyt', '0002_notification_settings', '2019-02-26 07:43:54.168083'),
+(52, 'django_nyt', '0003_subscription', '2019-02-26 07:43:57.343252'),
+(53, 'django_nyt', '0004_notification_subscription', '2019-02-26 07:43:58.829174'),
+(54, 'django_nyt', '0005__v_0_9_2', '2019-02-26 07:44:05.865184'),
+(55, 'django_nyt', '0006_auto_20141229_1630', '2019-02-26 07:44:07.067140'),
+(56, 'django_nyt', '0007_add_modified_and_default_settings', '2019-02-26 07:44:08.464175'),
+(57, 'django_nyt', '0008_auto_20161023_1641', '2019-02-26 07:44:11.479821'),
+(58, 'etherpad', '0001_initial', '2019-02-26 07:44:16.348977'),
+(59, 'forum', '0001_initial', '2019-02-26 07:44:20.090416'),
+(60, 'forum_conversation', '0001_initial', '2019-02-26 07:44:29.521586'),
+(61, 'forum_conversation', '0002_post_anonymous_key', '2019-02-26 07:44:30.283029'),
+(62, 'forum_conversation', '0003_auto_20160228_2051', '2019-02-26 07:44:30.395129'),
+(63, 'forum_conversation', '0004_auto_20160427_0502', '2019-02-26 07:44:32.469261'),
+(64, 'forum_conversation', '0005_auto_20160607_0455', '2019-02-26 07:44:33.163204'),
+(65, 'forum_conversation', '0006_post_enable_signature', '2019-02-26 07:44:34.265613'),
+(66, 'forum_conversation', '0007_auto_20160903_0450', '2019-02-26 07:44:38.033489'),
+(67, 'forum_conversation', '0008_auto_20160903_0512', '2019-02-26 07:44:38.132767'),
+(68, 'forum_conversation', '0009_auto_20160925_2126', '2019-02-26 07:44:38.209165'),
+(69, 'forum_conversation', '0010_auto_20170120_0224', '2019-02-26 07:44:39.645125'),
+(70, 'forum', '0002_auto_20150725_0512', '2019-02-26 07:44:39.703364'),
+(71, 'forum', '0003_remove_forum_is_active', '2019-02-26 07:44:40.564074'),
+(72, 'forum', '0004_auto_20170504_2108', '2019-02-26 07:44:42.270841'),
+(73, 'forum', '0005_auto_20170504_2113', '2019-02-26 07:44:42.366941'),
+(74, 'forum', '0006_auto_20170523_2036', '2019-02-26 07:44:44.081771'),
+(75, 'forum', '0007_auto_20170523_2140', '2019-02-26 07:44:44.187242'),
+(76, 'forum', '0008_forum_last_post', '2019-02-26 07:44:45.952930'),
+(77, 'forum', '0009_auto_20170928_2327', '2019-02-26 07:44:46.052430'),
+(78, 'forum_attachments', '0001_initial', '2019-02-26 07:44:47.080605'),
+(79, 'forum_member', '0001_initial', '2019-02-26 07:44:48.367580'),
+(80, 'forum_member', '0002_auto_20160225_0515', '2019-02-26 07:44:48.462005'),
+(81, 'forum_member', '0003_auto_20160227_2122', '2019-02-26 07:44:48.541383'),
+(82, 'forum_permission', '0001_initial', '2019-02-26 07:44:55.894577'),
+(83, 'forum_permission', '0002_auto_20160607_0500', '2019-02-26 07:44:57.389034'),
+(84, 'forum_permission', '0003_remove_forumpermission_name', '2019-02-26 07:44:58.132573'),
+(85, 'forum_polls', '0001_initial', '2019-02-26 07:45:02.425912'),
+(86, 'forum_polls', '0002_auto_20151105_0029', '2019-02-26 07:45:04.623388'),
+(87, 'forum_tracking', '0001_initial', '2019-02-26 07:45:09.284099'),
+(88, 'forum_tracking', '0002_auto_20160607_0502', '2019-02-26 07:45:10.128895'),
+(89, 'notifications', '0001_initial', '2019-02-26 07:45:14.137945'),
+(90, 'notifications', '0002_auto_20150224_1134', '2019-02-26 07:45:15.759730'),
+(91, 'notifications', '0003_notification_data', '2019-02-26 07:45:16.577030'),
+(92, 'notifications', '0004_auto_20150826_1508', '2019-02-26 07:45:16.752698'),
+(93, 'notifications', '0005_auto_20160504_1520', '2019-02-26 07:45:16.888103'),
+(94, 'notifications', '0006_indexes', '2019-02-26 07:45:18.254944'),
+(95, 'reversion', '0001_initial', '2019-02-26 07:45:22.089041'),
+(96, 'reversion', '0002_auto_20141216_1509', '2019-02-26 07:45:22.130714'),
+(97, 'reversion', '0003_auto_20160601_1600', '2019-02-26 07:45:22.188958'),
+(98, 'reversion', '0004_auto_20160611_1202', '2019-02-26 07:45:22.230512'),
+(99, 'sessions', '0001_initial', '2019-02-26 07:45:22.823877'),
+(100, 'sites', '0002_alter_domain_unique', '2019-02-26 07:45:23.108265'),
+(101, 'default', '0001_initial', '2019-02-26 07:45:26.549143'),
+(102, 'social_auth', '0001_initial', '2019-02-26 07:45:26.599468'),
+(103, 'default', '0002_add_related_name', '2019-02-26 07:45:27.577108'),
+(104, 'social_auth', '0002_add_related_name', '2019-02-26 07:45:27.610293'),
+(105, 'default', '0003_alter_email_max_length', '2019-02-26 07:45:28.019857'),
+(106, 'social_auth', '0003_alter_email_max_length', '2019-02-26 07:45:28.053333'),
+(107, 'default', '0004_auto_20160423_0400', '2019-02-26 07:45:28.131117'),
+(108, 'social_auth', '0004_auto_20160423_0400', '2019-02-26 07:45:28.169443'),
+(109, 'social_auth', '0005_auto_20160727_2333', '2019-02-26 07:45:28.452965'),
+(110, 'social_django', '0006_partial', '2019-02-26 07:45:29.029389'),
+(111, 'social_django', '0007_code_timestamp', '2019-02-26 07:45:30.081749'),
+(112, 'social_django', '0008_partial_timestamp', '2019-02-26 07:45:31.051186'),
+(113, 'thumbnail', '0001_initial', '2019-02-26 07:45:31.389462'),
+(114, 'webcontent', '0001_initial', '2019-02-26 07:45:32.056620'),
+(115, 'webcontent', '0002_auto_20180124_1328', '2019-02-26 07:45:34.033219'),
+(116, 'webcontent', '0003_auto_20180124_1452', '2019-02-26 07:45:35.486687'),
+(117, 'webcontent', '0004_delete_faq', '2019-02-26 07:45:35.695460'),
+(118, 'webcontent', '0005_faq', '2019-02-26 07:45:36.033789'),
+(119, 'webcontent', '0006_faqcategory', '2019-02-26 07:45:36.341167'),
+(120, 'webcontent', '0007_remove_faq_category', '2019-02-26 07:45:36.924524'),
+(121, 'webcontent', '0008_faq_category', '2019-02-26 07:45:38.284867'),
+(122, 'webcontent', '0009_faq_order', '2019-02-26 07:45:38.812470'),
+(123, 'webcontent', '0010_remove_faq_order', '2019-02-26 07:45:39.371786'),
+(124, 'webcontent', '0011_faq_order', '2019-02-26 07:45:40.015671'),
+(125, 'webcontent', '0012_auto_20180125_1628', '2019-02-26 07:45:40.766945'),
+(126, 'webcontent', '0013_auto_20180125_1634', '2019-02-26 07:45:41.760222'),
+(127, 'webcontent', '0014_auto_20180125_1636', '2019-02-26 07:45:41.903136'),
+(128, 'webcontent', '0015_auto_20180125_1643', '2019-02-26 07:45:42.713092'),
+(129, 'wiki', '0001_initial', '2019-02-26 07:46:20.852399'),
+(130, 'wiki', '0002_urlpath_moved_to', '2019-02-26 07:46:23.248390'),
+(131, 'wiki_attachments', '0001_initial', '2019-02-26 07:46:29.304235'),
+(132, 'wiki_attachments', '0002_auto_20151118_1816', '2019-02-26 07:46:29.373945'),
+(133, 'wiki_images', '0001_initial', '2019-02-26 07:46:31.942550'),
+(134, 'wiki_images', '0002_auto_20151118_1811', '2019-02-26 07:46:32.044721'),
+(135, 'wiki_notifications', '0001_initial', '2019-02-26 07:46:34.491264'),
+(136, 'wiki_notifications', '0002_auto_20151118_1811', '2019-02-26 07:46:34.546877'),
+(137, 'workflow', '0002_auto_20190110_1419', '2019-02-26 07:46:35.795909'),
+(138, 'reversion', '0001_squashed_0004_auto_20160611_1202', '2019-02-26 07:46:35.849356'),
+(139, 'social_django', '0001_initial', '2019-02-26 07:46:35.894827'),
+(140, 'social_django', '0004_auto_20160423_0400', '2019-02-26 07:46:35.936257'),
+(141, 'social_django', '0005_auto_20160727_2333', '2019-02-26 07:46:35.994715'),
+(142, 'social_django', '0003_alter_email_max_length', '2019-02-26 07:46:36.060426'),
+(143, 'social_django', '0002_add_related_name', '2019-02-26 07:46:36.102235');
 
 -- --------------------------------------------------------
 
@@ -1142,15 +1125,14 @@ CREATE TABLE `django_session` (
   `session_key` varchar(40) NOT NULL,
   `session_data` longtext NOT NULL,
   `expire_date` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `django_session`
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('5g6h6salgzj2gbqae2064ditonymchur', 'YzA4N2ZhYjliNDZmYTE3YjI1N2RlYzQ3MzI5ZGFkOTcyNGU3YWQ0NDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiZWM0MmFlZGI4ZTQ5NDg2YmIxYjhlNTlmNzM4MDY2ZjgiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiMDhjZWNmZDA4ZjlmNmNjZjgzNzExNDYyZDA5YWUyOTE5ODc1YTE0NiJ9', '2019-02-26 09:22:27.058905'),
-('m948z3vs2bfzwl315p6bl47qbph5qjt7', 'MWFhNzU5MjIxMzcyMzYyNWNmYTEzZTI3MTUzYzlkOTg5YWEyZGVlYzp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiYjJhYzc5ZjUxNTRhNGQ3Yzk5OTE5YjYwNDUwNjE1YmEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiMDhjZWNmZDA4ZjlmNmNjZjgzNzExNDYyZDA5YWUyOTE5ODc1YTE0NiJ9', '2019-02-19 12:28:37.187117');
+('9w2571ejkpm8tsta0qsvxksoyshao8gq', 'ZDZkN2YyZTc0YWFhMmU2MjlhZGY5N2FjNWMxYzA4NjBjZTdiYTJiMDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNGIzMDNmNjlmZjAwNDMxYWE1MTg1ODE3Mjc2Y2IwMWMiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9', '2019-02-26 09:52:01.871653');
 
 -- --------------------------------------------------------
 
@@ -1162,7 +1144,7 @@ CREATE TABLE `django_site` (
   `id` int(11) NOT NULL,
   `domain` varchar(100) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `django_site`
@@ -1181,7 +1163,7 @@ CREATE TABLE `etherpad_etherarticle` (
   `id` int(11) NOT NULL,
   `article_ether_id` longtext NOT NULL,
   `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1193,7 +1175,7 @@ CREATE TABLE `etherpad_ethercommunity` (
   `id` int(11) NOT NULL,
   `community_ether_id` longtext NOT NULL,
   `community_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1205,7 +1187,7 @@ CREATE TABLE `etherpad_ethergroup` (
   `id` int(11) NOT NULL,
   `group_ether_id` longtext NOT NULL,
   `group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1217,7 +1199,7 @@ CREATE TABLE `etherpad_etheruser` (
   `id` int(11) NOT NULL,
   `user_ether_id` longtext NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1230,7 +1212,7 @@ CREATE TABLE `forum_attachments_attachment` (
   `file` varchar(100) NOT NULL,
   `comment` varchar(255) DEFAULT NULL,
   `post_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1255,7 +1237,7 @@ CREATE TABLE `forum_conversation_post` (
   `updated_by_id` int(11) DEFAULT NULL,
   `anonymous_key` varchar(100) DEFAULT NULL,
   `enable_signature` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1279,7 +1261,7 @@ CREATE TABLE `forum_conversation_topic` (
   `poster_id` int(11) DEFAULT NULL,
   `first_post_id` int(11) DEFAULT NULL,
   `last_post_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1291,7 +1273,7 @@ CREATE TABLE `forum_conversation_topic_subscribers` (
   `id` int(11) NOT NULL,
   `topic_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1322,14 +1304,14 @@ CREATE TABLE `forum_forum` (
   `direct_posts_count` int(10) UNSIGNED NOT NULL,
   `direct_topics_count` int(10) UNSIGNED NOT NULL,
   `last_post_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `forum_forum`
 --
 
 INSERT INTO `forum_forum` (`id`, `created`, `updated`, `name`, `slug`, `description`, `image`, `link`, `link_redirects`, `type`, `link_redirects_count`, `last_post_on`, `display_sub_forum_list`, `_description_rendered`, `lft`, `rght`, `tree_id`, `level`, `parent_id`, `direct_posts_count`, `direct_topics_count`, `last_post_id`) VALUES
-(1, '2019-02-19 10:18:19.632954', '2019-02-19 10:18:19.632991', 'Collaborative Community', 'collaborative-community', '', '', NULL, 0, 0, 0, NULL, 1, '<p></p>', 1, 2, 1, 0, NULL, 0, 0, NULL);
+(1, '2019-02-26 07:49:42.059228', '2019-02-26 07:49:42.059279', 'Collaboration System', 'collaboration-system', '', '', NULL, 0, 0, 0, NULL, 1, '<p></p>', 1, 2, 1, 0, NULL, 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1344,7 +1326,7 @@ CREATE TABLE `forum_member_forumprofile` (
   `posts_count` int(10) UNSIGNED NOT NULL,
   `_signature_rendered` longtext,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1357,7 +1339,7 @@ CREATE TABLE `forum_permission_forumpermission` (
   `codename` varchar(150) NOT NULL,
   `is_global` tinyint(1) NOT NULL,
   `is_local` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `forum_permission_forumpermission`
@@ -1396,7 +1378,7 @@ CREATE TABLE `forum_permission_groupforumpermission` (
   `forum_id` int(11) DEFAULT NULL,
   `group_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `forum_permission_groupforumpermission`
@@ -1427,9 +1409,7 @@ INSERT INTO `forum_permission_groupforumpermission` (`id`, `has_perm`, `forum_id
 (22, 1, NULL, 3, 4),
 (23, 1, NULL, 3, 3),
 (24, 1, NULL, 3, 10),
-(25, 1, NULL, 3, 11),
-(26, 1, NULL, 3, 12),
-(27, 1, NULL, 3, 13);
+(25, 1, NULL, 3, 11);
 
 -- --------------------------------------------------------
 
@@ -1444,7 +1424,7 @@ CREATE TABLE `forum_permission_userforumpermission` (
   `forum_id` int(11) DEFAULT NULL,
   `permission_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `forum_permission_userforumpermission`
@@ -1469,7 +1449,7 @@ CREATE TABLE `forum_polls_topicpoll` (
   `max_options` smallint(5) UNSIGNED NOT NULL,
   `user_changes` tinyint(1) NOT NULL,
   `topic_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1481,7 +1461,7 @@ CREATE TABLE `forum_polls_topicpolloption` (
   `id` int(11) NOT NULL,
   `text` varchar(255) NOT NULL,
   `poll_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1495,7 +1475,7 @@ CREATE TABLE `forum_polls_topicpollvote` (
   `poll_option_id` int(11) NOT NULL,
   `voter_id` int(11) DEFAULT NULL,
   `anonymous_key` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1508,7 +1488,7 @@ CREATE TABLE `forum_tracking_forumreadtrack` (
   `mark_time` datetime(6) NOT NULL,
   `forum_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1521,7 +1501,7 @@ CREATE TABLE `forum_tracking_topicreadtrack` (
   `mark_time` datetime(6) NOT NULL,
   `topic_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1537,7 +1517,7 @@ CREATE TABLE `Group_group` (
   `visibility` tinyint(1) NOT NULL,
   `created_at` datetime(6) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1550,7 +1530,7 @@ CREATE TABLE `Group_grouparticles` (
   `article_id` int(11) NOT NULL,
   `group_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1566,7 +1546,7 @@ CREATE TABLE `Group_groupinvitations` (
   `invitedby_id` int(11) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1579,7 +1559,7 @@ CREATE TABLE `Group_groupmedia` (
   `group_id` int(11) DEFAULT NULL,
   `media_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1592,7 +1572,7 @@ CREATE TABLE `Group_groupmembership` (
   `group_id` int(11) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1613,7 +1593,7 @@ CREATE TABLE `Media_media` (
   `state_id` int(11) DEFAULT NULL,
   `medialink` varchar(300) DEFAULT NULL,
   `metadata_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1623,8 +1603,8 @@ CREATE TABLE `Media_media` (
 
 CREATE TABLE `metadata_metadata` (
   `id` int(11) NOT NULL,
-  `description` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `description` text CHARACTER SET utf8
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1650,7 +1630,7 @@ CREATE TABLE `notifications_notification` (
   `deleted` tinyint(1) NOT NULL,
   `emailed` tinyint(1) NOT NULL,
   `data` longtext
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1669,7 +1649,7 @@ CREATE TABLE `nyt_notification` (
   `subscription_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `modified` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1681,7 +1661,7 @@ CREATE TABLE `nyt_notificationtype` (
   `key` varchar(128) NOT NULL,
   `label` varchar(128) DEFAULT NULL,
   `content_type_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1694,7 +1674,7 @@ CREATE TABLE `nyt_settings` (
   `user_id` int(11) NOT NULL,
   `interval` smallint(6) NOT NULL,
   `is_default` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1709,7 +1689,7 @@ CREATE TABLE `nyt_subscription` (
   `object_id` varchar(64) DEFAULT NULL,
   `send_emails` tinyint(1) NOT NULL,
   `latest_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1722,7 +1702,7 @@ CREATE TABLE `Reputation_articleflaglogs` (
   `reason_id` int(11) NOT NULL,
   `resource_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1737,7 +1717,7 @@ CREATE TABLE `Reputation_articlescorelog` (
   `reported` int(11) DEFAULT NULL,
   `publish` tinyint(1) NOT NULL,
   `resource_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1752,7 +1732,7 @@ CREATE TABLE `Reputation_articleuserscorelogs` (
   `reported` tinyint(1) NOT NULL,
   `resource_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1767,7 +1747,7 @@ CREATE TABLE `Reputation_communityreputaion` (
   `published_count` int(11) NOT NULL,
   `community_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1778,7 +1758,7 @@ CREATE TABLE `Reputation_communityreputaion` (
 CREATE TABLE `Reputation_flagreason` (
   `id` int(11) NOT NULL,
   `reason` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1791,7 +1771,7 @@ CREATE TABLE `Reputation_mediaflaglogs` (
   `reason_id` int(11) NOT NULL,
   `resource_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1806,7 +1786,7 @@ CREATE TABLE `Reputation_mediascorelog` (
   `reported` int(11) DEFAULT NULL,
   `publish` tinyint(1) NOT NULL,
   `resource_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1821,7 +1801,7 @@ CREATE TABLE `Reputation_mediauserscorelogs` (
   `reported` tinyint(1) NOT NULL,
   `resource_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1837,14 +1817,7 @@ CREATE TABLE `Reputation_resourcescore` (
   `can_report` tinyint(1) NOT NULL,
   `publish_value` int(11) DEFAULT NULL,
   `resource_type` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `Reputation_resourcescore`
---
-
-INSERT INTO `Reputation_resourcescore` (`id`, `can_vote_unpublished`, `upvote_value`, `downvote_value`, `can_report`, `publish_value`, `resource_type`) VALUES
-(1, 1, 0, 0, 1, 0, 'resource');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1857,7 +1830,7 @@ CREATE TABLE `Reputation_userscore` (
   `author` int(11) DEFAULT NULL,
   `publisher` int(11) DEFAULT NULL,
   `role_score` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1870,7 +1843,7 @@ CREATE TABLE `reversion_revision` (
   `date_created` datetime(6) NOT NULL,
   `comment` longtext NOT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1887,7 +1860,7 @@ CREATE TABLE `reversion_version` (
   `content_type_id` int(11) NOT NULL,
   `revision_id` int(11) NOT NULL,
   `db` varchar(191) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1903,7 +1876,7 @@ CREATE TABLE `social_auth_association` (
   `issued` int(11) NOT NULL,
   `lifetime` int(11) NOT NULL,
   `assoc_type` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1917,7 +1890,7 @@ CREATE TABLE `social_auth_code` (
   `code` varchar(32) NOT NULL,
   `verified` tinyint(1) NOT NULL,
   `timestamp` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1930,7 +1903,7 @@ CREATE TABLE `social_auth_nonce` (
   `server_url` varchar(255) NOT NULL,
   `timestamp` int(11) NOT NULL,
   `salt` varchar(65) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1945,7 +1918,7 @@ CREATE TABLE `social_auth_partial` (
   `backend` varchar(32) NOT NULL,
   `data` longtext NOT NULL,
   `timestamp` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1959,7 +1932,7 @@ CREATE TABLE `social_auth_usersocialauth` (
   `uid` varchar(255) NOT NULL,
   `extra_data` longtext NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1971,7 +1944,7 @@ CREATE TABLE `taggit_tag` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `slug` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1984,7 +1957,7 @@ CREATE TABLE `taggit_taggeditem` (
   `object_id` int(11) NOT NULL,
   `content_type_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1997,7 +1970,7 @@ CREATE TABLE `TaskQueue_task` (
   `name` varchar(100) NOT NULL,
   `tfile` varchar(100) NOT NULL,
   `status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2008,7 +1981,7 @@ CREATE TABLE `TaskQueue_task` (
 CREATE TABLE `thumbnail_kvstore` (
   `key` varchar(200) NOT NULL,
   `value` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2021,7 +1994,7 @@ CREATE TABLE `UserRolesPermission_favourite` (
   `resource` int(10) UNSIGNED NOT NULL,
   `category` varchar(20) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2033,7 +2006,7 @@ CREATE TABLE `UserRolesPermission_profileimage` (
   `id` int(11) NOT NULL,
   `photo` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2047,7 +2020,7 @@ CREATE TABLE `webcontent_faq` (
   `answer` longtext NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   `flow` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `webcontent_faq`
@@ -2104,7 +2077,7 @@ CREATE TABLE `webcontent_faqcategory` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `desc` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `webcontent_faqcategory`
@@ -2130,7 +2103,7 @@ CREATE TABLE `webcontent_feedback` (
   `body` longtext NOT NULL,
   `provided_at` datetime(6) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2149,14 +2122,14 @@ CREATE TABLE `wiki_article` (
   `current_revision_id` int(11) DEFAULT NULL,
   `group_id` int(11) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `wiki_article`
 --
 
 INSERT INTO `wiki_article` (`id`, `created`, `modified`, `group_read`, `group_write`, `other_read`, `other_write`, `current_revision_id`, `group_id`, `owner_id`) VALUES
-(1, '2019-02-19 10:18:33.615810', '2019-02-19 10:18:33.833550', 1, 1, 1, 1, 1, NULL, NULL);
+(1, '2019-02-26 07:51:50.401999', '2019-02-26 07:51:50.698621', 1, 1, 1, 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2170,7 +2143,7 @@ CREATE TABLE `wiki_articleforobject` (
   `is_mptt` tinyint(1) NOT NULL,
   `article_id` int(11) NOT NULL,
   `content_type_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `wiki_articleforobject`
@@ -2190,7 +2163,7 @@ CREATE TABLE `wiki_articleplugin` (
   `deleted` tinyint(1) NOT NULL,
   `created` datetime(6) NOT NULL,
   `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2213,14 +2186,14 @@ CREATE TABLE `wiki_articlerevision` (
   `article_id` int(11) NOT NULL,
   `previous_revision_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `wiki_articlerevision`
 --
 
 INSERT INTO `wiki_articlerevision` (`id`, `revision_number`, `user_message`, `automatic_log`, `ip_address`, `modified`, `created`, `deleted`, `locked`, `content`, `title`, `article_id`, `previous_revision_id`, `user_id`) VALUES
-(1, 1, '', '', NULL, '2019-02-19 10:18:33.746171', '2019-02-19 10:18:33.746203', 0, 0, '', 'Collaborative Community', 1, NULL, 1);
+(1, 1, '', '', NULL, '2019-02-26 07:51:50.551101', '2019-02-26 07:51:50.551153', 0, 0, '', 'Collaboration System', 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2232,7 +2205,7 @@ CREATE TABLE `wiki_attachments_attachment` (
   `reusableplugin_ptr_id` int(11) NOT NULL,
   `original_filename` varchar(256) DEFAULT NULL,
   `current_revision_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2255,7 +2228,7 @@ CREATE TABLE `wiki_attachments_attachmentrevision` (
   `attachment_id` int(11) NOT NULL,
   `previous_revision_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2265,7 +2238,7 @@ CREATE TABLE `wiki_attachments_attachmentrevision` (
 
 CREATE TABLE `wiki_images_image` (
   `revisionplugin_ptr_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2278,7 +2251,7 @@ CREATE TABLE `wiki_images_imagerevision` (
   `image` varchar(2000) DEFAULT NULL,
   `width` smallint(6) DEFAULT NULL,
   `height` smallint(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2289,7 +2262,7 @@ CREATE TABLE `wiki_images_imagerevision` (
 CREATE TABLE `wiki_notifications_articlesubscription` (
   `articleplugin_ptr_id` int(11) NOT NULL,
   `subscription_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2299,7 +2272,7 @@ CREATE TABLE `wiki_notifications_articlesubscription` (
 
 CREATE TABLE `wiki_reusableplugin` (
   `articleplugin_ptr_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2311,7 +2284,7 @@ CREATE TABLE `wiki_reusableplugin_articles` (
   `id` int(11) NOT NULL,
   `reusableplugin_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2322,7 +2295,7 @@ CREATE TABLE `wiki_reusableplugin_articles` (
 CREATE TABLE `wiki_revisionplugin` (
   `articleplugin_ptr_id` int(11) NOT NULL,
   `current_revision_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2343,7 +2316,7 @@ CREATE TABLE `wiki_revisionpluginrevision` (
   `plugin_id` int(11) NOT NULL,
   `previous_revision_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2354,7 +2327,7 @@ CREATE TABLE `wiki_revisionpluginrevision` (
 CREATE TABLE `wiki_simpleplugin` (
   `articleplugin_ptr_id` int(11) NOT NULL,
   `article_revision_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2373,14 +2346,14 @@ CREATE TABLE `wiki_urlpath` (
   `parent_id` int(11) DEFAULT NULL,
   `site_id` int(11) NOT NULL,
   `moved_to_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `wiki_urlpath`
 --
 
 INSERT INTO `wiki_urlpath` (`id`, `slug`, `lft`, `rght`, `tree_id`, `level`, `article_id`, `parent_id`, `site_id`, `moved_to_id`) VALUES
-(1, NULL, 1, 4, 1, 0, 1, NULL, 1, NULL);
+(1, NULL, 1, 2, 1, 0, 1, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -2394,16 +2367,16 @@ CREATE TABLE `workflow_states` (
   `desc` longtext,
   `final` tinyint(1) NOT NULL,
   `initial` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `workflow_states`
 --
 
 INSERT INTO `workflow_states` (`id`, `name`, `desc`, `final`, `initial`) VALUES
-(1, 'draft', 'save as draft state', 0, 1),
+(1, 'draft', 'save as draft state', 0, 0),
 (2, 'visible', 'this state make the content visible to community', 0, 0),
-(3, 'publish', 'save as visible state', 1, 0),
+(3, 'publish', 'save as visible state', 0, 0),
 (4, 'private', 'this state make the content visible to group', 0, 0),
 (5, 'publishable', 'this content makes the content ready for publishing', 0, 0);
 
@@ -2418,7 +2391,7 @@ CREATE TABLE `workflow_transitions` (
   `name` varchar(100) DEFAULT NULL,
   `from_state_id` int(11) DEFAULT NULL,
   `to_state_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `workflow_transitions`
@@ -3351,7 +3324,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT for table `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=315;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
 --
 -- AUTO_INCREMENT for table `auth_user`
 --
@@ -3386,12 +3359,12 @@ ALTER TABLE `BasicArticle_articleviewlogs`
 -- AUTO_INCREMENT for table `Categories_category`
 --
 ALTER TABLE `Categories_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Community_community`
 --
 ALTER TABLE `Community_community`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Community_communityarticles`
 --
@@ -3416,7 +3389,7 @@ ALTER TABLE `Community_communitymedia`
 -- AUTO_INCREMENT for table `Community_communitymembership`
 --
 ALTER TABLE `Community_communitymembership`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Community_requestcommunitycreation`
 --
@@ -3451,7 +3424,7 @@ ALTER TABLE `Course_videos`
 -- AUTO_INCREMENT for table `django_admin_log`
 --
 ALTER TABLE `django_admin_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `django_comments`
 --
@@ -3471,7 +3444,7 @@ ALTER TABLE `django_comment_flags`
 -- AUTO_INCREMENT for table `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 --
 -- AUTO_INCREMENT for table `django_migrations`
 --
@@ -3491,7 +3464,7 @@ ALTER TABLE `etherpad_etherarticle`
 -- AUTO_INCREMENT for table `etherpad_ethercommunity`
 --
 ALTER TABLE `etherpad_ethercommunity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `etherpad_ethergroup`
 --
@@ -3526,7 +3499,7 @@ ALTER TABLE `forum_conversation_topic_subscribers`
 -- AUTO_INCREMENT for table `forum_forum`
 --
 ALTER TABLE `forum_forum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `forum_member_forumprofile`
 --
@@ -3541,7 +3514,7 @@ ALTER TABLE `forum_permission_forumpermission`
 -- AUTO_INCREMENT for table `forum_permission_groupforumpermission`
 --
 ALTER TABLE `forum_permission_groupforumpermission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `forum_permission_userforumpermission`
 --
@@ -3646,7 +3619,7 @@ ALTER TABLE `Reputation_articleuserscorelogs`
 -- AUTO_INCREMENT for table `Reputation_communityreputaion`
 --
 ALTER TABLE `Reputation_communityreputaion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Reputation_flagreason`
 --
@@ -3671,7 +3644,7 @@ ALTER TABLE `Reputation_mediauserscorelogs`
 -- AUTO_INCREMENT for table `Reputation_resourcescore`
 --
 ALTER TABLE `Reputation_resourcescore`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Reputation_userscore`
 --
@@ -3756,12 +3729,12 @@ ALTER TABLE `webcontent_feedback`
 -- AUTO_INCREMENT for table `wiki_article`
 --
 ALTER TABLE `wiki_article`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `wiki_articleforobject`
 --
 ALTER TABLE `wiki_articleforobject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `wiki_articleplugin`
 --
@@ -3771,7 +3744,7 @@ ALTER TABLE `wiki_articleplugin`
 -- AUTO_INCREMENT for table `wiki_articlerevision`
 --
 ALTER TABLE `wiki_articlerevision`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `wiki_attachments_attachmentrevision`
 --
@@ -3791,7 +3764,7 @@ ALTER TABLE `wiki_revisionpluginrevision`
 -- AUTO_INCREMENT for table `wiki_urlpath`
 --
 ALTER TABLE `wiki_urlpath`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `workflow_states`
 --
@@ -3859,7 +3832,7 @@ ALTER TABLE `auth_user_user_permissions`
 --
 ALTER TABLE `badges_badgetouser`
   ADD CONSTRAINT `badges_badgetouser_badge_id_0e3cd6bb_fk_badges_badge_id` FOREIGN KEY (`badge_id`) REFERENCES `badges_badge` (`id`),
-  ADD CONSTRAINT `badges_badgetouser_community_id_01e9a7f7_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  ADD CONSTRAINT `badges_badgetouser_community_id_01e9a7f7_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
   ADD CONSTRAINT `badges_badgetouser_user_id_7928b431_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
@@ -3874,59 +3847,59 @@ ALTER TABLE `BasicArticle_articles`
 -- Constraints for table `BasicArticle_articleviewlogs`
 --
 ALTER TABLE `BasicArticle_articleviewlogs`
-  ADD CONSTRAINT `BasicArticle_article_article_id_164e59b4_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`);
+  ADD CONSTRAINT `BasicArticle_article_article_id_164e59b4_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `BasicArticle_articles` (`id`);
 
 --
 -- Constraints for table `Categories_category`
 --
 ALTER TABLE `Categories_category`
-  ADD CONSTRAINT `Categories_category_parent_id_eee850a6_fk_Categories_category_id` FOREIGN KEY (`parent_id`) REFERENCES `categories_category` (`id`);
+  ADD CONSTRAINT `Categories_category_parent_id_eee850a6_fk_Categories_category_id` FOREIGN KEY (`parent_id`) REFERENCES `Categories_category` (`id`);
 
 --
 -- Constraints for table `Community_community`
 --
 ALTER TABLE `Community_community`
-  ADD CONSTRAINT `Community_community_category_id_87e260b2_fk_Categorie` FOREIGN KEY (`category_id`) REFERENCES `categories_category` (`id`),
+  ADD CONSTRAINT `Community_community_category_id_87e260b2_fk_Categorie` FOREIGN KEY (`category_id`) REFERENCES `Categories_category` (`id`),
   ADD CONSTRAINT `Community_community_created_by_id_1080464d_fk_auth_user_id` FOREIGN KEY (`created_by_id`) REFERENCES `auth_user` (`id`),
-  ADD CONSTRAINT `Community_community_parent_id_47d0e58d_fk_Community_community_id` FOREIGN KEY (`parent_id`) REFERENCES `community_community` (`id`);
+  ADD CONSTRAINT `Community_community_parent_id_47d0e58d_fk_Community_community_id` FOREIGN KEY (`parent_id`) REFERENCES `Community_community` (`id`);
 
 --
 -- Constraints for table `Community_communityarticles`
 --
 ALTER TABLE `Community_communityarticles`
-  ADD CONSTRAINT `Community_communitya_article_id_c9af3fed_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`),
-  ADD CONSTRAINT `Community_communitya_community_id_39b5841f_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  ADD CONSTRAINT `Community_communitya_article_id_c9af3fed_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `BasicArticle_articles` (`id`),
+  ADD CONSTRAINT `Community_communitya_community_id_39b5841f_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
   ADD CONSTRAINT `Community_communityarticles_user_id_04d18793_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Community_communitycourses`
 --
 ALTER TABLE `Community_communitycourses`
-  ADD CONSTRAINT `Community_communityc_community_id_db58cc7f_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
-  ADD CONSTRAINT `Community_communityc_course_id_1b9cc41b_fk_Course_co` FOREIGN KEY (`course_id`) REFERENCES `course_course` (`id`),
+  ADD CONSTRAINT `Community_communityc_community_id_db58cc7f_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
+  ADD CONSTRAINT `Community_communityc_course_id_1b9cc41b_fk_Course_co` FOREIGN KEY (`course_id`) REFERENCES `Course_course` (`id`),
   ADD CONSTRAINT `Community_communitycourses_user_id_d3572caf_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Community_communitygroups`
 --
 ALTER TABLE `Community_communitygroups`
-  ADD CONSTRAINT `Community_communityg_community_id_3e76934c_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
-  ADD CONSTRAINT `Community_communitygroups_group_id_a2ce7b35_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  ADD CONSTRAINT `Community_communityg_community_id_3e76934c_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
+  ADD CONSTRAINT `Community_communitygroups_group_id_a2ce7b35_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`),
   ADD CONSTRAINT `Community_communitygroups_user_id_eaead89d_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Community_communitymedia`
 --
 ALTER TABLE `Community_communitymedia`
-  ADD CONSTRAINT `Community_communitym_community_id_3ff46a01_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
-  ADD CONSTRAINT `Community_communitymedia_media_id_e160518e_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `media_media` (`id`),
+  ADD CONSTRAINT `Community_communitym_community_id_3ff46a01_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
+  ADD CONSTRAINT `Community_communitymedia_media_id_e160518e_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `Media_media` (`id`),
   ADD CONSTRAINT `Community_communitymedia_user_id_97a38254_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Community_communitymembership`
 --
 ALTER TABLE `Community_communitymembership`
-  ADD CONSTRAINT `Community_communitym_community_id_8a39991d_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  ADD CONSTRAINT `Community_communitym_community_id_8a39991d_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
   ADD CONSTRAINT `Community_communitymembership_role_id_9c581fd0_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
   ADD CONSTRAINT `Community_communitymembership_user_id_5dd1c26b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
@@ -3934,7 +3907,7 @@ ALTER TABLE `Community_communitymembership`
 -- Constraints for table `Community_requestcommunitycreation`
 --
 ALTER TABLE `Community_requestcommunitycreation`
-  ADD CONSTRAINT `Community_requestcom_category_id_874787b7_fk_Categorie` FOREIGN KEY (`category_id`) REFERENCES `categories_category` (`id`),
+  ADD CONSTRAINT `Community_requestcom_category_id_874787b7_fk_Categorie` FOREIGN KEY (`category_id`) REFERENCES `Categories_category` (`id`),
   ADD CONSTRAINT `Community_requestcom_requestedby_id_b3e83124_fk_auth_user` FOREIGN KEY (`requestedby_id`) REFERENCES `auth_user` (`id`);
 
 --
@@ -3948,27 +3921,27 @@ ALTER TABLE `Course_course`
 -- Constraints for table `Course_links`
 --
 ALTER TABLE `Course_links`
-  ADD CONSTRAINT `Course_links_topics_id_096bf6bd_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `course_topics` (`id`);
+  ADD CONSTRAINT `Course_links_topics_id_096bf6bd_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `Course_topics` (`id`);
 
 --
 -- Constraints for table `Course_topicarticle`
 --
 ALTER TABLE `Course_topicarticle`
-  ADD CONSTRAINT `Course_topicarticle_article_id_2ab7af7f_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`),
-  ADD CONSTRAINT `Course_topicarticle_topics_id_d20b76e7_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `course_topics` (`id`);
+  ADD CONSTRAINT `Course_topicarticle_article_id_2ab7af7f_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `BasicArticle_articles` (`id`),
+  ADD CONSTRAINT `Course_topicarticle_topics_id_d20b76e7_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `Course_topics` (`id`);
 
 --
 -- Constraints for table `Course_topics`
 --
 ALTER TABLE `Course_topics`
-  ADD CONSTRAINT `Course_topics_course_id_9e18b74c_fk_Course_course_id` FOREIGN KEY (`course_id`) REFERENCES `course_course` (`id`),
-  ADD CONSTRAINT `Course_topics_parent_id_adff4cae_fk_Course_topics_id` FOREIGN KEY (`parent_id`) REFERENCES `course_topics` (`id`);
+  ADD CONSTRAINT `Course_topics_course_id_9e18b74c_fk_Course_course_id` FOREIGN KEY (`course_id`) REFERENCES `Course_course` (`id`),
+  ADD CONSTRAINT `Course_topics_parent_id_adff4cae_fk_Course_topics_id` FOREIGN KEY (`parent_id`) REFERENCES `Course_topics` (`id`);
 
 --
 -- Constraints for table `Course_videos`
 --
 ALTER TABLE `Course_videos`
-  ADD CONSTRAINT `Course_videos_topics_id_568227cc_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `course_topics` (`id`);
+  ADD CONSTRAINT `Course_videos_topics_id_568227cc_fk_Course_topics_id` FOREIGN KEY (`topics_id`) REFERENCES `Course_topics` (`id`);
 
 --
 -- Constraints for table `django_admin_log`
@@ -4002,19 +3975,19 @@ ALTER TABLE `django_comment_flags`
 -- Constraints for table `etherpad_etherarticle`
 --
 ALTER TABLE `etherpad_etherarticle`
-  ADD CONSTRAINT `etherpad_etherarticl_article_id_af7a9005_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`);
+  ADD CONSTRAINT `etherpad_etherarticl_article_id_af7a9005_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `BasicArticle_articles` (`id`);
 
 --
 -- Constraints for table `etherpad_ethercommunity`
 --
 ALTER TABLE `etherpad_ethercommunity`
-  ADD CONSTRAINT `etherpad_ethercommun_community_id_8610cc18_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`);
+  ADD CONSTRAINT `etherpad_ethercommun_community_id_8610cc18_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`);
 
 --
 -- Constraints for table `etherpad_ethergroup`
 --
 ALTER TABLE `etherpad_ethergroup`
-  ADD CONSTRAINT `etherpad_ethergroup_group_id_a1912466_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`);
+  ADD CONSTRAINT `etherpad_ethergroup_group_id_a1912466_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`);
 
 --
 -- Constraints for table `etherpad_etheruser`
@@ -4124,15 +4097,15 @@ ALTER TABLE `Group_group`
 -- Constraints for table `Group_grouparticles`
 --
 ALTER TABLE `Group_grouparticles`
-  ADD CONSTRAINT `Group_grouparticles_article_id_eac38398_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`),
-  ADD CONSTRAINT `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  ADD CONSTRAINT `Group_grouparticles_article_id_eac38398_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `BasicArticle_articles` (`id`),
+  ADD CONSTRAINT `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`),
   ADD CONSTRAINT `Group_grouparticles_user_id_12983c5c_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Group_groupinvitations`
 --
 ALTER TABLE `Group_groupinvitations`
-  ADD CONSTRAINT `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  ADD CONSTRAINT `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`),
   ADD CONSTRAINT `Group_groupinvitations_invitedby_id_f7a8ea5c_fk_auth_user_id` FOREIGN KEY (`invitedby_id`) REFERENCES `auth_user` (`id`),
   ADD CONSTRAINT `Group_groupinvitations_role_id_20c49c7f_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
   ADD CONSTRAINT `Group_groupinvitations_user_id_a4a046d3_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
@@ -4141,15 +4114,15 @@ ALTER TABLE `Group_groupinvitations`
 -- Constraints for table `Group_groupmedia`
 --
 ALTER TABLE `Group_groupmedia`
-  ADD CONSTRAINT `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
-  ADD CONSTRAINT `Group_groupmedia_media_id_bb652569_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `media_media` (`id`),
+  ADD CONSTRAINT `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`),
+  ADD CONSTRAINT `Group_groupmedia_media_id_bb652569_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `Media_media` (`id`),
   ADD CONSTRAINT `Group_groupmedia_user_id_e6917c04_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Group_groupmembership`
 --
 ALTER TABLE `Group_groupmembership`
-  ADD CONSTRAINT `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  ADD CONSTRAINT `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `Group_group` (`id`),
   ADD CONSTRAINT `Group_groupmembership_role_id_bb865ffb_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
   ADD CONSTRAINT `Group_groupmembership_user_id_e4f5757f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
@@ -4202,49 +4175,49 @@ ALTER TABLE `nyt_subscription`
 -- Constraints for table `Reputation_articleflaglogs`
 --
 ALTER TABLE `Reputation_articleflaglogs`
-  ADD CONSTRAINT `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
-  ADD CONSTRAINT `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
+  ADD CONSTRAINT `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `Reputation_flagreason` (`id`),
+  ADD CONSTRAINT `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `BasicArticle_articles` (`id`),
   ADD CONSTRAINT `Reputation_articleflaglogs_user_id_4bce74ef_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Reputation_articlescorelog`
 --
 ALTER TABLE `Reputation_articlescorelog`
-  ADD CONSTRAINT `Reputation_articlesc_resource_id_ddac6fc9_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`);
+  ADD CONSTRAINT `Reputation_articlesc_resource_id_ddac6fc9_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `BasicArticle_articles` (`id`);
 
 --
 -- Constraints for table `Reputation_articleuserscorelogs`
 --
 ALTER TABLE `Reputation_articleuserscorelogs`
-  ADD CONSTRAINT `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
+  ADD CONSTRAINT `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `BasicArticle_articles` (`id`),
   ADD CONSTRAINT `Reputation_articleuserscorelogs_user_id_77095608_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Reputation_communityreputaion`
 --
 ALTER TABLE `Reputation_communityreputaion`
-  ADD CONSTRAINT `Reputation_community_community_id_9fe0df3b_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  ADD CONSTRAINT `Reputation_community_community_id_9fe0df3b_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `Community_community` (`id`),
   ADD CONSTRAINT `Reputation_communityreputaion_user_id_fce03592_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Reputation_mediaflaglogs`
 --
 ALTER TABLE `Reputation_mediaflaglogs`
-  ADD CONSTRAINT `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
-  ADD CONSTRAINT `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
+  ADD CONSTRAINT `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `Reputation_flagreason` (`id`),
+  ADD CONSTRAINT `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `Media_media` (`id`),
   ADD CONSTRAINT `Reputation_mediaflaglogs_user_id_6d095f7f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
 -- Constraints for table `Reputation_mediascorelog`
 --
 ALTER TABLE `Reputation_mediascorelog`
-  ADD CONSTRAINT `Reputation_mediascorelog_resource_id_c3f674e3_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`);
+  ADD CONSTRAINT `Reputation_mediascorelog_resource_id_c3f674e3_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `Media_media` (`id`);
 
 --
 -- Constraints for table `Reputation_mediauserscorelogs`
 --
 ALTER TABLE `Reputation_mediauserscorelogs`
-  ADD CONSTRAINT `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
+  ADD CONSTRAINT `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` FOREIGN KEY (`resource_id`) REFERENCES `Media_media` (`id`),
   ADD CONSTRAINT `Reputation_mediauserscorelogs_user_id_ef68208e_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 
 --
