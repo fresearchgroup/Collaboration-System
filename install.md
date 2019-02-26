@@ -164,3 +164,5 @@ Keep the Etherpad server running and open a new terminal. Go inside Collaboratio
 		//To make migrations
 		docker-compose run web python manage.py migrate
 
+
+## For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
