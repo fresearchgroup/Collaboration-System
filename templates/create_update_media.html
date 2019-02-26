@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
+{% load crispy_forms_tags %}
 
 {% load static %}
 {% block css %}
@@ -23,47 +24,7 @@
 {% if user.is_authenticated %}
   <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
-
-    <div class="form-group">
-      <label for="title">Title</label>
-      {{ form.title }}
-      <div class="invalid-feedback">
-        {{ form.title.errors }}
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="title">Description</label>
-      {{ form.description }}
-      <div class="invalid-feedback">
-        {{ form.description.errors }}
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="title">Type</label>
-      {{ form.media_type }}
-      <div class="invalid-feedback">
-        {{ form.media_type.errors }}
-      </div>
-    </div>
-
-    <div class="form-group" id="LinkOption" style="display: none">
-      <label for="title">Media Link</label>
-      {{ form.medialink }}
-      <div class="invalid-feedback">
-        {{ form.medialink.errors }}
-      </div>
-    </div>
-
-    <div class="form-group custom-file" id="UploadOption">
-      <label for="image">Media File</label>
-      {{form.mediafile}}
-    </div>
-
-    <div class="form-group">
-      <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Create</button>
-    </div>
+    {% crispy form %}
   </form>
 {% endif %}
 {% endblock %}
@@ -90,15 +51,27 @@
 $(function() {
     $('input[name="media_type"]').on('click', function() {
         if ($(this).val() == 'Link') {
-          $('#LinkOption').show();
-          $('#UploadOption').hide();
+          $('#div_id_medialink').show();
+          $('#div_id_mediafile').hide();
         }
         if ($(this).val() == 'Upload') {
-            $('#LinkOption').hide();
-            $('#UploadOption').show();
+            $('#div_id_medialink').hide();
+            $('#div_id_mediafile').show();
         }
     });
 });
 </script>
-
+<script type="text/javascript">
+		jQuery(document).ready(function() {
+      {% if not media.title %}
+        $('#div_id_medialink').hide();
+      {% else %}
+        {% if media.mediafile %}
+          $('#div_id_medialink').hide();
+        {% else %}
+          $('#div_id_mediafile').hide();
+        {% endif %}
+      {% endif %}
+		});
+</script>
 {% endblock %}

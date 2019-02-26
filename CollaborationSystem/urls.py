@@ -37,6 +37,7 @@ from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
 from Categories import views as categoryview
+from metadata import views as metadataview
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -170,7 +171,7 @@ urlpatterns = [
     url(r'^community_media_create/(?P<pk>\d+)/(?P<mediatype>[\w\-]+)$', mediaview.MediaCreateView.as_view(), name='community_media_create'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
-    url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+    url(r'^media_edit/(?P<pk>\d*)/$', mediaview.MediaUpdateView.as_view(), name='media_edit'),
     url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
@@ -187,6 +188,8 @@ urlpatterns = [
     url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
     url(r'categories/$', categoryview.categories, name='categories'),
 
+    url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
+    url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
