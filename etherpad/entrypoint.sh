@@ -67,7 +67,7 @@ if [ ! -f settings.json ]; then
 	cat <<- EOF > settings.json
 	{
 	  "title": "${ETHERPAD_TITLE}",
-	  "ip": "localhost",
+	  "ip": "0.0.0.0",
 	  "port": "${ETHERPAD_PORT}",
 	  "dbType" : "${ETHERPAD_DB_TYPE}",
 	  "dbSettings" : {
