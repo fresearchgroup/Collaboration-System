@@ -53,9 +53,8 @@ def migrate_communities():
 				cursor.execute("select * from temples.metadata_metadata where id=%s;",[ma[0]['metadata_id']])
 				ma = dictfetchall(cursor)
 				ma=Metadata.objects.create(description=ma[0]['description'])
-				m=Media.objects.create(mediatype=m[0]['mediatype'], title=m[0]['title'], mediafile=m[0]['mediafile'], created_by=user, state=state, medialink=m[0]['medialink'] )
+				m=Media.objects.create(mediatype=m[0]['mediatype'], title=m[0]['title'], mediafile=m[0]['mediafile'], created_by=user, state=state, medialink=m[0]['medialink'], metadata=ma )
 				CommunityMedia.objects.create(media=m, user=user, community=com)
-				MediaMetadata.objects.create(media=m, metadata=ma)
 
 		cursor.execute("select * from temples.Community_communitygroups where community_id=%s;", [i['id']])
 		groups = dictfetchall(cursor)
@@ -112,9 +111,8 @@ def migrate_communities():
 						cursor.execute("select * from temples.metadata_metadata where id=%s;",[ma[0]['metadata_id']])
 						ma = dictfetchall(cursor)
 						ma=Metadata.objects.create(description=ma[0]['description'])
-						m=Media.objects.create(mediatype=m[0]['mediatype'], title=m[0]['title'], mediafile=m[0]['mediafile'], created_by=user, state=state, medialink=m[0]['medialink'] )
+						m=Media.objects.create(mediatype=m[0]['mediatype'], title=m[0]['title'], mediafile=m[0]['mediafile'], created_by=user, state=state, medialink=m[0]['medialink'], metadata=ma )
 						CommunityMedia.objects.create(media=m, user=user, community=grp)
-						MediaMetadata.objects.create(media=m, metadata=ma)
 
 
 
