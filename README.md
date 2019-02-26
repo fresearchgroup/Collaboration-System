@@ -39,7 +39,7 @@ The system allows individual users to form communities, create groups, participa
 
 For three Step Installation use Docker:
 
-	<p align="center"><img src="/temp/demo.gif?raw=true"/></p>
+<p align="center"><img src="/temp/demo.gif?raw=true"/></p>
 
 
 * [Install](https://github.com/fresearchgroup/Collaboration-System/blob/n-level/install.md)
