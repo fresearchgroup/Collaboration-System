@@ -317,9 +317,10 @@ class UpdateCommunityView(UpdateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
-
+		self.object.image_thumbnail = form.cleaned_data.get('image')
+		self.object.save()
+		
 		if form.cleaned_data.get('x'):
-			self.object.image_thumbnail = form.cleaned_data.get('image')
 			x = form.cleaned_data.get('x')
 			y = form.cleaned_data.get('y')
 			w = form.cleaned_data.get('width')
@@ -328,7 +329,6 @@ class UpdateCommunityView(UpdateView):
 			cropped_image = image.crop((x, y, w+x, h+y))
 			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
 			resized_image.save(self.object.image_thumbnail.path)
-		self.object.save()
 
 		return super(UpdateCommunityView, self).form_valid(form)
 
