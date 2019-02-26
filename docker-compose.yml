@@ -11,6 +11,8 @@ services:
       MYSQL_PASSWORD: django
     ports:
       - "3306:3306"
+    volumes:
+      - ./collab.sql:/docker-entrypoint-initdb.d/dump.sql
   web:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000

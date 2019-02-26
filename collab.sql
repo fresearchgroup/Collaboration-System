@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 26, 2019 at 02:28 PM
+-- Generation Time: Feb 26, 2019 at 04:58 PM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `temple_migration`
+-- Database: `collaboration`
 --
 
 -- --------------------------------------------------------
@@ -456,7 +456,7 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$36000$r8CujTIffhma$jnmVmCO1tuc18NIMsZrwfrdyNnxCNmIAXB+9LdVkPsE=', '2019-02-26 07:49:08.166678', 1, 'admin', '', '', 'admin@mail.com', 1, 1, '2019-02-26 07:47:48.227174');
+(1, 'pbkdf2_sha256$36000$r8CujTIffhma$jnmVmCO1tuc18NIMsZrwfrdyNnxCNmIAXB+9LdVkPsE=', '2019-02-26 11:27:42.531168', 1, 'admin', '', '', 'admin@mail.com', 1, 1, '2019-02-26 07:47:48.227174');
 
 -- --------------------------------------------------------
 
@@ -769,7 +769,10 @@ CREATE TABLE `django_admin_log` (
 --
 
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
-(1, '2019-02-26 07:49:42.065158', '1', 'Collaboration System', 1, '[{\"added\": {}}]', 90, 1);
+(1, '2019-02-26 07:49:42.065158', '1', 'Collaboration System', 1, '[{\"added\": {}}]', 90, 1),
+(2, '2019-02-26 11:25:17.114008', '3', 'publish', 2, '[{\"changed\": {\"fields\": [\"final\"]}}]', 31, 1),
+(3, '2019-02-26 11:27:56.205778', '1', 'draft', 2, '[{\"changed\": {\"fields\": [\"initial\"]}}]', 31, 1),
+(4, '2019-02-26 11:28:04.665605', '3', 'publish', 2, '[]', 31, 1);
 
 -- --------------------------------------------------------
 
@@ -1132,7 +1135,11 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('9w2571ejkpm8tsta0qsvxksoyshao8gq', 'ZDZkN2YyZTc0YWFhMmU2MjlhZGY5N2FjNWMxYzA4NjBjZTdiYTJiMDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNGIzMDNmNjlmZjAwNDMxYWE1MTg1ODE3Mjc2Y2IwMWMiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9', '2019-02-26 09:52:01.871653');
+('9w2571ejkpm8tsta0qsvxksoyshao8gq', 'ZDZkN2YyZTc0YWFhMmU2MjlhZGY5N2FjNWMxYzA4NjBjZTdiYTJiMDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNGIzMDNmNjlmZjAwNDMxYWE1MTg1ODE3Mjc2Y2IwMWMiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9', '2019-02-26 09:52:01.871653'),
+('b1yueqzk0okf3zke2j83ym9tcrdwf72u', 'OGY2NzBiMzlkMGNiZjVjODJjZGNmYzRkMzg1ODdiYzUzMTg1ODk2Zjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNzk4YmMxZThhNTA2NDJjZjg4MjQ4ODM2ZmI2YTJlOTgiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9', '2019-02-26 13:28:32.916180'),
+('hek7ddvb9rg9a4eygiachdww7fqwx8cn', 'MmI0NzhlMWIwZmUzYzlkN2U5YmE1MDJkODhhNTFmODJkNGNhNDZhNjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNTc2MGMyYjcyMWQzNGY5OGI5MDNlMzQzMThkNmNiYTAifQ==', '2019-02-26 12:34:21.300604'),
+('s6jbzpogbqo00m1kzfqybrdc8l3xkw6u', 'ZWY4NmE0NjZhNDczNWQ4ZmNkNmU3YTUyNzExOTMxMGE5NzZiY2NmYzp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiYTM3MjU0NjVjZmFkNDdjM2E3NDc3ZTIwM2NjMTM3ZGEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9', '2019-02-26 13:25:21.608345'),
+('yue3sfc6ebqycweh3weozwjh5pbhw6rm', 'YTNhMjg1N2JjNmU0ODM1OTA0OGUwY2NjMzg1YThkZDBmMThlMWMyYjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNmVlNzU1MzY4NGJiNDZhMTk4NDJjOGRhNTNiZWRiOGMifQ==', '2019-02-26 12:33:15.568030');
 
 -- --------------------------------------------------------
 
@@ -2374,9 +2381,9 @@ CREATE TABLE `workflow_states` (
 --
 
 INSERT INTO `workflow_states` (`id`, `name`, `desc`, `final`, `initial`) VALUES
-(1, 'draft', 'save as draft state', 0, 0),
+(1, 'draft', 'save as draft state', 0, 1),
 (2, 'visible', 'this state make the content visible to community', 0, 0),
-(3, 'publish', 'save as visible state', 0, 0),
+(3, 'publish', 'save as visible state', 1, 0),
 (4, 'private', 'this state make the content visible to group', 0, 0),
 (5, 'publishable', 'this content makes the content ready for publishing', 0, 0);
 
@@ -3424,7 +3431,7 @@ ALTER TABLE `Course_videos`
 -- AUTO_INCREMENT for table `django_admin_log`
 --
 ALTER TABLE `django_admin_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `django_comments`
 --
