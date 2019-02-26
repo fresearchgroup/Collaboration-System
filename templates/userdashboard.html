@@ -23,7 +23,6 @@ var articlesContributed = [{{total}}];
 
 {% block content %}
 
-
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-4" style="width: 350px">
       <div class="recent-work-item">
@@ -114,6 +113,20 @@ var articlesContributed = [{{total}}];
         {% endif %}
       </div>
 
+    </div>
+  </div>
+</div>
+<div class="row margin-bottom-40">
+  <div class="col-md-12">
+    <div class="pricing hover-effect">
+      <div class="pricing-head">
+        <h3>Badges</h3>
+        <h4>
+          <span style="text-align:left; padding-left:20px; padding-top:10px" class="badges-container">
+              
+          </span>
+        </h4>
+      </div>
     </div>
   </div>
 </div>
@@ -240,6 +253,28 @@ var articlesContributed = [{{total}}];
         };
         container.pagination(options);
       })('mycommunities-pagination');
+    })
+  </script>
+
+  <script>
+    $.ajax({
+      url: '/api/reputation/score',
+      type: 'GET',
+      success: function(data) {
+        console.log(data);
+        console.log(data.length);
+        for (i = 0; i < data.length; i++) {
+          var badgeDiv = $("<div/>");
+          // console.log(data.length);
+          // console.log(data[i].community_name);
+          badgeDiv.append('<p><b>' + data[i].community_name + '</b></p>');
+
+          for (var j = 0; j < data[i].badges.length; j++) {
+            badgeDiv.append('<p>' + data[i].badges[j].badge + '</p>');
+          }
+          $('.badges-container').append(badgeDiv);
+        }
+      }
     })
   </script>
 {% endblock %}

@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
+    'badges',
     'Categories',
     'crispy_forms',
     'taggit',

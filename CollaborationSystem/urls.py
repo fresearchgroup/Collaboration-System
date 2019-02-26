@@ -183,6 +183,7 @@ urlpatterns = [
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+    url(r'^badges/', include('badges.urls')),
 
     url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
     url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),

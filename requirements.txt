@@ -29,5 +29,6 @@ social-auth-core==1.7.0
 -e git+https://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
 wiki==0.3.1
 celery==4.2.1
+future==0.17.1
 django-categories==1.6
 django-crispy-forms
