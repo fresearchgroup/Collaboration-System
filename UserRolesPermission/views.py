@@ -59,7 +59,8 @@ def signup(request):
             else:
                 user = form.save()
                 assign_role(user, Author)
-                create_ether_user(user)
+                if settings.REALTIME_EDITOR:
+                    create_ether_user(user)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('user_dashboard')
         else:
