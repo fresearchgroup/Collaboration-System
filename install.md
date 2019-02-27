@@ -131,7 +131,7 @@ Keep the Etherpad server running and open a new terminal. Go inside Collaboratio
     
     
 
-## For development installation (Docker) - 
+## For Docker installation- 
 
  -- Install Docker and Docker-Compose from  --
 
@@ -152,14 +152,17 @@ Keep the Etherpad server running and open a new terminal. Go inside Collaboratio
 
  		docker-compose up db
 
-	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
-
- 		docker-compose run web python manage.py migrate
-
- 		docker-compose run web python manage.py createsuperuser
-
- 		docker-compose run web python manage.py loaddata workflow roles faq
-
 		docker-compose up
 	```
 
+
+3. Other commands--
+		
+		//To create superuser
+		docker-compose run web python manage.py createsuperuser
+
+		//To make migrations
+		docker-compose run web python manage.py migrate
+
+
+## For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/

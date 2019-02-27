@@ -21,7 +21,7 @@
           <label for="can_vote" class="col-sm-3 col-form-label">User can upvote unpublish content.</label>
           <div class="col-sm-9">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="can_vote" name="can_vote" value="True">
+              <input class="form-check-input" type="checkbox" id="can_vote" name="can_vote" {% if res.can_vote_unpublished %} checked {% endif %}>
               <label class="form-check-label" for="can_vote">
                 (Setted as ={{res.can_vote_unpublished}})
               </label>
@@ -50,7 +50,7 @@
           <label for="can_report" class="col-sm-3 col-form-label">User can report content.</label>
           <div class="col-sm-9">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="can_report" name="can_report" value="True">
+              <input class="form-check-input" type="checkbox" id="can_report" name="can_report" {% if res.can_report %} checked {% endif %}">
               <label class="form-check-label" for="can_report">
                 (Setted as = {{res.can_report}})
               </label>

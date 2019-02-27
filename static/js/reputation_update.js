@@ -41,20 +41,26 @@ $(document).ready(function() {
 });
 
 function updateStats(data) {
-  user_log = data['user_log'];
-  $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !user_log.upvoted);
-  $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !user_log.downvoted);
-  $('#reputation-reported').toggleClass('fa-flag-o', !user_log.reported);
-
-  $('#reputation-upvote').toggleClass('fa-thumbs-up', user_log.upvoted);
-  $('#reputation-downvote').toggleClass('fa-thumbs-down', user_log.downvoted);
-  $('#reputation-reported').toggleClass('fa-flag', user_log.reported);    
-
-  var resource_log = data['resource_log'];
-
-  $('.upvote-count').text(resource_log.upvote);
-  $('.downvote-count').text(resource_log.downvote);
-  $('.reported-count').text(resource_log.reported);
-
   allow_reputation_stat_update = true;
+
+  if (!data.success) {
+    swal({
+      title: data.message
+    });
+  } else {
+    user_log = data['user_log'];
+    $('#reputation-upvote').toggleClass('fa-thumbs-o-up', !user_log.upvoted);
+    $('#reputation-downvote').toggleClass('fa-thumbs-o-down', !user_log.downvoted);
+    $('#reputation-reported').toggleClass('fa-flag-o', !user_log.reported);
+  
+    $('#reputation-upvote').toggleClass('fa-thumbs-up', user_log.upvoted);
+    $('#reputation-downvote').toggleClass('fa-thumbs-down', user_log.downvoted);
+    $('#reputation-reported').toggleClass('fa-flag', user_log.reported);    
+  
+    var resource_log = data['resource_log'];
+  
+    $('.upvote-count').text(resource_log.upvote);
+    $('.downvote-count').text(resource_log.downvote);
+    $('.reported-count').text(resource_log.reported);
+  }
 }

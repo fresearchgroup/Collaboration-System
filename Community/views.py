@@ -26,14 +26,12 @@ from ast import literal_eval
 import json
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
-from Media.views import create_media
-from metadata.views import create_metadata
-from metadata.models import MediaMetadata
 from django.views.generic import CreateView, UpdateView
 from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
+from Categories.models import Category
 from PIL import Image
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -46,15 +44,20 @@ from .forms import FacetedProductSearchForm
 
 def display_communities(request):
 	if request.method == 'POST':
-		sortby = request.POST['sortby']
-		if sortby == 'a_to_z':
-			communities=Community.objects.filter(parent=None).order_by('name')
-		if sortby == 'z_to_a':
-			communities=Community.objects.filter(parent=None).order_by('-name')
-		if sortby == 'oldest':
-			communities=Community.objects.filter(parent=None).order_by('created_at')
-		if sortby == 'latest':
-			communities=Community.objects.filter(parent=None).order_by('-created_at')
+		if 'sortby' in request.POST:
+			sortby = request.POST['sortby']
+			if sortby == 'a_to_z':
+				communities=Community.objects.filter(parent=None).order_by('name')
+			if sortby == 'z_to_a':
+				communities=Community.objects.filter(parent=None).order_by('-name')
+			if sortby == 'oldest':
+				communities=Community.objects.filter(parent=None).order_by('created_at')
+			if sortby == 'latest':
+				communities=Community.objects.filter(parent=None).order_by('-created_at')
+		elif 'category' in request.POST:
+			category = request.POST['category']
+			category = Category.objects.get(pk=category)
+			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.filter(parent=None).order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
@@ -324,8 +327,8 @@ class UpdateCommunityView(UpdateView):
 		self.object = form.save(commit=False)
 		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
-
-		if self.object.image_thumbnail:
+		
+		if form.cleaned_data.get('x'):
 			x = form.cleaned_data.get('x')
 			y = form.cleaned_data.get('y')
 			w = form.cleaned_data.get('width')
@@ -745,3 +748,4 @@ class FacetedSearchView(BaseFacetedSearchView):
     template_name = 'search_result.html'
     #paginate_by = 3
     #context_object_name = 'object_list'
+

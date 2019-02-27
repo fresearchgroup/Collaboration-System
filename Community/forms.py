@@ -42,10 +42,10 @@ class RequestCommunityCreateForm(forms.ModelForm):
 
 class CommunityUpdateForm(forms.ModelForm):
 
-	x = forms.FloatField(widget=forms.HiddenInput())
-	y = forms.FloatField(widget=forms.HiddenInput())
-	width = forms.FloatField(widget=forms.HiddenInput())
-	height = forms.FloatField(widget=forms.HiddenInput())
+	x = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	y = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	width = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
 	class Meta:
 		model = Community

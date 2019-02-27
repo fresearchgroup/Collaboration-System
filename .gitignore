@@ -11,6 +11,8 @@ media/images
 media/audio
 media/video
 media/task
+media/category
+media/CACHE
 PyEtherpadLite
 
 # SQLite database files
@@ -27,3 +29,4 @@ src/
 
 .DS_Store/
 node_modules/
+static/js/dist/

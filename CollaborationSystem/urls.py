@@ -39,6 +39,8 @@ from TaskQueue import views as taskview
 from Community.forms import FacetedSearchForm
 from Community.views import FacetedSearchView, autocomplete
 from haystack.query import SearchQuerySet
+from Categories import views as categoryview
+from metadata import views as metadataview
 
 
 router = routers.DefaultRouter()
@@ -173,25 +175,29 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
-    url(r'community_media_create/', communityview.community_media_create, name='community_media_create'),
+    url(r'^community_media_create/(?P<pk>\d+)/(?P<mediatype>[\w\-]+)$', mediaview.MediaCreateView.as_view(), name='community_media_create'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
-    url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+    url(r'^media_edit/(?P<pk>\d*)/$', mediaview.MediaUpdateView.as_view(), name='media_edit'),
     url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),
     url(r'^run_task/', taskview.run_task, name='run_task'),
-    url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
 
     url(r'manage_reputation/',repuationview.manage_reputation , name = 'manage_reputation'),
     url(r'manage_resource_score/',repuationview.manage_resource_score , name = 'manage_resource_score'),
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+    url(r'^badges/', include('badges.urls')),
 
     url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
+    url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
+    url(r'categories/$', categoryview.categories, name='categories'),
 
+    url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
+    url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern

@@ -59,24 +59,36 @@
   </div>
   <div class="row">
     <div class="col-md-6 col-sm-6">
-      {% if gcmedia.media.mediatype == 'Image' %}
-        <img src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" alt="image" class="img-responsive">
+      {% if gcmedia.media.mediatype == 'IMAGE' %}
+        {% if gcmedia.media.mediafile %}
+          <img src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" alt="image" class="img-responsive">
+        {% else %}
+          <img src="{{ gcmedia.media.medialink}}" alt="image" class="img-responsive">
+        {% endif %}
       {% endif %}
-      {% if gcmedia.media.mediatype == 'Audio' %}
-        <audio controls>
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
-        </audio>
+      {% if gcmedia.media.mediatype == 'AUDIO' %}
+        {% if gcmedia.media.mediafile %}
+          <audio controls>
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+          </audio>
+        {% else %}
+          <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+        {% endif %}
       {% endif %}
-      {% if gcmedia.media.mediatype == 'Video' %}
-        <video class="img-responsive margin-bottom-10" style="width: 100%; border: 1px solid red;" controls>
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
-        </video>      
+      {% if gcmedia.media.mediatype == 'VIDEO' %}
+        {% if gcmedia.media.mediafile %}
+          <video class="img-responsive margin-bottom-10" style="width: 100%; border: 1px solid red;" controls>
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
+          </video>      
+        {% else %}
+          <iframe height="350" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+        {% endif %}
       {% endif %}
     </div>
     <div class="col-md-6 col-sm-6">
@@ -118,8 +130,17 @@
       </h4>
 
       <h4>
-        {{myhtml|safe}}{% autoescape off%} {{mediametadata.metadata.description}} {% endautoescape%}
+        {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.metadata.description}} {% endautoescape%}
       </h4>
+      {% if user.is_authenticated %} 
+        {% if gcmedia.media.state.name != 'publish'%}
+          {% if gcmedia.media.metadata %}
+            <h5><a id="metadata_edit_id" class="nav-link" href="{% url 'metadata_update' gcmedia.media.pk gcmedia.media.metadata.pk %}">Update metadata</a></h5>
+          {% else %}
+            <h5><a id="metadata_create_id" class="nav-link" href="{% url 'metadata_create' gcmedia.community.pk gcmedia.media.pk%}">Add metadata</a></h5>
+          {% endif %}
+        {%endif%} 
+      {% endif %}
     </div>
   </div>
   {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %}

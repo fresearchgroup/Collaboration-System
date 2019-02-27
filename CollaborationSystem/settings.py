@@ -83,8 +83,13 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
-    'Categories'
+    'badges',
+    'Categories',
+    'crispy_forms',
+    'taggit',
 ] + get_machina_apps()
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 SITE_ID = 1
 
@@ -297,9 +302,11 @@ DJANGO_NOTIFICATIONS_CONFIG = {
 'USE_JSONFIELD':True,
 'SOFT_DELETE':True
 }
-SERVERURL = config('NODESERVERURL')+":"+config('NODESERVERPORT')
+SERVERURL = config('NODE_SERVER_APIURL')+":"+config('NODESERVERPORT')
 APIKEY = config('APIKEY')
 APIURL = SERVERURL+"/api"
+ETHERPAD_URL = config('ETHERPAD_URL')
+
 WIKI_ACCOUNT_HANDLING = True
 WIKI_ACCOUNT_SIGNUP_ALLOWED = True
 
@@ -309,3 +316,5 @@ H5P_ROOT = config('H5P_ROOT')
 CELERY_BROKER_URL = 'amqp://localhost'
 
 REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
+
+TAGGIT_CASE_INSENSITIVE = True
