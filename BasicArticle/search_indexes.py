@@ -8,6 +8,7 @@ class ArticlesIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, model_attr='title')
     # created_by = indexes.CharField(model_attr='created_by')
     created_at = indexes.DateTimeField(model_attr='created_at')
+    state = indexes.CharField(model_attr='state')
 
     def get_model(self):
         return Articles

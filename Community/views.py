@@ -725,22 +725,6 @@ def community_media_create(request):
 		return redirect('login')
 
 
-def autocomplete(request):
-    print("Entered auto-complete function")
-    sqs = SearchQuerySet().autocomplete(
-        content_auto=request.GET.get(
-            'query',
-            ''))[
-        :5]
-    s = []
-    for result in sqs:
-        d = {"value": result.title, "data": result.object.slug}
-        s.append(d)
-    output = {'suggestions': s}
-    
-    print("autocomplete suggestions = "+str(output))
-    return JsonResponse(output)
-
 class FacetedSearchView(BaseFacetedSearchView):
 
     form_class = FacetedProductSearchForm

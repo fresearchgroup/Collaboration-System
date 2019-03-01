@@ -103,7 +103,6 @@ class FacetedProductSearchForm(FacetedSearchForm):
     def __init__(self, *args, **kwargs):
         data = dict(kwargs.get("data", []))
         self.categorys = data.get('category', [])
-        #self.brands = data.get('brand', [])
         super(FacetedProductSearchForm, self).__init__(*args, **kwargs)
 
     def search(self):
@@ -117,5 +116,4 @@ class FacetedProductSearchForm(FacetedSearchForm):
                     query = u''
                 query += u'"%s"' % sqs.query.clean(category)
             sqs = sqs.narrow(u'category_exact:%s' % query)
-        print ("2.>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Inside FacetedSearchForm sqs = "+str(sqs.query))
         return sqs
