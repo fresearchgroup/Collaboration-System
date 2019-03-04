@@ -535,6 +535,19 @@
           </div>
           <!-- END MEMBERS -->
 
+          <hr />
+
+          <!-- GROUPS START -->
+          {% if children %}
+          <h2 class="no-top-space">Sub Communities</h2>
+          <ul class="nav sidebar-categories margin-bottom-40">
+            <div class="data-container"></div>
+          </ul>
+          <div id="pagination-commgroups" class="margin-bottom-20"></div>
+          <!-- GROUPS END -->
+          {% endif %}
+          <hr />
+
         </div>
         <!-- END CONTENT -->
       </div>
@@ -559,18 +572,6 @@
               </div>
             </div>
             <!-- END LEFT most SIDEBAR -->
-
-            <!-- BEGIN RIGHT SIDEBAR -->
-            <div class="col-md-3 col-sm-3 blog-sidebar">
-              <!-- groups START -->
-              <h2 class="">Groups</h2>
-              <ul class="nav sidebar-categories margin-bottom-20">
-                <div class="data-container"></div>
-              </ul>
-              <div id="pagination-commgroups" class="margin-bottom-20"></div>    
-              <!-- groups END -->
-            </div>
-            <!-- END RIGHT most SIDEBAR -->
 
 
             <!-- BEGIN RIGHT SIDEBAR -->
