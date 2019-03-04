@@ -33,6 +33,7 @@ from django.db import connection
 from django.urls import reverse
 from Categories.models import Category
 from PIL import Image
+from UserRolesPermission.models import ProfileImage
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -72,6 +73,12 @@ def community_view(request, pk):
 	pubarticlescount = len(list(pubarticles))
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
+	for comm in communitymem:
+		try:
+			user_profile = ProfileImage.objects.get(user=comm.user)
+			comm.photo = user_profile.photo
+		except ProfileImage.DoesNotExist:
+			user_profile = "No Image available"
 	children = community.get_children()
 	childrencount = children.count()
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'users':users, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
