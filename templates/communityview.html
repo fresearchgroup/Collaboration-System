@@ -548,6 +548,17 @@
           {% endif %}
           <hr />
 
+          <!-- BEGIN TOP CONTRIBUTORS PHOTOS STREAM -->
+          <div class="blog-photo-stream margin-bottom-20">
+            <h2>Top Contributors</h2>
+            <ul class="list-unstyled">
+              {% for top in top_contributors %}
+                <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}{{top.photo}}"></a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!-- END TOP CONTRIBUTORS STREAM -->
+
         </div>
         <!-- END CONTENT -->
       </div>
@@ -572,21 +583,6 @@
               </div>
             </div>
             <!-- END LEFT most SIDEBAR -->
-
-
-            <!-- BEGIN RIGHT SIDEBAR -->
-            <div class="col-md-3 col-sm-3 blog-tags margin-bottom-20">
-              <!-- Contributors START -->
-              <h2 class="">Top Contributors</h2>
-              <ul>
-                {% for user in users %}
-                  <li><a href="javascript:;">{{user.username}}</a></li>
-                {% endfor %}
-              </ul>
-              <!-- Contributors END -->
-            </div>
-            <!-- END RIGHT SIDEBAR -->
-
 
           </div>
         </div>

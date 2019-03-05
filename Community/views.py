@@ -34,6 +34,7 @@ from django.urls import reverse
 from Categories.models import Category
 from PIL import Image
 from UserRolesPermission.models import ProfileImage
+from django.db.models import Count
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -72,6 +73,16 @@ def community_view(request, pk):
 	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
 	pubarticlescount = len(list(pubarticles))
 	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
+
+	top_contributors = CommunityArticles.objects.values('user__username').annotate(num=Count('user__username')).filter(community=community).order_by('-num')[:8]
+	for top in top_contributors:
+		username = top['user__username']
+		try:
+			user_profile = ProfileImage.objects.get(user__username=username)
+			top['photo'] = user_profile.photo
+		except ProfileImage.DoesNotExist:
+			top['photo'] = ''
+
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
 	for comm in communitymem:
 		try:
@@ -81,7 +92,7 @@ def community_view(request, pk):
 			user_profile = "No Image available"
 	children = community.get_children()
 	childrencount = children.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'users':users, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
