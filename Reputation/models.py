@@ -24,8 +24,8 @@ class ResourceScore(models.Model):
 
 #score needed to achieve a certain role
 class UserScore(models.Model):
-    author = models.IntegerField(null=True)
-    publisher = models.IntegerField(null=True)
+    author = models.IntegerField(default=0)
+    publisher = models.IntegerField(default=0)
     role_score = models.CharField(max_length=20, default='role_score')
 
 class FlagReason(models.Model):

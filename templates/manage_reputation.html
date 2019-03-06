@@ -31,7 +31,7 @@
         <div class="form-group row">
           <label for="upvote" class="col-sm-3 col-form-label">Points for upvotes</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" id="upvote" name="upvote" >
+            <input type="number" class="form-control" id="upvote" name="upvote" value="{{res.upvote_value}}">
           </div>
           <label class="form-text-label" for="upvote">
               (Value assigned = {{res.upvote_value}})
@@ -40,7 +40,7 @@
         <div class="form-group row">
           <label for="downvote" class="col-sm-3 col-form-label">Points for downvotes</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" id="downvote" name="downvote" >
+            <input type="number" class="form-control" id="downvote" name="downvote" value="{{res.downvote_value}}">
           </div>
           <label class="form-text-label" for="downvote">
               (value assigned = {{res.downvote_value}})
@@ -60,7 +60,7 @@
         <div class="form-group row">
           <label for="pub_content" class="col-sm-3 col-form-label">Points for publish content</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" id="pub_content" name="pub_content" >
+            <input type="number" class="form-control" id="pub_content" name="pub_content" value="{{res.publish_value}}">
           </div>
           <label class="form-text-label" for="pub_content">
               (Value assigned = {{res.publish_value}})
@@ -81,12 +81,21 @@
           <div class="form-group row">
               <label for="pub_value" class="col-sm-3 col-form-label">Points for acheiving Publisher Role</label>
               <div class="col-sm-3">
-                <input type="text" class="form-control" id="pub_value" name="pub_value" >
+                <input type="number" class="form-control" id="pub_value" name="pub_value" value="{{scr.publisher}}">
               </div>
               <label class="form-text-label" for="pub_value">
                   (Value assigned = {{scr.publisher}})
-                </label>
+              </label>
             </div>
+            <div class="form-group row">
+                <label for="author_value" class="col-sm-3 col-form-label">Points for acheiving Author Role</label>
+                <div class="col-sm-3">
+                  <input type="number" class="form-control" id="author_value" name="author_value" value="{{scr.author}}">
+                </div>
+                <label class="form-text-label" for="author_value">
+                    (Value assigned = {{scr.author}})
+                </label>
+              </div>
             <div class="form-group row">
               <div class="col-sm-10">
                 <button type="submit" class="btn btn-primary">Submit</button>
