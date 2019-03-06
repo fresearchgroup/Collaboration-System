@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/infinite.min.js' %}"></script>
+{% endblock %}
+
 {% load comments %}
 {% load comments_xtd %}
 
@@ -23,10 +30,12 @@
    </div>
 </div>
 {% endif %}
+<div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
 <div class="row ">
   <div class="col-md-10 col-sm-10">
 {% for article in articles %}
+<div class="infinite-item">
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
       {% if article.article.image %}
@@ -53,6 +62,7 @@
   </div>
 
   <hr class="blog-post-sep">
+</div>
 {% endfor %}
 </div>
 {% if not favs %}
@@ -71,32 +81,31 @@
     {%endif%}
 </div>
 {% endautoescape%}
+</div>
 
-{% if articles.has_other_pages %}
-<div class="row">
-  <div class="col-md-4 col-sm-4 items-info">{{articles}}</div>
-  <div class="col-md-8 col-sm-8">
-    <ul class="pagination pull-right">
-    {% if articles.has_previous %}
-      <li><a href="?page={{ articles.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in articles.paginator.page_range %}
-      {% if articles.number == i %}
-        <li class="" ><span style="background-color:#E84D1C">{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if articles.has_next %}
-      <li><a href="?page={{ articles.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-</div>
-</div>
-<br />
+{% if articles.has_next %}
+<a class="infinite-more-link" href="?page={{ articles.next_page_number }}">
+  <i class="fa fa-spinner fa-spin" style="font-size:24px;color:red"></i> Loading...
+</a>
 {% endif %}
+
+<div class="loading" style="display: none;">
+
+</div>
+
+
+{% endblock %} 
+
+{% block javascript %}
+<script type="text/javascript">
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+      $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+      $('.loading').hide();
+    }
+  });
+</script> 
 {% endblock %}
