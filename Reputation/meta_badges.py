@@ -31,7 +31,7 @@ class Publisher(MetaBadge):
 class ContributorBadge(MetaBadge):
     id = 'contributor'
     model = CommunityArticles
-    one_time_only = True
+    one_time_only = False
 
     title = 'Contributor'
     description = 'Whoa, a contributor'
