@@ -116,20 +116,6 @@ var articlesContributed = [{{total}}];
     </div>
   </div>
 </div>
-<div class="row margin-bottom-40">
-  <div class="col-md-12">
-    <div class="pricing hover-effect">
-      <div class="pricing-head">
-        <h3>Badges</h3>
-        <h4>
-          <span style="text-align:left; padding-left:20px; padding-top:10px" class="badges-container">
-              
-          </span>
-        </h4>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 
 <div class="col-md-12">
@@ -211,70 +197,69 @@ var articlesContributed = [{{total}}];
 {% block javascript %}
   <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
   <script>
-    $(function() {
-      (function(name) {
-        var container = $('#pagination-mycommunities');
-
-        var sources = function () {
-          var result = [];
-          {% for comm in mycommunities %}
-            var temp = ''
-            {% if comm.role.name == 'author' %}
-              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
-            {% elif comm.role.name == 'publisher' %}
-              temp += '<i class="fa fa-print" style="top:3px;"></i> '
-            {% else %}
-              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
-            {% endif %}
-            temp += '<a href="{% url 'community_view' comm.community.pk %}">' + '{{ comm.community }}' + '</a>';
-            result.push(temp);
-          {% endfor %}
-          return result;
-        }();
-
-        var options = {
-          dataSource: sources,
-          pageSize: 5,
-          showGoInput: true,
-          showGoButton: true,
-          showPageNumbers: false,
-          showNavigator: true,
-
-          callback: function (data, pagination) {
-            var dataHtml = '';
-            //Get the datasource (item)
-            $.each(data, function (index, item) {
-              dataHtml += item + '<br />';
-            });
-            dataHtml += '<br />'
-            //Add data to container
-            container.prev().html(dataHtml);
-          }
-        };
-        container.pagination(options);
-      })('mycommunities-pagination');
-    })
-  </script>
-
-  <script>
     $.ajax({
       url: '/api/reputation/score',
       type: 'GET',
-      success: function(data) {
-        console.log(data);
-        console.log(data.length);
-        for (i = 0; i < data.length; i++) {
-          var badgeDiv = $("<div/>");
-          // console.log(data.length);
-          // console.log(data[i].community_name);
-          badgeDiv.append('<p><b>' + data[i].community_name + '</b></p>');
+      success: function(mycommunities) {
+        (function(name) {
+          console.log(mycommunities);
+          var container = $('#pagination-mycommunities');
 
-          for (var j = 0; j < data[i].badges.length; j++) {
-            badgeDiv.append('<p>' + data[i].badges[j].badge + '</p>');
-          }
-          $('.badges-container').append(badgeDiv);
-        }
+          var sources = function () {
+            var result = [];
+
+            var i = 0;
+            for (i = 0; i < mycommunities.length; i++) {
+              var temp = '';
+              var comm = mycommunities[i];
+
+              if (comm.role.name === 'author') {
+                temp += '<i class="fa fa-pencil" style="top:3px;"></i> ';
+              } else if (comm.role.name == 'publisher') {
+                temp += '<i class="fa fa-print" style="top:3px;"></i> ';
+              } else {
+                temp += '<i class="fa fa-trophy" style="top:3px;"></i> ';
+              }
+
+              var url = "{% url 'community_view' 999 %}";
+              temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
+              
+              var badgeDiv = $("<div/>");
+
+              for (var j = 0; j < comm.badges.length; j++) {
+                badgeDiv.append('<div>' + comm.badges[j].badge + '</div>');
+              }
+
+              temp += badgeDiv.html();
+
+              result.push(temp);
+            }
+
+            return result;
+          }();  
+
+          var options = {
+            dataSource: sources,
+            pageSize: 5,
+            showGoInput: true,
+            showGoButton: true,
+            showPageNumbers: false,
+            showNavigator: true,
+
+            callback: function (data, pagination) {
+              var dataHtml = '';
+              //Get the datasource (item)
+              $.each(data, function (index, item) {
+                dataHtml += item + '<br />';
+              });
+              dataHtml += '<br />'
+              //Add data to container
+              container.prev().html(dataHtml);
+            }
+          };
+          container.pagination(options);
+        })('mycommunities-pagination');
       }
-    })
+    });
   </script>
 {% endblock %}
