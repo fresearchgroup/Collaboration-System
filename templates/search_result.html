@@ -19,9 +19,9 @@
 
     {% if query %}
       <h3> Communities </h3>
+      <div class="container">
+
       {% for result in object_list|slice:":1" %}
-            
-                <div class="container">
 
                 {% if result.object.name %}
                     <div class="mix-grid thumbnails">
@@ -69,14 +69,15 @@
         </div>
        
 
-        
+            <br>
             <h3> Articles </h3>
+            <div class="infinite-container">
             {% for result in object_list|slice:":1" %}
-                {% if result.object.title %}
+                {% if result.object.body %}
                 
                 {% if result.object.state.name == "publish" %}
                 <!-- BEGIN CONTENT -->
-                <div class="infinite-container">
+                
                       {{myhtml|safe}}
                       <div class="infinite-item">
                        <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
@@ -124,6 +125,47 @@
             {% endfor %}
 
         </div>
+
+        <br>
+        <h3> Media </h3>
+        <div class="infinite-container">
+        {% for result in object_list %}
+        <h5>{{ result.object.mediatype }}</h5>
+        {% if result.object.mediafile %}
+
+        <div class="col-md-3 col-sm-4 gallery-item">
+          <a data-rel="fancybox-button"
+            title=""
+            href="{{ MEDIA_URL }}{{ result.object.mediafile}}"
+            class="fancybox-button"
+            text = "{{ result.object.title }}">
+            <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ result.object.mediafile}}" class="img-responsive">
+            <div class="zoomix"><i class="fa fa-search"></i></div>
+          </a>
+          <h3> <a href="{% url 'media_view' result.object.pk %}">{{ result.object.title }} </a> </h3>
+          <i class="fa fa-user" style="color:red;"></i> {{ result.object.created_by }} <br />
+          <i class="fa fa-calendar" style="color:red;"></i> {{result.object.created_at}} <br />
+        </div>
+
+        {% endif %}
+        {% endfor %}
+
+        </div>
+
+
+        <!-- <br>
+            <h3> Media </h3>
+            {% for result in object_list %}
+
+                {% if result.object.mediafile %}
+                 File = {{ result.object.mediafile }}
+                 url = {{ result.object.get_absolute_url }} 
+                 state = {{ result.object.state }}              
+
+                {% endif %}
+            {% endfor %}
+
+        </div> -->
 
 
 
