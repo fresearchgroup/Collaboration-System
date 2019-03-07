@@ -11,6 +11,7 @@ from Media.models import Media
 from BasicArticle.models import Articles
 from rest_framework.permissions import IsAuthenticated
 from Community.models import Community, CommunityMembership, CommunityArticles, CommunityGroups, CommunityMedia
+from Community.serializers import CommunityMembershipSerializer
 from Group.models import GroupArticles
 from django.http import Http404
 from django.db.models import F
@@ -233,16 +234,16 @@ class ReputationScore(APIView):
     def get(self, request):
         reputation_score = []
 
-        community_reputations = CommunityReputaion.objects.filter(user=request.user)
-        resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
         user_badges = request.user.badges.all
+        community_membership = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
 
-        for repu in community_reputations:
-            reputation_score.append({
-                'community_id': repu.community.id,
-                'community_name': repu.community.name,
-                'score': repu.upvote_count * resource_score.upvote_value - repu.downvote_count * resource_score.downvote_value + repu.published_count * resource_score.publish_value,
-                'badges': BadgeToUserSerializer(BadgeToUser.objects.filter(user=request.user, community=repu.community), many=True).data
-            })
+        for comm in community_membership:
+            repu = CommunityReputaion.objects.get(user=request.user, community=comm.community)
+            
+            res = CommunityMembershipSerializer(comm).data
+            res['score'] = repu.get_reputation_score()
+            res['badges'] = BadgeToUserSerializer(BadgeToUser.objects.filter(user=request.user, community=repu.community), many=True).data
+
+            reputation_score.append(res)
 
         return Response(reputation_score)
