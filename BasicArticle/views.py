@@ -79,7 +79,8 @@ def display_articles(request):
 		articles = paginator.page(paginator.num_pages)
 	fav_articles = ''
 	if request.user.is_authenticated:
-		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
+		resource_ids = favourite.objects.values_list('resource').filter(user=request.user,category='article')
+		fav_articles = Articles.objects.filter(pk__in=resource_ids)
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
 def view_article(request, pk):

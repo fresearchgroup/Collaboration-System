@@ -4,6 +4,7 @@
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
   <script src="{% static 'js/infinite.min.js' %}"></script>
+  <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% load comments %}
@@ -33,7 +34,7 @@
 <div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
 <div class="row ">
-  <div class="col-md-10 col-sm-10">
+  <div class="col-md-9 col-sm-9">
 {% for article in articles %}
 <div class="infinite-item">
   <div class="row margin-bottom-15">
@@ -44,7 +45,7 @@
       <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
       {%endif%}
     </div>
-    <div class="col-md-7 col-sm-7">
+    <div class="col-md-10 col-sm-10">
       <h3><a href="{% url 'article_view' article.article.pk %}">{{ article.article.title }}</a></h3>
       <ul class="blog-info">
         <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
@@ -65,20 +66,20 @@
 </div>
 {% endfor %}
 </div>
-{% if not favs %}
-<div class="col-md-2 col-sm-2">
-                <div class="card" style="width: 18rem;">
-                  <div class="card-header alert alert-warning">
-                    Favourite Articles
-                  </div>
-                  {%for article in favs%}
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="{% url 'article_view' article.id %}">{{article.title}}</a></li>
-                  </ul>
-                  {%endfor%}
-          </div>
-    </div>
-    {%endif%}
+
+<div class="col-md-3 col-sm-3">
+
+  <!-- FAVOURITES START -->
+  {% if favs %}
+    <h2 class="no-top-space">Favourite Articles</h2>
+    <ul class="nav sidebar-categories margin-bottom-40">
+      <div class="data-container"></div>
+    </ul>
+    <div id="pagination-fav" class="margin-bottom-20"></div>
+  {% endif %}
+  <!-- FAVOURITES END -->
+
+</div>
 </div>
 {% endautoescape%}
 </div>
@@ -97,6 +98,46 @@
 {% endblock %} 
 
 {% block javascript %}
+
+<script src="{% static 'jquery-pagination/pagination.js' %}"></script>
+<script>
+    $(function () {
+        (function (name) {
+            var container = $('#pagination-fav');
+
+            var sources = function () {
+                var result = [];
+                {% for fav in favs %}
+                var temp = ''
+                temp += '<li><a href="{% url 'article_view' fav.id %}">' + '{{fav.title}}' + '</a></li>'
+                result.push(temp);
+                {% endfor %}
+                return result;
+            }();
+
+            var options = {
+                dataSource: sources,
+                pageSize: 5,
+                showGoInput: true,
+                showGoButton: true,
+                showPageNumbers: false,
+                showNavigator: true,
+
+                callback: function (data, pagination) {
+                    var dataHtml = '';
+                    //Get the datasource (item)
+                    $.each(data, function (index, item) {
+                        dataHtml += item ;
+                    });
+                    //Add data to container
+                    container.prev().html(dataHtml);
+                }
+            };
+            container.pagination(options);
+        })('fav-pagination');
+    })
+</script>
+
 <script type="text/javascript">
   var infinite = new Waypoint.Infinite({
     element: $('.infinite-container')[0],
