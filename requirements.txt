@@ -1,4 +1,4 @@
-django==1.11.18
+django==1.11.20
 django-comments-xtd==2.0.9
 django-contrib-comments==1.8.0
 django-cors-headers==2.1.0

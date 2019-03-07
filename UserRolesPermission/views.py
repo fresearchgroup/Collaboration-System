@@ -59,7 +59,8 @@ def signup(request):
             else:
                 user = form.save()
                 assign_role(user, Author)
-                create_ether_user(user)
+                if settings.REALTIME_EDITOR:
+                    create_ether_user(user)
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('user_dashboard')
         else:
@@ -108,29 +109,13 @@ def user_dashboard(request):
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-        ap = User.objects.raw(
-        'Select 1 id, Year, Sum(JAN) JAN,sum(FEB) FEB,sum(MAR) MAR,sum(APR) APR,sum(MAY) MAY,sum(JUN) JUN,sum(JUL) JUL,sum(AUG) AUG,sum(SEP) SEP,sum(OCT) OCT,sum(NOV) NOV,sum(DECEM) DECE, Concat(Sum(JAN) , "," , sum(FEB) , "," ,sum(MAR),",",sum(APR),",",sum(MAY),",",sum(JUN),",",sum(JUL),",",sum(AUG),",", sum(SEP) ,",",sum(OCT),",",sum(NOV),",",sum(DECEM)) Data,state_id State from (Select Year, Case when Month=1 Then 1 else 0 END JAN, Case when Month=2 Then 1 else 0 END FEB, Case when Month=3 Then 1 else 0 END MAR, Case when Month=4 Then 1 else 0 END APR, Case when Month=5 Then 1 else 0 END MAY, Case when Month=6 Then 1 else 0 END JUN, Case when Month=7 Then 1 else 0 END JUL, Case when Month=8 Then 1 else 0 END AUG, Case when Month=9 Then 1 else 0 END SEP, Case when Month=10 Then 1 else 0 END OCT, Case when Month=11 Then 1 else 0 END NOV, Case when Month=12 Then 1 else 0 END DECEM, state_id from  (select  Month(created_at) Month ,Year(created_at) Year ,state_id from BasicArticle_articles where id in (select article_id from Community_communityarticles where user_id=%s) ) T ) P group by Year,state_id having Year=%s;',
-        [request.user.id, yearby] )
-        visiblelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        publishablelist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        articlespublished = ''
-        for a in ap:
-            if a.State == 3: #publsihed
-                articlespublished=a.Data
-            if a.State == 2: # visible
-                visiblelist = str(bytes.decode(a.Data)).split(',')
-                visiblelist = list(map(int, visiblelist))
-            if a.State == 5: #publishable
-                publishablelist = str(bytes.decode(a.Data)).split(',')
-                publishablelist = list(map(int, publishablelist))
+        articlescontributed = []
+        articlespublished = []
+        for i in range(1, 13):
+            articlescontributed.append(Articles.objects.filter(created_by=request.user, state__initial=False, state__final=False, created_at__year=yearby, created_at__month=i).count())
+            articlespublished.append(Articles.objects.filter(created_by=request.user, state__final=True, created_at__year=yearby, created_at__month=i).count())
 
-        articlescontributed = map(add, visiblelist, publishablelist)
-        articlescontributed = list(map(str, articlescontributed))
-        total = ''
-        for a in articlescontributed:
-            total = total + ',' + a
-        total=total[1:]
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articlescontributed':list(articlescontributed),'articlespublished':articlespublished, 'total':total, 'user_profile':user_profile, 'lstContent':lstContent})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articlescontributed':articlescontributed,'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent})
     else:
         return redirect('login')
 

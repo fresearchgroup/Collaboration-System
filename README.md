@@ -37,9 +37,13 @@ The system allows individual users to form communities, create groups, participa
 
 ## Installation 
 
-For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
+For three Step Installation use Docker: [Install](https://github.com/fresearchgroup/Collaboration-System/blob/n-level/install.md)
 
-For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
+<p align="center"><img src="/temp/demo.gif?raw=true"/></p>
+
+
+
+
 
 
 ### Event Logging

@@ -68,7 +68,7 @@ def display_articles(request):
 	"""
 	display list of articles in  article list page.
 	"""
-	articlelist=Articles.objects.raw('select o.id,title,username,views,o.created_at,g.name GNAME,c.name CNAME from (select id,title,username,views,created_at,GID,CID COMMID from ( select ba.id,ba.title , username,views,created_at ,(select group_id from Group_grouparticles where article_id=ba.id) GID , (select community_id from Community_communityarticles where article_id=ba.id) CID from (select * from BasicArticle_articles  where id in (select article_id from Group_grouparticles) or id in (select article_id from Community_communityarticles)) ba join auth_user au on ba.created_by_id=au.id join workflow_states ws on ws.id=ba.state_id where ws.name="publish") t ) o  left join Community_community c on c.id=COMMID left join Group_group g on g.id=GID order by views desc;')
+	articlelist = CommunityArticles.objects.filter(article__state__final=True)
 	page = request.GET.get('page', 1)
 	paginator = Paginator(list(articlelist), 5)
 	try:
@@ -79,7 +79,8 @@ def display_articles(request):
 		articles = paginator.page(paginator.num_pages)
 	fav_articles = ''
 	if request.user.is_authenticated:
-		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
+		resource_ids = favourite.objects.values_list('resource').filter(user=request.user,category='article')
+		fav_articles = Articles.objects.filter(pk__in=resource_ids)
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
 def view_article(request, pk):
@@ -206,7 +207,7 @@ class ArticleEditView(UpdateView):
 		if self.is_communitymember(self.request, community):
 			context['role'] = self.get_communityrole(self.request, community)
 			if settings.REALTIME_EDITOR:
-				context['url'] = settings.SERVERURL
+				context['url'] = settings.ETHERPAD_URL
 				context['padid'] = get_pad_id(self.object.pk)
 		return context
 
