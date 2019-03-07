@@ -234,7 +234,6 @@ class ReputationScore(APIView):
     def get(self, request):
         reputation_score = []
 
-        resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
         user_badges = request.user.badges.all
         community_membership = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
 
@@ -242,7 +241,7 @@ class ReputationScore(APIView):
             repu = CommunityReputaion.objects.get(user=request.user, community=comm.community)
             
             res = CommunityMembershipSerializer(comm).data
-            res['score'] = repu.upvote_count * resource_score.upvote_value - repu.downvote_count * resource_score.downvote_value + repu.published_count * resource_score.publish_value
+            res['score'] = repu.get_reputation_score()
             res['badges'] = BadgeToUserSerializer(BadgeToUser.objects.filter(user=request.user, community=repu.community), many=True).data
 
             reputation_score.append(res)
