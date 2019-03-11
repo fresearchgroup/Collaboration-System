@@ -725,11 +725,31 @@ def community_media_create(request):
 		return redirect('login')
 
 
-class FacetedSearchView(BaseFacetedSearchView):
+class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 
     form_class = FacetedProductSearchForm
     facet_fields = ['category']
     template_name = 'search_result.html'
     #paginate_by = 3
     #context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print("self.request.GET >>>>>>>>>>>>>>>>>>>>> ", self.request.GET)
+        try:
+        	if 'community' in self.request.GET:
+		        context['community'] = self.request.GET['community']
+        	if 'article' in self.request.GET:
+	            context['article'] = self.request.GET['article']
+        	if 'image' in self.request.GET:
+	        	context['image'] = self.request.GET['image']
+        	if 'audio' in self.request.GET:
+		        context['audio'] = self.request.GET['audio']
+        	if 'video' in self.request.GET:
+		        context['video'] = self.request.GET['video']
+        	if 'query' in self.request.GET:
+		        context['query'] = self.request.GET['query']
+        except:
+            pass
+        return context
 

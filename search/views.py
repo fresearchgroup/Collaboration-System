@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from django.conf import settings
 from django.core.paginator import InvalidPage, Paginator
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpRequest
 from django.shortcuts import render
 
 from haystack.forms import FacetedSearchForm, ModelSearchForm
@@ -161,6 +161,18 @@ class SearchView(object):
 
         return render(self.request, self.template, context)
 
+    # def search_queries(self):
+        # return render(self.template)
+        # return HttpResponse('hello')
+        # print ("############### request.GET ::::::::::::::::: ")
+        # context = self.get_context()
+
+        # return render(self.request, self.template, {hello:'hello'})
+
+def search_queries(request):
+    query = request.GET['q']
+    comm = request.GET['community']
+    return render(request, 'search_result.html', {'query':query})
 
 def search_view_factory(view_class=SearchView, *args, **kwargs):
     def search_view(request):

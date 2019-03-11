@@ -41,6 +41,7 @@ from Community.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 from Categories import views as categoryview
 from metadata import views as metadataview
+from search import views as SearchView
 
 
 router = routers.DefaultRouter()
@@ -207,7 +208,7 @@ urlpatterns += [
     url(r'^wiki-notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
     url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
-
+    # url(r'^search_category/', SearchView.search_queries, name='search_queries'),
 
 ]
 
