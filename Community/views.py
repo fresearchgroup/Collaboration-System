@@ -33,6 +33,9 @@ from django.db import connection
 from django.urls import reverse
 from Categories.models import Category
 from PIL import Image
+from UserRolesPermission.models import ProfileImage
+from django.db.models import Count
+from django.db.models import F
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -70,11 +73,26 @@ def community_view(request, pk):
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
 	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
 	pubarticlescount = len(list(pubarticles))
-	users = CommunityArticles.objects.raw('select  u.id,username from auth_user u join Community_communityarticles c on u.id = c.user_id where c.community_id=%s group by u.id order by count(*) desc limit 2;', [pk])
+
+	top_contributors = CommunityArticles.objects.values('user__username').annotate(num=Count('user__username')).filter(community=community).order_by('-num')[:8]
+	for top in top_contributors:
+		username = top['user__username']
+		try:
+			user_profile = ProfileImage.objects.get(user__username=username)
+			top['photo'] = user_profile.photo
+		except ProfileImage.DoesNotExist:
+			top['photo'] = ''
+
 	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
+	for comm in communitymem:
+		try:
+			user_profile = ProfileImage.objects.get(user=comm.user)
+			comm.photo = user_profile.photo
+		except ProfileImage.DoesNotExist:
+			user_profile = "No Image available"
 	children = community.get_children()
 	childrencount = children.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'users':users, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
@@ -533,9 +551,19 @@ def community_content(request, pk):
 		uid = request.user.id
 		membership = CommunityMembership.objects.get(user=uid, community=community.pk)
 		if membership:
-			carticles = CommunityArticles.objects.raw('select "article" as type, ba.id, ba.title, ba.body, ba.image, ba.views, ba.created_at, username, workflow_states.name as state from  workflow_states, auth_user au, BasicArticle_articles as ba , Community_communityarticles as ca  where au.id=ba.created_by_id and ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
-			ccourse = CommunityCourses.objects.raw('select "course" as type, course.id, course.title, course.body, course.image, course.created_at, username, workflow_states.name as state from workflow_states, Course_course as course, Community_communitycourses as ccourses, auth_user au where au.id=course.created_by_id and course.state_id=workflow_states.id and course.id=ccourses.course_id and ccourses.community_id=%s and course.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
-			cmedia = CommunityMedia.objects.raw('select "media" as type, media.id, media.title, media.mediafile as image, media.mediatype, media.created_at, username, workflow_states.name as state from workflow_states, Media_media as media, Community_communitymedia as cmedia, auth_user au where au.id=media.created_by_id and media.state_id=workflow_states.id and media.id=cmedia.media_id and cmedia.community_id=%s and media.state_id in (select id from workflow_states as w where w.name = "visible" or w.name="publishable");', [community.pk])
+
+			carticles = CommunityArticles.objects.filter(community=community, article__state__initial=False, article__state__final=False).annotate(title=F('article__title'),state=F('article__state__name'),created_at=F('article__created_at'),body=F('article__body'),image=F('article__image'),views=F('article__views'),username=F('article__created_by__username'))
+			for art in carticles:
+				art.type = 'article'
+
+			ccourse = CommunityCourses.objects.filter(community=community, course__state__initial=False, course__state__final=False).annotate(title=F('course__title'),state=F('course__state__name'),created_at=F('course__created_at'),body=F('course__body'),image=F('course__image'),username=F('course__created_by__username'))
+			for course in ccourse:
+				course.type = 'course'
+
+			cmedia = CommunityMedia.objects.filter(community=community, media__state__initial=False, media__state__final=False).annotate(title=F('media__title'),state=F('media__state__name'),created_at=F('media__created_at'),mediatype=F('media__mediatype'),image=F('media__mediafile'),username=F('media__created_by__username'))
+			for media in cmedia:
+				media.type = 'media'
+
 			ch5p = []
 			print('new test')
 			try:
