@@ -32,3 +32,4 @@ celery==4.2.1
 future==0.17.1
 django-categories==1.6
 django-crispy-forms
+djangorestframework-simplejwt==4.1.0
