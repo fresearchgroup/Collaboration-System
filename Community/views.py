@@ -430,7 +430,10 @@ class CreateCommunityView(CreateView):
 		try:
 			cursor = connection.cursor()
 			cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-			tree_id = cursor.fetchone()[0] + 1
+			try:
+				tree_id = cursor.fetchone()[0] + 1
+			except:
+				tree_id = 0
 			slug = "-".join(name.lower().split())
 			#return HttpResponse(str(tree_id))
 			insert_stmt = (

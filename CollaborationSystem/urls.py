@@ -38,6 +38,8 @@ from Media import views as mediaview
 from TaskQueue import views as taskview
 from Categories import views as categoryview
 from metadata import views as metadataview
+from workflow import views as workflowview
+from django.views.generic import TemplateView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -197,6 +199,9 @@ urlpatterns = [
 
     url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
     url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
+
+    url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
+    url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
