@@ -31,6 +31,13 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
+BADGE_LEVEL_CHOICES = (
+    ("1", "Grey"),
+    ("2", "Red"),
+    ("3", "Yellow"),
+    ("4", "Blue"),
+    ("5", "Green"),
+)
 
 # Application definition
 

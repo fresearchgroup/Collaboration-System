@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from Reputation.models import CommunityReputaion, FlagReason
 from Reputation.models import ArticleScoreLog, ArticleUserScoreLogs, MediaScoreLog, MediaUserScoreLogs
-from badges.models import BadgeToUser
+from badges.models import BadgeToUser, Badge
 
 class CommunityReputaionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,3 +66,7 @@ class BadgeToUserSerializer(serializers.ModelSerializer):
         model = BadgeToUser
         fields = ['user', 'badge', 'community']
 
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ['id', 'user', 'level', 'icon', 'title', 'description']
