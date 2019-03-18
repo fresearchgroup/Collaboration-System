@@ -50,14 +50,19 @@ def manage_user_role_score(request):
     if request.user.is_superuser:
         if request.method == 'POST':
             pub_value = request.POST.get('pub_value')
+            author_value = request.POST.get('author_value')
             if pub_value == '':
                 pub_value = 0
+            if author_value == '':
+                author_value = 0
+            
             if UserScore.objects.filter(role_score='role_score').exists():
                 scr = UserScore.objects.get(role_score='role_score')
                 scr.publisher = pub_value
+                scr.author = author_value
                 scr.save()
             else:
-                UserScore.objects.create(publisher=pub_value)
+                UserScore.objects.create(publisher=pub_value, author=author_value)
             return redirect('manage_reputation')
         else:
             return redirect('manage_reputation')

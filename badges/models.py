@@ -57,8 +57,10 @@ class Badge(models.Model):
 
     def award_to(self, user, community):
         has_badge = self in user.badges.all()
+        
         if self.meta_badge.one_time_only and has_badge:
-            return False
+            if BadgeToUser.objects.filter(badge=self, user=user, community=community).count() > 0:
+                return False
 
         BadgeToUser.objects.create(badge=self, user=user, community=community)
 

@@ -42,7 +42,12 @@ from haystack.query import SearchQuerySet
 from Categories import views as categoryview
 from metadata import views as metadataview
 from search import views as SearchView
-
+from workflow import views as workflowview
+from django.views.generic import TemplateView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -55,6 +60,8 @@ urlpatterns = [
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/auth/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^api/auth/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
 
     url(r'^activity/', include('actstream.urls')),
 
@@ -199,6 +206,9 @@ urlpatterns = [
 
     url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
     url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
+
+    url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
+    url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
