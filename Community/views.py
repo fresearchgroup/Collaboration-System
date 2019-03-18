@@ -33,6 +33,12 @@ from django.db import connection
 from django.urls import reverse
 from Categories.models import Category
 from PIL import Image
+from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
+from django.http import JsonResponse
+from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+from haystack.query import SearchQuerySet
+from .forms import FacetedProductSearchForm
 from UserRolesPermission.models import ProfileImage
 from django.db.models import Count
 from django.db.models import F
@@ -727,3 +733,52 @@ def create_wiki_for_community(community):
 
 
 	cursor.execute('''SET FOREIGN_KEY_CHECKS=1''')
+
+def community_media_create(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			status = request.POST['status']
+			cid = request.POST['cid']
+			community = Community.objects.get(pk=cid)
+			if status=='1':
+				media = create_media(request)
+				metadata = create_metadata(request)
+				CommunityMedia.objects.create(media=media, user=request.user, community=community)
+				MediaMetadata.objects.create(media=media, metadata=metadata)
+				return redirect('media_view', media.pk)
+			else:
+				return render(request, 'new_media.html', {'community':community, 'status':1})
+		else:
+			return redirect('home')
+	else:
+		return redirect('login')
+
+
+class FacetedSearchView(BaseFacetedSearchView, TemplateView):
+
+    form_class = FacetedProductSearchForm
+    facet_fields = ['category']
+    template_name = 'search_result.html'
+    #paginate_by = 3
+    #context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print("self.request.GET >>>>>>>>>>>>>>>>>>>>> ", self.request.GET)
+        try:
+        	if 'community' in self.request.GET:
+		        context['community'] = self.request.GET['community']
+        	if 'article' in self.request.GET:
+	            context['article'] = self.request.GET['article']
+        	if 'image' in self.request.GET:
+	        	context['image'] = self.request.GET['image']
+        	if 'audio' in self.request.GET:
+		        context['audio'] = self.request.GET['audio']
+        	if 'video' in self.request.GET:
+		        context['video'] = self.request.GET['video']
+        	if 'query' in self.request.GET:
+		        context['query'] = self.request.GET['query']
+        except:
+            pass
+        return context
+

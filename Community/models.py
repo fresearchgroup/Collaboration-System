@@ -15,6 +15,7 @@ def get_file_path(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('community', filename)
 
+
 class Community(MPTTModel):
 
 		name = models.CharField(max_length=100)

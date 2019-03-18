@@ -24,7 +24,7 @@ django-notifications-hq==1.4.0
 django-activity-stream==0.6.5
 django-jsonfield==1.0.1
 django-jsonfield-compat==0.4.4
-elasticsearch
+elasticsearch==2.3.0
 social-auth-core==1.7.0
 -e git+https://github.com/devjones/PyEtherpadLite.git#egg=PyEtherpadLite
 wiki==0.3.1
