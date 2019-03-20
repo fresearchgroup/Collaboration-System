@@ -12,6 +12,11 @@ class CommunityReputaion(models.Model):
     downvote_count = models.IntegerField(default=0)
     published_count = models.IntegerField(default=0)
 
+    def get_reputation_score(self):
+        resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
+
+        return self.upvote_count * resource_score.upvote_value - self.downvote_count * resource_score.downvote_value + self.published_count * resource_score.publish_value
+
 #reputation values and operation for any resource in the system
 class ResourceScore(models.Model):
     can_vote_unpublished = models.BooleanField(default=True)
@@ -24,8 +29,8 @@ class ResourceScore(models.Model):
 
 #score needed to achieve a certain role
 class UserScore(models.Model):
-    author = models.IntegerField(null=True)
-    publisher = models.IntegerField(null=True)
+    author = models.IntegerField(default=0)
+    publisher = models.IntegerField(default=0)
     role_score = models.CharField(max_length=20, default='role_score')
 
 class FlagReason(models.Model):

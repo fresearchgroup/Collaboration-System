@@ -88,17 +88,17 @@ class MetaBadge(with_metaclass(MetaBadgeMeta, object)):
     def get_community(self, instance):
         return instance.community
 
-    def get_progress(self, user):
-        if BadgeToUser.objects.filter(user=user, badge=self.badge).count():
+    def get_progress(self, user, community):
+        if BadgeToUser.objects.filter(user=user, community=community, badge=self.badge).count():
             return 1
         return 0
     
-    def get_progress_percentage(self, progress=None, user=None):
+    def get_progress_percentage(self, progress=None, user=None, community=None):
         if user is None and progress is None:
             raise RequiresUserOrProgress("This method requires either a user or progress keyword argument")
 
         if not progress:
-            progress = self.get_progress(user)
+            progress = self.get_progress(user, community)
 
         progress = min(progress, self.progress_finish)
         
