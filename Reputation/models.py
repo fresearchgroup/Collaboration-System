@@ -43,11 +43,11 @@ class BadgeScore(models.Model):
     articles_revised_by_me_level_3 = models.IntegerField(default=0)
     articles_revised_by_me_level_4 = models.IntegerField(default=0)
     articles_revised_by_me_level_5 = models.IntegerField(default=0)
-    articles_published_be_me_level_1 = models.IntegerField(default=0)
-    articles_published_be_me_level_2 = models.IntegerField(default=0)
-    articles_published_be_me_level_3 = models.IntegerField(default=0)
-    articles_published_be_me_level_4 = models.IntegerField(default=0)
-    articles_published_be_me_level_5 = models.IntegerField(default=0)
+    articles_published_by_me_level_1 = models.IntegerField(default=0)
+    articles_published_by_me_level_2 = models.IntegerField(default=0)
+    articles_published_by_me_level_3 = models.IntegerField(default=0)
+    articles_published_by_me_level_4 = models.IntegerField(default=0)
+    articles_published_by_me_level_5 = models.IntegerField(default=0)
 
 
 #score needed to achieve badges

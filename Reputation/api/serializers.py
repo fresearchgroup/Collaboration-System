@@ -61,12 +61,14 @@ class FlagReasonSerializer(serializers.ModelSerializer):
         model = FlagReason
         fields = ['id', 'reason']
         
-class BadgeToUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BadgeToUser
-        fields = ['user', 'badge', 'community']
-
 class BadgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Badge
         fields = ['id', 'user', 'level', 'icon', 'title', 'description']
+
+class BadgeToUserSerializer(serializers.ModelSerializer):
+    badge = BadgeSerializer(read_only=True)
+
+    class Meta:
+        model = BadgeToUser
+        fields = ['user', 'badge', 'community']

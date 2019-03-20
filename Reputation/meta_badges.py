@@ -18,6 +18,9 @@ class ACLevel1(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.articles_contributed_level_1
 
+    def get_progress(self, user, community):
+        return CommunityArticles.objects.filter(user=user, community=community).count()
+
     def get_user(self, instance):
         return instance.user
 
@@ -40,6 +43,9 @@ class ACLevel2(MetaBadge):
 
     progress_start = 0
     progress_finish = badge_score.articles_contributed_level_2
+
+    def get_progress(self, user, community):
+        return CommunityArticles.objects.filter(user=user, community=community).count()
 
     def get_user(self, instance):
         return instance.user
@@ -64,6 +70,9 @@ class ACLevel3(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.articles_contributed_level_3
 
+    def get_progress(self, user, community):
+        return CommunityArticles.objects.filter(user=user, community=community).count()
+
     def get_user(self, instance):
         return instance.user
 
@@ -86,6 +95,9 @@ class ACLevel4(MetaBadge):
 
     progress_start = 0
     progress_finish = badge_score.articles_contributed_level_4
+
+    def get_progress(self, user, community):
+        return CommunityArticles.objects.filter(user=user, community=community).count()
 
     def get_user(self, instance):
         return instance.user
@@ -110,6 +122,9 @@ class ACLevel5(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.articles_contributed_level_5
 
+    def get_progress(self, user, community):
+        return CommunityArticles.objects.filter(user=user, community=community).count()
+
     def get_user(self, instance):
         return instance.user
 
@@ -132,6 +147,9 @@ class APLevel1(MetaBadge):
 
     progress_start = 0
     progress_finish = badge_score.my_articles_published_level_1
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_count
 
     def get_user(self, instance):
         return instance.user
@@ -156,6 +174,9 @@ class APLevel2(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.my_articles_published_level_2
 
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_count
+
     def get_user(self, instance):
         return instance.user
 
@@ -178,6 +199,9 @@ class APLevel3(MetaBadge):
 
     progress_start = 0
     progress_finish = badge_score.my_articles_published_level_3
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_count
 
     def get_user(self, instance):
         return instance.user
@@ -202,6 +226,9 @@ class APLevel4(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.my_articles_published_level_4
 
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_count
+
     def get_user(self, instance):
         return instance.user
 
@@ -225,6 +252,9 @@ class APLevel5(MetaBadge):
     progress_start = 0
     progress_finish = badge_score.my_articles_published_level_5
 
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_count
+
     def get_user(self, instance):
         return instance.user
 
@@ -246,7 +276,10 @@ class PALevel1(MetaBadge):
     badge_score = BadgeScore.objects.get_or_create()[0]
 
     progress_start = 0
-    progress_finish = badge_score.articles_published_be_me_level_1
+    progress_finish = badge_score.articles_published_by_me_level_1
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_by_me_count
 
     def get_user(self, instance):
         return instance.user
@@ -255,7 +288,7 @@ class PALevel1(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_be_me_level_1
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_1
 
 class PALevel2(MetaBadge):
     id = 'pa-level-2'
@@ -269,7 +302,10 @@ class PALevel2(MetaBadge):
     badge_score = BadgeScore.objects.get_or_create()[0]
 
     progress_start = 0
-    progress_finish = badge_score.articles_published_be_me_level_2
+    progress_finish = badge_score.articles_published_by_me_level_2
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_by_me_count
 
     def get_user(self, instance):
         return instance.user
@@ -278,7 +314,7 @@ class PALevel2(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_be_me_level_2
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_2
 
 class PALevel3(MetaBadge):
     id = 'pa-level-3'
@@ -292,7 +328,10 @@ class PALevel3(MetaBadge):
     badge_score = BadgeScore.objects.get_or_create()[0]
 
     progress_start = 0
-    progress_finish = badge_score.articles_published_be_me_level_3
+    progress_finish = badge_score.articles_published_by_me_level_3
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_by_me_count
 
     def get_user(self, instance):
         return instance.user
@@ -301,7 +340,7 @@ class PALevel3(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_be_me_level_3
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_3
 
 class PALevel4(MetaBadge):
     id = 'pa-level-4'
@@ -315,7 +354,10 @@ class PALevel4(MetaBadge):
     badge_score = BadgeScore.objects.get_or_create()[0]
 
     progress_start = 0
-    progress_finish = badge_score.articles_published_be_me_level_4
+    progress_finish = badge_score.articles_published_by_me_level_4
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_by_me_count
 
     def get_user(self, instance):
         return instance.user
@@ -324,7 +366,7 @@ class PALevel4(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_be_me_level_4
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_4
 
 class PALevel5(MetaBadge):
     id = 'pa-level-5'
@@ -338,7 +380,10 @@ class PALevel5(MetaBadge):
     badge_score = BadgeScore.objects.get_or_create()[0]
 
     progress_start = 0
-    progress_finish = badge_score.articles_published_be_me_level_5
+    progress_finish = badge_score.articles_published_by_me_level_5
+
+    def get_progress(self, user, community):
+        return CommunityReputaion.objects.get(user=user, community=community).published_by_me_count
 
     def get_user(self, instance):
         return instance.user
@@ -347,7 +392,7 @@ class PALevel5(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_be_me_level_5
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_5
 
 
 # class Publisher(MetaBadge):

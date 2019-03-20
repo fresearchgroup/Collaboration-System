@@ -77,31 +77,213 @@
       <h3>User Reputation Management</h3>
       <br/>
       <form method='post' action='{% url 'manage_role_score' %}'>
-          {% csrf_token %}
-          <div class="form-group row">
-              <label for="pub_value" class="col-sm-3 col-form-label">Points for acheiving Publisher Role</label>
-              <div class="col-sm-3">
-                <input type="number" class="form-control" id="pub_value" name="pub_value" value="{{scr.publisher}}">
-              </div>
-              <label class="form-text-label" for="pub_value">
-                  (Value assigned = {{scr.publisher}})
-              </label>
-            </div>
-            <div class="form-group row">
-                <label for="author_value" class="col-sm-3 col-form-label">Points for acheiving Author Role</label>
-                <div class="col-sm-3">
-                  <input type="number" class="form-control" id="author_value" name="author_value" value="{{scr.author}}">
-                </div>
-                <label class="form-text-label" for="author_value">
-                    (Value assigned = {{scr.author}})
-                </label>
-              </div>
-            <div class="form-group row">
-              <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </div>
-            </div>
-          </form>
+        {% csrf_token %}
+        <div class="form-group row">
+          <label for="ac_level1_val" class="col-sm-3 col-form-label">Points for acheiving AC Level 1 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ac_level1_val" name="ac_level1_val" value="{{scr.articles_contributed_level_1}}">
+          </div>
+          <label class="form-text-label" for="ac_level1_val">
+              (Value assigned = {{scr.articles_contributed_level_1}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ac_level2_val" class="col-sm-3 col-form-label">Points for acheiving AC Level 2 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ac_level2_val" name="ac_level2_val" value="{{scr.articles_contributed_level_2}}">
+          </div>
+          <label class="form-text-label" for="ac_level2_val">
+              (Value assigned = {{scr.articles_contributed_level_2}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ac_level3_val" class="col-sm-3 col-form-label">Points for acheiving AC Level 3 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ac_level3_val" name="ac_level3_val" value="{{scr.articles_contributed_level_3}}">
+          </div>
+          <label class="form-text-label" for="ac_level3_val">
+              (Value assigned = {{scr.articles_contributed_level_3}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ac_level4_val" class="col-sm-3 col-form-label">Points for acheiving AC Level 4 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ac_level4_val" name="ac_level4_val" value="{{scr.articles_contributed_level_4}}">
+          </div>
+          <label class="form-text-label" for="ac_level4_val">
+              (Value assigned = {{scr.articles_contributed_level_4}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ac_level5_val" class="col-sm-3 col-form-label">Points for acheiving AC Level 5 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ac_level5_val" name="ac_level5_val" value="{{scr.articles_contributed_level_5}}">
+          </div>
+          <label class="form-text-label" for="ac_level5_val">
+              (Value assigned = {{scr.articles_contributed_level_5}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ap_level1_val" class="col-sm-3 col-form-label">Points for acheiving AP Level 1 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ap_level1_val" name="ap_level1_val" value="{{scr.my_articles_published_level_1}}">
+          </div>
+          <label class="form-text-label" for="ap_level1_val">
+              (Value assigned = {{scr.my_articles_published_level_1}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ap_level2_val" class="col-sm-3 col-form-label">Points for acheiving AP Level 2 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ap_level2_val" name="ap_level2_val" value="{{scr.my_articles_published_level_2}}">
+          </div>
+          <label class="form-text-label" for="ap_level2_val">
+              (Value assigned = {{scr.my_articles_published_level_2}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ap_level3_val" class="col-sm-3 col-form-label">Points for acheiving AP Level 3 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ap_level3_val" name="ap_level3_val" value="{{scr.my_articles_published_level_3}}">
+          </div>
+          <label class="form-text-label" for="ap_level3_val">
+              (Value assigned = {{scr.my_articles_published_level_3}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ap_level4_val" class="col-sm-3 col-form-label">Points for acheiving AP Level 4 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ap_level4_val" name="ap_level4_val" value="{{scr.my_articles_published_level_4}}">
+          </div>
+          <label class="form-text-label" for="ap_level4_val">
+              (Value assigned = {{scr.my_articles_published_level_4}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ap_level5_val" class="col-sm-3 col-form-label">Points for acheiving AP Level 5 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ap_level5_val" name="ap_level5_val" value="{{scr.my_articles_published_level_5}}">
+          </div>
+          <label class="form-text-label" for="ap_level5_val">
+              (Value assigned = {{scr.my_articles_published_level_5}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="pa_level1_val" class="col-sm-3 col-form-label">Points for acheiving PA Level 1 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="pa_level1_val" name="pa_level1_val" value="{{scr.articles_published_by_me_level_1}}">
+          </div>
+          <label class="form-text-label" for="pa_level1_val">
+              (Value assigned = {{scr.articles_published_by_me_level_1}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="pa_level2_val" class="col-sm-3 col-form-label">Points for acheiving PA Level 2 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="pa_level2_val" name="pa_level2_val" value="{{scr.articles_published_by_me_level_2}}">
+          </div>
+          <label class="form-text-label" for="pa_level2_val">
+              (Value assigned = {{scr.articles_published_by_me_level_2}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="pa_level3_val" class="col-sm-3 col-form-label">Points for acheiving PA Level 3 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="pa_level3_val" name="pa_level3_val" value="{{scr.articles_published_by_me_level_3}}">
+          </div>
+          <label class="form-text-label" for="pa_level3_val">
+              (Value assigned = {{scr.articles_published_by_me_level_3}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="pa_level4_val" class="col-sm-3 col-form-label">Points for acheiving PA Level 4 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="pa_level4_val" name="pa_level4_val" value="{{scr.articles_published_by_me_level_4}}">
+          </div>
+          <label class="form-text-label" for="pa_level4_val">
+              (Value assigned = {{scr.articles_published_by_me_level_4}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="pa_level5_val" class="col-sm-3 col-form-label">Points for acheiving PA Level 5 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="pa_level5_val" name="pa_level5_val" value="{{scr.articles_published_by_me_level_5}}">
+          </div>
+          <label class="form-text-label" for="pa_level5_val">
+              (Value assigned = {{scr.articles_published_by_me_level_5}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ra_level1_val" class="col-sm-3 col-form-label">Points for acheiving RA Level 1 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ra_level1_val" name="ra_level1_val" value="{{scr.articles_revised_by_me_level_1}}">
+          </div>
+          <label class="form-text-label" for="ra_level1_val">
+              (Value assigned = {{scr.articles_revised_by_me_level_1}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ra_level2_val" class="col-sm-3 col-form-label">Points for acheiving RA Level 2 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ra_level2_val" name="ra_level2_val" value="{{scr.articles_revised_by_me_level_2}}">
+          </div>
+          <label class="form-text-label" for="ra_level2_val">
+              (Value assigned = {{scr.articles_revised_by_me_level_2}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ra_level3_val" class="col-sm-3 col-form-label">Points for acheiving RA Level 3 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ra_level3_val" name="ra_level3_val" value="{{scr.articles_revised_by_me_level_3}}">
+          </div>
+          <label class="form-text-label" for="ra_level3_val">
+              (Value assigned = {{scr.articles_revised_by_me_level_3}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ra_level4_val" class="col-sm-3 col-form-label">Points for acheiving RA Level 4 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ra_level4_val" name="ra_level4_val" value="{{scr.articles_revised_by_me_level_4}}">
+          </div>
+          <label class="form-text-label" for="ra_level4_val">
+              (Value assigned = {{scr.articles_revised_by_me_level_4}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <label for="ra_level5_val" class="col-sm-3 col-form-label">Points for acheiving RA Level 5 badge</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="ra_level5_val" name="ra_level5_val" value="{{scr.articles_revised_by_me_level_5}}">
+          </div>
+          <label class="form-text-label" for="ra_level5_val">
+              (Value assigned = {{scr.articles_revised_by_me_level_5}})
+          </label>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
