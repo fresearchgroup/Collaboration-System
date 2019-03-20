@@ -21,6 +21,10 @@ class Articles(models.Model):
 	views = models.PositiveIntegerField(default=0)
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
 	tags = TaggableManager()
+
+	def get_absolute_url(self):
+		from django.urls import reverse
+		return reverse('article_view', kwargs={'pk': self.id})
 	
 	def __str__(self):
 		return self.title

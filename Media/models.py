@@ -32,3 +32,7 @@ class Media(models.Model):
 	published_by=models.ForeignKey(User,null=True,related_name='media_publisher')
 	views = models.PositiveIntegerField(default=0)
 	state = models.ForeignKey(States, null=True,related_name='media_workflow')
+
+	def get_absolute_url(self):
+		from django.urls import reverse
+		return reverse('media_view', kwargs={'pk': self.id})
