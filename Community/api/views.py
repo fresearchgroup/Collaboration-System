@@ -5,7 +5,7 @@ from BasicArticle.serializers import ArticleSerializer
 from BasicArticle.models import Articles
 from Media.api.serializers import MediaCreateSerializer
 from Media.models import Media
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from .permissions import IsCommunityMember
 class CommunityListsApi(generics.ListAPIView):
 	queryset = Community.objects.all()
@@ -26,18 +26,22 @@ class CommunityMediaApi(generics.ListAPIView):
 
 
 class CreateCommunityResource(generics.CreateAPIView):
-	permission_classes = (IsAdminUser, IsCommunityMember,)
+	permission_classes = (IsAuthenticated, IsCommunityMember,)
 
 	def get_serializer_class(self):
 		if self.kwargs['resource_type'] == 'article':
 			return ArticleSerializer
 		elif self.kwargs['resource_type'] == 'media':
 			return MediaCreateSerializer
+		else:
+			return
 
 	def get_queryset(self):
 		if self.kwargs['resource_type'] == 'article':
 			return Article.objects.all()
 		elif self.kwargs['resource_type'] == 'media':
 			return Media.objects.all()
+		else:
+			return
 
 	
