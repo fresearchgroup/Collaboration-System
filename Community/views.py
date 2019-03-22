@@ -765,6 +765,7 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print("self.request.GET >>>>>>>>>>>>>>>>>>>>> ", self.request.GET)
+        
         try:
         	if 'community' in self.request.GET:
 		        context['community'] = self.request.GET['community']
