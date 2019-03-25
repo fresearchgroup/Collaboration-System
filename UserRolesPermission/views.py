@@ -119,6 +119,12 @@ def user_dashboard(request):
     else:
         return redirect('login')
 
+def badges_progress_dashboard(request):
+    if request.user.is_authenticated:
+        return render(request, 'badges_progress_dashboard.html')
+    else:
+        return redirect('login')
+
 def home(request):
 	state = States.objects.get(name='publish')
 	articles=Articles.objects.filter(state=state).order_by('-views')[:3]

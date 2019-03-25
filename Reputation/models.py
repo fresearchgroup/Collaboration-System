@@ -11,6 +11,7 @@ class CommunityReputaion(models.Model):
     upvote_count = models.IntegerField(default=0)
     downvote_count = models.IntegerField(default=0)
     published_count = models.IntegerField(default=0)
+    published_by_me_count = models.IntegerField(default=0)
 
     def get_reputation_score(self):
         resource_score = ResourceScore.objects.get_or_create(resource_type='resource')[0]
@@ -26,8 +27,30 @@ class ResourceScore(models.Model):
     publish_value = models.IntegerField(null = True, default=0)
     resource_type = models.CharField(max_length=20, default='resource')
 
+class BadgeScore(models.Model):
+    articles_contributed_level_1 = models.IntegerField(default=0)
+    articles_contributed_level_2 = models.IntegerField(default=0)
+    articles_contributed_level_3 = models.IntegerField(default=0)
+    articles_contributed_level_4 = models.IntegerField(default=0)
+    articles_contributed_level_5 = models.IntegerField(default=0)
+    my_articles_published_level_1 = models.IntegerField(default=0)
+    my_articles_published_level_2 = models.IntegerField(default=0)
+    my_articles_published_level_3 = models.IntegerField(default=0)
+    my_articles_published_level_4 = models.IntegerField(default=0)
+    my_articles_published_level_5 = models.IntegerField(default=0)
+    articles_revised_by_me_level_1 = models.IntegerField(default=0)
+    articles_revised_by_me_level_2 = models.IntegerField(default=0)
+    articles_revised_by_me_level_3 = models.IntegerField(default=0)
+    articles_revised_by_me_level_4 = models.IntegerField(default=0)
+    articles_revised_by_me_level_5 = models.IntegerField(default=0)
+    articles_published_by_me_level_1 = models.IntegerField(default=0)
+    articles_published_by_me_level_2 = models.IntegerField(default=0)
+    articles_published_by_me_level_3 = models.IntegerField(default=0)
+    articles_published_by_me_level_4 = models.IntegerField(default=0)
+    articles_published_by_me_level_5 = models.IntegerField(default=0)
 
-#score needed to achieve a certain role
+
+#score needed to achieve badges
 class UserScore(models.Model):
     author = models.IntegerField(default=0)
     publisher = models.IntegerField(default=0)

@@ -16,8 +16,8 @@ from Group.models import GroupArticles
 from django.http import Http404
 from django.db.models import F
 import json
-from badges.models import BadgeToUser
-from .serializers import BadgeToUserSerializer
+from badges.models import BadgeToUser, Badge
+from .serializers import BadgeToUserSerializer, BadgeSerializer
 
 class ReputationStats(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -228,6 +228,7 @@ class ResourceReports(APIView):
 
         return Response(response)
 
+# for getting badges earned by user
 class ReputationScore(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -247,3 +248,32 @@ class ReputationScore(APIView):
             reputation_score.append(res)
 
         return Response(reputation_score)
+
+# for getting progress of all badges of a user
+class BadgesProgress(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        badges_progress = []
+
+        badges = Badge.objects.all()
+
+        community_membership = CommunityMembership.objects.filter(user=request.user).order_by('community__name')
+
+        for comm in community_membership:
+            community_data = CommunityMembershipSerializer(comm).data
+            community_data['badges'] = []
+            
+            community = comm.community
+            
+            for badge in badges:
+                badge_serialized = BadgeSerializer(badge).data
+                badge_serialized['progress'] = badge.meta_badge.get_progress_percentage(user=request.user, community=community)
+                community_data['badges'].append(badge_serialized)
+
+            badges_progress.append(community_data)
+
+
+        return Response(badges_progress)
+
+
