@@ -7,7 +7,7 @@ from metadata.models import Metadata
 from workflow.views import get_initial_state
 
 def get_file_path(instance, filename):
-	ext = filename.split('.')[-1]
+	ext = filename.split('.')[-1].lower()
 	filename = "%s.%s" % (uuid.uuid4(), ext)
 	if ext == 'mp3' or ext == 'wav' or ext == 'ogg' :
 		return os.path.join('audio', filename)
