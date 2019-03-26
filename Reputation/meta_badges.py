@@ -28,7 +28,7 @@ class ACLevel1(MetaBadge):
         return instance.community
 
     def check_articles_count(self, instance):
-        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() > self.badge_score.articles_contributed_level_1
+        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() >= self.badge_score.articles_contributed_level_1
 
 class ACLevel2(MetaBadge):
     id = 'ac-level-2'
@@ -54,7 +54,7 @@ class ACLevel2(MetaBadge):
         return instance.community
 
     def check_articles_count(self, instance):
-        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() > self.badge_score.articles_contributed_level_2
+        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() >= self.badge_score.articles_contributed_level_2
 
 class ACLevel3(MetaBadge):
     id = 'ac-level-3'
@@ -80,7 +80,7 @@ class ACLevel3(MetaBadge):
         return instance.community
 
     def check_articles_count(self, instance):
-        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() > self.badge_score.articles_contributed_level_3
+        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() >= self.badge_score.articles_contributed_level_3
 
 class ACLevel4(MetaBadge):
     id = 'ac-level-4'
@@ -106,7 +106,7 @@ class ACLevel4(MetaBadge):
         return instance.community
 
     def check_articles_count(self, instance):
-        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() > self.badge_score.articles_contributed_level_4
+        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() >= self.badge_score.articles_contributed_level_4
 
 class ACLevel5(MetaBadge):
     id = 'ac-level-5'
@@ -132,7 +132,7 @@ class ACLevel5(MetaBadge):
         return instance.community
 
     def check_articles_count(self, instance):
-        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() > self.badge_score.articles_contributed_level_5
+        return CommunityArticles.objects.filter(user=instance.user, community=instance.community).count() >= self.badge_score.articles_contributed_level_5
 
 class APLevel1(MetaBadge):
     id = 'ap-level-1'
@@ -158,7 +158,7 @@ class APLevel1(MetaBadge):
         return instance.community
 
     def check_my_articles_published_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count > self.badge_score.my_articles_published_level_1
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count >= self.badge_score.my_articles_published_level_1
 
 class APLevel2(MetaBadge):
     id = 'ap-level-2'
@@ -184,7 +184,7 @@ class APLevel2(MetaBadge):
         return instance.community
 
     def check_my_articles_published_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count > self.badge_score.my_articles_published_level_2
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count >= self.badge_score.my_articles_published_level_2
 
 class APLevel3(MetaBadge):
     id = 'ap-level-3'
@@ -210,7 +210,7 @@ class APLevel3(MetaBadge):
         return instance.community
 
     def check_my_articles_published_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count > self.badge_score.my_articles_published_level_3
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count >= self.badge_score.my_articles_published_level_3
 
 class APLevel4(MetaBadge):
     id = 'ap-level-4'
@@ -236,7 +236,7 @@ class APLevel4(MetaBadge):
         return instance.community
 
     def check_my_articles_published_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count > self.badge_score.my_articles_published_level_4
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count >= self.badge_score.my_articles_published_level_4
 
 class APLevel5(MetaBadge):
     id = 'ap-level-5'
@@ -262,7 +262,7 @@ class APLevel5(MetaBadge):
         return instance.community
 
     def check_my_articles_published_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count > self.badge_score.my_articles_published_level_5
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_count >= self.badge_score.my_articles_published_level_5
 
 class PALevel1(MetaBadge):
     id = 'pa-level-1'
@@ -288,7 +288,7 @@ class PALevel1(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_1
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count >= self.badge_score.articles_published_by_me_level_1
 
 class PALevel2(MetaBadge):
     id = 'pa-level-2'
@@ -314,7 +314,7 @@ class PALevel2(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_2
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count >= self.badge_score.articles_published_by_me_level_2
 
 class PALevel3(MetaBadge):
     id = 'pa-level-3'
@@ -340,7 +340,7 @@ class PALevel3(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_3
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count >= self.badge_score.articles_published_by_me_level_3
 
 class PALevel4(MetaBadge):
     id = 'pa-level-4'
@@ -366,7 +366,7 @@ class PALevel4(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_4
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count >= self.badge_score.articles_published_by_me_level_4
 
 class PALevel5(MetaBadge):
     id = 'pa-level-5'
@@ -392,4 +392,4 @@ class PALevel5(MetaBadge):
         return instance.community
 
     def check_articles_published_by_me_count(self, instance):
-        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count > self.badge_score.articles_published_by_me_level_5
+        return CommunityReputaion.objects.get(user=instance.user, community=instance.community).published_by_me_count >= self.badge_score.articles_published_by_me_level_5

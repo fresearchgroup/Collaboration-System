@@ -253,6 +253,17 @@ class ReputationScore(APIView):
 class BadgesProgress(APIView):
     permission_classes = (IsAuthenticated,)
 
+    def group_badges(self, badges):
+        grouped_badges = {}
+
+        for badge in badges:
+            if badge.get('title') not in grouped_badges:
+                grouped_badges[badge.get('title')] = []
+            
+            grouped_badges[badge.get('title')].append(badge)
+
+        return grouped_badges
+
     def get(self, request):
         badges_progress = []
 
@@ -270,6 +281,8 @@ class BadgesProgress(APIView):
                 badge_serialized = BadgeSerializer(badge).data
                 badge_serialized['progress'] = badge.meta_badge.get_progress_percentage(user=request.user, community=community)
                 community_data['badges'].append(badge_serialized)
+
+            community_data['badges'] = self.group_badges(community_data['badges'])
 
             badges_progress.append(community_data)
 
