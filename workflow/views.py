@@ -64,3 +64,6 @@ def createTransitions(request):
 			
 
 		return render(request, 'transition.html', {'states':states, 'roles':roles}) 
+
+def get_initial_state():
+	return States.objects.get(initial=True).pk
