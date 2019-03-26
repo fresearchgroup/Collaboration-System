@@ -757,10 +757,11 @@ def community_media_create(request):
 class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 
     form_class = FacetedProductSearchForm
-    facet_fields = ['category']
+    facet_fields = ['category', 'created_at', 'views']
     template_name = 'search_result.html'
     #paginate_by = 3
-    #context_object_name = 'object_list'
+    # context_object_name = 'object_list'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -781,5 +782,9 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 		        context['query'] = self.request.GET['query']
         except:
             pass
+        # print("context ====================================== ", str(context))
+        # print("context ====================================== ", str(context['object_list']))
+        # print("context ====================================== ", str(context['facets']))
+        object_list = context['object_list']
         return context
 

@@ -197,10 +197,18 @@ $(document).ready(function() {
           <span class="sep"></span>
           <i class="fa fa-search search-btn"></i>
           <div class="search-box">
-            <form method ='post' action="/search/">
-              {% csrf_token %}
+            <form method ='get' action="/search/">
+             <table style="text-align:center;">
+              <tr>
+                <label class="checkbox-inline hide"><input id="community" checked type="checkbox" name="community" value="community"> Community</label>
+                <label class="checkbox-inline hide"><input id="article" checked type="checkbox" name="article" value="article"> Article</label>
+                <label class="checkbox-inline hide"><input id="image" checked type="checkbox" name="image" value="image"> Image</label> 
+                <label class="checkbox-inline hide"><input id="audio" checked type="checkbox" name="audio" value="audio"> Audio</label> 
+                <label class="checkbox-inline hide"><input id="video" checked type="checkbox" name="video" value="video"> Video</label> 
+              </tr>
+              </table> 
               <div class="input-group">
-                <input type="text" placeholder="Search" class="form-control" id="searchcriteria" name="searchcriteria">
+                <input type="text" placeholder="Search" class="form-control" name="q" id="q1">
                 <span class="input-group-btn">
                   <button class="btn btn-primary" type="submit">Search</button>
                 </span>

@@ -6,11 +6,11 @@
     <form  method="get" action=".">
         <table style="text-align:center;">
           <tr>
-            <label class="checkbox-inline"><input id="community" type="checkbox" name="community" value="community"> Community</label>
-            <label class="checkbox-inline"><input id="article" type="checkbox" name="article" value="article"> Article</label>
-            <label class="checkbox-inline"><input id="image" type="checkbox" name="image" value="image"> Image</label> 
-            <label class="checkbox-inline"><input id="audio" type="checkbox" name="audio" value="audio"> Audio</label> 
-            <label class="checkbox-inline"><input id="video" type="checkbox" name="video" value="video"> Video</label> 
+            <label class="checkbox-inline"><input id="community" checked type="checkbox" name="community" value="community"> Community</label>
+            <label class="checkbox-inline"><input id="article" checked type="checkbox" name="article" value="article"> Article</label>
+            <label class="checkbox-inline"><input id="image" checked type="checkbox" name="image" value="image"> Image</label> 
+            <label class="checkbox-inline"><input id="audio" checked type="checkbox" name="audio" value="audio"> Audio</label> 
+            <label class="checkbox-inline"><input id="video" checked type="checkbox" name="video" value="video"> Video</label> 
           </tr>
             <!-- {{ form.as_table }} -->
             <tr>
@@ -23,35 +23,61 @@
             </tr>
             <hr>
             <tr>
-              
             </tr>
         </table>  
-     </form>
-
+    
 <hr>
-
+<hr>
 <div class="container row">
+  {% if facets.fields %}
   <div class="col-md-3 facet">
     <h3>Filters</h3>
-    {% if facets.fields.category %}
-        <dt>Filter by Category</dt>
-        {% for category in facets.fields.category %}
-        {% if category.1 != 0 %}
-        <dl>
-        <input class="facet" id="{{category.0|cut:" "}}" type="checkbox" name="category" value="{{ category.0 }}" 
-        data-toggle="toggle" /> {{ category.0 }} ({{ category.1 }})
-        </dl>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        </dl>
-        <div>
-        <input class="btn btn-primary btn-xs" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
-        </div>
-        <dl>
+          {% if facets.fields.category and community %}
+          <dt>Filter by Category</dt>
+            {% for category in facets.fields.category %}
+              {% if category.1 != 0 %}
+              <dl>
+                <input class="facet" id="{{category.0|cut:" "}}" type="checkbox" name="category" value="{{ category.0 }}" data-toggle="toggle" /> {{ category.0 }} ({{ category.1 }})
+              </dl>
+              {% endif %}
+            {% endfor %}
+            <div>
+              <input class="btn btn-primary btn-xs" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+            </div>
+          {% endif %}
+          <hr>
+          {% if facets.fields.created_at %}
+            <dt>Filter by Creation Date</dt>
+              {% for date in facets.fields.created_at %}
+                {% if date.1 != 0 %}
+                <dl>
+                  <input class="facet" id="{{date.0|cut:" "}}" type="checkbox" name="date" value="{{ date.0 }}" data-toggle="toggle" /> {{ date.0 }} ({{ date.1 }})
+                </dl>
+                {% endif %}
+              {% endfor %}
+              <div>
+                <input class="btn btn-primary btn-xs" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+              </div>
+          {% endif %}
+          <hr>
+          {% if facets.fields.views %}
+            <dt>Filter by Views</dt>
+              {% for view in facets.fields.views %}
+                {% if view.1 != 0 %}
+                <dl>
+                  <input class="facet" id="{{view.0|cut:" "}}" type="checkbox" name="view" value="{{ view.0 }}" data-toggle="toggle" /> {{ view.0 }} ({{ view.1 }})
+                </dl>
+                {% endif %}
+              {% endfor %}
+              <div>
+                <input class="btn btn-primary btn-xs" type="submit" value="apply filter" onclick="return onFacetChangeApplied();" />
+              </div>              
+          {% endif %}
+          <hr>
+  {% endif %}
   </div>
   
-
+ </form>
 
 
   <div class="col-md-9">

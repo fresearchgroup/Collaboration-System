@@ -108,6 +108,7 @@ class FacetedProductSearchForm(FacetedSearchForm):
     def search(self):
         sqs = super(FacetedProductSearchForm, self).search()
         if self.categorys:
+            print("checking>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             query = None
             for category in self.categorys:
                 if query:
@@ -115,5 +116,7 @@ class FacetedProductSearchForm(FacetedSearchForm):
                 else:
                     query = u''
                 query += u'"%s"' % sqs.query.clean(category)
+                print("query >>>>>>>>>>> ", query)
             sqs = sqs.narrow(u'category_exact:%s' % query)
+        print("sqs >>>>>>>>>>>> ", str(sqs))
         return sqs

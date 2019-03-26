@@ -8,6 +8,8 @@ from haystack.fields import CharField
 class MediaIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.EdgeNgramField(document=True, model_attr='title')
     #category = indexes.CharField(model_attr='category', faceted=True)
+    created_at = indexes.DateTimeField(model_attr='created_at', faceted=True)
+    views = indexes.IntegerField(model_attr='views', faceted=True)
     mediafile = indexes.CharField(model_attr='mediafile')
     state = indexes.CharField(model_attr='state')
     
