@@ -273,7 +273,6 @@ class BadgesProgress(APIView):
 
             badges_progress.append(community_data)
 
-
         return Response(badges_progress)
 
 
