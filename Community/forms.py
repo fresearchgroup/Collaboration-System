@@ -102,13 +102,15 @@ class FacetedProductSearchForm(FacetedSearchForm):
 
     def __init__(self, *args, **kwargs):
         data = dict(kwargs.get("data", []))
+        print("data inside FacetedProductSearchForm >>>>>>>>>>>>>>>> ", str(data))
         self.categorys = data.get('category', [])
+        self.views = data.get('view', [])
         super(FacetedProductSearchForm, self).__init__(*args, **kwargs)
 
     def search(self):
         sqs = super(FacetedProductSearchForm, self).search()
         if self.categorys:
-            print("checking>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print("checking categories >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             query = None
             for category in self.categorys:
                 if query:
@@ -118,5 +120,16 @@ class FacetedProductSearchForm(FacetedSearchForm):
                 query += u'"%s"' % sqs.query.clean(category)
                 print("query >>>>>>>>>>> ", query)
             sqs = sqs.narrow(u'category_exact:%s' % query)
+        if self.views:
+            print("checking views >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            query = None
+            for view in self.views:
+                if query:
+                    query += u' OR '
+                else:
+                    query = u''
+                query += u'"%s"' % sqs.query.clean(view)
+                print("query >>>>>>>>>>> ", query)
+            sqs = sqs.narrow(u'view_exact:%s' % query)
         print("sqs >>>>>>>>>>>> ", str(sqs))
         return sqs
