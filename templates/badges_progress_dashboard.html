@@ -2,6 +2,50 @@
 {%load static %}
 {% block css %}
   <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+  <style>
+    .progress {
+      background-color: #ccc;
+      width: 100%;
+      height: 20px;
+      border-radius: 10px;
+    }
+
+    .progress-bar { 
+      float: left; 
+      height: 100%;
+    }
+
+    .badge-grey {
+      background-color: #3d3d3f;
+      color: white;
+    }
+
+    .badge-red {
+      background-color: #e62739;
+      color: white;
+    }
+
+    .badge-yellow {
+      background-color: #feda6a;
+      color: white;
+    }
+
+    .badge-blue {
+      background-color: #7acfd6;
+      color: white;
+    }
+
+    .badge-green {
+      background-color: #feda6a;
+      color: white;
+    }
+
+    .badge-info {
+      border: 1px solid;
+      padding: 10px;
+      margin: 5px;
+    }
+  </style>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -22,11 +66,8 @@
     <div class="col-md-12">
       <h1>Badge Progress</h1>
     </div>
-  </div>
 
-  <div class="badge-container">
-
-  </div>
+  <div class="badge-container"></div>
 </div>
 
 {% endblock %}
@@ -47,43 +88,64 @@
           var community = communities[i].community;
           rowDiv.append('<h2 style="margin: 5px">' + community.name + '</h2>');
 
-          var badges = communities[i].badges;
+          var badges_group = communities[i].badges;
+
           var badgeLevelMapping = {
-            '1': 'btn-secondary',
-            '2': 'btn-danger',
-            '3': 'btn-warning',
-            '4': 'btn-primary',
-            '5': 'btn-success'
+            '1': 'badge-grey',
+            '2': 'badge-red',
+            '3': 'badge-yellow',
+            '4': 'badge-blue',
+            '5': 'badge-green'
           };
 
-          for (var j = 0; j < badges.length; j++) {
-            var badge = badges[j];
+          var colDiv = $('<div>', {
+            'class': 'col-md-12'
+          });
 
-            var colDiv = $('<div>', {
-              'class': 'col-md-2 text-center',
-              'css': {
-                'border': '1px solid grey',
-                'margin': '5px',
-                'border-radius': '5px',
-                'padding': '5px',
+          for (var j in badges_group) {
+            if (badges_group.hasOwnProperty(j)) {
+              var badges = badges_group[j];
+
+              var progressDiv = $('<div>', {
+                'class': 'progress'
+              });
+
+              // assuming the badges are given in order of its level
+              var prevBadgeLevel = 0, nextBadgeLevel = 0, badgeProgress = 100;
+
+              for (var k = 0; k < badges.length; k++) {
+                var badge = badges[k];
+
+                if (badge.progress < 100) {
+                  nextBadgeLevel = badge.level;
+                  badgeProgress = badge.progress;
+                  break;
+                } else {
+                  prevBadgeLevel = badge.level;
+                }
               }
-            });
 
-            colDiv.append(`
-              <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <span class="btn ${badgeLevelMapping[badge.level]}">${badge.title}</button>
-                  </h5>
-                  <span>Progress: ${Math.round(badge.progress)}%</span>
+
+              colDiv.append(`
+                <div class="row">
+                  <div class="badge-info ${badgeLevelMapping[prevBadgeLevel]}" style="float: left;">${badges[prevBadgeLevel].title}</div>
+                  <div class="badge-info ${badgeLevelMapping[nextBadgeLevel]}" style="float: right;">${badges[nextBadgeLevel].title}</div>
                 </div>
-              </div>
-            `);
+              `);
 
-            rowDiv.append(colDiv);
+              progressDiv.append(`
+                <div class="row">
+                  <div class="progress-bar ${badgeLevelMapping[nextBadgeLevel]}" style="width: ${badge.progress}%;"></div>
+                </div>
+              `);
+              
+
+              colDiv.append(progressDiv);
+            }
+            
           }
 
-          badgeContainer.append(rowDiv);
+          badgeContainer.append(colDiv);
         }
       }
     });
