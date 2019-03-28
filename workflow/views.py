@@ -16,10 +16,11 @@ def canEditResourceCommunity(state, role, resource, request):
 	return True
 
 def getStatesCommunity(current_state, role):
-	state_query = Transitions.objects.value_list(role=role, from_state=current_state) 
+	state_query = Transitions.objects.filter(role=role, from_state=current_state) 
 	states = []
 	for value in state_query:
 	    states.append(value[0])
+    
 	return states
 
 def getAllStates(request):
