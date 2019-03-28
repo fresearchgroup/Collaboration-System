@@ -101,4 +101,7 @@ class MediaFlagLogs(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reason = models.ForeignKey(FlagReason, on_delete=models.CASCADE)
 
-from .meta_badges import *
+try:
+    from .meta_badges import *
+except Exception:
+    print("Run migrations again")
