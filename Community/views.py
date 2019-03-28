@@ -24,6 +24,7 @@ from notification.views import notify_subscribe_unsubscribe, notify_update_role,
 from django.conf import settings
 from ast import literal_eval
 import json
+import datetime
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 from django.views.generic import CreateView, UpdateView
@@ -782,9 +783,14 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 		        context['query'] = self.request.GET['query']
         except:
             pass
-        # print("context ====================================== ", str(context))
-        # print("context ====================================== ", str(context['object_list']))
-        # print("context ====================================== ", str(context['facets']))
+        
+        new_created_at = []
+        for d in context['facets']['fields']['created_at']:
+        	date_value = datetime.datetime.fromtimestamp(int(str(d[0]))/1000)
+        	temp_tuple = (date_value, d[1])
+        	new_created_at.append(temp_tuple)
+        context['facets']['fields']['created_at'] = new_created_at
+
         object_list = context['object_list']
         return context
 
