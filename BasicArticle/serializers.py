@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from .models import Articles
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer):
+	created_by = serializers.ReadOnlyField(source='created_by.username')
 	class Meta:
 		model = Articles
-		fields = ('pk','title', 'body', 'image','created_by', 'tags')
+		fields = ('pk','title', 'body', 'image','created_by')
 
-		read_only_fields = ('created_by',)
+	def create(self, validated_data):
+		return Articles.objects.create(created_by=self.context['request'].user, **validated_data)
