@@ -197,6 +197,7 @@ class ArticleEditView(UpdateView):
 				return redirect('article_view',pk=self.object.pk)
 			community = self.get_community()
 			if self.is_communitymember(request, community):
+				role = self.get_communityrole(request, community)
 				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
 					response=super(ArticleEditView, self).get(request, *args, **kwargs)
 					if settings.REALTIME_EDITOR:
@@ -329,17 +330,16 @@ def delete_article(request, pk):
 
 
 def article_watch(request, article):
-    if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
-    	view = ArticleViewLogs(
-    		article=article,ip=request.META['REMOTE_ADDR'],
-    		session=request.session.session_key
-    		)
-    	view.save()
-    	article = Articles.objects.get(pk=article.pk)
-    	article.views += 1
-    	article.save()
-
-    return article.views
+	if not ArticleViewLogs.objects.filter(article=article,session=request.session.session_key):
+		view = ArticleViewLogs(
+			article=article,ip=request.META['REMOTE_ADDR'],
+			session=request.session.session_key
+			)
+		view.save()
+		article = Articles.objects.get(pk=article.pk)
+		article.views += 1
+		article.save()
+	return article.views
 
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
