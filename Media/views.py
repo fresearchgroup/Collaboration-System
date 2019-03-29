@@ -129,6 +129,7 @@ class MediaUpdateView(UpdateView):
 
 	def get_form_kwargs(self):
 		kwargs = super(MediaUpdateView, self).get_form_kwargs()
+		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
 		kwargs.update({'mediatype': self.object.mediatype})
 		return kwargs
 

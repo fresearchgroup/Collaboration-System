@@ -52,11 +52,12 @@ class MediaUpdateForm(forms.ModelForm):
 		fields = ['title', 'mediafile', 'medialink', 'state']
 
 	def __init__(self, *args, **kwargs):
+		role = kwargs.pop('role', None)
 		mtype = kwargs.pop('mediatype', None)
 		super().__init__(*args, **kwargs)
 		self.fields['title'].widget.attrs.update({'class': 'form-control'})
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})
-		states = getStatesCommunity(self.instance.state.name)
+		states = getStatesCommunity(self.instance.state.name, role)
 		self.fields['state'].queryset = States.objects.filter(name__in=states)
 		self.fields['mediafile'].required = False
 		if mtype == 'IMAGE':
