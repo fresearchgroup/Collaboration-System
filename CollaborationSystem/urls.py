@@ -60,8 +60,8 @@ urlpatterns = [
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/auth/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    url(r'^api/auth/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^api/auth/$', user_viewsets.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^api/auth/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
 
     url(r'^activity/', include('actstream.urls')),
 
@@ -98,7 +98,7 @@ urlpatterns = [
     url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),
 
     url(r'^forum/', include(board.urls)),
-    url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
+    url(r'^api/auth/signup/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 
     url(r'^request_community_creation/$', communityview.RequestCommunityCreationView.as_view(), name='request_community_creation'),
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
