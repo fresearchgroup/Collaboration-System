@@ -62,7 +62,7 @@ https://github.com/fresearchgroup/Community-Recommendation
 
    ####Community APIs
 
-	Community Join :
+	1. Community Join :
 		Allowed Method : POST
 		URL:  /api/community/<community-id>/join/
 		Url parameters
@@ -71,7 +71,7 @@ https://github.com/fresearchgroup/Community-Recommendation
 			Must be Authenticated
 			Must not already be the member of the same community.
 
-	Community Unjoin:
+	2. Community Unjoin:
 		Allowed Method:  DELETE
 		URL: /api/community/<community-id>/unjoin/
 		Url parameters:
@@ -80,7 +80,7 @@ https://github.com/fresearchgroup/Community-Recommendation
 			Must be Authenticated
 			Must be a member of that community 
 
-	Create Community Resource:
+	3. Create Community Resource:
 		Allowed Method: POST
 		URL: /api/community/<community-id>/create/<resource-type>
 		Url parameters:
@@ -99,13 +99,13 @@ https://github.com/fresearchgroup/Community-Recommendation
 
 
 
-	Community List APi: This api returns a list of communities in the system.
+	4. Community List APi: This api returns a list of communities in the system.
 		Allowed Method : GET
 		URL:  /api/community/list/
 	 	Permissions: 
 			Allowed to all.
 
-	Community Articles list API: This api returns a list of all published articles of a particular community.
+	5. Community Articles list API: This api returns a list of all published articles of a particular community.
 		Allow Method : GET
 		URL: /api/community/<COMMUNITY-ID>/articles/
 		Url parameters: 
@@ -113,7 +113,7 @@ https://github.com/fresearchgroup/Community-Recommendation
 		Permissions:
 			Allowed to all
 
-	Community Media list API: This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+	6. Community Media list API: This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
 		Allowed Method: GET
 		URL: /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
 		URL parameters:
