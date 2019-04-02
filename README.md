@@ -124,3 +124,30 @@ https://github.com/fresearchgroup/Community-Recommendation
 
 
 
+  ####User APIs
+
+	1. Login API- 
+		Allowed Method: POST
+		URl: /api/auth/
+		
+		POST request body should contain two fields - username and password
+		Returned data will be JSON containing two fields - refresh and access
+		Using the access token will used for every other authenticated request.
+
+	2. Signup API:
+		Allowed Method: POST
+		URL: /api/auth/signup/
+		
+		POST request should contain three fields - username, password, and email
+		Returned data will be JSON containing two fields - refresh and access
+
+	3. Refresh Token API:
+		Allowed Method: POST
+		URL: /api/auth/refresh/
+		
+		POST request body should contain one filed - refresh
+		Returned data will be JSON containing two fields - refresh and access
+		Since access tokens are short lived, this API can be used to refresh the access token.
+		Currently, username is not encoded in the tokens returned by this API. Will be modified soon.
+
+	The username will be encoded in both access and refresh tokens. These tokens can be decoded using any JWT library to access the username data inside it. One popular library for Java and Android is https://java.jsonwebtoken.io, for Angular - https://github.com/auth0/angular2-jwt. Examples to decode (or parse) JWT token has been shown in their documentation.
