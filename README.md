@@ -60,20 +60,67 @@ https://github.com/fresearchgroup/Community-Recommendation
 
 ### APIs 
 
-	1. /api/community/list/
-		-- Method Allow : GET
-		-- This api returns a list of communities in the system.
+   ####Community APIs
 
-	2. /api/community/<COMMUNITY-ID>/articles/
-		--  Method Allow : GET
-		--  COMMUNITY-ID is the id of a particular community.
-		--  This api returns a list published articles of a particular community.
+	Community Join :
+		Allowed Method : POST
+		URL:  /api/community/<community-id>/join/
+		Url parameters
+			Community-id:  Its is the id of the community the user wants to join. 
+		Permission:
+			Must be Authenticated
+			Must not already be the member of the same community.
 
-	3. /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
-		--  Method Allow : GET
-		--  COMMUNITY-ID is the id of a particular community.
-		--  MEDIA-TYPE is the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
-		--  This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+	Community Unjoin:
+		Allowed Method:  DELETE
+		URL: /api/community/<community-id>/unjoin/
+		Url parameters:
+			Community-id: Its is the id of the community the user wants to unjoin. 
+		Permissions:
+			Must be Authenticated
+			Must be a member of that community 
+
+	Create Community Resource:
+		Allowed Method: POST
+		URL: /api/community/<community-id>/create/<resource-type>
+		Url parameters:
+			Community-id:  The ID of the community where the user wants to create the resource.
+			Resource-type: The type of resource that the user wants to create in that community 
+				
+				Currently two types of resource are supported. They are -
+					‘article’
+					‘media’
+
+				Please note, the resource-type parameters should match with the above mentioned types.
+
+		Permissions:
+			Must be Authenticated.
+			Must be a member of that community.
+
+
+
+	Community List APi: This api returns a list of communities in the system.
+		Allowed Method : GET
+		URL:  /api/community/list/
+	 	Permissions: 
+			Allowed to all.
+
+	Community Articles list API: This api returns a list of all published articles of a particular community.
+		Allow Method : GET
+		URL: /api/community/<COMMUNITY-ID>/articles/
+		Url parameters: 
+			Community-id: The ID of the community
+		Permissions:
+			Allowed to all
+
+	Community Media list API: This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+		Allowed Method: GET
+		URL: /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
+		URL parameters:
+			COMMUNITY-ID: the id of a particular community.
+			 MEDIA-TYPE: the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
+		Permissions: 
+			Allowed to all
 
 
 
