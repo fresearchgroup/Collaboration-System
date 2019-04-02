@@ -60,20 +60,94 @@ https://github.com/fresearchgroup/Community-Recommendation
 
 ### APIs 
 
-	1. /api/community/list/
-		-- Method Allow : GET
-		-- This api returns a list of communities in the system.
+   ####Community APIs
 
-	2. /api/community/<COMMUNITY-ID>/articles/
-		--  Method Allow : GET
-		--  COMMUNITY-ID is the id of a particular community.
-		--  This api returns a list published articles of a particular community.
+	1. Community Join :
+		Allowed Method : POST
+		URL:  /api/community/<community-id>/join/
+		Url parameters
+			Community-id:  Its is the id of the community the user wants to join. 
+		Permission:
+			Must be Authenticated
+			Must not already be the member of the same community.
 
-	3. /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
-		--  Method Allow : GET
-		--  COMMUNITY-ID is the id of a particular community.
-		--  MEDIA-TYPE is the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
-		--  This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+	2. Community Unjoin:
+		Allowed Method:  DELETE
+		URL: /api/community/<community-id>/unjoin/
+		Url parameters:
+			Community-id: Its is the id of the community the user wants to unjoin. 
+		Permissions:
+			Must be Authenticated
+			Must be a member of that community 
+
+	3. Create Community Resource:
+		Allowed Method: POST
+		URL: /api/community/<community-id>/create/<resource-type>
+		Url parameters:
+			Community-id:  The ID of the community where the user wants to create the resource.
+			Resource-type: The type of resource that the user wants to create in that community 
+				
+				Currently two types of resource are supported. They are -
+					‘article’
+					‘media’
+
+				Please note, the resource-type parameters should match with the above mentioned types.
+
+		Permissions:
+			Must be Authenticated.
+			Must be a member of that community.
 
 
 
+	4. Community List APi: This api returns a list of communities in the system.
+		Allowed Method : GET
+		URL:  /api/community/list/
+	 	Permissions: 
+			Allowed to all.
+
+	5. Community Articles list API: This api returns a list of all published articles of a particular community.
+		Allow Method : GET
+		URL: /api/community/<COMMUNITY-ID>/articles/
+		Url parameters: 
+			Community-id: The ID of the community
+		Permissions:
+			Allowed to all
+
+	6. Community Media list API: This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+		Allowed Method: GET
+		URL: /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
+		URL parameters:
+			COMMUNITY-ID: the id of a particular community.
+			 MEDIA-TYPE: the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
+		Permissions: 
+			Allowed to all
+
+
+
+  ####User APIs
+
+	1. Login API- 
+		Allowed Method: POST
+		URl: /api/auth/
+		
+		POST request body should contain two fields - username and password
+		Returned data will be JSON containing two fields - refresh and access
+		Using the access token will used for every other authenticated request.
+
+	2. Signup API:
+		Allowed Method: POST
+		URL: /api/auth/signup/
+		
+		POST request should contain three fields - username, password, and email
+		Returned data will be JSON containing two fields - refresh and access
+
+	3. Refresh Token API:
+		Allowed Method: POST
+		URL: /api/auth/refresh/
+		
+		POST request body should contain one filed - refresh
+		Returned data will be JSON containing two fields - refresh and access
+		Since access tokens are short lived, this API can be used to refresh the access token.
+		Currently, username is not encoded in the tokens returned by this API. Will be modified soon.
+
+	The username will be encoded in both access and refresh tokens. These tokens can be decoded using any JWT library to access the username data inside it. One popular library for Java and Android is https://java.jsonwebtoken.io, for Angular - https://github.com/auth0/angular2-jwt. Examples to decode (or parse) JWT token has been shown in their documentation.
