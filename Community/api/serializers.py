@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Community.models import Community, CommunityArticles, CommunityMedia
+from Community.models import Community, CommunityArticles, CommunityMedia, CommunityMembership
 
 class CommunitySerializer(serializers.ModelSerializer):
 	created_by = serializers.ReadOnlyField(source='created_by.username')
@@ -69,3 +69,12 @@ class CommunityMediaSerializer(serializers.ModelSerializer):
 			'communityid'
 
 		]
+
+class CommunityMembershipSerializer(serializers.ModelSerializer):
+	user = serializers.ReadOnlyField(source='user.username')
+	community = serializers.ReadOnlyField(source='community.name')
+	role = serializers.ReadOnlyField(source='role.name')
+
+	class Meta:
+		model = CommunityMembership
+		fields = ['user', 'community', 'role']
