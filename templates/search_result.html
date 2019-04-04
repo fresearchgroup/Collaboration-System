@@ -27,7 +27,8 @@
         </table>  
     
 <hr>
-
+facets:: {{facets}}
+object_list:: {{object_list}}
 <div class="container row">
   {% if facets.fields %}
   <div class="col-md-3 facet">
@@ -46,9 +47,9 @@
             </div>
           {% endif %}
           <hr>
-          {% if facets.fields.created_at %}
+          {% if facets.dates.created_at %}
             <dt>Filter by Creation Date</dt>
-              {% for date in facets.fields.created_at %}
+              {% for date in facets.dates.created_at %}
                 {% if date.1 != 0 %}
                 <dl>
                   <input class="facet" id="{{date.0|cut:" "}}" type="checkbox" name="date" value="{{ date.0 }}" data-toggle="toggle" /> {{ date.0 }} ({{ date.1 }})
@@ -85,7 +86,7 @@
       {% if community %}
       <h3> Communities </h3>
       <div class="container">
-          {% for result in object_list|slice:":1" %}
+          {% for result in object_list %}
           {% if result.object.name %}
             <div class="mix-grid thumbnails">
                 {{myhtml|safe}}
@@ -135,7 +136,8 @@
     {% if article %}
     <h3> Articles </h3>
     <div class="container">
-    {% for result in object_list|slice:":1" %}
+    {% for result in object_list %}
+       
         {% if result.object.body %}
         
         {% if result.object.state.name == "publish" %}

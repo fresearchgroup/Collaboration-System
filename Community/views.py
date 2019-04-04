@@ -766,6 +766,8 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print("context..................")
+        print(context)
         print("self.request.GET >>>>>>>>>>>>>>>>>>>>> ", self.request.GET)
         
         try:
@@ -784,12 +786,12 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
         except:
             pass
         
-        new_created_at = []
-        for d in context['facets']['fields']['created_at']:
-        	date_value = datetime.datetime.fromtimestamp(int(str(d[0]))/1000)
-        	temp_tuple = (date_value, d[1])
-        	new_created_at.append(temp_tuple)
-        context['facets']['fields']['created_at'] = new_created_at
+        # new_created_at = []
+        # for d in context['facets']['fields']['created_at']:
+        # 	date_value = datetime.datetime.fromtimestamp(int(str(d[0]))/1000)
+        # 	temp_tuple = (date_value, d[1])
+        # 	new_created_at.append(temp_tuple)
+        # context['facets']['fields']['created_at'] = new_created_at
 
         object_list = context['object_list']
         return context

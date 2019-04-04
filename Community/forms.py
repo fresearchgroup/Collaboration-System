@@ -4,6 +4,7 @@ from .models import Community, RequestCommunityCreation
 from Categories.models import Category
 from mptt.forms import TreeNodeChoiceField
 from haystack.forms import FacetedSearchForm
+import datetime
 
 class CommunityCreateForm(forms.ModelForm):
 
@@ -105,10 +106,12 @@ class FacetedProductSearchForm(FacetedSearchForm):
         print("data inside FacetedProductSearchForm >>>>>>>>>>>>>>>> ", str(data))
         self.categorys = data.get('category', [])
         self.views = data.get('view', [])
+        self.created_ats = data.get('date', [])
         super(FacetedProductSearchForm, self).__init__(*args, **kwargs)
-
+		
     def search(self):
         sqs = super(FacetedProductSearchForm, self).search()
+        sqs = sqs.date_facet('created_at', start_date=datetime.date(2019, 1, 1), end_date=datetime.date(2019, 4, 4), gap_by='month')
         if self.categorys:
             print("checking categories >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             query = None
@@ -130,6 +133,17 @@ class FacetedProductSearchForm(FacetedSearchForm):
                     query = u''
                 query += u'"%s"' % sqs.query.clean(view)
                 print("query >>>>>>>>>>> ", query)
-            sqs = sqs.narrow(u'view_exact:%s' % query)
-        print("sqs >>>>>>>>>>>> ", str(sqs))
+            sqs = sqs.narrow(u'views_exact:%s' % query)
+        if self.created_ats:
+            print("checking created_ats >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            query = None
+            for view in self.created_ats:
+                if query:
+                    query += u' OR '
+                else:
+                    query = u''
+                query += u'"%s"' % sqs.query.clean(view)
+                print("query >>>>>>>>>>> ", query)
+            sqs = sqs.filter(created_at__gte=datetime.datetime(2018, 1, 1)).filter(created_at__lte=datetime.datetime(2020, 1, 1))
+        print("sqs >>>>>>>>>>>> ", str(sqs.query))
         return sqs
