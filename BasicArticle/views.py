@@ -198,7 +198,7 @@ class ArticleEditView(UpdateView):
 			community = self.get_community()
 			if self.is_communitymember(request, community):
 				role = self.get_communityrole(request, community)
-				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+				if canEditResourceCommunity(self.object.state.id, role.name, self.object, request):
 					response=super(ArticleEditView, self).get(request, *args, **kwargs)
 					if settings.REALTIME_EDITOR:
 						sessionid = create_session_community(request, community.id)
