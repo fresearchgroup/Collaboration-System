@@ -19,7 +19,7 @@ def getStatesCommunity(current_state, role):
 	state_query = Transitions.objects.filter(role=role, from_state=current_state) 
 	states = []
 	for value in state_query:
-	    states.append(value[0])
+		states.append(value.to_state.name)
     
 	return states
 
