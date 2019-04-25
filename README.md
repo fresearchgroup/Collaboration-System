@@ -92,6 +92,64 @@ https://github.com/fresearchgroup/Community-Recommendation
 					‘media’
 
 				Please note, the resource-type parameters should match with the above mentioned types.
+		Body schema fields:
+			i. Article:
+				"title": {
+					"type": "string",
+					"required": true,
+					"label": "Title",
+					"max_length": 100
+				    },
+				    "body": {
+					"type": "string",
+					"required": false,
+					"label": "Body"
+				    },
+				    "image": {
+					"type": "image upload",
+					"label": "Image",
+					"max_length": 100
+				    }
+			ii. Media:
+				"mediatype": {
+				"type": "choice",
+				"label": "Mediatype",
+				"choices": [
+					    {
+						"value": "IMAGE",
+						"display_name": "Image"
+					    },
+					    {
+						"value": "AUDIO",
+						"display_name": "Audio"
+					    },
+					    {
+						"value": "VIDEO",
+						"display_name": "Video"
+					    }
+					]
+				    },
+				    "title": {
+					"type": "string",
+					"required": true,
+					"read_only": false,
+					"label": "Title",
+					"max_length": 100
+				    },
+				    "mediafile": {
+					"type": "file upload",
+					"required": false,
+					"read_only": false,
+					"label": "Mediafile",
+					"max_length": 100
+				    },
+				    "medialink": {
+					"type": "string",
+					"required": false,
+					"read_only": false,
+					"label": "Medialink",
+					"max_length": 300
+				    }
 
 		Permissions:
 			Must be Authenticated.
