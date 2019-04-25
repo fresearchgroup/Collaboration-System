@@ -6,7 +6,7 @@ from BasicArticle.models import Articles
 from Media.api.serializers import MediaCreateSerializer
 from Media.models import Media
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsCommunityMember, IfNotCommunityMember
+from .permissions import IsCommunityMember, IfNotCommunityMember, CanUnjoinCommunity
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group as Roles
@@ -61,7 +61,7 @@ class CommunityJoinAPI(generics.CreateAPIView):
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CommunityUnJoinAPI(generics.DestroyAPIView):
-	permission_classes = (IsAuthenticated, IsCommunityMember)
+	permission_classes = (IsAuthenticated, IsCommunityMember, CanUnjoinCommunity)
 	serializer_class = CommunityMembershipSerializer
 
 	def destroy(self, request, *args, **kwargs):
