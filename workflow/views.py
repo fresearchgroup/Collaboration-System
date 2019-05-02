@@ -27,12 +27,36 @@ def getAllStates(request):
 	state_query = States.objects.all()
 	states = []
 	roles = []
+	role_ids = dict()
+	state_ids = dict()
 	roles_query = Roles.objects.all()
+	previous_val = dict()
 	for role in roles_query:
-	    roles.append(role.name)
+		roles.append(role.name)
+		role_ids[role.name] = role.id
 	for value in state_query:
-	    states.append(value.name)
-	return render(request, 'transition.html', {'states':states, 'roles':roles})
+		states.append(value.name)
+		state_ids[value.name] = value.id
+	for role in roles:
+		for state_from in states:
+			for state_to in states:
+				role_id = role_ids[role]
+				from_state_id = state_ids[state_from]
+				to_state_id = state_ids[state_to]
+
+				try:
+					transition = Transitions.objects.get(name=role+'-'+state_from+'-'+state_to, 
+								     from_state_id=from_state_id,
+								     to_state_id=to_state_id,
+								     role_id=role_id)
+					if role in previous_val.keys():
+						previous_val[role].append((state_from, state_to))
+					else:
+						previous_val[role] = [(state_from, state_to)]
+				except:
+					pass
+
+	return render(request, 'transition.html', {'states':states, 'roles':roles, 'previous_val':previous_val})
 
 def createTransitions(request):
 	if request.method == 'POST':
@@ -50,10 +74,12 @@ def createTransitions(request):
 			state_ids[value.name] = value.id
 
 
+		print("HERE0")
 		for role in roles:
 			for state_from in states:
 				for state_to in states:
 					if request.POST.get(role+'-'+state_from+'-'+state_to, False):
+						print("HERE")
 						role_id = role_ids[role]
 						from_state_id = state_ids[state_from]
 						to_state_id = state_ids[state_to]
@@ -62,6 +88,8 @@ def createTransitions(request):
 									     from_state_id=from_state_id,
 									     to_state_id=to_state_id,
 									     role_id=role_id)
+						print("HERE2")
+						print(transition)
 			
 
 		return render(request, 'transition.html', {'states':states, 'roles':roles}) 
