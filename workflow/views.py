@@ -74,12 +74,10 @@ def createTransitions(request):
 			state_ids[value.name] = value.id
 
 
-		print("HERE0")
 		for role in roles:
 			for state_from in states:
 				for state_to in states:
 					if request.POST.get(role+'-'+state_from+'-'+state_to, False):
-						print("HERE")
 						role_id = role_ids[role]
 						from_state_id = state_ids[state_from]
 						to_state_id = state_ids[state_to]
@@ -88,8 +86,6 @@ def createTransitions(request):
 									     from_state_id=from_state_id,
 									     to_state_id=to_state_id,
 									     role_id=role_id)
-						print("HERE2")
-						print(transition)
 			
 
 		return render(request, 'transition.html', {'states':states, 'roles':roles}) 
