@@ -31,6 +31,10 @@
       <th>{{ state_row }}</th>
 		{% for state_col in states %}
 			<td>
+				 {% if previous_val|keyvalue:role == '' %} 
+					<input type="checkbox" name="{{role}}-{{state_row}}-{{state_col}}" >
+				 {% endif %} 
+
 				 {% for tup in previous_val|keyvalue:role %} 
 				 {% if tup.0 == state_row and tup.1 == state_col %} 
 				<input type="checkbox" name="{{role}}-{{state_row}}-{{state_col}}" checked >
