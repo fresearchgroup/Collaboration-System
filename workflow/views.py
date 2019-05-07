@@ -73,6 +73,8 @@ def createTransitions(request):
 			states.append(value.name)
 			state_ids[value.name] = value.id
 
+		Transitions.objects.all().delete()
+		previous_val = dict()
 
 		for role in roles:
 			for state_from in states:
@@ -87,8 +89,26 @@ def createTransitions(request):
 									     to_state_id=to_state_id,
 									     role_id=role_id)
 			
+		for role in roles:
+			for state_from in states:
+				for state_to in states:
+					role_id = role_ids[role]
+					from_state_id = state_ids[state_from]
+					to_state_id = state_ids[state_to]
+	
+					try:
+						transition = Transitions.objects.get(name=role+'-'+state_from+'-'+state_to, 
+									     from_state_id=from_state_id,
+									     to_state_id=to_state_id,
+									     role_id=role_id)
+						if role in previous_val.keys():
+							previous_val[role].append((state_from, state_to))
+						else:
+							previous_val[role] = [(state_from, state_to)]
+					except:
+						pass
 
-		return render(request, 'transition.html', {'states':states, 'roles':roles}) 
+		return render(request, 'transition.html', {'states':states, 'roles':roles, 'previous_val':previous_val}) 
 
 def get_initial_state():
 	return States.objects.get(initial=True).pk
