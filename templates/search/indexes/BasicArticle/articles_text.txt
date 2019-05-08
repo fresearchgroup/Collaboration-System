@@ -1,4 +1,9 @@
 {{ object.title }}
 {{ object.created_by.get_full_name }}
 {{ object.body }}
-{{object.published_on}}
+{{ object.published_on }}
+{{ object.image }}
+{{ object.created_at }}
+{{ object.published_by }}
+{{ object.views }}
+{{ object.state }}

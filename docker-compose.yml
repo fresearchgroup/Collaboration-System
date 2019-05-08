@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   db:
@@ -11,6 +11,8 @@ services:
       MYSQL_PASSWORD: django
     ports:
       - "3306:3306"
+    volumes:
+      - ./collab.sql:/docker-entrypoint-initdb.d/dump.sql
   web:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
@@ -18,20 +20,17 @@ services:
       - "7000:8000"
     depends_on:
       - db
-      - h5p
-      - node
+      - ether
 
-  h5p:
-    image: h5p_image
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-
-  node:
-    image: etherpadlite
-    command: ./bin/run.sh
+  ether:
+    build: './etherpad'
+    entrypoint: sh /entrypoint.sh
+    command: sh bin/run.sh --root
+    environment:
+      ETHERPAD_DB_HOST: db
+      ETHERPAD_DB_PASSWORD: root
+      ETHERPAD_API_KEY: c1f3ae385ed34c9571261c2a439248843e792ae43fefdec6ace2bb6eb80ac65b
+      ETHERPAD_DB_NAME: django
     ports:
       - "9001:9001"
     depends_on:

@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, JsonResponse
 from .models import Group, GroupMembership, GroupArticles, GroupInvitations, GroupMedia
 from BasicArticle.models import Articles
-from BasicArticle.views import create_article, view_article
 from Community.models import CommunityMembership, CommunityGroups
 from django.contrib.auth.models import Group as Roles
 from django.contrib.auth.models import User
@@ -19,9 +18,6 @@ from django.conf import settings
 import json
 import requests
 from etherpad.views import create_group_ether, create_article_ether_group, create_session_group
-from Media.views import create_media
-from metadata.views import create_metadata
-from metadata.models import MediaMetadata
 
 def create_group(request):
 	if request.method == 'POST':
@@ -133,61 +129,7 @@ def group_article_create_body(request,article, group):
 		return redirect('login')
 
 def group_article_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			gid = request.POST['gid']
-			group = Group.objects.get(pk=gid)
-			if status=='1':
-				article = create_article(request)
-				GroupArticles.objects.create(article=article, user = request.user , group =group )
-
-				#create ether id for the article belonging to the group
-				padid = create_article_ether_group(gid, article)
-
-				# return community_article_create_body(request, article, community)
-				data={
-					'article_id':article.id,
-					'community_or_group_id':group.pk,#see this thing
-					'user_id':request.user.id,
-					'username':request.user.username,
-					'url':settings.SERVERURL,
-					'articleof':'group',
-					'padid':padid
-				}
-				return JsonResponse(data)
-				# return redirect('article_edit', article.pk)
-
-
-			elif status == '2' or status=='3':
-				pk=''
-				# print(status)
-				if status == '2':
-					pk = request.POST.get('pk','')
-					article = Articles.objects.get(pk=pk)
-					return group_article_create_body(request, article, group)
-				elif status == '3':
-					pk = request.POST.get('pk','3')
-					article= Articles.objects.get(pk=pk)
-					article.title=request.POST['title']
-					try:
-						image = request.FILES['article_image']
-					except:
-						image = None
-					article.image=image
-					article.save()
-					data={}
-					return JsonResponse(data)
-			else:
-				#create session for this group article in ether pad
-				sid = create_session_group(request, gid)
-				response = render(request, 'new_article.html', {'group':group, 'status':1})
-				response.set_cookie('sessionID', sid)
-				return response
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
+	pass
 
 def group_h5p_create(request):
 	if request.user.is_authenticated:
@@ -394,23 +336,3 @@ def feed_content(request, pk):
 	except GroupMembership.DoesNotExist:
 		return redirect('group_view', group.pk)
 	return render(request, 'groupfeed.html', {'group': group, 'membership':membership, 'grpfeeds':grpfeeds})
-
-def group_media_create(request):
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			status = request.POST['status']
-			gid = request.POST['gid']
-			group = Group.objects.get(pk=gid)
-			if status=='1':
-				media = create_media(request)
-				metadata = create_metadata(request)
-				GroupMedia.objects.create(media=media, user=request.user, group=group)
-				MediaMetadata.objects.create(media=media, metadata=metadata)
-				return redirect('media_view', media.pk)
-			else:
-				return render(request, 'new_media.html', {'group':group, 'status':1})
-		else:
-			return redirect('home')
-	else:
-		return redirect('login')
-		

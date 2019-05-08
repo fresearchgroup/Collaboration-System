@@ -11,8 +11,8 @@
   	   <a href="{% url 'user_insight_dashboard'%}">Insights</a>
   </li>
 <script type="text/javascript">
-var articlesPublished = [{{articlespublished}}];
-var articlesContributed = [{{total}}];
+var articlesPublished = {{articlespublished}};
+var articlesContributed = {{articlescontributed}};
 
 </script>
 
@@ -22,7 +22,6 @@ var articlesContributed = [{{total}}];
 {% endblock %}
 
 {% block content %}
-
 
 <div class="row recent-work margin-bottom-40">
   <div class="col-md-4" style="width: 350px">
@@ -70,7 +69,7 @@ var articlesContributed = [{{total}}];
   <div class="content-page">
     <div class="row margin-bottom-40">
 
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="pricing hover-effect">
           <div class="pricing-head">
             <h3>My Communities</h3>
@@ -89,24 +88,6 @@ var articlesContributed = [{{total}}];
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="pricing hover-effect">
-          <div class="pricing-head">
-            <h3>My Groups</h3>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-              <div class="data-container"></div>
-              <div id="pagination-mygroups"></div>
-            </span>
-            </h4>
-          </div>
-<!--      <div class="pricing-footer">
-            <a href="javascript:;" class="btn btn-primary">
-               Sign Up <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-          </div>-->
-        </div>
-      </div>
 
       <div class="col-md-4">
         {% if pendingcommunities %}
@@ -118,22 +99,6 @@ var articlesContributed = [{{total}}];
         {{myhtml|safe}}{% autoescape off%}
         {% for pending in pendingcommunities %}
               {{ pending.name }}  <br />
-        {% endfor %}
-        {% endautoescape%}
-            </span>
-            </h4>
-            <h4>
-            <span style="text-align:left; padding-left:20px; padding-top:10px">
-        {{myhtml|safe}}{% autoescape off%}
-        {% for invite in grpinvitations %}
-              <form method="post" action="{% url 'handle_group_invitations' %}">
-                   {% csrf_token %}
-                   <a href="{% url 'group_view' invite.group.id %}"> {{ invite.group.name  }} </a>
-                   <input type='hidden' name = 'pk' value ={{invite.pk}} />
-                   <button type="radio" name ="status" value="Accept" class="btn btn-success" >Accept  </button>
-                   <button type="radio" name ="status" value="Reject" class="btn btn-danger"> Reject</button>
-              </form>
-                <br />
         {% endfor %}
         {% endautoescape%}
             </span>
@@ -160,7 +125,7 @@ var articlesContributed = [{{total}}];
           <th style="color:white">Type</th>
           <th style="color:white">Content</th>
           <th style="color:white">Status</th>
-          <th style="color:white">Community / Group</th>
+          <th style="color:white">Community</th>
           <th style="color:white">Created</th>
         </tr>
     </thead>
@@ -176,9 +141,9 @@ var articlesContributed = [{{total}}];
                 <i class="fa fa-briefcase" style="color:red;"></i> Course
               {% endif %}
               {% if content.type == 'Media' %}
-                {% if content.media.mediatype == 'Image' %}<i class="fa fa-picture-o" style="color:red;"></i> Image {% endif %}
-                {% if content.media.mediatype == 'Audio' %}<i class="fa fa-music" style="color:red;"></i> Audio {% endif %}
-                {% if content.media.mediatype == 'Video' %}<i class="fa fa-film" style="color:red;"></i> Video {% endif %}
+                {% if content.media.mediatype == 'IMAGE' %}<i class="fa fa-picture-o" style="color:red;"></i> Image {% endif %}
+                {% if content.media.mediatype == 'AUDIO' %}<i class="fa fa-music" style="color:red;"></i> Audio {% endif %}
+                {% if content.media.mediatype == 'VIDEO' %}<i class="fa fa-film" style="color:red;"></i> Video {% endif %}
               {% endif %}
             </td>
             <td>
@@ -207,9 +172,6 @@ var articlesContributed = [{{total}}];
               {% if content.belongsto == 'community' %}
                 <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
               {% endif %}
-              {% if content.belongsto == 'group' %}
-                <a href="{% url 'group_view' content.group.pk  %}">{{ content.group }}</a>
-              {% endif %}
             </td>
             <td>
               {% if content.type == 'article' %}
@@ -235,90 +197,81 @@ var articlesContributed = [{{total}}];
 {% block javascript %}
   <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
   <script>
-    $(function() {
-      (function(name) {
-        var container = $('#pagination-mygroups');
+    $.ajax({
+      url: '/api/reputation/score',
+      type: 'GET',
+      success: function(mycommunities) {
+        (function(name) {
 
-        var sources = function () {
-          var result = [];
-          {% for grp in mygroups %}
-            var temp = ''
-            {% if grp.role.name == 'author' %}
-              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
-            {% elif grp.role.name == 'publisher' %}
-              temp += '<i class="fa fa-print" style="top:3px;"></i> '
-            {% else %}
-              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
-            {% endif %}
-            temp += '<a href="{% url 'group_view' grp.group.pk %}">' + '{{ grp.group }}' + '</a>';
-            result.push(temp);
-          {% endfor %}
-          return result;
-        }();
+          var container = $('#pagination-mycommunities');
 
-        var options = {
-          dataSource: sources,
-          pageSize: 5,
-          showGoInput: true,
-          showGoButton: true,
-          showPageNumbers: false,
-          showNavigator: true,
+          var sources = function () {
+            var result = [];
 
-          callback: function (data, pagination) {
-            var dataHtml = '';
-            //Get the datasource (item)
-            $.each(data, function (index, item) {
-              dataHtml += item + '<br />';
-            });
-            dataHtml += '<br />'
-            //Add data to container
-            container.prev().html(dataHtml);
-          }
-        };
-        container.pagination(options);
-      })('mygroups-pagination');
+            var i = 0;
+            var badgeLevelMapping = {
+              '1': 'btn-secondary',
+              '2': 'btn-danger',
+              '3': 'btn-warning',
+              '4': 'btn-primary',
+              '5': 'btn-success'
+            };
+            for (i = 0; i < mycommunities.length; i++) {
+              var temp = '';
+              var comm = mycommunities[i];
 
-      (function(name) {
-        var container = $('#pagination-mycommunities');
+              if (comm.role.name === 'author') {
+                temp += '<i class="fa fa-pencil" style="top:3px;"></i> ';
+              } else if (comm.role.name == 'publisher') {
+                temp += '<i class="fa fa-print" style="top:3px;"></i> ';
+              } else {
+                temp += '<i class="fa fa-trophy" style="top:3px;"></i> ';
+              }
 
-        var sources = function () {
-          var result = [];
-          {% for comm in mycommunities %}
-            var temp = ''
-            {% if comm.role.name == 'author' %}
-              temp += '<i class="fa fa-pencil" style="top:3px;"></i> '
-            {% elif comm.role.name == 'publisher' %}
-              temp += '<i class="fa fa-print" style="top:3px;"></i> '
-            {% else %}
-              temp += '<i class="fa fa-trophy" style="top:3px;"></i> '
-            {% endif %}
-            temp += '<a href="{% url 'community_view' comm.community.pk %}">' + '{{ comm.community }}' + '</a>';
-            result.push(temp);
-          {% endfor %}
-          return result;
-        }();
+              var url = "{% url 'community_view' 999 %}";
+              temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
+              
+              var badgeDiv = $("<div>", {
+                'css': {
+                  'margin': '10px'
+                }
+              });
 
-        var options = {
-          dataSource: sources,
-          pageSize: 5,
-          showGoInput: true,
-          showGoButton: true,
-          showPageNumbers: false,
-          showNavigator: true,
+              for (var j = 0; j < comm.badges.length; j++) {
+                var badge = comm.badges[j].badge;
+                badgeDiv.append('<span class="btn ' + badgeLevelMapping[badge.level] + '" style="width: 50px; margin: 5px;">' + badge.title + '</span>');
+              }
 
-          callback: function (data, pagination) {
-            var dataHtml = '';
-            //Get the datasource (item)
-            $.each(data, function (index, item) {
-              dataHtml += item + '<br />';
-            });
-            dataHtml += '<br />'
-            //Add data to container
-            container.prev().html(dataHtml);
-          }
-        };
-        container.pagination(options);
-      })('mycommunities-pagination');
-    })
+              temp += badgeDiv.prop('outerHTML');
+
+              result.push(temp);
+            }
+
+            return result;
+          }();  
+
+          var options = {
+            dataSource: sources,
+            pageSize: 5,
+            showGoInput: true,
+            showGoButton: true,
+            showPageNumbers: false,
+            showNavigator: true,
+
+            callback: function (data, pagination) {
+              var dataHtml = '';
+              //Get the datasource (item)
+              $.each(data, function (index, item) {
+                dataHtml += item + '<br />';
+              });
+              dataHtml += '<br />'
+              //Add data to container
+              container.prev().html(dataHtml);
+            }
+          };
+          container.pagination(options);
+        })('mycommunities-pagination');
+      }
+    });
   </script>
 {% endblock %}

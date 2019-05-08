@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load workflow_tags %}
+
+{% load static %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item">Define Transitions</li>
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<form method="post" name = "form" action ="{% url 'create_transition' %}">
+  {% csrf_token %}
+  {% for role in roles %}
+  <h2>{{ role }}</h2>
+  <div class="form-group">
+    <div class="table-responsive">
+    <table class="table table-bordered">
+      <tr>
+        <th></th>
+      {% for state_name in states %}
+        <th>{{state_name}}</th>
+      {% endfor %}
+      </tr>
+	{% for state_row in states %}
+		<tr>
+      <th>{{ state_row }}</th>
+		{% for state_col in states %}
+			<td>
+				 {% if previous_val|keyvalue:role == '' %} 
+					<input type="checkbox" name="{{role}}-{{state_row}}-{{state_col}}" >
+				 {% endif %} 
+
+				 {% for tup in previous_val|keyvalue:role %} 
+				 {% if tup.0 == state_row and tup.1 == state_col %} 
+				<input type="checkbox" name="{{role}}-{{state_row}}-{{state_col}}" checked >
+				 {% else %} 
+				 <input type="checkbox" name="{{role}}-{{state_row}}-{{state_col}}"> 
+				 {% endif %} 
+			 	{% endfor %} 
+			</td>
+		{% endfor %}
+		</tr>
+
+	{% endfor %}
+  </table>
+  </div>
+  </div>
+  {% endfor %}
+  <button id="submit" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
+</form>
+{% endif %}
+<br />
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
+{% endblock %}

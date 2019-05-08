@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+{% if request.POST.mediaof == "community" %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+{% endif %}
+{% if request.POST.mediaof == "group" %}
+  <li class="breadcrumb-item active"><a href="{% url 'group_view' group.pk %}">{{group.name}} Group</a></li>
+{% endif %}
+  <li class="breadcrumb-item active">Upload {{request.POST.mediatype}}</li>
+{% endblock %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% crispy form %}
+  </form>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#description' ) )
+    .then( description => {
+      console.log( description );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+
+<script>
+$(function() {
+    $('input[name="media_type"]').on('click', function() {
+        if ($(this).val() == 'Link') {
+          $('#div_id_medialink').show();
+          $('#div_id_mediafile').hide();
+        }
+        if ($(this).val() == 'Upload') {
+            $('#div_id_medialink').hide();
+            $('#div_id_mediafile').show();
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+		jQuery(document).ready(function() {
+      {% if not media.title %}
+        $('#div_id_medialink').hide();
+      {% else %}
+        {% if media.mediafile %}
+          $('#div_id_medialink').hide();
+        {% else %}
+          $('#div_id_mediafile').hide();
+        {% endif %}
+      {% endif %}
+		});
+</script>
+{% endblock %}

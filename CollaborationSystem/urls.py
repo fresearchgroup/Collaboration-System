@@ -36,9 +36,21 @@ from Recommendation_API import views
 from Reputation import views as repuationview
 from Media import views as mediaview
 from TaskQueue import views as taskview
+from Community.forms import FacetedSearchForm
+from Community.views import FacetedSearchView
+from haystack.query import SearchQuerySet
+from Categories import views as categoryview
+from metadata import views as metadataview
+from search import views as SearchView
+from workflow import views as workflowview
+from django.views.generic import TemplateView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 router = routers.DefaultRouter()
-router.register(r'articleapi', viewsets.ArticleViewSet)
+#router.register(r'articleapi', viewsets.ArticleViewSet)
 
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
@@ -48,6 +60,8 @@ urlpatterns = [
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/auth/$', user_viewsets.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^api/auth/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
 
     url(r'^activity/', include('actstream.urls')),
 
@@ -57,7 +71,7 @@ urlpatterns = [
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),
     url(r'^community-unsubscribe/$', communityview.community_unsubscribe, name='community_unsubscribe'),
-    url(r'^community-article-create/$', communityview.community_article_create, name='community_article_create'),
+    url(r'^community-article-create/(?P<pk>\d+)/$', articleview.ArticleCreateView.as_view(), name='community_article_create'),
     url(r'^comments/', include('django_comments_xtd.urls')),
 
     url(r'^articles/$', articleview.display_articles, name='display_articles'),
@@ -66,12 +80,13 @@ urlpatterns = [
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
-    url(r'^article-edit/(?P<pk>\d*)/$', articleview.edit_article, name='article_edit'),
+    url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
-    url(r'^community-group-create/$', communityview.community_group, name='community_group'),
+    url(r'^mydashboard/badges$', user_views.badges_progress_dashboard, name='badges_progress_dashboard'),
+    url(r'^community-group-create/(?P<pk>\d+)/$', communityview.CreateSubCommunityView.as_view(), name='community_group'),
 
     url(r'^group-view/(?P<pk>\d+)/$', group_views.group_view, name='group_view'),
     url(r'^group-subscribe/$', group_views.group_subscribe, name='group_subscribe'),
@@ -83,9 +98,9 @@ urlpatterns = [
     url(r'^group-feed/(?P<pk>\d+)/$', group_views.feed_content, name='group_feed'),
 
     url(r'^forum/', include(board.urls)),
-    url(r'^registrationapi/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
+    url(r'^api/auth/signup/$', user_viewsets.RegistrationViewsets.as_view(), name='account-create'),
 
-    url(r'^request_community_creation/$', communityview.request_community_creation, name='request_community_creation'),
+    url(r'^request_community_creation/$', communityview.RequestCommunityCreationView.as_view(), name='request_community_creation'),
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
@@ -100,9 +115,9 @@ urlpatterns = [
     url(r'^userprofile/(?P<username>[\w.@+-]+)/$', user_views.display_user_profile, name='display_user_profile'),
 
     url(r'^update_group_info/(?P<pk>\d+)/$', group_views.update_group_info, name='update_group_info'),
-    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.update_community_info, name='update_community_info'),
+    url(r'^update_community_info/(?P<pk>\d+)/$', communityview.UpdateCommunityView.as_view(), name='update_community_info'),
 
-    url(r'^create_community/$', communityview.create_community, name='create_community'),
+    url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
@@ -133,16 +148,17 @@ urlpatterns = [
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
-    url(r'^search/', include('haystack.urls')),
+    #url(r'^search/', include('haystack.urls')),
+    # url(r'^$', FacetedSearchView.as_view(form_class=FacetedSearchForm, facet_fields=['name'],template_name='search.html', context_object_name='page_object')),
+    #url(r'^$', FacetedSearchView.as_view(), name='haystack_search'),
+    #url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset = SearchQuerySet().facet('desc'), name='haystack_search')),
 
     url(r'^feedback/$', web.provide_feedback, name ='provide_feedback' ),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
-    url(r'^community_group_content/(?P<pk>\d+)/$', communityview.community_group_content, name='community_group_content'),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
 
     url(r'^check_user/$', user_views.username_exist, name ='check_user' ),
     url(r'^favourites/$', user_views.favourites, name ='favourites' ),
-    url(r'^group-invitations/$', user_views.group_invitations, name='group_invitations'),
 
     url(r'^community-course-create/$', communityview.community_course_create, name='community_course_create'),
     url(r'^community-h5p-create/$', communityview.community_h5p_create, name='community_h5p_create'),
@@ -168,23 +184,32 @@ urlpatterns = [
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
     url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
-    url(r'community_media_create/', communityview.community_media_create, name='community_media_create'),
+    url(r'^community_media_create/(?P<pk>\d+)/(?P<mediatype>[\w\-]+)$', mediaview.MediaCreateView.as_view(), name='community_media_create'),
 
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
-    url(r'media_edit/(?P<pk>\d+)/$', mediaview.media_edit, name='media_edit'),
+    url(r'^media_edit/(?P<pk>\d*)/$', mediaview.MediaUpdateView.as_view(), name='media_edit'),
     url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),
     url(r'^run_task/', taskview.run_task, name='run_task'),
-    url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
 
     url(r'manage_reputation/',repuationview.manage_reputation , name = 'manage_reputation'),
     url(r'manage_resource_score/',repuationview.manage_resource_score , name = 'manage_resource_score'),
     url(r'manage_role_score/',repuationview.manage_user_role_score , name = 'manage_role_score'),
 
     url(r'api/reputation/', include('Reputation.api.urls', namespace = 'api-reputation')),
+    url(r'^badges/', include('badges.urls')),
 
+    url(r'api/community/', include('Community.api.urls', namespace = 'api-community')),
+    url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
+    url(r'categories/$', categoryview.categories, name='categories'),
+
+    url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
+    url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
+
+    url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
+    url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
@@ -192,8 +217,12 @@ from django_nyt.urls import get_pattern as get_nyt_pattern
 
 urlpatterns += [
     url(r'^wiki-notifications/', get_nyt_pattern()),
-    url(r'^wiki/', get_wiki_pattern())
+    url(r'^wiki/', get_wiki_pattern()),
+    url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
+    # url(r'^search_category/', SearchView.search_queries, name='search_queries'),
+
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

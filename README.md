@@ -35,145 +35,17 @@ The system allows individual users to form communities, create groups, participa
 * [Celery](https://pypi.org/project/django-celery/)
 * [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server)
 
-## For development installation (Virtual Environment)
+## Installation 
 
-1. Install virtualenv 
+For three Step Installation use Docker: [Install](https://github.com/fresearchgroup/Collaboration-System/blob/n-level/install.md)
 
- 	```bash
- 		sudo pip3 install virtualenv 
- 	```
-2. Clone the project from github 
-	
-	```bash
- 		git clone https://github.com/fresearchgroup/Collaboration-System.git 
-  	```
-3. Create a virtual env --- 
-
-	```bash
-     	virtualenv collab -p python3 
-	```
-
-4. Activate the virtual environment -- 
-
-     ```bash
-     	source collab/bin/activate
-     ```
-
-5. Install the requirements.txt -- 
-
-	```bash
-		pip3 install -r Collaboration-System/requirements.txt
-	```
-
-6. Install mysql server --
-
-	```
-		$ sudo apt-get update
-		
-		$ sudo apt-get install mysql-server
- 
-		$ sudo apt-get install libmysqlclient-dev
-
-        $ mysql -u root -p
-
-        Enter password=root
-		
-	mysql> create database collaboration;
-        mysql> use collaboration;
-        mysql> source collab.sql   
-	```
-
-7. Create a .env inside CollaborationSystem and paste the following -
-	```bash
-       		sudo nano .env
-	```
-    ```
-        SECRET_KEY=myf0)*es+lr_3l0i5$4^)^fb&4rcf(m28zven+oxkd6!(6gr*6
-        DEBUG=True
-        DB_NAME=collaboration
-        DB_USER=root
-        DB_PASSWORD=root
-        DB_HOST=localhost
-        DB_PORT=3306
-        ALLOWED_HOSTS= localhost
-        GOOGLE_RECAPTCHA_SECRET_KEY=6Lfsk0MUAAAAAFdhF-dAY-iTEpWaaCFWAc1tkqjK
-        EMAIL_HOST=localhost
-        EMAIL_HOST_USER=
-        EMAIL_HOST_PASSWORD=
-        EMAIL_PORT=25
-        EMAIL_USE_TLS=False
-        DEFAULT_FROM_EMAIL=collaboratingcommunity@cse.iitb.ac.in
-        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=735919351499-ajre9us5dccvms36ilhrqb88ajv4ahl0.apps.googleusercontent.com
-        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=I1v-sHbsogVc0jAw9M9Xy1eM
-		LOG_TYPE=TOSERVER
-		LOG_PROTOCOL=http
-		LOG_ADDRESS=logstash
-		LOG_PORT=5000
-		LOG_STORE=debug.log
-		LOG_USE_PROXY=False
-		URL_BASIC=http://localhost:8000/
-		PAGE_SIZE=1000
-		MAX_PAGE_SIZE=10000
-		EVENTAPI_TOKEN_USERNAME=eventloguser
-		EVENTAPI_TOKEN_PASSWORD=eventlogpass
-		EVENT_API_TOKEN=
-		ELASTICSEARCH_ADDRESS=
-		
-		NODESERVERURL=http://localhost
-		NODESERVERPORT=9001
-		COLLAB_ROOT=http://localhost:7000
-		H5P_ROOT=http://localhost:8000
-		APIKEY=ae0135343b703000e7377f8438e5f1154dcdc2ffc434268729203764cfe28b26
-    ```
-
-8. Do all the migrations --
-
-	```bash
-		python3 manage.py migrate
-	```
-			
-9. Runserver --
-
-    ```bash
-    	python3 manage.py runserver
-    ``` 
- 
-For manual installtion -- https://fresearchgroup.github.io/docs-collaboration-system/
-
-For automated installation using nginx and gunicorn- https://github.com/abhisgithub/django-nginx-installation-script
+<p align="center"><img src="/temp/demo.gif?raw=true"/></p>
 
 
-## For development installation (Docker) - 
 
- -- Install Docker and Docker-Compose from  --
 
-	    Docker - https://docs.docker.com/install/linux/docker-ce/ubuntu/#set-up-the-repository
 
-	    Docker Compose -- https://docs.docker.com/compose/install/
 
-1. Clone the repository --
-```
-   	git clone https://github.com/fresearchgroup/Collaboration-System.git
-```
-
-2. The run the following commands inside the repository --
- 
-	```
-
- 		docker-compose build
-
- 		docker-compose up db
-
-	 	docker exec -i <container-image-name> mysql -u<username> -p<password> django < collab.sql
-
- 		docker-compose run web python manage.py migrate
-
- 		docker-compose run web python manage.py createsuperuser
-
- 		docker-compose run web python manage.py loaddata workflow roles faq
-
-		docker-compose up
-	```
 ### Event Logging
 To set-up event logging for this system, please refer to the installation steps given in the repository link given below:
 https://github.com/fresearchgroup/Collaboration-System-Event-Logs
@@ -186,3 +58,154 @@ https://github.com/fresearchgroup/Community-Content-Tools
 This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
 https://github.com/fresearchgroup/Community-Recommendation
 
+### APIs 
+
+   ####Community APIs
+
+	1. Community Join :
+		Allowed Method : POST
+		URL:  /api/community/<community-id>/join/
+		Url parameters
+			Community-id:  Its is the id of the community the user wants to join. 
+		Permission:
+			Must be Authenticated
+			Must not already be the member of the same community.
+
+	2. Community Unjoin:
+		Allowed Method:  DELETE
+		URL: /api/community/<community-id>/unjoin/
+		Url parameters:
+			Community-id: Its is the id of the community the user wants to unjoin. 
+		Permissions:
+			Must be Authenticated
+			Must be a member of that community 
+
+	3. Create Community Resource:
+		Allowed Method: POST
+		URL: /api/community/<community-id>/create/<resource-type>
+		Url parameters:
+			Community-id:  The ID of the community where the user wants to create the resource.
+			Resource-type: The type of resource that the user wants to create in that community 
+				
+				Currently two types of resource are supported. They are -
+					‘article’
+					‘media’
+
+				Please note, the resource-type parameters should match with the above mentioned types.
+		Body schema fields:
+			i. Article:
+				"title": {
+					"type": "string",
+					"required": true,
+					"label": "Title",
+					"max_length": 100
+				    },
+				    "body": {
+					"type": "string",
+					"required": false,
+					"label": "Body"
+				    },
+				    "image": {
+					"type": "image upload",
+					"label": "Image",
+					"max_length": 100
+				    }
+			ii. Media:
+				"mediatype": {
+				"type": "choice",
+				"label": "Mediatype",
+				"choices": [
+					    {
+						"value": "IMAGE",
+						"display_name": "Image"
+					    },
+					    {
+						"value": "AUDIO",
+						"display_name": "Audio"
+					    },
+					    {
+						"value": "VIDEO",
+						"display_name": "Video"
+					    }
+					]
+				    },
+				    "title": {
+					"type": "string",
+					"required": true,
+					"read_only": false,
+					"label": "Title",
+					"max_length": 100
+				    },
+				    "mediafile": {
+					"type": "file upload",
+					"required": false,
+					"read_only": false,
+					"label": "Mediafile",
+					"max_length": 100
+				    },
+				    "medialink": {
+					"type": "string",
+					"required": false,
+					"read_only": false,
+					"label": "Medialink",
+					"max_length": 300
+				    }
+
+		Permissions:
+			Must be Authenticated.
+			Must be a member of that community.
+
+
+
+	4. Community List APi: This api returns a list of communities in the system.
+		Allowed Method : GET
+		URL:  /api/community/list/
+	 	Permissions: 
+			Allowed to all.
+
+	5. Community Articles list API: This api returns a list of all published articles of a particular community.
+		Allow Method : GET
+		URL: /api/community/<COMMUNITY-ID>/articles/
+		Url parameters: 
+			Community-id: The ID of the community
+		Permissions:
+			Allowed to all
+
+	6. Community Media list API: This api returns a list of published media of particular type (eg: IMAGE, AUDIO, VIDEO) in a community.
+		Allowed Method: GET
+		URL: /api/community/<COMMUNITY-ID>/media/<MEDIA-TYPE>/
+		URL parameters:
+			COMMUNITY-ID: the id of a particular community.
+			 MEDIA-TYPE: the type of media content that the api will return. Options are - IMAGE, AUDIO, VIDEO
+		Permissions: 
+			Allowed to all
+
+
+
+  ####User APIs
+
+	1. Login API- 
+		Allowed Method: POST
+		URl: /api/auth/
+		
+		POST request body should contain two fields - username and password
+		Returned data will be JSON containing two fields - refresh and access
+		Using the access token will used for every other authenticated request.
+
+	2. Signup API:
+		Allowed Method: POST
+		URL: /api/auth/signup/
+		
+		POST request should contain three fields - username, password, and email
+		Returned data will be JSON containing two fields - refresh and access
+
+	3. Refresh Token API:
+		Allowed Method: POST
+		URL: /api/auth/refresh/
+		
+		POST request body should contain one filed - refresh
+		Returned data will be JSON containing two fields - refresh and access
+		Since access tokens are short lived, this API can be used to refresh the access token.
+		Currently, username is not encoded in the tokens returned by this API. Will be modified soon.
+
+	The username will be encoded in both access and refresh tokens. These tokens can be decoded using any JWT library to access the username data inside it. One popular library for Java and Android is https://java.jsonwebtoken.io, for Angular - https://github.com/auth0/angular2-jwt. Examples to decode (or parse) JWT token has been shown in their documentation.

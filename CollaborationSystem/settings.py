@@ -31,6 +31,13 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
+BADGE_LEVEL_CHOICES = (
+    ("1", "Grey"),
+    ("2", "Red"),
+    ("3", "Yellow"),
+    ("4", "Blue"),
+    ("5", "Green"),
+)
 
 # Application definition
 
@@ -83,12 +90,18 @@ INSTALLED_APPS = [
     'Media',
     'metadata',
     'TaskQueue',
+    'badges',
+    'Categories',
+    'crispy_forms',
+    'taggit',
 ] + get_machina_apps()
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 SITE_ID = 1
 
 ACTSTREAM_SETTINGS = {
-    #'MANAGER': 'Community.managers.MyActionManager',
+    # 'MANAGER': 'Community.managers.MyActionManager',
     'FETCH_RELATIONS': True,
     'USE_PREFETCH': True,
     'USE_JSONFIELD': True,
@@ -96,15 +109,15 @@ ACTSTREAM_SETTINGS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reversion.middleware.RevisionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'eventlog.middleware.Middleware',
@@ -137,15 +150,14 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = (
- 'social_core.backends.open_id.OpenIdAuth',  # for Google authentication
- 'social_core.backends.google.GoogleOpenId',  # for Google authentication
- 'social_core.backends.google.GoogleOAuth2',  # for Google authentication
- 'social_core.backends.github.GithubOAuth2',  # for Github authentication
- 'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
+    'social_core.backends.open_id.OpenIdAuth',  # for Google authentication
+    'social_core.backends.google.GoogleOpenId',  # for Google authentication
+    'social_core.backends.google.GoogleOAuth2',  # for Google authentication
+    'social_core.backends.github.GithubOAuth2',  # for Github authentication
+    'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
 
- 'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
-
 
 
 WSGI_APPLICATION = 'CollaborationSystem.wsgi.application'
@@ -210,41 +222,43 @@ LOGIN_URL = 'login/'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'user_dashboard'
 
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL = True
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET') #Paste Secret Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # Paste Secret Key
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST =config('EMAIL_HOST')
+EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD =config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-DEFAULT_FROM_EMAIL=config('DEFAULT_FROM_EMAIL') 
-
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
 CACHES = {
-  'default': {
-    'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-  },
-  'machina_attachments': {
-    'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-    'LOCATION': '/tmp',
-  }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'machina_attachments': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp',
+    }
 }
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
         'URL': 'http://'+config('ELASTICSEARCH_ADDRESS')+':9200/',
         'INDEX_NAME': 'haystack',
     },
 }
 
+#HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-COMMENTS_APP='django_comments_xtd'
+COMMENTS_APP = 'django_comments_xtd'
 
 COMMENTS_XTD_MAX_THREAD_LEVEL = 1  # default is 0
 
@@ -269,15 +283,17 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
 ROLEPERMISSIONS_MODULE = 'UserRolesPermission.roles'
 
 REST_FRAMEWORK = {
-  'DEFAULT_AUTHENTICATION_CLASSES': (
-      'rest_framework.authentication.TokenAuthentication',
-      'rest_framework.authentication.BasicAuthentication',
-      'rest_framework.authentication.SessionAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
-    
+
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
 }
 
 
@@ -291,13 +307,15 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 DJANGO_NOTIFICATIONS_CONFIG = {
-'PAGINATE_BY': 10,
-'USE_JSONFIELD':True,
-'SOFT_DELETE':True
+    'PAGINATE_BY': 10,
+    'USE_JSONFIELD': True,
+    'SOFT_DELETE': True
 }
-SERVERURL = config('NODESERVERURL')+":"+config('NODESERVERPORT')
+SERVERURL = config('NODE_SERVER_APIURL')+":"+config('NODESERVERPORT')
 APIKEY = config('APIKEY')
 APIURL = SERVERURL+"/api"
+ETHERPAD_URL = config('ETHERPAD_URL')
+
 WIKI_ACCOUNT_HANDLING = True
 WIKI_ACCOUNT_SIGNUP_ALLOWED = True
 
@@ -305,3 +323,7 @@ COLLAB_ROOT = config('COLLAB_ROOT')
 H5P_ROOT = config('H5P_ROOT')
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
+
+TAGGIT_CASE_INSENSITIVE = True
