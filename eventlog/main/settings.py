@@ -3,6 +3,7 @@ from decouple import config
 
 STORE = 'STORE'
 TOSERVER = 'TOSERVER'
+TOKAFKA = 'TOKAFKA'
 
 LOG_TYPE = config('LOG_TYPE')
 

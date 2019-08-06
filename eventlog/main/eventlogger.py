@@ -8,6 +8,8 @@ import requests
 from requests.auth import HTTPProxyAuth
 import os
 from .. import utils
+from confluent_kafka import Producer
+
 class StoreLog:
 
     def __init__(self):
@@ -17,6 +19,8 @@ class StoreLog:
              self.conf = settings.STORE_CONF
         elif self.method == settings.TOSERVER:
             self.conf = settings.SERVER_CONF
+        elif self.method == settings.TOKAFKA:
+            self.producer = Producer({'bootstrap.servers':'localhost:9092'})
 
     def run(self, logVal):
         utils.ilog(self.LOG_CLASS, "Log is: {!s}".format(logVal), mode = "DEBUG")
@@ -24,6 +28,8 @@ class StoreLog:
             self._store_file(logVal)
         elif self.method == settings.TOSERVER:
             self._to_server(logVal)
+        elif self.method == settings.TOKAFKA:
+            self._to_kafka(logVal)
 
     def _to_server(self, logVal):
         if self.conf['protocol'] != None:
@@ -50,6 +56,18 @@ class StoreLog:
                 fp.flush()
         except IOError as io:
             print(io)
+
+    def _to_kafka(self, logVal):
+        self.producer.produce('logs', str(logVal) , callback=delivery_report)
+
+def delivery_report(err, msg):
+    """ Called once for each message produced to indicate delivery result.
+    Triggered by poll() or flush(). """
+    if err is not None:
+        print('Message delivery failed: {}'.format(err))
+    else:
+        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+
 
 
 def create_log(event_name, data):
