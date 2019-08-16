@@ -27,6 +27,7 @@ class CommunityCreateForm(forms.ModelForm):
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
 		self.fields['created_by'].widget.attrs.update({'class': 'form-control'})
 		self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
+		self.fields['category'].required = False
 
 class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
@@ -66,6 +67,7 @@ class CommunityUpdateForm(forms.ModelForm):
 			self.fields['category'] = TreeNodeChoiceField(self.instance.parent.category.get_descendants(include_self=False))
 		else:
 			self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
+		self.fields['category'].required = False
 
 class SubCommunityCreateForm(forms.ModelForm):
 	x = forms.FloatField(widget=forms.HiddenInput())
@@ -85,7 +87,6 @@ class SubCommunityCreateForm(forms.ModelForm):
 		self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
 		self.fields['image'].required = False
 		self.fields['category'].widget.attrs.update({'class': 'form-control'})
-		self.fields['category'].required = False
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tag_line'].required = False
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
@@ -96,6 +97,7 @@ class SubCommunityCreateForm(forms.ModelForm):
 			self.fields['category'] = TreeNodeChoiceField(community.category.get_descendants(include_self=False))
 		else:
 			self.fields['category'].queryset = Category.objects.none()
+		self.fields['category'].required = False
 
 
 
