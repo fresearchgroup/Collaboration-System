@@ -20,7 +20,7 @@ class Articles(models.Model):
 	published_on=models.DateTimeField(null=True)
 	published_by=models.ForeignKey(User,null=True,related_name='article_publisher')
 	views = models.PositiveIntegerField(default=0)
-	state = models.ForeignKey(States, default=get_initial_state, null=True,related_name='articleworkflow')
+	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
 	tags = TaggableManager()
 
 	def get_absolute_url(self):
