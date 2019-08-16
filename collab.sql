@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for osx10.14 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
 --
 -- Host: localhost    Database: collaboration
 -- ------------------------------------------------------
--- Server version	8.0.12
+-- Server version	5.7.27-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,338 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `actstream_action`
---
-
-DROP TABLE IF EXISTS `actstream_action`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `actstream_action` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `actor_object_id` varchar(255) NOT NULL,
-  `verb` varchar(255) NOT NULL,
-  `description` longtext,
-  `target_object_id` varchar(255) DEFAULT NULL,
-  `action_object_object_id` varchar(255) DEFAULT NULL,
-  `timestamp` datetime(6) NOT NULL,
-  `public` tinyint(1) NOT NULL,
-  `data` longtext,
-  `action_object_content_type_id` int(11) DEFAULT NULL,
-  `actor_content_type_id` int(11) NOT NULL,
-  `target_content_type_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `actstream_action_action_object_conten_ee623c15_fk_django_co` (`action_object_content_type_id`),
-  KEY `actstream_action_actor_content_type_i_d5e5ec2a_fk_django_co` (`actor_content_type_id`),
-  KEY `actstream_action_target_content_type__187fa164_fk_django_co` (`target_content_type_id`),
-  KEY `actstream_action_actor_object_id_72ef0cfa` (`actor_object_id`),
-  KEY `actstream_action_verb_83f768b7` (`verb`),
-  KEY `actstream_action_target_object_id_e080d801` (`target_object_id`),
-  KEY `actstream_action_action_object_object_id_6433bdf7` (`action_object_object_id`),
-  KEY `actstream_action_timestamp_a23fe3ae` (`timestamp`),
-  KEY `actstream_action_public_ac0653e9` (`public`),
-  CONSTRAINT `actstream_action_action_object_conten_ee623c15_fk_django_co` FOREIGN KEY (`action_object_content_type_id`) REFERENCES `django_content_type` (`id`),
-  CONSTRAINT `actstream_action_actor_content_type_i_d5e5ec2a_fk_django_co` FOREIGN KEY (`actor_content_type_id`) REFERENCES `django_content_type` (`id`),
-  CONSTRAINT `actstream_action_target_content_type__187fa164_fk_django_co` FOREIGN KEY (`target_content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `actstream_action`
---
-
-LOCK TABLES `actstream_action` WRITE;
-/*!40000 ALTER TABLE `actstream_action` DISABLE KEYS */;
-/*!40000 ALTER TABLE `actstream_action` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `actstream_follow`
---
-
-DROP TABLE IF EXISTS `actstream_follow`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `actstream_follow` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `object_id` varchar(255) NOT NULL,
-  `actor_only` tinyint(1) NOT NULL,
-  `started` datetime(6) NOT NULL,
-  `content_type_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `actstream_follow_user_id_content_type_id_object_id_63ca7c27_uniq` (`user_id`,`content_type_id`,`object_id`),
-  KEY `actstream_follow_content_type_id_ba287eb9_fk_django_co` (`content_type_id`),
-  KEY `actstream_follow_object_id_d790e00d` (`object_id`),
-  KEY `actstream_follow_started_254c63bd` (`started`),
-  CONSTRAINT `actstream_follow_content_type_id_ba287eb9_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
-  CONSTRAINT `actstream_follow_user_id_e9d4e1ff_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `actstream_follow`
---
-
-LOCK TABLES `actstream_follow` WRITE;
-/*!40000 ALTER TABLE `actstream_follow` DISABLE KEYS */;
-/*!40000 ALTER TABLE `actstream_follow` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_group`
---
-
-DROP TABLE IF EXISTS `auth_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_group`
---
-
-LOCK TABLES `auth_group` WRITE;
-/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
-INSERT INTO `auth_group` VALUES (1,'author'),(3,'community_admin'),(4,'group_admin'),(2,'publisher');
-/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_group_permissions`
---
-
-DROP TABLE IF EXISTS `auth_group_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_group_permissions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) NOT NULL,
-  `permission_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
-  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
-  CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
-  CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_group_permissions`
---
-
-LOCK TABLES `auth_group_permissions` WRITE;
-/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_permission`
---
-
-DROP TABLE IF EXISTS `auth_permission`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_permission` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `content_type_id` int(11) NOT NULL,
-  `codename` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
-  CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_permission`
---
-
-LOCK TABLES `auth_permission` WRITE;
-/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can add permission',2,'add_permission'),(5,'Can change permission',2,'change_permission'),(6,'Can delete permission',2,'delete_permission'),(7,'Can add group',3,'add_group'),(8,'Can change group',3,'change_group'),(9,'Can delete group',3,'delete_group'),(10,'Can add user',4,'add_user'),(11,'Can change user',4,'change_user'),(12,'Can delete user',4,'delete_user'),(13,'Can add content type',5,'add_contenttype'),(14,'Can change content type',5,'change_contenttype'),(15,'Can delete content type',5,'delete_contenttype'),(16,'Can add session',6,'add_session'),(17,'Can change session',6,'change_session'),(18,'Can delete session',6,'delete_session'),(19,'Can add site',7,'add_site'),(20,'Can change site',7,'change_site'),(21,'Can delete site',7,'delete_site'),(22,'Can add comment',8,'add_xtdcomment'),(23,'Can change comment',8,'change_xtdcomment'),(24,'Can delete comment',8,'delete_xtdcomment'),(25,'Can moderate comments',8,'can_moderate'),(26,'Can add black listed domain',9,'add_blacklisteddomain'),(27,'Can change black listed domain',9,'change_blacklisteddomain'),(28,'Can delete black listed domain',9,'delete_blacklisteddomain'),(29,'Can add comment',10,'add_comment'),(30,'Can change comment',10,'change_comment'),(31,'Can delete comment',10,'delete_comment'),(32,'Can moderate comments',10,'can_moderate'),(33,'Can add comment flag',11,'add_commentflag'),(34,'Can change comment flag',11,'change_commentflag'),(35,'Can delete comment flag',11,'delete_commentflag'),(36,'Can add community',12,'add_community'),(37,'Can change community',12,'change_community'),(38,'Can delete community',12,'delete_community'),(39,'Can add community articles',13,'add_communityarticles'),(40,'Can change community articles',13,'change_communityarticles'),(41,'Can delete community articles',13,'delete_communityarticles'),(42,'Can add community courses',14,'add_communitycourses'),(43,'Can change community courses',14,'change_communitycourses'),(44,'Can delete community courses',14,'delete_communitycourses'),(45,'Can add community groups',15,'add_communitygroups'),(46,'Can change community groups',15,'change_communitygroups'),(47,'Can delete community groups',15,'delete_communitygroups'),(48,'Can add community media',16,'add_communitymedia'),(49,'Can change community media',16,'change_communitymedia'),(50,'Can delete community media',16,'delete_communitymedia'),(51,'Can add community membership',17,'add_communitymembership'),(52,'Can change community membership',17,'change_communitymembership'),(53,'Can delete community membership',17,'delete_communitymembership'),(54,'Can add request community creation',18,'add_requestcommunitycreation'),(55,'Can change request community creation',18,'change_requestcommunitycreation'),(56,'Can delete request community creation',18,'delete_requestcommunitycreation'),(57,'Can add favourite',19,'add_favourite'),(58,'Can change favourite',19,'change_favourite'),(59,'Can delete favourite',19,'delete_favourite'),(60,'Can add profile image',20,'add_profileimage'),(61,'Can change profile image',20,'change_profileimage'),(62,'Can delete profile image',20,'delete_profileimage'),(63,'Can add articles',21,'add_articles'),(64,'Can change articles',21,'change_articles'),(65,'Can delete articles',21,'delete_articles'),(66,'Can add article view logs',22,'add_articleviewlogs'),(67,'Can change article view logs',22,'change_articleviewlogs'),(68,'Can delete article view logs',22,'delete_articleviewlogs'),(69,'Can add group',23,'add_group'),(70,'Can change group',23,'change_group'),(71,'Can delete group',23,'delete_group'),(72,'Can add group articles',24,'add_grouparticles'),(73,'Can change group articles',24,'change_grouparticles'),(74,'Can delete group articles',24,'delete_grouparticles'),(75,'Can add group invitations',25,'add_groupinvitations'),(76,'Can change group invitations',25,'change_groupinvitations'),(77,'Can delete group invitations',25,'delete_groupinvitations'),(78,'Can add group media',26,'add_groupmedia'),(79,'Can change group media',26,'change_groupmedia'),(80,'Can delete group media',26,'delete_groupmedia'),(81,'Can add group membership',27,'add_groupmembership'),(82,'Can change group membership',27,'change_groupmembership'),(83,'Can delete group membership',27,'delete_groupmembership'),(84,'Can add revision',28,'add_revision'),(85,'Can change revision',28,'change_revision'),(86,'Can delete revision',28,'delete_revision'),(87,'Can add version',29,'add_version'),(88,'Can change version',29,'change_version'),(89,'Can delete version',29,'delete_version'),(90,'Can add Token',30,'add_token'),(91,'Can change Token',30,'change_token'),(92,'Can delete Token',30,'delete_token'),(93,'Can add states',31,'add_states'),(94,'Can change states',31,'change_states'),(95,'Can delete states',31,'delete_states'),(96,'Can add transitions',32,'add_transitions'),(97,'Can change transitions',32,'change_transitions'),(98,'Can delete transitions',32,'delete_transitions'),(99,'Can add association',33,'add_association'),(100,'Can change association',33,'change_association'),(101,'Can delete association',33,'delete_association'),(102,'Can add code',34,'add_code'),(103,'Can change code',34,'change_code'),(104,'Can delete code',34,'delete_code'),(105,'Can add nonce',35,'add_nonce'),(106,'Can change nonce',35,'change_nonce'),(107,'Can delete nonce',35,'delete_nonce'),(108,'Can add user social auth',36,'add_usersocialauth'),(109,'Can change user social auth',36,'change_usersocialauth'),(110,'Can delete user social auth',36,'delete_usersocialauth'),(111,'Can add partial',37,'add_partial'),(112,'Can change partial',37,'change_partial'),(113,'Can delete partial',37,'delete_partial'),(114,'Can add feedback',38,'add_feedback'),(115,'Can change feedback',38,'change_feedback'),(116,'Can delete feedback',38,'delete_feedback'),(117,'Can add faq',39,'add_faq'),(118,'Can change faq',39,'change_faq'),(119,'Can delete faq',39,'delete_faq'),(120,'Can add faq category',40,'add_faqcategory'),(121,'Can change faq category',40,'change_faqcategory'),(122,'Can delete faq category',40,'delete_faqcategory'),(123,'Can add course',41,'add_course'),(124,'Can change course',41,'change_course'),(125,'Can delete course',41,'delete_course'),(126,'Can add links',42,'add_links'),(127,'Can change links',42,'change_links'),(128,'Can delete links',42,'delete_links'),(129,'Can add topic article',43,'add_topicarticle'),(130,'Can change topic article',43,'change_topicarticle'),(131,'Can delete topic article',43,'delete_topicarticle'),(132,'Can add topics',44,'add_topics'),(133,'Can change topics',44,'change_topics'),(134,'Can delete topics',44,'delete_topics'),(135,'Can add videos',45,'add_videos'),(136,'Can change videos',45,'change_videos'),(137,'Can delete videos',45,'delete_videos'),(138,'Can add notification',46,'add_notification'),(139,'Can change notification',46,'change_notification'),(140,'Can delete notification',46,'delete_notification'),(141,'Can add action',47,'add_action'),(142,'Can change action',47,'change_action'),(143,'Can delete action',47,'delete_action'),(144,'Can add follow',48,'add_follow'),(145,'Can change follow',48,'change_follow'),(146,'Can delete follow',48,'delete_follow'),(147,'Can add type',49,'add_notificationtype'),(148,'Can change type',49,'change_notificationtype'),(149,'Can delete type',49,'delete_notificationtype'),(150,'Can add settings',50,'add_settings'),(151,'Can change settings',50,'change_settings'),(152,'Can delete settings',50,'delete_settings'),(153,'Can add notification',51,'add_notification'),(154,'Can change notification',51,'change_notification'),(155,'Can delete notification',51,'delete_notification'),(156,'Can add subscription',52,'add_subscription'),(157,'Can change subscription',52,'change_subscription'),(158,'Can delete subscription',52,'delete_subscription'),(159,'Can add kv store',53,'add_kvstore'),(160,'Can change kv store',53,'change_kvstore'),(161,'Can delete kv store',53,'delete_kvstore'),(162,'Can add article',54,'add_article'),(163,'Can change article',54,'change_article'),(164,'Can delete article',54,'delete_article'),(165,'Can edit all articles and lock/unlock/restore',54,'moderate'),(166,'Can change ownership of any article',54,'assign'),(167,'Can assign permissions to other users',54,'grant'),(168,'Can add Article for object',55,'add_articleforobject'),(169,'Can change Article for object',55,'change_articleforobject'),(170,'Can delete Article for object',55,'delete_articleforobject'),(171,'Can add article plugin',56,'add_articleplugin'),(172,'Can change article plugin',56,'change_articleplugin'),(173,'Can delete article plugin',56,'delete_articleplugin'),(174,'Can add article revision',57,'add_articlerevision'),(175,'Can change article revision',57,'change_articlerevision'),(176,'Can delete article revision',57,'delete_articlerevision'),(177,'Can add reusable plugin',58,'add_reusableplugin'),(178,'Can change reusable plugin',58,'change_reusableplugin'),(179,'Can delete reusable plugin',58,'delete_reusableplugin'),(180,'Can add revision plugin',59,'add_revisionplugin'),(181,'Can change revision plugin',59,'change_revisionplugin'),(182,'Can delete revision plugin',59,'delete_revisionplugin'),(183,'Can add revision plugin revision',60,'add_revisionpluginrevision'),(184,'Can change revision plugin revision',60,'change_revisionpluginrevision'),(185,'Can delete revision plugin revision',60,'delete_revisionpluginrevision'),(186,'Can add simple plugin',61,'add_simpleplugin'),(187,'Can change simple plugin',61,'change_simpleplugin'),(188,'Can delete simple plugin',61,'delete_simpleplugin'),(189,'Can add URL path',62,'add_urlpath'),(190,'Can change URL path',62,'change_urlpath'),(191,'Can delete URL path',62,'delete_urlpath'),(192,'Can add attachment',63,'add_attachment'),(193,'Can change attachment',63,'change_attachment'),(194,'Can delete attachment',63,'delete_attachment'),(195,'Can add attachment revision',64,'add_attachmentrevision'),(196,'Can change attachment revision',64,'change_attachmentrevision'),(197,'Can delete attachment revision',64,'delete_attachmentrevision'),(198,'Can add article subscription',65,'add_articlesubscription'),(199,'Can change article subscription',65,'change_articlesubscription'),(200,'Can delete article subscription',65,'delete_articlesubscription'),(201,'Can add image',66,'add_image'),(202,'Can change image',66,'change_image'),(203,'Can delete image',66,'delete_image'),(204,'Can add image revision',67,'add_imagerevision'),(205,'Can change image revision',67,'change_imagerevision'),(206,'Can delete image revision',67,'delete_imagerevision'),(207,'Can add article flag logs',68,'add_articleflaglogs'),(208,'Can change article flag logs',68,'change_articleflaglogs'),(209,'Can delete article flag logs',68,'delete_articleflaglogs'),(210,'Can add article score log',69,'add_articlescorelog'),(211,'Can change article score log',69,'change_articlescorelog'),(212,'Can delete article score log',69,'delete_articlescorelog'),(213,'Can add article user score logs',70,'add_articleuserscorelogs'),(214,'Can change article user score logs',70,'change_articleuserscorelogs'),(215,'Can delete article user score logs',70,'delete_articleuserscorelogs'),(216,'Can add community reputaion',71,'add_communityreputaion'),(217,'Can change community reputaion',71,'change_communityreputaion'),(218,'Can delete community reputaion',71,'delete_communityreputaion'),(219,'Can add flag reason',72,'add_flagreason'),(220,'Can change flag reason',72,'change_flagreason'),(221,'Can delete flag reason',72,'delete_flagreason'),(222,'Can add media flag logs',73,'add_mediaflaglogs'),(223,'Can change media flag logs',73,'change_mediaflaglogs'),(224,'Can delete media flag logs',73,'delete_mediaflaglogs'),(225,'Can add media score log',74,'add_mediascorelog'),(226,'Can change media score log',74,'change_mediascorelog'),(227,'Can delete media score log',74,'delete_mediascorelog'),(228,'Can add media user score logs',75,'add_mediauserscorelogs'),(229,'Can change media user score logs',75,'change_mediauserscorelogs'),(230,'Can delete media user score logs',75,'delete_mediauserscorelogs'),(231,'Can add resource score',76,'add_resourcescore'),(232,'Can change resource score',76,'change_resourcescore'),(233,'Can delete resource score',76,'delete_resourcescore'),(234,'Can add user score',77,'add_userscore'),(235,'Can change user score',77,'change_userscore'),(236,'Can delete user score',77,'delete_userscore'),(237,'Can add ether article',78,'add_etherarticle'),(238,'Can change ether article',78,'change_etherarticle'),(239,'Can delete ether article',78,'delete_etherarticle'),(240,'Can add ether community',79,'add_ethercommunity'),(241,'Can change ether community',79,'change_ethercommunity'),(242,'Can delete ether community',79,'delete_ethercommunity'),(243,'Can add ether group',80,'add_ethergroup'),(244,'Can change ether group',80,'change_ethergroup'),(245,'Can delete ether group',80,'delete_ethergroup'),(246,'Can add ether user',81,'add_etheruser'),(247,'Can change ether user',81,'change_etheruser'),(248,'Can delete ether user',81,'delete_etheruser'),(249,'Can add media',82,'add_media'),(250,'Can change media',82,'change_media'),(251,'Can delete media',82,'delete_media'),(252,'Can add metadata',83,'add_metadata'),(253,'Can change metadata',83,'change_metadata'),(254,'Can delete metadata',83,'delete_metadata'),(255,'Can add task',84,'add_task'),(256,'Can change task',84,'change_task'),(257,'Can delete task',84,'delete_task'),(258,'Can add badge',85,'add_badge'),(259,'Can change badge',85,'change_badge'),(260,'Can delete badge',85,'delete_badge'),(261,'Can add badge to user',86,'add_badgetouser'),(262,'Can change badge to user',86,'change_badgetouser'),(263,'Can delete badge to user',86,'delete_badgetouser'),(264,'Can add category',87,'add_category'),(265,'Can change category',87,'change_category'),(266,'Can delete category',87,'delete_category'),(267,'Can add Tag',88,'add_tag'),(268,'Can change Tag',88,'change_tag'),(269,'Can delete Tag',88,'delete_tag'),(270,'Can add Tagged Item',89,'add_taggeditem'),(271,'Can change Tagged Item',89,'change_taggeditem'),(272,'Can delete Tagged Item',89,'delete_taggeditem'),(273,'Can add Forum',90,'add_forum'),(274,'Can change Forum',90,'change_forum'),(275,'Can delete Forum',90,'delete_forum'),(276,'Can add Post',91,'add_post'),(277,'Can change Post',91,'change_post'),(278,'Can delete Post',91,'delete_post'),(279,'Can add Topic',92,'add_topic'),(280,'Can change Topic',92,'change_topic'),(281,'Can delete Topic',92,'delete_topic'),(282,'Can add Attachment',93,'add_attachment'),(283,'Can change Attachment',93,'change_attachment'),(284,'Can delete Attachment',93,'delete_attachment'),(285,'Can add Topic poll',94,'add_topicpoll'),(286,'Can change Topic poll',94,'change_topicpoll'),(287,'Can delete Topic poll',94,'delete_topicpoll'),(288,'Can add Topic poll option',95,'add_topicpolloption'),(289,'Can change Topic poll option',95,'change_topicpolloption'),(290,'Can delete Topic poll option',95,'delete_topicpolloption'),(291,'Can add Topic poll vote',96,'add_topicpollvote'),(292,'Can change Topic poll vote',96,'change_topicpollvote'),(293,'Can delete Topic poll vote',96,'delete_topicpollvote'),(294,'Can add Forum track',97,'add_forumreadtrack'),(295,'Can change Forum track',97,'change_forumreadtrack'),(296,'Can delete Forum track',97,'delete_forumreadtrack'),(297,'Can add Topic track',98,'add_topicreadtrack'),(298,'Can change Topic track',98,'change_topicreadtrack'),(299,'Can delete Topic track',98,'delete_topicreadtrack'),(300,'Can add Forum profile',99,'add_forumprofile'),(301,'Can change Forum profile',99,'change_forumprofile'),(302,'Can delete Forum profile',99,'delete_forumprofile'),(303,'Can add Forum permission',100,'add_forumpermission'),(304,'Can change Forum permission',100,'change_forumpermission'),(305,'Can delete Forum permission',100,'delete_forumpermission'),(306,'Can add Group forum permission',101,'add_groupforumpermission'),(307,'Can change Group forum permission',101,'change_groupforumpermission'),(308,'Can delete Group forum permission',101,'delete_groupforumpermission'),(309,'Can add User forum permission',102,'add_userforumpermission'),(310,'Can change User forum permission',102,'change_userforumpermission'),(311,'Can delete User forum permission',102,'delete_userforumpermission'),(312,'Can add badge score',103,'add_badgescore'),(313,'Can change badge score',103,'change_badgescore'),(314,'Can delete badge score',103,'delete_badgescore');
-/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_user`
---
-
-DROP TABLE IF EXISTS `auth_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `password` varchar(128) NOT NULL,
-  `last_login` datetime(6) DEFAULT NULL,
-  `is_superuser` tinyint(1) NOT NULL,
-  `username` varchar(150) NOT NULL,
-  `first_name` varchar(30) NOT NULL,
-  `last_name` varchar(30) NOT NULL,
-  `email` varchar(254) NOT NULL,
-  `is_staff` tinyint(1) NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
-  `date_joined` datetime(6) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_user`
---
-
-LOCK TABLES `auth_user` WRITE;
-/*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$r8CujTIffhma$jnmVmCO1tuc18NIMsZrwfrdyNnxCNmIAXB+9LdVkPsE=','2019-03-26 14:16:28.754819',1,'admin','','','admin@mail.com',1,1,'2019-02-26 07:47:48.227174');
-/*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_user_groups`
---
-
-DROP TABLE IF EXISTS `auth_user_groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_user_groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `group_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
-  KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
-  CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
-  CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_user_groups`
---
-
-LOCK TABLES `auth_user_groups` WRITE;
-/*!40000 ALTER TABLE `auth_user_groups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `auth_user_groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_user_user_permissions`
---
-
-DROP TABLE IF EXISTS `auth_user_user_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth_user_user_permissions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `permission_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
-  KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
-  CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
-  CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `auth_user_user_permissions`
---
-
-LOCK TABLES `auth_user_user_permissions` WRITE;
-/*!40000 ALTER TABLE `auth_user_user_permissions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `auth_user_user_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `authtoken_token`
---
-
-DROP TABLE IF EXISTS `authtoken_token`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `authtoken_token` (
-  `key` varchar(40) NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`key`),
-  UNIQUE KEY `user_id` (`user_id`),
-  CONSTRAINT `authtoken_token_user_id_35299eff_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `authtoken_token`
---
-
-LOCK TABLES `authtoken_token` WRITE;
-/*!40000 ALTER TABLE `authtoken_token` DISABLE KEYS */;
-/*!40000 ALTER TABLE `authtoken_token` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `badges_badge`
---
-
-DROP TABLE IF EXISTS `badges_badge`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `badges_badge` (
-  `id` varchar(255) NOT NULL,
-  `level` varchar(1) NOT NULL,
-  `icon` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `badges_badge`
---
-
-LOCK TABLES `badges_badge` WRITE;
-/*!40000 ALTER TABLE `badges_badge` DISABLE KEYS */;
-INSERT INTO `badges_badge` VALUES ('ac-level-1','1',''),('ac-level-2','2',''),('ac-level-3','3',''),('ac-level-4','4',''),('ac-level-5','5',''),('ap-level-1','1',''),('ap-level-2','2',''),('ap-level-3','3',''),('ap-level-4','4',''),('ap-level-5','5',''),('pa-level-1','1',''),('pa-level-2','2',''),('pa-level-3','3',''),('pa-level-4','4',''),('pa-level-5','5','');
-/*!40000 ALTER TABLE `badges_badge` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `badges_badgetouser`
---
-
-DROP TABLE IF EXISTS `badges_badgetouser`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `badges_badgetouser` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `created` datetime(6) NOT NULL,
-  `badge_id` varchar(255) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `community_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `badges_badgetouser_badge_id_0e3cd6bb_fk_badges_badge_id` (`badge_id`),
-  KEY `badges_badgetouser_user_id_7928b431_fk_auth_user_id` (`user_id`),
-  KEY `badges_badgetouser_community_id_01e9a7f7_fk_Community` (`community_id`),
-  CONSTRAINT `badges_badgetouser_badge_id_0e3cd6bb_fk_badges_badge_id` FOREIGN KEY (`badge_id`) REFERENCES `badges_badge` (`id`),
-  CONSTRAINT `badges_badgetouser_community_id_01e9a7f7_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
-  CONSTRAINT `badges_badgetouser_user_id_7928b431_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `badges_badgetouser`
---
-
-LOCK TABLES `badges_badgetouser` WRITE;
-/*!40000 ALTER TABLE `badges_badgetouser` DISABLE KEYS */;
-/*!40000 ALTER TABLE `badges_badgetouser` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BasicArticle_articles`
 --
 
@@ -357,14 +25,14 @@ DROP TABLE IF EXISTS `BasicArticle_articles`;
 CREATE TABLE `BasicArticle_articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
-  `body` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `body` text CHARACTER SET utf8,
   `image` varchar(100) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
   `published_on` datetime(6) DEFAULT NULL,
   `views` int(10) unsigned NOT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `published_by_id` int(11) DEFAULT NULL,
-  `state_id` int(11),
+  `state_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `BasicArticle_articles_created_by_id_8b76d84d_fk_auth_user_id` (`created_by_id`),
   KEY `BasicArticle_articles_published_by_id_81e5e785_fk_auth_user_id` (`published_by_id`),
@@ -445,7 +113,6 @@ CREATE TABLE `Categories_category` (
 
 LOCK TABLES `Categories_category` WRITE;
 /*!40000 ALTER TABLE `Categories_category` DISABLE KEYS */;
-INSERT INTO `Categories_category` VALUES (1,'CS','category/bf1d0420-ae80-4e53-b4bc-9a6efabd1652.PNG','2019-03-26 14:17:02.349656',1,2,1,0,NULL);
 /*!40000 ALTER TABLE `Categories_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,7 +160,6 @@ CREATE TABLE `Community_community` (
 
 LOCK TABLES `Community_community` WRITE;
 /*!40000 ALTER TABLE `Community_community` DISABLE KEYS */;
-INSERT INTO `Community_community` VALUES (3,'q','<p>q</p>','',1,'q','2019-03-26 14:52:57.276683','q-4',4,1,2,1,0,1,NULL,'');
 /*!40000 ALTER TABLE `Community_community` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -649,7 +315,6 @@ CREATE TABLE `Community_communitymembership` (
 
 LOCK TABLES `Community_communitymembership` WRITE;
 /*!40000 ALTER TABLE `Community_communitymembership` DISABLE KEYS */;
-INSERT INTO `Community_communitymembership` VALUES (1,3,3,1);
 /*!40000 ALTER TABLE `Community_communitymembership` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -840,6 +505,950 @@ LOCK TABLES `Course_videos` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Group_group`
+--
+
+DROP TABLE IF EXISTS `Group_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Group_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `desc` longtext NOT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `visibility` tinyint(1) NOT NULL,
+  `created_at` datetime(6) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Group_group_created_by_id_b1ee0c6d_fk_auth_user_id` (`created_by_id`),
+  CONSTRAINT `Group_group_created_by_id_b1ee0c6d_fk_auth_user_id` FOREIGN KEY (`created_by_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Group_group`
+--
+
+LOCK TABLES `Group_group` WRITE;
+/*!40000 ALTER TABLE `Group_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Group_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Group_grouparticles`
+--
+
+DROP TABLE IF EXISTS `Group_grouparticles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Group_grouparticles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Group_grouparticles_article_id_eac38398_fk_BasicArti` (`article_id`),
+  KEY `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` (`group_id`),
+  KEY `Group_grouparticles_user_id_12983c5c_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Group_grouparticles_article_id_eac38398_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`),
+  CONSTRAINT `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  CONSTRAINT `Group_grouparticles_user_id_12983c5c_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Group_grouparticles`
+--
+
+LOCK TABLES `Group_grouparticles` WRITE;
+/*!40000 ALTER TABLE `Group_grouparticles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Group_grouparticles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Group_groupinvitations`
+--
+
+DROP TABLE IF EXISTS `Group_groupinvitations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Group_groupinvitations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invitedat` datetime(6) DEFAULT NULL,
+  `status` varchar(100) DEFAULT NULL,
+  `group_id` int(11) NOT NULL,
+  `invitedby_id` int(11) NOT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` (`group_id`),
+  KEY `Group_groupinvitations_invitedby_id_f7a8ea5c_fk_auth_user_id` (`invitedby_id`),
+  KEY `Group_groupinvitations_role_id_20c49c7f_fk_auth_group_id` (`role_id`),
+  KEY `Group_groupinvitations_user_id_a4a046d3_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  CONSTRAINT `Group_groupinvitations_invitedby_id_f7a8ea5c_fk_auth_user_id` FOREIGN KEY (`invitedby_id`) REFERENCES `auth_user` (`id`),
+  CONSTRAINT `Group_groupinvitations_role_id_20c49c7f_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `Group_groupinvitations_user_id_a4a046d3_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Group_groupinvitations`
+--
+
+LOCK TABLES `Group_groupinvitations` WRITE;
+/*!40000 ALTER TABLE `Group_groupinvitations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Group_groupinvitations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Group_groupmedia`
+--
+
+DROP TABLE IF EXISTS `Group_groupmedia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Group_groupmedia` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `media_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` (`group_id`),
+  KEY `Group_groupmedia_media_id_bb652569_fk_Media_media_id` (`media_id`),
+  KEY `Group_groupmedia_user_id_e6917c04_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  CONSTRAINT `Group_groupmedia_media_id_bb652569_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `media_media` (`id`),
+  CONSTRAINT `Group_groupmedia_user_id_e6917c04_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Group_groupmedia`
+--
+
+LOCK TABLES `Group_groupmedia` WRITE;
+/*!40000 ALTER TABLE `Group_groupmedia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Group_groupmedia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Group_groupmembership`
+--
+
+DROP TABLE IF EXISTS `Group_groupmembership`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Group_groupmembership` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` (`group_id`),
+  KEY `Group_groupmembership_role_id_bb865ffb_fk_auth_group_id` (`role_id`),
+  KEY `Group_groupmembership_user_id_e4f5757f_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
+  CONSTRAINT `Group_groupmembership_role_id_bb865ffb_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `Group_groupmembership_user_id_e4f5757f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Group_groupmembership`
+--
+
+LOCK TABLES `Group_groupmembership` WRITE;
+/*!40000 ALTER TABLE `Group_groupmembership` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Group_groupmembership` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Media_media`
+--
+
+DROP TABLE IF EXISTS `Media_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Media_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mediatype` varchar(10) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `mediafile` varchar(100) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `published_on` datetime(6) DEFAULT NULL,
+  `views` int(10) unsigned NOT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `published_by_id` int(11) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `medialink` varchar(300) DEFAULT NULL,
+  `metadata_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Media_media_created_by_id_ae93f7fb_fk_auth_user_id` (`created_by_id`),
+  KEY `Media_media_published_by_id_83121da5_fk_auth_user_id` (`published_by_id`),
+  KEY `Media_media_state_id_46785feb_fk_workflow_states_id` (`state_id`),
+  KEY `Media_media_metadata_id_c939b240_fk_metadata_metadata_id` (`metadata_id`),
+  CONSTRAINT `Media_media_created_by_id_ae93f7fb_fk_auth_user_id` FOREIGN KEY (`created_by_id`) REFERENCES `auth_user` (`id`),
+  CONSTRAINT `Media_media_metadata_id_c939b240_fk_metadata_metadata_id` FOREIGN KEY (`metadata_id`) REFERENCES `metadata_metadata` (`id`),
+  CONSTRAINT `Media_media_published_by_id_83121da5_fk_auth_user_id` FOREIGN KEY (`published_by_id`) REFERENCES `auth_user` (`id`),
+  CONSTRAINT `Media_media_state_id_46785feb_fk_workflow_states_id` FOREIGN KEY (`state_id`) REFERENCES `workflow_states` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Media_media`
+--
+
+LOCK TABLES `Media_media` WRITE;
+/*!40000 ALTER TABLE `Media_media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Media_media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_articleflaglogs`
+--
+
+DROP TABLE IF EXISTS `Reputation_articleflaglogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_articleflaglogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reason_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` (`reason_id`),
+  KEY `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` (`resource_id`),
+  KEY `Reputation_articleflaglogs_user_id_4bce74ef_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
+  CONSTRAINT `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
+  CONSTRAINT `Reputation_articleflaglogs_user_id_4bce74ef_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_articleflaglogs`
+--
+
+LOCK TABLES `Reputation_articleflaglogs` WRITE;
+/*!40000 ALTER TABLE `Reputation_articleflaglogs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_articleflaglogs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_articlescorelog`
+--
+
+DROP TABLE IF EXISTS `Reputation_articlescorelog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_articlescorelog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upvote` int(11) DEFAULT NULL,
+  `downvote` int(11) DEFAULT NULL,
+  `reported` int(11) DEFAULT NULL,
+  `publish` tinyint(1) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `resource_id` (`resource_id`),
+  CONSTRAINT `Reputation_articlesc_resource_id_ddac6fc9_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_articlescorelog`
+--
+
+LOCK TABLES `Reputation_articlescorelog` WRITE;
+/*!40000 ALTER TABLE `Reputation_articlescorelog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_articlescorelog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_articleuserscorelogs`
+--
+
+DROP TABLE IF EXISTS `Reputation_articleuserscorelogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_articleuserscorelogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upvoted` tinyint(1) NOT NULL,
+  `downvoted` tinyint(1) NOT NULL,
+  `reported` tinyint(1) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` (`resource_id`),
+  KEY `Reputation_articleuserscorelogs_user_id_77095608_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
+  CONSTRAINT `Reputation_articleuserscorelogs_user_id_77095608_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_articleuserscorelogs`
+--
+
+LOCK TABLES `Reputation_articleuserscorelogs` WRITE;
+/*!40000 ALTER TABLE `Reputation_articleuserscorelogs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_articleuserscorelogs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_badgescore`
+--
+
+DROP TABLE IF EXISTS `Reputation_badgescore`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_badgescore` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `articles_contributed_level_1` int(11) NOT NULL,
+  `articles_contributed_level_2` int(11) NOT NULL,
+  `articles_contributed_level_3` int(11) NOT NULL,
+  `articles_contributed_level_4` int(11) NOT NULL,
+  `articles_contributed_level_5` int(11) NOT NULL,
+  `my_articles_published_level_1` int(11) NOT NULL,
+  `my_articles_published_level_2` int(11) NOT NULL,
+  `my_articles_published_level_3` int(11) NOT NULL,
+  `my_articles_published_level_4` int(11) NOT NULL,
+  `my_articles_published_level_5` int(11) NOT NULL,
+  `articles_revised_by_me_level_1` int(11) NOT NULL,
+  `articles_revised_by_me_level_2` int(11) NOT NULL,
+  `articles_revised_by_me_level_3` int(11) NOT NULL,
+  `articles_revised_by_me_level_4` int(11) NOT NULL,
+  `articles_revised_by_me_level_5` int(11) NOT NULL,
+  `articles_published_by_me_level_1` int(11) NOT NULL,
+  `articles_published_by_me_level_2` int(11) NOT NULL,
+  `articles_published_by_me_level_3` int(11) NOT NULL,
+  `articles_published_by_me_level_4` int(11) NOT NULL,
+  `articles_published_by_me_level_5` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_badgescore`
+--
+
+LOCK TABLES `Reputation_badgescore` WRITE;
+/*!40000 ALTER TABLE `Reputation_badgescore` DISABLE KEYS */;
+INSERT INTO `Reputation_badgescore` VALUES (1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5);
+/*!40000 ALTER TABLE `Reputation_badgescore` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_communityreputaion`
+--
+
+DROP TABLE IF EXISTS `Reputation_communityreputaion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_communityreputaion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upvote_count` int(11) NOT NULL,
+  `downvote_count` int(11) NOT NULL,
+  `published_count` int(11) NOT NULL,
+  `community_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `published_by_me_count` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Reputation_community_community_id_9fe0df3b_fk_Community` (`community_id`),
+  KEY `Reputation_communityreputaion_user_id_fce03592_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Reputation_community_community_id_9fe0df3b_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  CONSTRAINT `Reputation_communityreputaion_user_id_fce03592_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_communityreputaion`
+--
+
+LOCK TABLES `Reputation_communityreputaion` WRITE;
+/*!40000 ALTER TABLE `Reputation_communityreputaion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_communityreputaion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_flagreason`
+--
+
+DROP TABLE IF EXISTS `Reputation_flagreason`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_flagreason` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reason` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_flagreason`
+--
+
+LOCK TABLES `Reputation_flagreason` WRITE;
+/*!40000 ALTER TABLE `Reputation_flagreason` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_flagreason` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_mediaflaglogs`
+--
+
+DROP TABLE IF EXISTS `Reputation_mediaflaglogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_mediaflaglogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reason_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` (`reason_id`),
+  KEY `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` (`resource_id`),
+  KEY `Reputation_mediaflaglogs_user_id_6d095f7f_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
+  CONSTRAINT `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
+  CONSTRAINT `Reputation_mediaflaglogs_user_id_6d095f7f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_mediaflaglogs`
+--
+
+LOCK TABLES `Reputation_mediaflaglogs` WRITE;
+/*!40000 ALTER TABLE `Reputation_mediaflaglogs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_mediaflaglogs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_mediascorelog`
+--
+
+DROP TABLE IF EXISTS `Reputation_mediascorelog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_mediascorelog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upvote` int(11) DEFAULT NULL,
+  `downvote` int(11) DEFAULT NULL,
+  `reported` int(11) DEFAULT NULL,
+  `publish` tinyint(1) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `resource_id` (`resource_id`),
+  CONSTRAINT `Reputation_mediascorelog_resource_id_c3f674e3_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_mediascorelog`
+--
+
+LOCK TABLES `Reputation_mediascorelog` WRITE;
+/*!40000 ALTER TABLE `Reputation_mediascorelog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_mediascorelog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_mediauserscorelogs`
+--
+
+DROP TABLE IF EXISTS `Reputation_mediauserscorelogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_mediauserscorelogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upvoted` tinyint(1) NOT NULL,
+  `downvoted` tinyint(1) NOT NULL,
+  `reported` tinyint(1) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` (`resource_id`),
+  KEY `Reputation_mediauserscorelogs_user_id_ef68208e_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
+  CONSTRAINT `Reputation_mediauserscorelogs_user_id_ef68208e_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_mediauserscorelogs`
+--
+
+LOCK TABLES `Reputation_mediauserscorelogs` WRITE;
+/*!40000 ALTER TABLE `Reputation_mediauserscorelogs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_mediauserscorelogs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_resourcescore`
+--
+
+DROP TABLE IF EXISTS `Reputation_resourcescore`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_resourcescore` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `can_vote_unpublished` tinyint(1) NOT NULL,
+  `upvote_value` int(11) DEFAULT NULL,
+  `downvote_value` int(11) DEFAULT NULL,
+  `can_report` tinyint(1) NOT NULL,
+  `publish_value` int(11) DEFAULT NULL,
+  `resource_type` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_resourcescore`
+--
+
+LOCK TABLES `Reputation_resourcescore` WRITE;
+/*!40000 ALTER TABLE `Reputation_resourcescore` DISABLE KEYS */;
+INSERT INTO `Reputation_resourcescore` VALUES (1,1,0,0,1,0,'resource');
+/*!40000 ALTER TABLE `Reputation_resourcescore` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reputation_userscore`
+--
+
+DROP TABLE IF EXISTS `Reputation_userscore`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Reputation_userscore` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author` int(11) NOT NULL,
+  `publisher` int(11) NOT NULL,
+  `role_score` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Reputation_userscore`
+--
+
+LOCK TABLES `Reputation_userscore` WRITE;
+/*!40000 ALTER TABLE `Reputation_userscore` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Reputation_userscore` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TaskQueue_task`
+--
+
+DROP TABLE IF EXISTS `TaskQueue_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TaskQueue_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `tfile` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TaskQueue_task`
+--
+
+LOCK TABLES `TaskQueue_task` WRITE;
+/*!40000 ALTER TABLE `TaskQueue_task` DISABLE KEYS */;
+/*!40000 ALTER TABLE `TaskQueue_task` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserRolesPermission_favourite`
+--
+
+DROP TABLE IF EXISTS `UserRolesPermission_favourite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRolesPermission_favourite` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `resource` int(10) unsigned NOT NULL,
+  `category` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `UserRolesPermission_favourite_user_id_14680490_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `UserRolesPermission_favourite_user_id_14680490_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserRolesPermission_favourite`
+--
+
+LOCK TABLES `UserRolesPermission_favourite` WRITE;
+/*!40000 ALTER TABLE `UserRolesPermission_favourite` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRolesPermission_favourite` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserRolesPermission_profileimage`
+--
+
+DROP TABLE IF EXISTS `UserRolesPermission_profileimage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRolesPermission_profileimage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `photo` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `UserRolesPermission__user_id_2e95d164_fk_auth_user` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserRolesPermission_profileimage`
+--
+
+LOCK TABLES `UserRolesPermission_profileimage` WRITE;
+/*!40000 ALTER TABLE `UserRolesPermission_profileimage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRolesPermission_profileimage` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `actstream_action`
+--
+
+DROP TABLE IF EXISTS `actstream_action`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `actstream_action` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `actor_object_id` varchar(255) NOT NULL,
+  `verb` varchar(255) NOT NULL,
+  `description` longtext,
+  `target_object_id` varchar(255) DEFAULT NULL,
+  `action_object_object_id` varchar(255) DEFAULT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `public` tinyint(1) NOT NULL,
+  `data` longtext,
+  `action_object_content_type_id` int(11) DEFAULT NULL,
+  `actor_content_type_id` int(11) NOT NULL,
+  `target_content_type_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `actstream_action_action_object_conten_ee623c15_fk_django_co` (`action_object_content_type_id`),
+  KEY `actstream_action_actor_content_type_i_d5e5ec2a_fk_django_co` (`actor_content_type_id`),
+  KEY `actstream_action_target_content_type__187fa164_fk_django_co` (`target_content_type_id`),
+  KEY `actstream_action_actor_object_id_72ef0cfa` (`actor_object_id`),
+  KEY `actstream_action_verb_83f768b7` (`verb`),
+  KEY `actstream_action_target_object_id_e080d801` (`target_object_id`),
+  KEY `actstream_action_action_object_object_id_6433bdf7` (`action_object_object_id`),
+  KEY `actstream_action_timestamp_a23fe3ae` (`timestamp`),
+  KEY `actstream_action_public_ac0653e9` (`public`),
+  CONSTRAINT `actstream_action_action_object_conten_ee623c15_fk_django_co` FOREIGN KEY (`action_object_content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `actstream_action_actor_content_type_i_d5e5ec2a_fk_django_co` FOREIGN KEY (`actor_content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `actstream_action_target_content_type__187fa164_fk_django_co` FOREIGN KEY (`target_content_type_id`) REFERENCES `django_content_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `actstream_action`
+--
+
+LOCK TABLES `actstream_action` WRITE;
+/*!40000 ALTER TABLE `actstream_action` DISABLE KEYS */;
+/*!40000 ALTER TABLE `actstream_action` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `actstream_follow`
+--
+
+DROP TABLE IF EXISTS `actstream_follow`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `actstream_follow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `object_id` varchar(255) NOT NULL,
+  `actor_only` tinyint(1) NOT NULL,
+  `started` datetime(6) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `actstream_follow_user_id_content_type_id_object_id_63ca7c27_uniq` (`user_id`,`content_type_id`,`object_id`),
+  KEY `actstream_follow_content_type_id_ba287eb9_fk_django_co` (`content_type_id`),
+  KEY `actstream_follow_object_id_d790e00d` (`object_id`),
+  KEY `actstream_follow_started_254c63bd` (`started`),
+  CONSTRAINT `actstream_follow_content_type_id_ba287eb9_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `actstream_follow_user_id_e9d4e1ff_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `actstream_follow`
+--
+
+LOCK TABLES `actstream_follow` WRITE;
+/*!40000 ALTER TABLE `actstream_follow` DISABLE KEYS */;
+/*!40000 ALTER TABLE `actstream_follow` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group`
+--
+
+DROP TABLE IF EXISTS `auth_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group`
+--
+
+LOCK TABLES `auth_group` WRITE;
+/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
+INSERT INTO `auth_group` VALUES (1,'author'),(3,'community_admin'),(2,'publisher');
+/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_group_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group_permissions`
+--
+
+LOCK TABLES `auth_group_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_permission`
+--
+
+DROP TABLE IF EXISTS `auth_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
+  CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_permission`
+--
+
+LOCK TABLES `auth_permission` WRITE;
+/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can add permission',2,'add_permission'),(5,'Can change permission',2,'change_permission'),(6,'Can delete permission',2,'delete_permission'),(7,'Can add group',3,'add_group'),(8,'Can change group',3,'change_group'),(9,'Can delete group',3,'delete_group'),(10,'Can add user',4,'add_user'),(11,'Can change user',4,'change_user'),(12,'Can delete user',4,'delete_user'),(13,'Can add content type',5,'add_contenttype'),(14,'Can change content type',5,'change_contenttype'),(15,'Can delete content type',5,'delete_contenttype'),(16,'Can add session',6,'add_session'),(17,'Can change session',6,'change_session'),(18,'Can delete session',6,'delete_session'),(19,'Can add site',7,'add_site'),(20,'Can change site',7,'change_site'),(21,'Can delete site',7,'delete_site'),(22,'Can add comment',8,'add_xtdcomment'),(23,'Can change comment',8,'change_xtdcomment'),(24,'Can delete comment',8,'delete_xtdcomment'),(25,'Can moderate comments',8,'can_moderate'),(26,'Can add black listed domain',9,'add_blacklisteddomain'),(27,'Can change black listed domain',9,'change_blacklisteddomain'),(28,'Can delete black listed domain',9,'delete_blacklisteddomain'),(29,'Can add comment',10,'add_comment'),(30,'Can change comment',10,'change_comment'),(31,'Can delete comment',10,'delete_comment'),(32,'Can moderate comments',10,'can_moderate'),(33,'Can add comment flag',11,'add_commentflag'),(34,'Can change comment flag',11,'change_commentflag'),(35,'Can delete comment flag',11,'delete_commentflag'),(36,'Can add community',12,'add_community'),(37,'Can change community',12,'change_community'),(38,'Can delete community',12,'delete_community'),(39,'Can add community articles',13,'add_communityarticles'),(40,'Can change community articles',13,'change_communityarticles'),(41,'Can delete community articles',13,'delete_communityarticles'),(42,'Can add community courses',14,'add_communitycourses'),(43,'Can change community courses',14,'change_communitycourses'),(44,'Can delete community courses',14,'delete_communitycourses'),(45,'Can add community groups',15,'add_communitygroups'),(46,'Can change community groups',15,'change_communitygroups'),(47,'Can delete community groups',15,'delete_communitygroups'),(48,'Can add community media',16,'add_communitymedia'),(49,'Can change community media',16,'change_communitymedia'),(50,'Can delete community media',16,'delete_communitymedia'),(51,'Can add community membership',17,'add_communitymembership'),(52,'Can change community membership',17,'change_communitymembership'),(53,'Can delete community membership',17,'delete_communitymembership'),(54,'Can add request community creation',18,'add_requestcommunitycreation'),(55,'Can change request community creation',18,'change_requestcommunitycreation'),(56,'Can delete request community creation',18,'delete_requestcommunitycreation'),(57,'Can add favourite',19,'add_favourite'),(58,'Can change favourite',19,'change_favourite'),(59,'Can delete favourite',19,'delete_favourite'),(60,'Can add profile image',20,'add_profileimage'),(61,'Can change profile image',20,'change_profileimage'),(62,'Can delete profile image',20,'delete_profileimage'),(63,'Can add articles',21,'add_articles'),(64,'Can change articles',21,'change_articles'),(65,'Can delete articles',21,'delete_articles'),(66,'Can add article view logs',22,'add_articleviewlogs'),(67,'Can change article view logs',22,'change_articleviewlogs'),(68,'Can delete article view logs',22,'delete_articleviewlogs'),(69,'Can add group',23,'add_group'),(70,'Can change group',23,'change_group'),(71,'Can delete group',23,'delete_group'),(72,'Can add group articles',24,'add_grouparticles'),(73,'Can change group articles',24,'change_grouparticles'),(74,'Can delete group articles',24,'delete_grouparticles'),(75,'Can add group invitations',25,'add_groupinvitations'),(76,'Can change group invitations',25,'change_groupinvitations'),(77,'Can delete group invitations',25,'delete_groupinvitations'),(78,'Can add group media',26,'add_groupmedia'),(79,'Can change group media',26,'change_groupmedia'),(80,'Can delete group media',26,'delete_groupmedia'),(81,'Can add group membership',27,'add_groupmembership'),(82,'Can change group membership',27,'change_groupmembership'),(83,'Can delete group membership',27,'delete_groupmembership'),(84,'Can add revision',28,'add_revision'),(85,'Can change revision',28,'change_revision'),(86,'Can delete revision',28,'delete_revision'),(87,'Can add version',29,'add_version'),(88,'Can change version',29,'change_version'),(89,'Can delete version',29,'delete_version'),(90,'Can add Token',30,'add_token'),(91,'Can change Token',30,'change_token'),(92,'Can delete Token',30,'delete_token'),(93,'Can add states',31,'add_states'),(94,'Can change states',31,'change_states'),(95,'Can delete states',31,'delete_states'),(96,'Can add transitions',32,'add_transitions'),(97,'Can change transitions',32,'change_transitions'),(98,'Can delete transitions',32,'delete_transitions'),(99,'Can add association',33,'add_association'),(100,'Can change association',33,'change_association'),(101,'Can delete association',33,'delete_association'),(102,'Can add code',34,'add_code'),(103,'Can change code',34,'change_code'),(104,'Can delete code',34,'delete_code'),(105,'Can add nonce',35,'add_nonce'),(106,'Can change nonce',35,'change_nonce'),(107,'Can delete nonce',35,'delete_nonce'),(108,'Can add user social auth',36,'add_usersocialauth'),(109,'Can change user social auth',36,'change_usersocialauth'),(110,'Can delete user social auth',36,'delete_usersocialauth'),(111,'Can add partial',37,'add_partial'),(112,'Can change partial',37,'change_partial'),(113,'Can delete partial',37,'delete_partial'),(114,'Can add feedback',38,'add_feedback'),(115,'Can change feedback',38,'change_feedback'),(116,'Can delete feedback',38,'delete_feedback'),(117,'Can add faq',39,'add_faq'),(118,'Can change faq',39,'change_faq'),(119,'Can delete faq',39,'delete_faq'),(120,'Can add faq category',40,'add_faqcategory'),(121,'Can change faq category',40,'change_faqcategory'),(122,'Can delete faq category',40,'delete_faqcategory'),(123,'Can add course',41,'add_course'),(124,'Can change course',41,'change_course'),(125,'Can delete course',41,'delete_course'),(126,'Can add links',42,'add_links'),(127,'Can change links',42,'change_links'),(128,'Can delete links',42,'delete_links'),(129,'Can add topic article',43,'add_topicarticle'),(130,'Can change topic article',43,'change_topicarticle'),(131,'Can delete topic article',43,'delete_topicarticle'),(132,'Can add topics',44,'add_topics'),(133,'Can change topics',44,'change_topics'),(134,'Can delete topics',44,'delete_topics'),(135,'Can add videos',45,'add_videos'),(136,'Can change videos',45,'change_videos'),(137,'Can delete videos',45,'delete_videos'),(138,'Can add notification',46,'add_notification'),(139,'Can change notification',46,'change_notification'),(140,'Can delete notification',46,'delete_notification'),(141,'Can add action',47,'add_action'),(142,'Can change action',47,'change_action'),(143,'Can delete action',47,'delete_action'),(144,'Can add follow',48,'add_follow'),(145,'Can change follow',48,'change_follow'),(146,'Can delete follow',48,'delete_follow'),(147,'Can add type',49,'add_notificationtype'),(148,'Can change type',49,'change_notificationtype'),(149,'Can delete type',49,'delete_notificationtype'),(150,'Can add settings',50,'add_settings'),(151,'Can change settings',50,'change_settings'),(152,'Can delete settings',50,'delete_settings'),(153,'Can add notification',51,'add_notification'),(154,'Can change notification',51,'change_notification'),(155,'Can delete notification',51,'delete_notification'),(156,'Can add subscription',52,'add_subscription'),(157,'Can change subscription',52,'change_subscription'),(158,'Can delete subscription',52,'delete_subscription'),(159,'Can add kv store',53,'add_kvstore'),(160,'Can change kv store',53,'change_kvstore'),(161,'Can delete kv store',53,'delete_kvstore'),(162,'Can add article',54,'add_article'),(163,'Can change article',54,'change_article'),(164,'Can delete article',54,'delete_article'),(165,'Can edit all articles and lock/unlock/restore',54,'moderate'),(166,'Can change ownership of any article',54,'assign'),(167,'Can assign permissions to other users',54,'grant'),(168,'Can add Article for object',55,'add_articleforobject'),(169,'Can change Article for object',55,'change_articleforobject'),(170,'Can delete Article for object',55,'delete_articleforobject'),(171,'Can add article plugin',56,'add_articleplugin'),(172,'Can change article plugin',56,'change_articleplugin'),(173,'Can delete article plugin',56,'delete_articleplugin'),(174,'Can add article revision',57,'add_articlerevision'),(175,'Can change article revision',57,'change_articlerevision'),(176,'Can delete article revision',57,'delete_articlerevision'),(177,'Can add reusable plugin',58,'add_reusableplugin'),(178,'Can change reusable plugin',58,'change_reusableplugin'),(179,'Can delete reusable plugin',58,'delete_reusableplugin'),(180,'Can add revision plugin',59,'add_revisionplugin'),(181,'Can change revision plugin',59,'change_revisionplugin'),(182,'Can delete revision plugin',59,'delete_revisionplugin'),(183,'Can add revision plugin revision',60,'add_revisionpluginrevision'),(184,'Can change revision plugin revision',60,'change_revisionpluginrevision'),(185,'Can delete revision plugin revision',60,'delete_revisionpluginrevision'),(186,'Can add simple plugin',61,'add_simpleplugin'),(187,'Can change simple plugin',61,'change_simpleplugin'),(188,'Can delete simple plugin',61,'delete_simpleplugin'),(189,'Can add URL path',62,'add_urlpath'),(190,'Can change URL path',62,'change_urlpath'),(191,'Can delete URL path',62,'delete_urlpath'),(192,'Can add attachment',63,'add_attachment'),(193,'Can change attachment',63,'change_attachment'),(194,'Can delete attachment',63,'delete_attachment'),(195,'Can add attachment revision',64,'add_attachmentrevision'),(196,'Can change attachment revision',64,'change_attachmentrevision'),(197,'Can delete attachment revision',64,'delete_attachmentrevision'),(198,'Can add article subscription',65,'add_articlesubscription'),(199,'Can change article subscription',65,'change_articlesubscription'),(200,'Can delete article subscription',65,'delete_articlesubscription'),(201,'Can add image',66,'add_image'),(202,'Can change image',66,'change_image'),(203,'Can delete image',66,'delete_image'),(204,'Can add image revision',67,'add_imagerevision'),(205,'Can change image revision',67,'change_imagerevision'),(206,'Can delete image revision',67,'delete_imagerevision'),(207,'Can add article flag logs',68,'add_articleflaglogs'),(208,'Can change article flag logs',68,'change_articleflaglogs'),(209,'Can delete article flag logs',68,'delete_articleflaglogs'),(210,'Can add article score log',69,'add_articlescorelog'),(211,'Can change article score log',69,'change_articlescorelog'),(212,'Can delete article score log',69,'delete_articlescorelog'),(213,'Can add article user score logs',70,'add_articleuserscorelogs'),(214,'Can change article user score logs',70,'change_articleuserscorelogs'),(215,'Can delete article user score logs',70,'delete_articleuserscorelogs'),(216,'Can add community reputaion',71,'add_communityreputaion'),(217,'Can change community reputaion',71,'change_communityreputaion'),(218,'Can delete community reputaion',71,'delete_communityreputaion'),(219,'Can add flag reason',72,'add_flagreason'),(220,'Can change flag reason',72,'change_flagreason'),(221,'Can delete flag reason',72,'delete_flagreason'),(222,'Can add media flag logs',73,'add_mediaflaglogs'),(223,'Can change media flag logs',73,'change_mediaflaglogs'),(224,'Can delete media flag logs',73,'delete_mediaflaglogs'),(225,'Can add media score log',74,'add_mediascorelog'),(226,'Can change media score log',74,'change_mediascorelog'),(227,'Can delete media score log',74,'delete_mediascorelog'),(228,'Can add media user score logs',75,'add_mediauserscorelogs'),(229,'Can change media user score logs',75,'change_mediauserscorelogs'),(230,'Can delete media user score logs',75,'delete_mediauserscorelogs'),(231,'Can add resource score',76,'add_resourcescore'),(232,'Can change resource score',76,'change_resourcescore'),(233,'Can delete resource score',76,'delete_resourcescore'),(234,'Can add user score',77,'add_userscore'),(235,'Can change user score',77,'change_userscore'),(236,'Can delete user score',77,'delete_userscore'),(237,'Can add ether article',78,'add_etherarticle'),(238,'Can change ether article',78,'change_etherarticle'),(239,'Can delete ether article',78,'delete_etherarticle'),(240,'Can add ether community',79,'add_ethercommunity'),(241,'Can change ether community',79,'change_ethercommunity'),(242,'Can delete ether community',79,'delete_ethercommunity'),(243,'Can add ether group',80,'add_ethergroup'),(244,'Can change ether group',80,'change_ethergroup'),(245,'Can delete ether group',80,'delete_ethergroup'),(246,'Can add ether user',81,'add_etheruser'),(247,'Can change ether user',81,'change_etheruser'),(248,'Can delete ether user',81,'delete_etheruser'),(249,'Can add media',82,'add_media'),(250,'Can change media',82,'change_media'),(251,'Can delete media',82,'delete_media'),(252,'Can add metadata',83,'add_metadata'),(253,'Can change metadata',83,'change_metadata'),(254,'Can delete metadata',83,'delete_metadata'),(255,'Can add task',84,'add_task'),(256,'Can change task',84,'change_task'),(257,'Can delete task',84,'delete_task'),(258,'Can add badge',85,'add_badge'),(259,'Can change badge',85,'change_badge'),(260,'Can delete badge',85,'delete_badge'),(261,'Can add badge to user',86,'add_badgetouser'),(262,'Can change badge to user',86,'change_badgetouser'),(263,'Can delete badge to user',86,'delete_badgetouser'),(264,'Can add category',87,'add_category'),(265,'Can change category',87,'change_category'),(266,'Can delete category',87,'delete_category'),(267,'Can add Tag',88,'add_tag'),(268,'Can change Tag',88,'change_tag'),(269,'Can delete Tag',88,'delete_tag'),(270,'Can add Tagged Item',89,'add_taggeditem'),(271,'Can change Tagged Item',89,'change_taggeditem'),(272,'Can delete Tagged Item',89,'delete_taggeditem'),(273,'Can add Forum',90,'add_forum'),(274,'Can change Forum',90,'change_forum'),(275,'Can delete Forum',90,'delete_forum'),(276,'Can add Post',91,'add_post'),(277,'Can change Post',91,'change_post'),(278,'Can delete Post',91,'delete_post'),(279,'Can add Topic',92,'add_topic'),(280,'Can change Topic',92,'change_topic'),(281,'Can delete Topic',92,'delete_topic'),(282,'Can add Attachment',93,'add_attachment'),(283,'Can change Attachment',93,'change_attachment'),(284,'Can delete Attachment',93,'delete_attachment'),(285,'Can add Topic poll',94,'add_topicpoll'),(286,'Can change Topic poll',94,'change_topicpoll'),(287,'Can delete Topic poll',94,'delete_topicpoll'),(288,'Can add Topic poll option',95,'add_topicpolloption'),(289,'Can change Topic poll option',95,'change_topicpolloption'),(290,'Can delete Topic poll option',95,'delete_topicpolloption'),(291,'Can add Topic poll vote',96,'add_topicpollvote'),(292,'Can change Topic poll vote',96,'change_topicpollvote'),(293,'Can delete Topic poll vote',96,'delete_topicpollvote'),(294,'Can add Forum track',97,'add_forumreadtrack'),(295,'Can change Forum track',97,'change_forumreadtrack'),(296,'Can delete Forum track',97,'delete_forumreadtrack'),(297,'Can add Topic track',98,'add_topicreadtrack'),(298,'Can change Topic track',98,'change_topicreadtrack'),(299,'Can delete Topic track',98,'delete_topicreadtrack'),(300,'Can add Forum profile',99,'add_forumprofile'),(301,'Can change Forum profile',99,'change_forumprofile'),(302,'Can delete Forum profile',99,'delete_forumprofile'),(303,'Can add Forum permission',100,'add_forumpermission'),(304,'Can change Forum permission',100,'change_forumpermission'),(305,'Can delete Forum permission',100,'delete_forumpermission'),(306,'Can add Group forum permission',101,'add_groupforumpermission'),(307,'Can change Group forum permission',101,'change_groupforumpermission'),(308,'Can delete Group forum permission',101,'delete_groupforumpermission'),(309,'Can add User forum permission',102,'add_userforumpermission'),(310,'Can change User forum permission',102,'change_userforumpermission'),(311,'Can delete User forum permission',102,'delete_userforumpermission'),(312,'Can add badge score',103,'add_badgescore'),(313,'Can change badge score',103,'change_badgescore'),(314,'Can delete badge score',103,'delete_badgescore');
+/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user`
+--
+
+DROP TABLE IF EXISTS `auth_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(30) NOT NULL,
+  `last_name` varchar(30) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user`
+--
+
+LOCK TABLES `auth_user` WRITE;
+/*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$r8CujTIffhma$jnmVmCO1tuc18NIMsZrwfrdyNnxCNmIAXB+9LdVkPsE=','2019-08-16 12:50:11.506731',1,'admin','','','admin@mail.com',1,1,'2019-02-26 07:47:48.227174');
+/*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_groups`
+--
+
+DROP TABLE IF EXISTS `auth_user_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
+  KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
+  CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_groups`
+--
+
+LOCK TABLES `auth_user_groups` WRITE;
+/*!40000 ALTER TABLE `auth_user_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_user_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_user_user_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_user_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
+  KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_user_permissions`
+--
+
+LOCK TABLES `auth_user_user_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_user_user_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_user_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `authtoken_token`
+--
+
+DROP TABLE IF EXISTS `authtoken_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `authtoken_token` (
+  `key` varchar(40) NOT NULL,
+  `created` datetime(6) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`key`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `authtoken_token_user_id_35299eff_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authtoken_token`
+--
+
+LOCK TABLES `authtoken_token` WRITE;
+/*!40000 ALTER TABLE `authtoken_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authtoken_token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `badges_badge`
+--
+
+DROP TABLE IF EXISTS `badges_badge`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `badges_badge` (
+  `id` varchar(255) NOT NULL,
+  `level` varchar(1) NOT NULL,
+  `icon` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `badges_badge`
+--
+
+LOCK TABLES `badges_badge` WRITE;
+/*!40000 ALTER TABLE `badges_badge` DISABLE KEYS */;
+INSERT INTO `badges_badge` VALUES ('ac-level-1','1',''),('ac-level-2','2',''),('ac-level-3','3',''),('ac-level-4','4',''),('ac-level-5','5',''),('ap-level-1','1',''),('ap-level-2','2',''),('ap-level-3','3',''),('ap-level-4','4',''),('ap-level-5','5',''),('pa-level-1','1',''),('pa-level-2','2',''),('pa-level-3','3',''),('pa-level-4','4',''),('pa-level-5','5','');
+/*!40000 ALTER TABLE `badges_badge` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `badges_badgetouser`
+--
+
+DROP TABLE IF EXISTS `badges_badgetouser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `badges_badgetouser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `badge_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `community_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `badges_badgetouser_badge_id_0e3cd6bb_fk_badges_badge_id` (`badge_id`),
+  KEY `badges_badgetouser_user_id_7928b431_fk_auth_user_id` (`user_id`),
+  KEY `badges_badgetouser_community_id_01e9a7f7_fk_Community` (`community_id`),
+  CONSTRAINT `badges_badgetouser_badge_id_0e3cd6bb_fk_badges_badge_id` FOREIGN KEY (`badge_id`) REFERENCES `badges_badge` (`id`),
+  CONSTRAINT `badges_badgetouser_community_id_01e9a7f7_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
+  CONSTRAINT `badges_badgetouser_user_id_7928b431_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `badges_badgetouser`
+--
+
+LOCK TABLES `badges_badgetouser` WRITE;
+/*!40000 ALTER TABLE `badges_badgetouser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `badges_badgetouser` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `django_admin_log`
 --
 
@@ -860,7 +1469,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -869,7 +1478,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (1,'2019-02-26 07:49:42.065158','1','Collaboration System',1,'[{\"added\": {}}]',90,1),(2,'2019-02-26 11:25:17.114008','3','publish',2,'[{\"changed\": {\"fields\": [\"final\"]}}]',31,1),(3,'2019-02-26 11:27:56.205778','1','draft',2,'[{\"changed\": {\"fields\": [\"initial\"]}}]',31,1),(4,'2019-02-26 11:28:04.665605','3','publish',2,'[]',31,1),(5,'2019-03-26 14:17:02.519561','1','CS',1,'[{\"added\": {}}]',87,1),(6,'2019-03-26 15:10:04.410381','publisher','Publisher',3,'',85,1),(7,'2019-03-26 15:10:04.573761','contributor','Contributor',3,'',85,1),(8,'2019-03-26 15:13:08.566664','publisher','Publisher',3,'',85,1),(9,'2019-03-26 15:13:08.764861','contributor','Contributor',3,'',85,1),(10,'2019-03-26 15:13:08.777171','author','Author',3,'',85,1);
+INSERT INTO `django_admin_log` VALUES (1,'2019-02-26 07:49:42.065158','1','Collaboration System',1,'[{\"added\": {}}]',90,1),(2,'2019-02-26 11:25:17.114008','3','publish',2,'[{\"changed\": {\"fields\": [\"final\"]}}]',31,1),(3,'2019-02-26 11:27:56.205778','1','draft',2,'[{\"changed\": {\"fields\": [\"initial\"]}}]',31,1),(4,'2019-02-26 11:28:04.665605','3','publish',2,'[]',31,1),(5,'2019-03-26 14:17:02.519561','1','CS',1,'[{\"added\": {}}]',87,1),(6,'2019-03-26 15:10:04.410381','publisher','Publisher',3,'',85,1),(7,'2019-03-26 15:10:04.573761','contributor','Contributor',3,'',85,1),(8,'2019-03-26 15:13:08.566664','publisher','Publisher',3,'',85,1),(9,'2019-03-26 15:13:08.764861','contributor','Contributor',3,'',85,1),(10,'2019-03-26 15:13:08.777171','author','Author',3,'',85,1),(11,'2019-08-16 12:51:04.819341','None','CS',3,'',87,1),(12,'2019-08-16 12:51:25.377822','4','private',3,'',31,1),(13,'2019-08-16 12:51:46.542562','6','Publish',3,'',32,1),(14,'2019-08-16 12:51:46.548515','5','Publish',3,'',32,1),(15,'2019-08-16 12:51:46.721958','4','Ready for Publishing',3,'',32,1),(16,'2019-08-16 12:55:16.611937','4','group_admin',3,'',3,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1073,7 +1682,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('9w2571ejkpm8tsta0qsvxksoyshao8gq','ZDZkN2YyZTc0YWFhMmU2MjlhZGY5N2FjNWMxYzA4NjBjZTdiYTJiMDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNGIzMDNmNjlmZjAwNDMxYWE1MTg1ODE3Mjc2Y2IwMWMiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 09:52:01.871653'),('b1yueqzk0okf3zke2j83ym9tcrdwf72u','OGY2NzBiMzlkMGNiZjVjODJjZGNmYzRkMzg1ODdiYzUzMTg1ODk2Zjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNzk4YmMxZThhNTA2NDJjZjg4MjQ4ODM2ZmI2YTJlOTgiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 13:28:32.916180'),('hek7ddvb9rg9a4eygiachdww7fqwx8cn','MmI0NzhlMWIwZmUzYzlkN2U5YmE1MDJkODhhNTFmODJkNGNhNDZhNjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNTc2MGMyYjcyMWQzNGY5OGI5MDNlMzQzMThkNmNiYTAifQ==','2019-02-26 12:34:21.300604'),('s6jbzpogbqo00m1kzfqybrdc8l3xkw6u','ZWY4NmE0NjZhNDczNWQ4ZmNkNmU3YTUyNzExOTMxMGE5NzZiY2NmYzp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiYTM3MjU0NjVjZmFkNDdjM2E3NDc3ZTIwM2NjMTM3ZGEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 13:25:21.608345'),('yue3sfc6ebqycweh3weozwjh5pbhw6rm','YTNhMjg1N2JjNmU0ODM1OTA0OGUwY2NjMzg1YThkZDBmMThlMWMyYjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNmVlNzU1MzY4NGJiNDZhMTk4NDJjOGRhNTNiZWRiOGMifQ==','2019-02-26 12:33:15.568030'),('zt5cmsetc8904rhgz4afyuaj4tchjpyq','NzdjNGY3YzE1M2ZkMzExZDIzMTAxNzdkNjNlNWQ4YTQ2MGM5YjZiMTp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiY2VjZmExZmViYmU1NDNkMDg2NGQ3YzA5ZmJkM2MzNGQiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-03-26 17:13:11.825347');
+INSERT INTO `django_session` VALUES ('26z1d1272taut1q3jhtghbszrv4azvqt','MzUwMGI1NDgxMzgzOWIyMTM4NWY2MjdkODRmZWVhNjA4Y2U5MjEyYjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiOGEyYWUwZGVlMzdjNGIyNWE3Yzc2MmFmYjQ1OTE0ZDYiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-08-16 14:55:58.795463'),('9w2571ejkpm8tsta0qsvxksoyshao8gq','ZDZkN2YyZTc0YWFhMmU2MjlhZGY5N2FjNWMxYzA4NjBjZTdiYTJiMDp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNGIzMDNmNjlmZjAwNDMxYWE1MTg1ODE3Mjc2Y2IwMWMiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 09:52:01.871653'),('b1yueqzk0okf3zke2j83ym9tcrdwf72u','OGY2NzBiMzlkMGNiZjVjODJjZGNmYzRkMzg1ODdiYzUzMTg1ODk2Zjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNzk4YmMxZThhNTA2NDJjZjg4MjQ4ODM2ZmI2YTJlOTgiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 13:28:32.916180'),('hek7ddvb9rg9a4eygiachdww7fqwx8cn','MmI0NzhlMWIwZmUzYzlkN2U5YmE1MDJkODhhNTFmODJkNGNhNDZhNjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNTc2MGMyYjcyMWQzNGY5OGI5MDNlMzQzMThkNmNiYTAifQ==','2019-02-26 12:34:21.300604'),('s6jbzpogbqo00m1kzfqybrdc8l3xkw6u','ZWY4NmE0NjZhNDczNWQ4ZmNkNmU3YTUyNzExOTMxMGE5NzZiY2NmYzp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiYTM3MjU0NjVjZmFkNDdjM2E3NDc3ZTIwM2NjMTM3ZGEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-02-26 13:25:21.608345'),('yue3sfc6ebqycweh3weozwjh5pbhw6rm','YTNhMjg1N2JjNmU0ODM1OTA0OGUwY2NjMzg1YThkZDBmMThlMWMyYjp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiNmVlNzU1MzY4NGJiNDZhMTk4NDJjOGRhNTNiZWRiOGMifQ==','2019-02-26 12:33:15.568030'),('zt5cmsetc8904rhgz4afyuaj4tchjpyq','NzdjNGY3YzE1M2ZkMzExZDIzMTAxNzdkNjNlNWQ4YTQ2MGM5YjZiMTp7Il9hbm9ueW1vdXNfZm9ydW1fa2V5IjoiY2VjZmExZmViYmU1NDNkMDg2NGQ3YzA5ZmJkM2MzNGQiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWIzMGMxOWMxOWUyNjAwYWI0M2QxNmNjYzg5YmQ2N2JjMTI4NTcwZCJ9','2019-03-26 17:13:11.825347');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1685,206 +2294,6 @@ LOCK TABLES `forum_tracking_topicreadtrack` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Group_group`
---
-
-DROP TABLE IF EXISTS `Group_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Group_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `desc` longtext NOT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `visibility` tinyint(1) NOT NULL,
-  `created_at` datetime(6) DEFAULT NULL,
-  `created_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Group_group_created_by_id_b1ee0c6d_fk_auth_user_id` (`created_by_id`),
-  CONSTRAINT `Group_group_created_by_id_b1ee0c6d_fk_auth_user_id` FOREIGN KEY (`created_by_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Group_group`
---
-
-LOCK TABLES `Group_group` WRITE;
-/*!40000 ALTER TABLE `Group_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Group_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Group_grouparticles`
---
-
-DROP TABLE IF EXISTS `Group_grouparticles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Group_grouparticles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article_id` int(11) NOT NULL,
-  `group_id` int(11) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Group_grouparticles_article_id_eac38398_fk_BasicArti` (`article_id`),
-  KEY `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` (`group_id`),
-  KEY `Group_grouparticles_user_id_12983c5c_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Group_grouparticles_article_id_eac38398_fk_BasicArti` FOREIGN KEY (`article_id`) REFERENCES `basicarticle_articles` (`id`),
-  CONSTRAINT `Group_grouparticles_group_id_84ee212d_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
-  CONSTRAINT `Group_grouparticles_user_id_12983c5c_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Group_grouparticles`
---
-
-LOCK TABLES `Group_grouparticles` WRITE;
-/*!40000 ALTER TABLE `Group_grouparticles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Group_grouparticles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Group_groupinvitations`
---
-
-DROP TABLE IF EXISTS `Group_groupinvitations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Group_groupinvitations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `invitedat` datetime(6) DEFAULT NULL,
-  `status` varchar(100) DEFAULT NULL,
-  `group_id` int(11) NOT NULL,
-  `invitedby_id` int(11) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` (`group_id`),
-  KEY `Group_groupinvitations_invitedby_id_f7a8ea5c_fk_auth_user_id` (`invitedby_id`),
-  KEY `Group_groupinvitations_role_id_20c49c7f_fk_auth_group_id` (`role_id`),
-  KEY `Group_groupinvitations_user_id_a4a046d3_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Group_groupinvitations_group_id_48a7f8e2_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
-  CONSTRAINT `Group_groupinvitations_invitedby_id_f7a8ea5c_fk_auth_user_id` FOREIGN KEY (`invitedby_id`) REFERENCES `auth_user` (`id`),
-  CONSTRAINT `Group_groupinvitations_role_id_20c49c7f_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
-  CONSTRAINT `Group_groupinvitations_user_id_a4a046d3_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Group_groupinvitations`
---
-
-LOCK TABLES `Group_groupinvitations` WRITE;
-/*!40000 ALTER TABLE `Group_groupinvitations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Group_groupinvitations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Group_groupmedia`
---
-
-DROP TABLE IF EXISTS `Group_groupmedia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Group_groupmedia` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) DEFAULT NULL,
-  `media_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` (`group_id`),
-  KEY `Group_groupmedia_media_id_bb652569_fk_Media_media_id` (`media_id`),
-  KEY `Group_groupmedia_user_id_e6917c04_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Group_groupmedia_group_id_73f1a47c_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
-  CONSTRAINT `Group_groupmedia_media_id_bb652569_fk_Media_media_id` FOREIGN KEY (`media_id`) REFERENCES `media_media` (`id`),
-  CONSTRAINT `Group_groupmedia_user_id_e6917c04_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Group_groupmedia`
---
-
-LOCK TABLES `Group_groupmedia` WRITE;
-/*!40000 ALTER TABLE `Group_groupmedia` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Group_groupmedia` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Group_groupmembership`
---
-
-DROP TABLE IF EXISTS `Group_groupmembership`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Group_groupmembership` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` (`group_id`),
-  KEY `Group_groupmembership_role_id_bb865ffb_fk_auth_group_id` (`role_id`),
-  KEY `Group_groupmembership_user_id_e4f5757f_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Group_groupmembership_group_id_adce78b5_fk_Group_group_id` FOREIGN KEY (`group_id`) REFERENCES `group_group` (`id`),
-  CONSTRAINT `Group_groupmembership_role_id_bb865ffb_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
-  CONSTRAINT `Group_groupmembership_user_id_e4f5757f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Group_groupmembership`
---
-
-LOCK TABLES `Group_groupmembership` WRITE;
-/*!40000 ALTER TABLE `Group_groupmembership` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Group_groupmembership` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Media_media`
---
-
-DROP TABLE IF EXISTS `Media_media`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Media_media` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mediatype` varchar(10) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `mediafile` varchar(100) DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL,
-  `published_on` datetime(6) DEFAULT NULL,
-  `views` int(10) unsigned NOT NULL,
-  `created_by_id` int(11) DEFAULT NULL,
-  `published_by_id` int(11) DEFAULT NULL,
-  `state_id` int(11),
-  `medialink` varchar(300) DEFAULT NULL,
-  `metadata_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Media_media_created_by_id_ae93f7fb_fk_auth_user_id` (`created_by_id`),
-  KEY `Media_media_published_by_id_83121da5_fk_auth_user_id` (`published_by_id`),
-  KEY `Media_media_state_id_46785feb_fk_workflow_states_id` (`state_id`),
-  KEY `Media_media_metadata_id_c939b240_fk_metadata_metadata_id` (`metadata_id`),
-  CONSTRAINT `Media_media_created_by_id_ae93f7fb_fk_auth_user_id` FOREIGN KEY (`created_by_id`) REFERENCES `auth_user` (`id`),
-  CONSTRAINT `Media_media_metadata_id_c939b240_fk_metadata_metadata_id` FOREIGN KEY (`metadata_id`) REFERENCES `metadata_metadata` (`id`),
-  CONSTRAINT `Media_media_published_by_id_83121da5_fk_auth_user_id` FOREIGN KEY (`published_by_id`) REFERENCES `auth_user` (`id`),
-  CONSTRAINT `Media_media_state_id_46785feb_fk_workflow_states_id` FOREIGN KEY (`state_id`) REFERENCES `workflow_states` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Media_media`
---
-
-LOCK TABLES `Media_media` WRITE;
-/*!40000 ALTER TABLE `Media_media` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Media_media` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `metadata_metadata`
 --
 
@@ -1893,7 +2302,7 @@ DROP TABLE IF EXISTS `metadata_metadata`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `metadata_metadata` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `description` text CHARACTER SET utf8,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2076,341 +2485,6 @@ CREATE TABLE `nyt_subscription` (
 LOCK TABLES `nyt_subscription` WRITE;
 /*!40000 ALTER TABLE `nyt_subscription` DISABLE KEYS */;
 /*!40000 ALTER TABLE `nyt_subscription` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_articleflaglogs`
---
-
-DROP TABLE IF EXISTS `Reputation_articleflaglogs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_articleflaglogs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reason_id` int(11) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` (`reason_id`),
-  KEY `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` (`resource_id`),
-  KEY `Reputation_articleflaglogs_user_id_4bce74ef_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Reputation_articlefl_reason_id_200b641a_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
-  CONSTRAINT `Reputation_articlefl_resource_id_21412c4c_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
-  CONSTRAINT `Reputation_articleflaglogs_user_id_4bce74ef_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_articleflaglogs`
---
-
-LOCK TABLES `Reputation_articleflaglogs` WRITE;
-/*!40000 ALTER TABLE `Reputation_articleflaglogs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_articleflaglogs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_articlescorelog`
---
-
-DROP TABLE IF EXISTS `Reputation_articlescorelog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_articlescorelog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `upvote` int(11) DEFAULT NULL,
-  `downvote` int(11) DEFAULT NULL,
-  `reported` int(11) DEFAULT NULL,
-  `publish` tinyint(1) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `resource_id` (`resource_id`),
-  CONSTRAINT `Reputation_articlesc_resource_id_ddac6fc9_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_articlescorelog`
---
-
-LOCK TABLES `Reputation_articlescorelog` WRITE;
-/*!40000 ALTER TABLE `Reputation_articlescorelog` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_articlescorelog` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_articleuserscorelogs`
---
-
-DROP TABLE IF EXISTS `Reputation_articleuserscorelogs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_articleuserscorelogs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `upvoted` tinyint(1) NOT NULL,
-  `downvoted` tinyint(1) NOT NULL,
-  `reported` tinyint(1) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` (`resource_id`),
-  KEY `Reputation_articleuserscorelogs_user_id_77095608_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Reputation_articleus_resource_id_2a10325b_fk_BasicArti` FOREIGN KEY (`resource_id`) REFERENCES `basicarticle_articles` (`id`),
-  CONSTRAINT `Reputation_articleuserscorelogs_user_id_77095608_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_articleuserscorelogs`
---
-
-LOCK TABLES `Reputation_articleuserscorelogs` WRITE;
-/*!40000 ALTER TABLE `Reputation_articleuserscorelogs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_articleuserscorelogs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_badgescore`
---
-
-DROP TABLE IF EXISTS `Reputation_badgescore`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_badgescore` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `articles_contributed_level_1` int(11) NOT NULL,
-  `articles_contributed_level_2` int(11) NOT NULL,
-  `articles_contributed_level_3` int(11) NOT NULL,
-  `articles_contributed_level_4` int(11) NOT NULL,
-  `articles_contributed_level_5` int(11) NOT NULL,
-  `my_articles_published_level_1` int(11) NOT NULL,
-  `my_articles_published_level_2` int(11) NOT NULL,
-  `my_articles_published_level_3` int(11) NOT NULL,
-  `my_articles_published_level_4` int(11) NOT NULL,
-  `my_articles_published_level_5` int(11) NOT NULL,
-  `articles_revised_by_me_level_1` int(11) NOT NULL,
-  `articles_revised_by_me_level_2` int(11) NOT NULL,
-  `articles_revised_by_me_level_3` int(11) NOT NULL,
-  `articles_revised_by_me_level_4` int(11) NOT NULL,
-  `articles_revised_by_me_level_5` int(11) NOT NULL,
-  `articles_published_by_me_level_1` int(11) NOT NULL,
-  `articles_published_by_me_level_2` int(11) NOT NULL,
-  `articles_published_by_me_level_3` int(11) NOT NULL,
-  `articles_published_by_me_level_4` int(11) NOT NULL,
-  `articles_published_by_me_level_5` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_badgescore`
---
-
-LOCK TABLES `Reputation_badgescore` WRITE;
-/*!40000 ALTER TABLE `Reputation_badgescore` DISABLE KEYS */;
-INSERT INTO `Reputation_badgescore` VALUES (1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5);
-/*!40000 ALTER TABLE `Reputation_badgescore` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_communityreputaion`
---
-
-DROP TABLE IF EXISTS `Reputation_communityreputaion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_communityreputaion` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `upvote_count` int(11) NOT NULL,
-  `downvote_count` int(11) NOT NULL,
-  `published_count` int(11) NOT NULL,
-  `community_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `published_by_me_count` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Reputation_community_community_id_9fe0df3b_fk_Community` (`community_id`),
-  KEY `Reputation_communityreputaion_user_id_fce03592_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Reputation_community_community_id_9fe0df3b_fk_Community` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
-  CONSTRAINT `Reputation_communityreputaion_user_id_fce03592_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_communityreputaion`
---
-
-LOCK TABLES `Reputation_communityreputaion` WRITE;
-/*!40000 ALTER TABLE `Reputation_communityreputaion` DISABLE KEYS */;
-INSERT INTO `Reputation_communityreputaion` VALUES (1,0,0,0,3,1,0);
-/*!40000 ALTER TABLE `Reputation_communityreputaion` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_flagreason`
---
-
-DROP TABLE IF EXISTS `Reputation_flagreason`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_flagreason` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reason` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_flagreason`
---
-
-LOCK TABLES `Reputation_flagreason` WRITE;
-/*!40000 ALTER TABLE `Reputation_flagreason` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_flagreason` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_mediaflaglogs`
---
-
-DROP TABLE IF EXISTS `Reputation_mediaflaglogs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_mediaflaglogs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reason_id` int(11) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` (`reason_id`),
-  KEY `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` (`resource_id`),
-  KEY `Reputation_mediaflaglogs_user_id_6d095f7f_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Reputation_mediaflag_reason_id_b7bf0680_fk_Reputatio` FOREIGN KEY (`reason_id`) REFERENCES `reputation_flagreason` (`id`),
-  CONSTRAINT `Reputation_mediaflaglogs_resource_id_1fe0b6c8_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
-  CONSTRAINT `Reputation_mediaflaglogs_user_id_6d095f7f_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_mediaflaglogs`
---
-
-LOCK TABLES `Reputation_mediaflaglogs` WRITE;
-/*!40000 ALTER TABLE `Reputation_mediaflaglogs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_mediaflaglogs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_mediascorelog`
---
-
-DROP TABLE IF EXISTS `Reputation_mediascorelog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_mediascorelog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `upvote` int(11) DEFAULT NULL,
-  `downvote` int(11) DEFAULT NULL,
-  `reported` int(11) DEFAULT NULL,
-  `publish` tinyint(1) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `resource_id` (`resource_id`),
-  CONSTRAINT `Reputation_mediascorelog_resource_id_c3f674e3_fk_Media_media_id` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_mediascorelog`
---
-
-LOCK TABLES `Reputation_mediascorelog` WRITE;
-/*!40000 ALTER TABLE `Reputation_mediascorelog` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_mediascorelog` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_mediauserscorelogs`
---
-
-DROP TABLE IF EXISTS `Reputation_mediauserscorelogs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_mediauserscorelogs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `upvoted` tinyint(1) NOT NULL,
-  `downvoted` tinyint(1) NOT NULL,
-  `reported` tinyint(1) NOT NULL,
-  `resource_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` (`resource_id`),
-  KEY `Reputation_mediauserscorelogs_user_id_ef68208e_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `Reputation_mediauser_resource_id_461aadb0_fk_Media_med` FOREIGN KEY (`resource_id`) REFERENCES `media_media` (`id`),
-  CONSTRAINT `Reputation_mediauserscorelogs_user_id_ef68208e_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_mediauserscorelogs`
---
-
-LOCK TABLES `Reputation_mediauserscorelogs` WRITE;
-/*!40000 ALTER TABLE `Reputation_mediauserscorelogs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_mediauserscorelogs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_resourcescore`
---
-
-DROP TABLE IF EXISTS `Reputation_resourcescore`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_resourcescore` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `can_vote_unpublished` tinyint(1) NOT NULL,
-  `upvote_value` int(11) DEFAULT NULL,
-  `downvote_value` int(11) DEFAULT NULL,
-  `can_report` tinyint(1) NOT NULL,
-  `publish_value` int(11) DEFAULT NULL,
-  `resource_type` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_resourcescore`
---
-
-LOCK TABLES `Reputation_resourcescore` WRITE;
-/*!40000 ALTER TABLE `Reputation_resourcescore` DISABLE KEYS */;
-INSERT INTO `Reputation_resourcescore` VALUES (1,1,0,0,1,0,'resource');
-/*!40000 ALTER TABLE `Reputation_resourcescore` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Reputation_userscore`
---
-
-DROP TABLE IF EXISTS `Reputation_userscore`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Reputation_userscore` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `author` int(11) NOT NULL,
-  `publisher` int(11) NOT NULL,
-  `role_score` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reputation_userscore`
---
-
-LOCK TABLES `Reputation_userscore` WRITE;
-/*!40000 ALTER TABLE `Reputation_userscore` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reputation_userscore` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2674,31 +2748,6 @@ LOCK TABLES `taggit_taggeditem` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `TaskQueue_task`
---
-
-DROP TABLE IF EXISTS `TaskQueue_task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TaskQueue_task` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `tfile` varchar(100) NOT NULL,
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `TaskQueue_task`
---
-
-LOCK TABLES `TaskQueue_task` WRITE;
-/*!40000 ALTER TABLE `TaskQueue_task` DISABLE KEYS */;
-/*!40000 ALTER TABLE `TaskQueue_task` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `thumbnail_kvstore`
 --
 
@@ -2719,59 +2768,6 @@ CREATE TABLE `thumbnail_kvstore` (
 LOCK TABLES `thumbnail_kvstore` WRITE;
 /*!40000 ALTER TABLE `thumbnail_kvstore` DISABLE KEYS */;
 /*!40000 ALTER TABLE `thumbnail_kvstore` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `UserRolesPermission_favourite`
---
-
-DROP TABLE IF EXISTS `UserRolesPermission_favourite`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `UserRolesPermission_favourite` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `resource` int(10) unsigned NOT NULL,
-  `category` varchar(20) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `UserRolesPermission_favourite_user_id_14680490_fk_auth_user_id` (`user_id`),
-  CONSTRAINT `UserRolesPermission_favourite_user_id_14680490_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserRolesPermission_favourite`
---
-
-LOCK TABLES `UserRolesPermission_favourite` WRITE;
-/*!40000 ALTER TABLE `UserRolesPermission_favourite` DISABLE KEYS */;
-/*!40000 ALTER TABLE `UserRolesPermission_favourite` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `UserRolesPermission_profileimage`
---
-
-DROP TABLE IF EXISTS `UserRolesPermission_profileimage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `UserRolesPermission_profileimage` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `photo` varchar(100) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  CONSTRAINT `UserRolesPermission__user_id_2e95d164_fk_auth_user` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserRolesPermission_profileimage`
---
-
-LOCK TABLES `UserRolesPermission_profileimage` WRITE;
-/*!40000 ALTER TABLE `UserRolesPermission_profileimage` DISABLE KEYS */;
-/*!40000 ALTER TABLE `UserRolesPermission_profileimage` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -3348,7 +3344,7 @@ CREATE TABLE `workflow_states` (
 
 LOCK TABLES `workflow_states` WRITE;
 /*!40000 ALTER TABLE `workflow_states` DISABLE KEYS */;
-INSERT INTO `workflow_states` VALUES (1,'draft','save as draft state',0,1),(2,'visible','this state make the content visible to community',0,0),(3,'publish','save as visible state',1,0),(4,'private','this state make the content visible to group',0,0),(5,'publishable','this content makes the content ready for publishing',0,0);
+INSERT INTO `workflow_states` VALUES (1,'draft','save as draft state',0,1),(2,'visible','this state make the content visible to community',0,0),(3,'publish','save as visible state',1,0),(5,'publishable','this content makes the content ready for publishing',0,0);
 /*!40000 ALTER TABLE `workflow_states` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3375,7 +3371,7 @@ CREATE TABLE `workflow_transitions` (
   CONSTRAINT `workflow_transitions_from_state_id_5ff9ea9d_fk_workflow_` FOREIGN KEY (`from_state_id`) REFERENCES `workflow_states` (`id`),
   CONSTRAINT `workflow_transitions_role_id_b75429ec_fk_auth_group_id` FOREIGN KEY (`role_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `workflow_transitions_to_state_id_8d6c5cc6_fk_workflow_states_id` FOREIGN KEY (`to_state_id`) REFERENCES `workflow_states` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3384,7 +3380,7 @@ CREATE TABLE `workflow_transitions` (
 
 LOCK TABLES `workflow_transitions` WRITE;
 /*!40000 ALTER TABLE `workflow_transitions` DISABLE KEYS */;
-INSERT INTO `workflow_transitions` VALUES (1,'Make Visible to Group',1,4,NULL,NULL),(3,'Make Visible to Community',4,2,NULL,NULL),(4,'Ready for Publishing',2,5,NULL,NULL),(5,'Publish',5,3,NULL,NULL),(6,'Publish',5,2,NULL,NULL);
+INSERT INTO `workflow_transitions` VALUES (7,'author-draft-draft',1,1,NULL,1),(8,'author-draft-visible',1,2,NULL,1),(9,'author-visible-visible',2,2,NULL,1),(10,'author-visible-publishable',2,5,NULL,1),(11,'community_admin-draft-draft',1,1,NULL,3),(12,'community_admin-draft-visible',1,2,NULL,3),(13,'community_admin-visible-visible',2,2,NULL,3),(14,'community_admin-visible-publishable',2,5,NULL,3),(15,'community_admin-publishable-draft',5,1,NULL,3),(16,'community_admin-publishable-publish',5,3,NULL,3),(17,'community_admin-publishable-publishable',5,5,NULL,3),(18,'publisher-draft-draft',1,1,NULL,2),(19,'publisher-draft-visible',1,2,NULL,2),(20,'publisher-visible-visible',2,2,NULL,2),(21,'publisher-visible-publishable',2,5,NULL,2),(22,'publisher-publishable-draft',5,1,NULL,2),(23,'publisher-publishable-publish',5,3,NULL,2),(24,'publisher-publishable-publishable',5,5,NULL,2);
 /*!40000 ALTER TABLE `workflow_transitions` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -3397,4 +3393,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-26 20:43:32
+-- Dump completed on 2019-08-16 18:27:50
