@@ -487,7 +487,7 @@ class CreateSubCommunityView(CreateView):
 
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
-			if self.is_member_of_parent():
+			if self.is_community_admin():
 				self.object = None
 				return super(CreateSubCommunityView, self).get(request, *args, **kwargs)
 			messages.warning(self.request, 'You are not a member of this community.')
@@ -497,6 +497,11 @@ class CreateSubCommunityView(CreateView):
 	def is_member_of_parent(self):
 		community = self.model.objects.get(pk=self.kwargs['pk'])
 		return CommunityMembership.objects.filter(community=community, user=self.request.user).exists()
+
+	def is_community_admin(self):
+		community = self.model.objects.get(pk=self.kwargs['pk'])
+		role = Roles.objects.get(name='community_admin')
+		return CommunityMembership.objects.filter(community=community, user=self.request.user, role=role).exists()
 
 	def form_valid(self, form):
 		"""
