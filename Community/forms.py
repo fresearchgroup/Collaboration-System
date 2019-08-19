@@ -70,10 +70,10 @@ class CommunityUpdateForm(forms.ModelForm):
 		self.fields['category'].required = False
 
 class SubCommunityCreateForm(forms.ModelForm):
-	x = forms.FloatField(widget=forms.HiddenInput())
-	y = forms.FloatField(widget=forms.HiddenInput())
-	width = forms.FloatField(widget=forms.HiddenInput())
-	height = forms.FloatField(widget=forms.HiddenInput())
+	x = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	y = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	width = forms.FloatField(widget=forms.HiddenInput(), required=False)
+	height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
 	class Meta:
 		model = Community
@@ -93,12 +93,12 @@ class SubCommunityCreateForm(forms.ModelForm):
 		self.fields['parent'].empty_label = None
 		if community:
 			self.fields['parent'].queryset = Community.objects.filter(pk=community.pk)
-		if community.category:
-			self.fields['category'] = TreeNodeChoiceField(community.category.get_descendants(include_self=False))
-		else:
-			self.fields['category'].queryset = Category.objects.none()
+			root = community.get_root()
+			if root.category:
+				self.fields['category'] = TreeNodeChoiceField(root.category.get_descendants(include_self=False))
+			else:
+				self.fields['category'].queryset = Category.objects.none()
 		self.fields['category'].required = False
-
 
 
 class FacetedProductSearchForm(FacetedSearchForm):
