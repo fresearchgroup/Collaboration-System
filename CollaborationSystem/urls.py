@@ -210,6 +210,8 @@ urlpatterns = [
 
     url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
     url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
+
+    url(r'api/search/', include('search.api.urls', namespace = 'api-search')),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
