@@ -250,7 +250,7 @@ CACHES = {
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
         'URL': 'http://'+config('ELASTICSEARCH_ADDRESS')+':9200/',
         'INDEX_NAME': 'haystack',
     },
