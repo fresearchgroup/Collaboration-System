@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Metadata
+from .models import Metadata, Schema
 from django.views.generic import CreateView, UpdateView
 from Community.models import CommunityMembership, Community, CommunityMedia
 from Media.models import Media
@@ -64,6 +64,10 @@ class MetadataCreateView(CreateView):
 
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
+		attars = dict()
+		for key in Schema:
+			attars[key] = form.cleaned_data.get(key)
+		self.object.attrs=attars
 		self.object.save()
 		redirect_url = super(MetadataCreateView, self).form_valid(form)
 		
