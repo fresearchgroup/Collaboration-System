@@ -3,6 +3,7 @@ from elasticsearch_dsl import Document, Date, Integer, Keyword, Text
 
 
 class CommunityIndex(Document):
+    community_id = Integer()
     name = Text(analyzer='snowball', fields={'raw': Keyword()})
     desc = Text(analyzer='snowball')
     image = Text(analyzer='snowball')
@@ -19,4 +20,4 @@ class CommunityIndex(Document):
         }
 
     def save(self, ** kwargs):
-        return super(Article, self).save(** kwargs)
+        return super(CommunityIndex, self).save(** kwargs)

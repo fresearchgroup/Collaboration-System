@@ -34,5 +34,6 @@ django-categories==1.6
 django-crispy-forms
 djangorestframework-simplejwt==4.1.0
 django-mysql==3.2.0
-confluent-kafka=1.1.0
+confluent-kafka==1.1.0
 elasticsearch-dsl==7.0.0
+elasticsearch==7.0.2
