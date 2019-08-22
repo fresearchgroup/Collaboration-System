@@ -16,7 +16,7 @@ from machina import MACHINA_MAIN_TEMPLATE_DIR
 from machina import MACHINA_MAIN_STATIC_DIR
 from decouple import config, Csv
 from elasticsearch_dsl.connections import connections
-connections.create_connection(hosts=['localhost:9200'])
+import elasticsearch
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -328,3 +328,8 @@ CELERY_BROKER_URL = 'amqp://localhost'
 REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
 
 TAGGIT_CASE_INSENSITIVE = True
+
+#elastic search Connection
+ELASTICSEARCH_RUNNING = config('ELASTICSEARCH_RUNNING', cast=bool)
+if ELASTICSEARCH_RUNNING:
+    connections.create_connection(hosts=[config('ELASTICSEARCH_ADDRESS')])
