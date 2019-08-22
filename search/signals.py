@@ -1,4 +1,5 @@
-from .schema import CommunityIndex
+from .schema import CommunityIndex, ArticleIndex
+from workflow.models import States
 
 def create_community_search_index(sender, instance, created, **kwargs):
 	if created:
@@ -14,3 +15,18 @@ def create_community_search_index(sender, instance, created, **kwargs):
 						parent=instance.parent.name if instance.parent else ''
 						)
 		cindex.save()
+
+
+def create_article_search_index(sender, instance, created, **kwargs):
+	if instance.state == States.objects.get(final=True):
+		aindex = ArticleIndex(
+						article_id = instance.pk,
+						title = instance.title,
+						body = instance.body,
+						image = instance.image.url if instance.image else '',
+						created_at = instance.created_at,
+						created_by = instance.created_by.username,
+						published_on = instance.published_on,
+						views=instance.views
+				)
+		aindex.save()

@@ -31,7 +31,14 @@ class SearchArticleAPI(generics.ListAPIView):
 	def get_queryset(self):
 		query =self.request.query_params.get('query', None)
 		if query:
-			return Articles.objects.filter(title__icontains=query, state__name='publish')
+			if settings.ELASTICSEARCH_RUNNING:
+				client = Elasticsearch()
+				s = Search().using(client).query(MultiMatch(query=query, fields=['title', 'body']))
+				response = s.execute()
+				articles_ids = [i.article_id for i in response]
+				return Articles.objects.filter(pk__in=articles_ids)
+			else:
+				return Articles.objects.filter(title__icontains=query, state__name='publish')
 		return Articles.objects.none()
 
 class SearchMediaAPI(generics.ListAPIView):
