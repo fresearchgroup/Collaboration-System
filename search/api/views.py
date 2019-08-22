@@ -3,6 +3,10 @@ from .serializers import SearchCommunitySerializer, SearchArticleSerializer, Sea
 from Community.models import Community
 from BasicArticle.models import Articles
 from Media.models import Media
+from django.conf import settings
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import MultiMatch
 
 class SearchCommunityAPI(generics.ListAPIView):
 	serializer_class = SearchCommunitySerializer
@@ -10,7 +14,14 @@ class SearchCommunityAPI(generics.ListAPIView):
 	def get_queryset(self):
 		query =self.request.query_params.get('query', None)
 		if query:
-			return Community.objects.filter(name__icontains=query)
+			if settings.ELASTICSEARCH_RUNNING:
+				client = Elasticsearch()
+				s = Search().using(client).query(MultiMatch(query=query, fields=['name', 'desc']))
+				response = s.execute()
+				community_ids=[i.community_id for i in response]
+				return Community.objects.filter(pk__in=community_ids)
+			else:
+				return Community.objects.filter(name__icontains=query)
 		return Community.objects.none()
 
 
