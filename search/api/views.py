@@ -16,7 +16,7 @@ class SearchCommunityAPI(generics.ListAPIView):
 		if query:
 			if settings.ELASTICSEARCH_RUNNING:
 				client = Elasticsearch()
-				s = Search().using(client).query(MultiMatch(query=query, fields=['name', 'desc']))
+				s = Search(index='community').using(client).query(MultiMatch(query=query, fields=['name', 'desc']))
 				response = s.execute()
 				community_ids=[i.community_id for i in response]
 				return Community.objects.filter(pk__in=community_ids)
@@ -33,7 +33,7 @@ class SearchArticleAPI(generics.ListAPIView):
 		if query:
 			if settings.ELASTICSEARCH_RUNNING:
 				client = Elasticsearch()
-				s = Search().using(client).query(MultiMatch(query=query, fields=['title', 'body']))
+				s = Search(index='article').using(client).query(MultiMatch(query=query, fields=['title', 'body']))
 				response = s.execute()
 				articles_ids = [i.article_id for i in response]
 				return Articles.objects.filter(pk__in=articles_ids)
@@ -47,5 +47,12 @@ class SearchMediaAPI(generics.ListAPIView):
 	def get_queryset(self):
 		query =self.request.query_params.get('query', None)
 		if query:
-			return Media.objects.filter(title__icontains=query, state__name='publish')
+			if settings.ELASTICSEARCH_RUNNING:
+				client = Elasticsearch()
+				s = Search(index='media').using(client).query(MultiMatch(query=query, fields=['title', 'mediatype']))
+				response = s.execute()
+				media_ids = [i.media_id for i in response]
+				return Media.objects.filter(pk__in=media_ids)
+			else:
+				return Media.objects.filter(title__icontains=query, state__name='publish')
 		return Media.objects.none()
