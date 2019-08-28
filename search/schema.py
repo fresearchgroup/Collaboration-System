@@ -16,7 +16,7 @@ class CommunityIndex(Document):
     class Index:
         name = 'community'
         settings = {
-          "number_of_shards": 2,
+          "number_of_shards": 1,
         }
 
     def save(self, ** kwargs):
@@ -37,7 +37,7 @@ class ArticleIndex(Document):
     class Index:
         name = 'article'
         settings = {
-          "number_of_shards": 2,
+          "number_of_shards": 1,
         }
 
     def save(self, ** kwargs):
@@ -58,7 +58,7 @@ class MediaIndex(Document):
     class Index:
         name = 'media'
         settings = {
-          "number_of_shards": 2,
+          "number_of_shards": 1,
         }
 
     def save(self, ** kwargs):
