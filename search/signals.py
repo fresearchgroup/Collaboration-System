@@ -1,4 +1,4 @@
-from .schema import CommunityIndex, ArticleIndex
+from .schema import CommunityIndex, ArticleIndex, MediaIndex
 from workflow.models import States
 
 def create_community_search_index(sender, instance, created, **kwargs):
@@ -30,3 +30,20 @@ def create_article_search_index(sender, instance, created, **kwargs):
 						views=instance.views
 				)
 		aindex.save()
+
+
+def create_media_search_index(sender, instance, created, **kwargs):
+	if instance.state == States.objects.get(final=True):
+		mindex = MediaIndex(
+						media_id = instance.pk,
+						title = instance.title,
+						mediatype = instance.mediatype,
+						mediafile = instance.mediafile.url if instance.mediafile else '',
+						medialink = instance.medialink,
+						created_at = instance.created_at,
+						created_by = instance.created_by.username,
+						published_on = instance.published_on,
+                                                published_by = instance.published_by.username if instance.published_by else '',
+						views=instance.views
+				)
+		mindex.save()
