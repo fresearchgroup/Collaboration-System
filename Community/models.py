@@ -54,6 +54,10 @@ class Community(MPTTModel):
 			except:
 				return False, False
 
+		def get_absolute_url(self):
+			from django.urls import reverse
+			return reverse('community_view', kwargs={'pk': self.id})
+
 
 class CommunityMembership(models.Model):
 	user = models.ForeignKey(User, related_name='communitymembership')

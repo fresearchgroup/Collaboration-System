@@ -66,7 +66,7 @@ urlpatterns = [
     url(r'^activity/', include('actstream.urls')),
 
     url(r'^auth/', include('social_django.urls', namespace='social')),
-
+    url(r'^community/', include('Community.urls', namespace='community')),
     url(r'^communities/$', communityview.display_communities, name ='display_communities'),
     url(r'^community-view/(?P<pk>\d+)/$', communityview.community_view, name='community_view'),
     url(r'^community-subscribe/$', communityview.community_subscribe, name='community_subscribe'),

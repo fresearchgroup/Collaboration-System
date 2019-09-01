@@ -62,6 +62,6 @@ class Command(BaseCommand):
 						)
 				mindex.save()
 
-				self.stdout.write(self.style.SUCCESS('Successfully created index all resources in elastic search'))
+			self.stdout.write(self.style.SUCCESS('Successfully created index all resources in elastic search'))
 		else:
 			self.stdout.write(self.style.WARNING('Elasticsearch serivces are not running'))
