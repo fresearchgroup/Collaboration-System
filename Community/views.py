@@ -34,12 +34,8 @@ from django.db import connection
 from django.urls import reverse
 from Categories.models import Category
 from PIL import Image
-from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
-from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
-from haystack.query import SearchQuerySet
-from .forms import FacetedProductSearchForm
 from UserRolesPermission.models import ProfileImage
 from django.db.models import Count
 from django.db.models import F
@@ -761,44 +757,4 @@ def community_media_create(request):
 		return redirect('login')
 
 
-class FacetedSearchView(BaseFacetedSearchView, TemplateView):
-
-    form_class = FacetedProductSearchForm
-    facet_fields = ['category', 'created_at', 'views']
-    template_name = 'search_result.html'
-    #paginate_by = 3
-    # context_object_name = 'object_list'
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        print("context..................")
-        print(context)
-        print("self.request.GET >>>>>>>>>>>>>>>>>>>>> ", self.request.GET)
-        
-        try:
-        	if 'community' in self.request.GET:
-		        context['community'] = self.request.GET['community']
-        	if 'article' in self.request.GET:
-	            context['article'] = self.request.GET['article']
-        	if 'image' in self.request.GET:
-	        	context['image'] = self.request.GET['image']
-        	if 'audio' in self.request.GET:
-		        context['audio'] = self.request.GET['audio']
-        	if 'video' in self.request.GET:
-		        context['video'] = self.request.GET['video']
-        	if 'query' in self.request.GET:
-		        context['query'] = self.request.GET['query']
-        except:
-            pass
-        
-        # new_created_at = []
-        # for d in context['facets']['fields']['created_at']:
-        # 	date_value = datetime.datetime.fromtimestamp(int(str(d[0]))/1000)
-        # 	temp_tuple = (date_value, d[1])
-        # 	new_created_at.append(temp_tuple)
-        # context['facets']['fields']['created_at'] = new_created_at
-
-        object_list = context['object_list']
-        return context
 

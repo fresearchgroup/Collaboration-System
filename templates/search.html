@@ -1,44 +1,109 @@
 {% extends 'base.html' %}
+{%load static %}
+
 {% load comments %}
 {% load comments_xtd %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
-{% endblock %}
-
 {% block content %}
-<h1>Articles</h1>
-{% if not articles %}
-<div class="content-page page-404">
-   <div class="number">
-      Oops!
-   </div>
-   <div class="details">
-      <h3>No Articles</h3>
-      <p>
-         Sorry, no articles found!
-      </p>
-   </div>
-</div>
-{% endif %}
+
+<h1>Search results</h1>
+<div class="infinite-container">
 {{myhtml|safe}}{% autoescape off%}
-{% for art in articles %}
+<div class="row ">
+  <div class="col-md-9 col-sm-9">
+{% for article in articles %}
+<div class="infinite-item">
   <div class="row margin-bottom-15">
     <div class="col-md-2 col-sm-2">
+      {% if article.image %}
+      <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive">
+      {% else %}
       <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
-
+      {%endif%}
     </div>
     <div class="col-md-10 col-sm-10">
-      <h3><a href="{% url 'article_view' art.id %}">{{ art.title }}</a></h3>
+      <h3><a href="{% url 'article_view' article.pk %}">{{ article.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{article.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{article.views}} </li>
+        {% get_comment_count for article as commentscnt %}
+        <li><i class="fa fa-comments"></i> {{ commentscnt }} comments </li>
+      </ul>
       <p>
-        {{ art.body|striptags|truncatewords:50 }}
-        <a href="{% url 'article_view' art.id %}" class="more">Read more <i class="icon-angle-right"></i></a>
+        {{ article.body|striptags|truncatewords:50 }}
+        <a href="{% url 'article_view' article.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
       </p>
     </div>
+
   </div>
   <hr class="blog-post-sep">
+</div>
 {% endfor %}
-{% endautoescape%}
 
+{% for media in medias %}
+<div class="infinite-item">
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      {% if media.image %}
+      <img src="{{ MEDIA_URL }}{{ media.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+    </div>
+    <div class="col-md-10 col-sm-10">
+      <h3><a href="{% url 'media_view' media.pk %}">{{ media.title }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{media.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{media.views}} </li>
+      </ul>
+      <p>
+        {{ media.body|striptags|truncatewords:50 }}
+        <a href="{% url 'media_view' media.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+
+  </div>
+  <hr class="blog-post-sep">
+</div>
+{% endfor %}
+
+{% for community in communities %}
+<div class="infinite-item">
+  <div class="row margin-bottom-15">
+    <div class="col-md-2 col-sm-2">
+      {% if community.image %}
+      <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive">
+      {% else %}
+      <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive">
+      {%endif%}
+    </div>
+    <div class="col-md-10 col-sm-10">
+      <h3><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></h3>
+      <ul class="blog-info">
+        <li><i class="fa fa-calendar"></i> {{community.created_at}} </li>
+        <li><i class="fa fa-eye"></i> {{community.views}} </li>
+      </ul>
+      <p>
+        {{ community.desc|striptags|truncatewords:50 }}
+        <a href="{% url 'community_view' community.pk %}" class="more">Read more <i class="icon-angle-right"></i></a>
+      </p>
+    </div>
+
+  </div>
+  <hr class="blog-post-sep">
+</div>
+{% endfor %}
+</div>
+
+</div>
+{% endautoescape%}
+</div>
+<div class="loading" style="display: none;">
+ 
+</div>
+
+{% endblock %}
+
+{% block javascript %}
 
 {% endblock %}
