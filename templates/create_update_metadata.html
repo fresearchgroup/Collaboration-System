@@ -13,7 +13,7 @@
 </style>
 {% endblock %}
 {% block breadcrumb %}
-  <li class="breadcrumb-item active">Metadata for {% if resource.name %} {{resource.name}} Community{% endif %} {% if resource.title %} {{resource.title}} {% endif %}</li>
+  <li class="breadcrumb-item active"><h2>Metadata for {% if resource.name %} {{resource.name}} Community{% endif %} {% if resource.title %} {{resource.title}} {% endif %}</h2></li>
 {% endblock %}
 
 {% block content %}
@@ -57,6 +57,7 @@
             {% endif %}
           </div>
         {% endfor %}
+        
         <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Create</button>
             </div>

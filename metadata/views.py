@@ -9,6 +9,7 @@ from workflow.views import canEditResourceCommunity
 from .forms import *
 from django.core.exceptions import ObjectDoesNotExist
 from BasicArticle.models import Articles
+from django.http import Http404
 
 # Create your views here.
 def create_metadata(request):
@@ -38,9 +39,9 @@ class MetadataCreateView(CreateView):
 	def get(self, request, *args, **kwargs):
 			if request.user.is_authenticated:
 				resource_dict = get_resource(str(self.kwargs['resource_type']), int(self.kwargs['resource_id']))
-				resource = resource_dict['resource']
-				resource_of = resource_dict['resource_of']
-				if resource:
+				if resource_dict['resource']:
+					resource = resource_dict['resource']
+					resource_of = resource_dict['resource_of']
 					membership, role, can_create = get_communitymemebership_and_role(request, resource, resource_of)
 					if membership and can_create:
 						self.object = None
@@ -84,13 +85,15 @@ class MetadataUpdateView(UpdateView):
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			resource_dict = get_resource(str(self.kwargs['resource_type']), int(self.kwargs['resource_id']))
-			resource = resource_dict['resource']
-			resource_of = resource_dict['resource_of']
-			if resource:
+			if resource_dict['resource']:
+				resource = resource_dict['resource']
+				resource_of = resource_dict['resource_of']
 				membership, role, can_edit = get_communitymemebership_and_role(request, resource, resource_of)
 				if membership and can_edit:
-					self.object = resource.metadata
-					return super(MetadataUpdateView, self).get(request, *args, **kwargs)
+					self.object = self.get_object()
+					if self.object:
+						return super(MetadataUpdateView, self).get(request, *args, **kwargs)
+					raise Http404("Url not found")
 				return redirect(self.get_success_url())
 			return redirect('home')
 		return redirect('login')
@@ -132,7 +135,21 @@ class MetadataUpdateView(UpdateView):
 			return reverse('media_view',kwargs={'pk': self.kwargs['resource_id']})
 		return None
 
+	def get_object(self, queryset=None):
+		pk = self.kwargs.get(self.pk_url_kwarg)
+		if pk is not '':
+			try:
+				obj = Metadata.objects.get(pk=pk)
+			except ObjectDoesNotExist:
+				raise Http404("Url not found")
 
+			resource_dict = get_resource(str(self.kwargs['resource_type']), int(self.kwargs['resource_id']))
+			if resource_dict['resource']:
+				resource = resource_dict['resource']
+				if obj == resource.metadata:
+					return obj
+				raise Http404("Url not found")
+		return None
 
 
 
@@ -152,16 +169,16 @@ def get_resource(type, id):
 			return {'resource':Community.objects.get(pk=id), 'resource_of':None}
 		elif type == 'article':
 			artcile = Articles.objects.get(pk=id)
-			belongsto = CommuniyArticles.objects.get(article=artcile)
+			belongsto = CommunityArticles.objects.get(article=artcile)
 			return {'resource': artcile, 'resource_of':belongsto.community}
 		elif type == 'media':
 			media = Media.objects.get(pk=id)
 			belongsto = CommunityMedia.objects.get(media=media)
 			return {'resource': media, 'resource_of':belongsto.community}
 		else:
-			return None
+			return {'resource': None, 'resource_of':None}
 	except ObjectDoesNotExist:
-		return None
+		return {'resource': None, 'resource_of':None}
 
 def is_communitymember(request, community):
 		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
