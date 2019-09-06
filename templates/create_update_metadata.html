@@ -13,9 +13,7 @@
 </style>
 {% endblock %}
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
-  <li class="breadcrumb-item active"><a href="{% url 'media_view' media.pk %}">{{media.title}}</a></li>
-  <li class="breadcrumb-item active">Metadata</li>
+  <li class="breadcrumb-item active">Metadata for {% if resource.name %} {{resource.name}} Community{% endif %} {% if resource.title %} {{resource.title}} {% endif %}</li>
 {% endblock %}
 
 {% block content %}

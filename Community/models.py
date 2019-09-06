@@ -9,6 +9,7 @@ from Media.models import Media
 from mptt.models import MPTTModel, TreeForeignKey
 from Categories.models import Category
 from django.db import connection
+from metadata.models import Metadata
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -29,6 +30,7 @@ class Community(MPTTModel):
 		forum_link = models.CharField(null=True, max_length=100)
 		forum = models.PositiveIntegerField(null=True)
 		parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+		metadata = models.ForeignKey(Metadata, null=True,related_name='community_metadata')
 
 		def __str__(self):
 			return self.name

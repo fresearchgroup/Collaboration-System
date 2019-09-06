@@ -4,13 +4,15 @@ from workflow.models import States, Transitions
 from django.contrib.auth.models import Group as Roles
 
 def canEditResourceCommunity(state, role, resource, request):
-	if state=='publishable' and role=='author':
+	if state=='draft' and request.user!= resource.created_by:
+		return False
+	elif state=='publishable' and role=='author':
 		messages.warning(request, 'Since it is publishable only the publishers can edit this')
 		return False
-	if state=='publishable' and request.user == resource.created_by:
+	elif state=='publishable' and request.user == resource.created_by:
 		messages.warning(request, 'You cannot edit your own content when it is in publishable state')
 		return False
-	if state=='publish':
+	elif state=='publish':
 		messages.warning(request, 'You cannot edit content which is already published')
 		return False
 	return True

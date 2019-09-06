@@ -40,7 +40,6 @@ from Community.forms import FacetedSearchForm
 from Community.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 from Categories import views as categoryview
-from metadata import views as metadataview
 from search import views as SearchView
 from workflow import views as workflowview
 from django.views.generic import TemplateView
@@ -205,8 +204,7 @@ urlpatterns = [
     url(r'categorized_communities/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.categorized_communities, name='categorized_communities'),
     url(r'categories/$', categoryview.categories, name='categories'),
 
-    url(r'^community/(?P<cpk>\d+)/media/(?P<mdpk>\d+)/metadata_create/$', metadataview.MetadataCreateView.as_view(), name='metadata_create'),
-    url(r'^media/(?P<mdpk>\d+)/metadata_update/(?P<pk>\d+)$', metadataview.MetadataUpdateView.as_view(), name='metadata_update'),
+    url(r'^metadata/', include('metadata.urls', namespace = 'metadata')),
 
     url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
     url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),

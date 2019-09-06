@@ -23,3 +23,15 @@ class MetadataForm(forms.ModelForm):
 
 		for key in Schema:
 			self.fields[key]=forms.CharField(label = key, required = False)
+
+
+class MetadataUpdateForm(forms.ModelForm):
+
+	class Meta:
+		model = Metadata
+		exclude = ['attrs']
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		for key in Schema:
+			self.fields[key]=forms.CharField(label = key, required = False, initial=kwargs['instance'].attrs[key])
