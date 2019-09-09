@@ -11,6 +11,15 @@ function delay(callback, ms) {
   };
 }
 
+$(document).ready(function () {
+    $(document).ajaxStart(function () {
+        $("#results").empty();
+        $("#loading").show();
+    }).ajaxStop(function () {
+        $("#loading").hide();
+    });
+});
+
 $("#filter_query").keydown(delay(function (e) { 
     var query = $('#filter_query').val();
     var category = $('input[name=category]:checked').val();

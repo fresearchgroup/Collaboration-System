@@ -96,7 +96,7 @@
 </div>
 <div class="col-md-3 col-sm-3">
 
-  <!-- FAVOURITES START -->
+  <!-- Search START -->
     <h2 class="no-top-space">Filter: Search in</h2>
     <ul class="nav sidebar-categories margin-bottom-40">
       <div class="data-container">
@@ -106,21 +106,21 @@
           <label class="radio-inline"><input type="radio" id ="category" name="category" value="media"> Media</label>
         </div>
           <div class="form-group">
-             <input type="text" placeholder="Search" class="form-control" name="filter_query" id="filter_query">
+          <input type="text" placeholder="Search" class="form-control" name="filter_query" id="filter_query">
           </div>
+          <div class="form-group" align="center">
+          <div id ="loading" class="loading" style="display: none;">
+            <img src="{{ MEDIA_URL }}default/loader.gif" alt="default" class="img-responsive">
+          </div>
+        </div>
       </div>
     </ul>
     <div id="pagination-fav" class="margin-bottom-20"></div>
-  <!-- FAVOURITES END -->
-
+  <!-- search END -->
 </div>
 </div>
 {% endautoescape%}
 
-</div>
-
-<div class="loading" style="display: none;">
- 
 </div>
 
 {% endblock %}
