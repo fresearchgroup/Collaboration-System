@@ -10,11 +10,18 @@ from .permissions import IsCommunityMember, IfNotCommunityMember, CanUnjoinCommu
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group as Roles
+from django.http import Http404
 
 class CommunityListsApi(generics.ListAPIView):
-	queryset = Community.objects.all()
 	serializer_class = CommunitySerializer
 
+	def get_queryset(self):
+		if self.kwargs['type'] == 'list':
+			return Community.objects.all()
+		elif self.kwargs['type'] == 'root':
+			return Community.objects.filter(parent=None)
+		else:
+			raise Http404
 
 class CommunityArticlesApi(generics.ListAPIView):
 	serializer_class = CommunityArticlesSerializer
@@ -68,3 +75,9 @@ class CommunityUnJoinAPI(generics.DestroyAPIView):
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityMembership.objects.get(user=request.user, community=community).delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommunityAPI(generics.RetrieveAPIView):
+	serializer_class = CommunitySerializer
+	lookup_url_kwarg = 'pk'
+	queryset = Community.objects.all()
