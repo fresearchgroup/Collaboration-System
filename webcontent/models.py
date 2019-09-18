@@ -9,6 +9,9 @@ class Feedback(models.Model):
 	user = models.ForeignKey(User, null=True, related_name='fuser')
 	provided_at = models.DateTimeField(null=True, auto_now_add=True)
 
+	def __str__(self):
+		return self.title
+
 class FaqCategory(models.Model):
 	name = models.CharField(max_length=50)
 	desc = models.TextField()
@@ -21,3 +24,6 @@ class Faq(models.Model):
 	flow = models.FloatField(default=0.0)
 	question = models.CharField(max_length=200)
 	answer = models.TextField()
+
+	def __str__(self):
+		return self.question
