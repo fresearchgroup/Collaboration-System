@@ -226,3 +226,13 @@ def favourites(request):
                 return HttpResponse('removed')
         return HttpResponse('ok')
 
+
+def validateEmail(email):
+    from django.core.exceptions import ValidationError
+    from django.core.validators import validate_email
+
+    try:
+        validate_email(email):
+        return True
+    except ValidationError as e:
+        return False
