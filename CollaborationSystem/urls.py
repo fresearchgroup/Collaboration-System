@@ -55,6 +55,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^signup/$', user_views.signup, name ='signup' ),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',user_views.activate_user, name='activate'),
     url(r'^', include(router.urls)),
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/auth/$', user_viewsets.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),

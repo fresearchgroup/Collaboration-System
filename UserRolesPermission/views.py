@@ -22,6 +22,64 @@ from datetime import date
 from decouple import config
 from etherpad.views import create_ether_user
 from django.db.models import Q
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils import six
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.contrib import messages as auth_messages
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+
+class TokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+        six.text_type(user.pk) + six.text_type(timestamp) +
+        six.text_type(user.is_active)
+        )
+account_activation_token = TokenGenerator()
+
+def validateEmail(email):
+    from django.core.exceptions import ValidationError
+    from django.core.validators import validate_email
+
+    try:
+        validate_email(email)
+        return True
+    except ValidationError as e:
+        return False
+
+
+
+def send_mail(request, user, to_email):
+    current_site = get_current_site(request)
+    mail_subject = 'Please activate your account.'
+    message = render_to_string('activate_email.html', {
+    'user': user,
+    'domain': current_site.domain,
+    'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+    'token':account_activation_token.make_token(user),
+    })
+    print(mail_subject, message, to_email)
+    #email = EmailMessage(mail_subject, message, to=[to_email])
+    #email.send()
+
+
+
+def activate_user(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        auth_messages.success(request, 'Thank you for your email confirmation. You can login to your account now.')
+        return redirect('login')
+    else:
+        return HttpResponse('Activation link is invalid!')
+
 
 def signup(request):
     """
@@ -57,12 +115,16 @@ def signup(request):
                     error = 'Captcha not verified'
                     return render(request, 'signup.html', {'form': form, 'error':error, 'captcha':Captcha})
             else:
-                user = form.save()
+                user = form.save(commit=False)
+                user.is_active = False
+                user.save()
                 assign_role(user, Author)
+                to_email = form.cleaned_data.get('email')
+                send_mail(request, user, to_email)
                 if settings.REALTIME_EDITOR:
                     create_ether_user(user)
-                auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return redirect('user_dashboard')
+                auth_messages.success(request, 'Please confirm your email address to complete the registration.')
+                return redirect('login')
         else:
             return render(request, 'signup.html', {'form': form, 'captcha':Captcha})
     else:
@@ -227,12 +289,3 @@ def favourites(request):
         return HttpResponse('ok')
 
 
-def validateEmail(email):
-    from django.core.exceptions import ValidationError
-    from django.core.validators import validate_email
-
-    try:
-        validate_email(email)
-        return True
-    except ValidationError as e:
-        return False
