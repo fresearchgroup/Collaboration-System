@@ -232,7 +232,7 @@ def validateEmail(email):
     from django.core.validators import validate_email
 
     try:
-        validate_email(email):
+        validate_email(email)
         return True
     except ValidationError as e:
         return False
