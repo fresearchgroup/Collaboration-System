@@ -60,9 +60,9 @@ def send_mail(request, user, to_email):
     'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
     'token':account_activation_token.make_token(user),
     })
-    print(mail_subject, message, to_email)
-    #email = EmailMessage(mail_subject, message, to=[to_email])
-    #email.send()
+    #print(mail_subject, message, to_email)
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    email.send(fail_silently=True)
 
 
 
