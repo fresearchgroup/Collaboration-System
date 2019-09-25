@@ -1,11 +1,41 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities </a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{ message }}</li>
   {% endif %}
+  <form class="breadcrumb-item active" id="display_community" method="post" action="{% url 'display_communities' %}">
+    <a href="{% url 'home' %}">Home</a> &nbsp;>&nbsp;
+    <a href="{% url 'categories' %}">Categories</a> &nbsp;>&nbsp; 
+    {% for comm in community.get_ancestors %}
+      <!--&nbsp;>&nbsp;-->
+      {% if comm.parent %}
+        <a href="{% url 'categorized_communities' comm.category.pk comm.parent.pk %}"> {{comm.category.name}} </a> &nbsp;>&nbsp;
+      {% else %}
+        {% csrf_token %}<input type="hidden" name="category" value="{{comm.category.pk}}">
+        <a href="#" onclick="document.getElementById('display_community').submit()">{{comm.category.name}}</a> &nbsp;>&nbsp;
+      {% endif %}
+      <a href="{% url 'community_view' comm.pk %}">{{comm.name}}</a> &nbsp;>&nbsp; 
+    {% endfor %}
+
+    {% if community %}
+      {% if community.parent %}
+        <a href="{% url 'categorized_communities' community.category.pk community.parent.pk %}"> {{community.category.name}} </a> &nbsp;>&nbsp;
+      {% else %}
+        {% csrf_token %}<input type="hidden" name="category" value="{{community.category.pk}}">
+        <a href="#" onclick="document.getElementById('display_community').submit()">{{community.category.name}} </a> &nbsp;>&nbsp;
+      {% endif %}
+    {% else %}
+      {% if category %}
+        <a href="#"> {{communities.0.category.name}} </a>
+      {% endif %}
+    {% endif %}
+    {% if community %}
+      <a href="{% url 'community_view' community.pk %}">{{community.name}}</a> &nbsp;>&nbsp;
+      <a href="{% url 'categorized_communities' category.pk community.pk %}">{{category}}</a>
+    {% endif %}
+  </form>
+
 {% endblock %}
 
 {% block content %}
