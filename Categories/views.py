@@ -9,7 +9,7 @@ def categorized_communities(request, catid, commid):
 	category = Category.objects.get(pk=catid)
 	community = Community.objects.get(pk=commid)
 	communities = Community.objects.filter(category=category, parent=community)
-	return render(request, 'communities.html',{'communities':communities})
+	return render(request, 'communities.html',{'communities':communities, 'community':community, 'category':category})
 
 def categories(request):
 	categories = Category.objects.filter(parent=None)

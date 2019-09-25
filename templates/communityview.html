@@ -6,14 +6,27 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-  {% for cat in community.get_ancestors %}
-    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
-  {% endfor %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
+  <form class="breadcrumb-item active" id="display_community" method="post" action="{% url 'display_communities' %}">
+    <a href="{% url 'home' %}">Home</a> &nbsp;>&nbsp;
+    <a href="{% url 'categories' %}">Categories</a> &nbsp;>&nbsp;
+    {% for cat in community.get_ancestors %}
+      {% if cat.parent %}
+        <a href="{% url 'categorized_communities' cat.category.pk cat.parent.pk %}"> {{cat.category.name}} </a> &nbsp;>&nbsp;
+      {% else %}
+        {% csrf_token %}<input type="hidden" name="category" value="{{cat.category.pk}}">
+        <a href="#" onclick="document.getElementById('display_community').submit()">{{cat.category.name}}</a> &nbsp;>&nbsp;
+      {% endif %}
+      <a href="{% url 'community_view' cat.pk %}"> {{cat.name}}</a> &nbsp;>&nbsp;
+    {% endfor %}
 
-
+    {% if community.parent %}
+      <a href="{% url 'categorized_communities' community.category.pk community.parent.pk %}"> {{community.category.name}} </a> &nbsp;>&nbsp;
+    {% else %}
+      {% csrf_token %}<input type="hidden" name="category" value="{{community.category.pk}}">
+      <a href="#" onclick="document.getElementById('display_community').submit()">{{community.category.name}}</a> &nbsp;>&nbsp;
+    {% endif %}
+    <a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a>
+  </form>
 {% endblock %}
 
 {% block content %}

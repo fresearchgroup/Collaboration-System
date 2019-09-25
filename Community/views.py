@@ -41,6 +41,7 @@ from django.db.models import Count
 from django.db.models import F
 
 def display_communities(request):
+	category=None
 	if request.method == 'POST':
 		if 'sortby' in request.POST:
 			sortby = request.POST['sortby']
@@ -58,7 +59,7 @@ def display_communities(request):
 			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.filter(parent=None).order_by('name')
-	return render(request, 'communities.html',{'communities':communities})
+	return render(request, 'communities.html',{'communities':communities, 'category':category})
 
 def community_view(request, pk):
 	try:
