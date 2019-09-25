@@ -209,16 +209,23 @@ def handle_community_creation_requests(request):
 
 					)
 
-				#create the ether id for community
-				create_community_ether(communitycreation)
-
-				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = rcommunity.requestedby,
 					community = communitycreation,
 					role = communityadmin
 					)
+
+				try:
+					create_community_ether(communitycreation)
+				except Exception as e:
+					messages.warning(request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+
+				try:
+					create_wiki_for_community(communitycreation)
+				except Exception as e:
+					messages.warning(request, 'Cannot create wiki for this Community. Please check default wiki is created.')
+
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 				rcommunity.status = 'approved'
 				rcommunity.save()
