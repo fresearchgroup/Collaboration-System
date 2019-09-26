@@ -114,6 +114,7 @@
       <br/>
       <br/>
       <br/>
+      {% if community %}
       <ul class="nav nav-tabs">
         <li class="nav-item ">
           <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
@@ -144,17 +145,10 @@
           <a class="nav-link" href="/wiki/{{community.name}}{{ community.pk }}">Wiki</a>
         </li>
       </ul>
+      {%else%}
+      <a class="btn btn-primary" href="#" onclick="history.go(-1);return false;">Go Back</a>
+      {% endif %}
       <br/>
-      <div class="pull-right controls-link-wrapper">
-      {% if not request.user.is_anonymous %}
-        <a href="{% url 'forum_member:user_subscriptions' %}" class="btn btn-link"><i class="fa fa-bookmark-o ">&nbsp;</i>{% trans "Subscriptions" %}</a>
-        <a href="{% url 'forum_member:user_posts' request.user.id %}" class="btn btn-link"><i class="fa fa-comments-o ">&nbsp;</i>{% trans "View my messages" %}</a>
-      {% endif %}
-      {% get_permission 'can_access_moderation_queue' request.user as can_access_moderation_queue %}
-      {% if can_access_moderation_queue %}
-        <a href="{% url 'forum_moderation:queue' %}" class="btn btn-link"><i class="fa fa-gavel">&nbsp;</i>{% trans "Moderation queue" %}</a>
-      {% endif %}
-      </div>
     </div>
   </div>
   <div class="row">
