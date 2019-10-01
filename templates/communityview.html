@@ -120,8 +120,7 @@
                 <li><i class="fa fa-institution"></i>Since: {{community.created_at.date}}</li><br />
                 <li><i class="fa fa-users"></i> {{subscribers}} Members </li><br />
                 <li><i class="fa fa-file-text"></i>{{pubarticlescount}} Published articles</li><br />
-                <li><i class="fa fa-soccer-ball-o"></i>{{groupcount}} Public groups </li><br />
-                <li><i class="fa fa-soccer-ball-o"></i>{{groupcount}} Public groups </li><br />
+                <li><i class="fa fa-soccer-ball-o"></i>{{childrencount}} Sub-Communities </li><br />
                 {% if community.metadata %} <h5><a id="metadata_update_id" class="nav-link" href="{% url 'metadata:update' 'community' community.pk  community.metadata.pk %}">Update Metadata</a></h5>
                 {% else %}
                   <h5><a id="metadata_update_id" class="nav-link" href="{% url 'metadata:create' 'community' community.pk  %}">Add Metadata</a></h5>
