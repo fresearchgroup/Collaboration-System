@@ -196,11 +196,12 @@ var articlesContributed = {{articlescontributed}};
 
 {% block javascript %}
   <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
-  <!-- <script>
-    $.ajax({
-      url: '/api/reputation/score',
-      type: 'GET',
-      success: function(mycommunities) {
+  <script>
+  //  $.ajax({
+  //    url: '/api/reputation/score',
+  //    type: 'GET',
+  //    success: function(mycommunities) {
+    $(function() {
         (function(name) {
 
           var container = $('#pagination-mycommunities');
@@ -208,44 +209,52 @@ var articlesContributed = {{articlescontributed}};
           var sources = function () {
             var result = [];
 
-            var i = 0;
+            /* var i = 0;
             var badgeLevelMapping = {
               '1': 'btn-secondary',
               '2': 'btn-danger',
               '3': 'btn-warning',
               '4': 'btn-primary',
               '5': 'btn-success'
-            };
-            for (i = 0; i < mycommunities.length; i++) {
+            }; */
+            //for (i = 0; i < mycommunities.length; i++) {
+            {% for comm in mycommunities %}
               var temp = '';
-              var comm = mycommunities[i];
+              //var comm = mycommunities[i];
 
-              if (comm.role.name === 'author') {
+              //if (comm.role.name === 'author') {
+              {% if comm.role.name == 'author' %}
                 temp += '<i class="fa fa-pencil" style="top:3px;"></i> ';
-              } else if (comm.role.name == 'publisher') {
+              //} 
+              {% elif comm.role.name == 'publisher' %}
+              //else if (comm.role.name == 'publisher') {
                 temp += '<i class="fa fa-print" style="top:3px;"></i> ';
-              } else {
+              //} 
+              //else {
+              {% else %}
                 temp += '<i class="fa fa-trophy" style="top:3px;"></i> ';
-              }
+              //}
+              {% endif %}
 
-              var url = "{% url 'community_view' 999 %}";
-              temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
-              
-              var badgeDiv = $("<div>", {
+              //var url = "{% url 'community_view' 999 %}";
+              //temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
+              temp += '<a href="{% url 'community_view' comm.community.pk %}">' + '{{ comm.community }}' + '</a>';
+              /*var badgeDiv = $("<div>", {
                 'css': {
                   'margin': '10px'
                 }
-              });
+              });*/
 
-              for (var j = 0; j < comm.badges.length; j++) {
+              /*for (var j = 0; j < comm.badges.length; j++) {
                 var badge = comm.badges[j].badge;
                 badgeDiv.append('<span class="btn ' + badgeLevelMapping[badge.level] + '" style="width: 50px; margin: 5px;">' + badge.title + '</span>');
-              }
+              }*/
 
-              temp += badgeDiv.prop('outerHTML');
+              //temp += badgeDiv.prop('outerHTML');
 
               result.push(temp);
-            }
+            //}
+            {% endfor %}
 
             return result;
           }();  
@@ -271,7 +280,7 @@ var articlesContributed = {{articlescontributed}};
           };
           container.pagination(options);
         })('mycommunities-pagination');
-      }
+      //}
     });
-  </script> -->
+  </script> 
 {% endblock %}
