@@ -537,7 +537,11 @@
             <h2>Top Contributors</h2>
             <ul class="list-unstyled">
               {% for top in top_contributors %}
-                <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}{{top.photo}}"></a></li>
+                {% if top.photo %}
+                  <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}{{top.photo}}"></a></li>
+                {% else %}
+                  <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}default/avatar.png"></a></li>
+                {% endif %}
               {% endfor %}
             </ul>
           </div>
