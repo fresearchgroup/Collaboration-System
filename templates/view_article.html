@@ -77,7 +77,7 @@
             {% endif %}
             
           </ul>
-        <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;">
+        <p id="view_article_html">
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
           
         </p>
