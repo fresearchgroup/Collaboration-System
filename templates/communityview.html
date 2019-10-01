@@ -512,44 +512,11 @@
         <div class="col-md-3">
 
           <!-- BEGIN MEMBERS -->
-          <h2>Members</h2>
+          <h2 class="no-top-space">Members</h2>
           <div class="recent-news margin-bottom-10">
-            {% for mem in communitymem %}
-              <div class="row margin-bottom-10">
-                <div class="col-md-3">
-                  {% if mem.photo %}
-                    <img class="img-responsive" src="{{ MEDIA_URL }}{{mem.photo}}">
-                  {% else %}
-                    <img class="img-responsive" src="{{ MEDIA_URL }}default/avatar.png">
-                  {%endif%}
-                </div>
-                <div class="col-md-9 recent-news-inner">
-                  <h3>
-                    {% if mem.role.name == 'author' %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-pencil"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% elif mem.role.name == 'publisher' %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-print"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% else %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-trophy"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% endif %}
-                  </h3>
-                  <p>
-                    Last Seen: {{mem.user.last_login|date}} <br />
-                    Member Since: {{mem.user.date_joined|date}}
-                  </p>
-                </div>
-              </div>
-            {% endfor %}
+              <div class="data-container"></div>
           </div>
+          <div id="pagination-commmembers" class="margin-bottom-20"></div> 
           <!-- END MEMBERS -->
 
           <hr />
@@ -653,6 +620,73 @@
     })
 </script> 
 
+<script>
+  $(function () {
+      (function (name) {
+          var container = $('#pagination-commmembers');
+
+          var sources = function () {
+              var result = [];
+              {% for mem in communitymem %}
+                var temp = ''
+                temp += '<div class="row margin-bottom-10">'
+                temp +=     '<div class="col-md-3">'
+                {% if mem.photo %}
+                    temp +=     '<img class="img-responsive" src="{{ MEDIA_URL }}{{mem.photo}}">'
+                {% else %}
+                    temp +=     '<img class="img-responsive" src="{{ MEDIA_URL }}default/avatar.png">'
+                {%endif%}
+                temp +=     '</div>'
+                temp +=     '<div class="col-md-9 recent-news-inner">'
+                temp +=        '<h3>'
+                {% if mem.role.name == 'author' %}
+                    temp +=        '<a href="{% url 'display_user_profile' mem.user.username %}">'
+                    temp +=            '<i class="fa fa-pencil"></i>'
+                    temp +=            '{{mem.user.username}}'
+                    temp +=        '</a>'
+                {% elif mem.role.name == 'publisher' %}
+                    temp +=        '<a href="{% url 'display_user_profile' mem.user.username %}">'
+                    temp +=           '<i class="fa fa-print"></i>'
+                    temp +=           '{{mem.user.username}}'
+                    temp +=        '</a>'
+                {% else %}
+                    temp +=        '<a href="{% url 'display_user_profile' mem.user.username %}">'
+                    temp +=           '<i class="fa fa-trophy"></i>'
+                    temp +=           '{{mem.user.username}}'
+                    temp +=        '</a>'
+                {% endif %}
+                temp +=        '</h3>'
+                temp +=        '<p> Last Seen: {{mem.user.last_login|date}} <br /> Member Since: {{mem.user.date_joined|date}} </p>'
+                temp +=     '</div>'
+                temp += '</div>'
+
+                result.push(temp);
+              {% endfor %}
+              return result;
+          }();
+
+          var options = {
+              dataSource: sources,
+              pageSize: 3,
+              showGoInput: true,
+              showGoButton: true,
+              showPageNumbers: false,
+              showNavigator: true,
+
+              callback: function (data, pagination) {
+                  var dataHtml = '';
+                  //Get the datasource (item)
+                  $.each(data, function (index, item) {
+                      dataHtml += item ;
+                  });
+                  //Add data to container
+                  container.prev().html(dataHtml);
+              }
+          };
+          container.pagination(options);
+      })('commgroups-commmembers');
+  })
+</script> 
 
 
 <script>

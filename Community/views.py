@@ -87,7 +87,7 @@ def community_view(request, pk):
 		except ProfileImage.DoesNotExist:
 			top['photo'] = ''
 
-	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')[:10]
+	communitymem=CommunityMembership.objects.filter(community = pk).order_by('?')
 	for comm in communitymem:
 		try:
 			user_profile = ProfileImage.objects.get(user=comm.user)
