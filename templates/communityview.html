@@ -36,15 +36,25 @@
   <li class="nav-item active">
     <a class="nav-link " href="#">View</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'published_content' community.pk %}">Published Content</a>
+  </li>
+
   {% if membership.role.name == 'community_admin' %}
+
+
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
+
+
   {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
+
+
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
@@ -108,7 +118,7 @@
                     {{community.desc}}
                     <a href="#" onclick="descShowHide()" id="morelink"> <i class="fa fa-arrow-circle-up" style="color:red;"></i> Less</a>
                   </div>
-                  {% endautoescape%}                  
+                  {% endautoescape%}
                 </div>
               </div>
             </div>
@@ -133,11 +143,11 @@
                       {% elif membership.role.name == 'publisher' %}
                         <i class="fa fa-print"></i>Publisher
                       {% else %}
-                        <i class="fa fa-trophy"></i>Community Admin 
+                        <i class="fa fa-trophy"></i>Community Admin
                       {% endif %}
                     {% else %}
                       Want to know more ...
-                  {% endif %}                
+                  {% endif %}
                 </li>
               </ul>
 
@@ -150,9 +160,9 @@
                               <input type="hidden" name="cid" value={{ community.pk}}>
                       </div>
                         <button id="join-us" type="submit" class="btn btn-primary" style="margin-left: 15px;"><i class="fa fa-sign-in margin-right-10"></i>Join Us</button>
-                
+
                       </form>
-                
+
                     </b>
                     {%else%}
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id = "Unsubscribe" style="margin-left: 15px; margin-top:10px;"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
@@ -204,16 +214,16 @@
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateVideo" data-whatever="@mdo"><p><i class="fa fa-film" style="font-size:42px;"></i></p>Video</button>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateGroup" data-whatever="@mdo"><p><i class="fa fa-soccer-ball-o" style="font-size:42px;"></i></p>Group</button>
                             <!--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateCourse" data-whatever="@mdo"><p><i class="fa fa-briefcase" style="font-size:42px;"></i></p>Course</button>-->
-                            
+
                             <!--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>Interactive <br /> Content</button>-->
                           </div>
                           <div class="modal-footer">
-                
+
                           </div>
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="modal fade" id="modalCreateArticle" tabindex="-1" role="dialog" aria-labelledby="CreateArticleModal" aria-hidden="true">
                       <div class="modal-dialog text-left" role="document">
                         <div class="modal-content">
@@ -249,7 +259,7 @@
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="modal fade" id="modalCreateImage" tabindex="-1" role="dialog" aria-labelledby="CreateImageModal" aria-hidden="true">
                       <div class="modal-dialog text-left" role="document">
                         <div class="modal-content">
@@ -285,7 +295,7 @@
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="modal fade" id="modalCreateAudio" tabindex="-1" role="dialog" aria-labelledby="CreateAudioModal" aria-hidden="true">
                         <div class="modal-dialog text-left" role="document">
                           <div class="modal-content">
@@ -321,7 +331,7 @@
                           </div>
                         </div>
                       </div>
-                
+
                       <div class="modal fade" id="modalCreateVideo" tabindex="-1" role="dialog" aria-labelledby="CreateVideoModal" aria-hidden="true">
                           <div class="modal-dialog text-left" role="document">
                             <div class="modal-content">
@@ -356,8 +366,8 @@
                               </div>
                             </div>
                           </div>
-                        </div>          
-                
+                        </div>
+
                     <div class="modal fade" id="modalCreateGroup" tabindex="-1" role="dialog" aria-labelledby="CreateGroupModal" aria-hidden="true">
                       <div class="modal-dialog text-left" role="document">
                         <div class="modal-content">
@@ -394,7 +404,7 @@
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="modal fade" id="modalCreateCourse" tabindex="-1" role="dialog" aria-labelledby="CreateCourseModal" aria-hidden="true">
                       <div class="modal-dialog text-left" role="document">
                         <div class="modal-content">
@@ -434,7 +444,7 @@
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="modal fade" id="modalCreateh5p" tabindex="-1" role="dialog" aria-labelledby="Createh5pModal" aria-hidden="true">
                       <div class="modal-dialog text-left" role="document">
                         <div class="modal-content">
@@ -516,7 +526,7 @@
           <div class="recent-news margin-bottom-10">
               <div class="data-container"></div>
           </div>
-          <div id="pagination-commmembers" class="margin-bottom-20"></div> 
+          <div id="pagination-commmembers" class="margin-bottom-20"></div>
           <!-- END MEMBERS -->
 
           <hr />
@@ -622,7 +632,7 @@
             container.pagination(options);
         })('commgroups-pagination');
     })
-</script> 
+</script>
 
 <script>
   $(function () {
@@ -690,7 +700,7 @@
           container.pagination(options);
       })('commgroups-commmembers');
   })
-</script> 
+</script>
 
 
 <script>

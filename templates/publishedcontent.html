@@ -22,7 +22,7 @@
   <li class="nav-item ">
     <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
   </li>
-  <li class="nav-item">
+  <li class="nav-item active">
     <a class="nav-link" href="{% url 'published_content' community.pk %}">Published Content</a>
   </li>
 
@@ -34,16 +34,17 @@
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
   {%endif%}
-  {% if  membership.role.name != '' %}
   
+  {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
 
-  <li class="nav-item active">
+  <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a
 
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
   </li>
+
 
 
   {%endif%}
@@ -61,7 +62,7 @@
 </ul>
 <br /><br />
 
-<h1>Visible and Publishable Content</h1>
+<h1>Published Content</h1>
 {% if not commarticles %}
 <div class="content-page page-404">
    <div class="number">

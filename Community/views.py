@@ -348,7 +348,7 @@ class UpdateCommunityView(UpdateView):
 		self.object = form.save(commit=False)
 		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
-		
+
 		if form.cleaned_data.get('x'):
 			x = form.cleaned_data.get('x')
 			y = form.cleaned_data.get('y')
@@ -613,6 +613,56 @@ def community_content(request, pk):
 		return redirect('community_view', community.pk)
 	return render(request, 'communitycontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
 
+def published_content(request, pk):
+	commarticles = ''
+#	try:
+	community = Community.objects.get(pk=pk)
+	try:
+		uid = request.user.id
+		membership = CommunityMembership.objects.get(user=request.user.id, community=community.pk)
+	except CommunityMembership.DoesNotExist:
+		membership = 'FALSE'
+
+	carticles = CommunityArticles.objects.filter(community=community, article__state__initial=False, article__state__final=True).annotate(title=F('article__title'),state=F('article__state__name'),created_at=F('article__created_at'),body=F('article__body'),image=F('article__image'),views=F('article__views'),username=F('article__created_by__username'))
+	for art in carticles:
+		art.type = 'article'
+
+	ccourse = CommunityCourses.objects.filter(community=community, course__state__initial=False, course__state__final=True).annotate(title=F('course__title'),state=F('course__state__name'),created_at=F('course__created_at'),body=F('course__body'),image=F('course__image'),username=F('course__created_by__username'))
+	for course in ccourse:
+		course.type = 'course'
+
+	cmedia = CommunityMedia.objects.filter(community=community, media__state__initial=False, media__state__final=True).annotate(title=F('media__title'),state=F('media__state__name'),created_at=F('media__created_at'),mediatype=F('media__mediatype'),image=F('media__mediafile'),username=F('media__created_by__username'))
+	for media in cmedia:
+		media.type = 'media'
+
+	ch5p = []
+	print('new test')
+	try:
+		response = requests.get(settings.H5P_ROOT + 'h5p/h5papi/?format=json')
+		json_data = json.loads(response.text)
+		print(json_data)
+
+		for obj in json_data:
+			if obj['community_id'] == community.pk:
+				obj['type'] = 'h5p'
+				ch5p.append(obj)
+	except Exception as e:
+		print(e)
+		print("H5P server down...Sorry!! We will be back soon")
+	lstfinal = list(carticles) +  list(cmedia) + list(ccourse) + list(ch5p)
+
+	page = request.GET.get('page', 1)
+	paginator = Paginator(list(lstfinal), 5)
+	try:
+		commarticles = paginator.page(page)
+	except PageNotAnInteger:
+		commarticles = paginator.page(1)
+	except EmptyPage:
+		commarticles = paginator.page(paginator.num_pages)
+
+#	except CommunityMembership.DoesNotExist:
+#		membership = 'FALSE'
+	return render(request, 'publishedcontent.html', {'community': community, 'membership':membership, 'commarticles':commarticles})
 
 def h5p_view(request, pk):
 	try:
@@ -763,6 +813,3 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
-
-
-

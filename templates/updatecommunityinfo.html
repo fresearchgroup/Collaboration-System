@@ -23,6 +23,12 @@
   <li class="nav-item">
     <a class="nav-link " href="{% url 'community_view' community.pk %}">View</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'published_content' community.pk %}">Published Content</a>
+  </li>
+
+
+
   {% if membership.role.name == 'community_admin' %}
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage community</a>
@@ -30,8 +36,12 @@
   <li class="nav-item active">
     <a class="nav-link " href="#">Update community Info</a>
   </li>
+
+
   {% endif %}
   {% if membership %}
+
+
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
   </li>
@@ -109,7 +119,7 @@
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Submit</button>
               </div>
-              
+
           </form>
 
            <!-- MODAL TO CROP THE IMAGE -->
