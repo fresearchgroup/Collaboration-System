@@ -562,32 +562,6 @@
       </div>
     <!-- END SIDEBAR & CONTENT -->
 
-    <!-- BEGIN SIDEBAR & CONTENT -->
-    <div class="row ">
-      <!-- BEGIN CONTENT -->
-      <div class="col-md-12 col-sm-12">
-        <div class="content-page">
-          <div class="row">
-            <!-- BEGIN LEFT SIDEBAR -->
-            <div class="col-md-3 col-sm-3 blog-sidebar">
-              <div class="recent-news margin-bottom-3">
-                <h2>Published Articles</h2>
-                {{myhtml|safe}}{% autoescape off%}
-                {% for article in pubarticles %}
-                    <h3><a href="{% url 'article_view' article.id %}">{{article.title}}</a></h3>
-                    <p>{{ article.body|striptags|truncatewords:5 }}</p>
-                {% endfor %}
-                {% endautoescape%}
-              </div>
-            </div>
-            <!-- END LEFT most SIDEBAR -->
-
-          </div>
-        </div>
-      </div>
-      <!-- END CONTENT -->
-    </div>
-    <!-- END SIDEBAR & CONTENT -->
   </div>
 </div>
 

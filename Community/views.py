@@ -96,7 +96,7 @@ def community_view(request, pk):
 			user_profile = "No Image available"
 	children = community.get_children()
 	childrencount = children.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
