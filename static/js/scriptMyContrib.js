@@ -11,18 +11,10 @@ var myChart = new Chart(ctx, {
     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     datasets: [
             {
-                data: articlesContributed,
-                label: "Articles Contributed",
+                data: articles,
+                label: "Articles",
                 backgroundColor: '#ffb3c3',
                 borderColor: '#ff6687',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                data: articlesPublished,
-                label: "Articles Published",
-                backgroundColor: '#ff4d73',
-                borderColor: '#b30027',
                 borderWidth: 1,
                 fill: false
             }
