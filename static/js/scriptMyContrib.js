@@ -17,7 +17,31 @@ var myChart = new Chart(ctx, {
                 borderColor: '#ff6687',
                 borderWidth: 1,
                 fill: false
-            }
+            },
+            {
+                data: images,
+                label: "Images",
+                backgroundColor: '#99e6ff',
+                borderColor: '#00ace6',
+                borderWidth: 2,
+                fill: false
+            },
+            {
+                data: audio,
+                label: "Audio",
+                backgroundColor: '#f8906d',
+                borderColor: '#f4450b',
+                borderWidth: 2,
+                fill: false
+            },
+            {
+                data: video,
+                label: "Video",
+                backgroundColor: '#f9da85',
+                borderColor: '#f7cc55',
+                borderWidth: 2,
+                fill: false
+            }            
         ]
     },
     options: {

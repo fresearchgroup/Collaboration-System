@@ -173,9 +173,15 @@ def user_dashboard(request):
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
         articles = []
+        images = []
+        audio = []
+        video = []
         for i in range(1, 13):
             articles.append(Articles.objects.filter(created_by=request.user, state__initial=False, created_at__year=yearby, created_at__month=i).count())
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articles':articles, 'user_profile':user_profile, 'lstContent':lstContent})
+            images.append(Media.objects.filter(created_by=request.user, mediatype='Image', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+            audio.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+            video.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articles':articles, 'user_profile':user_profile, 'lstContent':lstContent, 'images':images, 'audio':audio, 'video':video})
     else:
         return redirect('login')
 
