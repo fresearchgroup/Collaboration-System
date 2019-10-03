@@ -6,28 +6,28 @@
 
 var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
+    type: 'bar',
+    data: {
     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     datasets: [
-      {
-        data: articlesContributed,
-	label: "Articles Contributed",
-	backgroundColor: 'rgba(255, 0, 0, 1)',
-	borderColor: 'rgba(255, 0, 0, 1)',
-	borderWidth: 1,
-	fill: false
-      },
-      {
-        data: articlesPublished,
-	label: "Articles Published",
-	backgroundColor: 'rgba(0, 0, 255, 1)',
-	borderColor: 'rgba(0, 0, 255, 1)',
-	borderWidth: 1,
-	fill: false
-      }
-    ]
-  },
+            {
+                data: articlesContributed,
+                label: "Articles Contributed",
+                backgroundColor: '#ffb3c3',
+                borderColor: '#ff6687',
+                borderWidth: 1,
+                fill: false
+            },
+            {
+                data: articlesPublished,
+                label: "Articles Published",
+                backgroundColor: '#ff4d73',
+                borderColor: '#b30027',
+                borderWidth: 1,
+                fill: false
+            }
+        ]
+    },
     options: {
         responsive: true,
         title:{
