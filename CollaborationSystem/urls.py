@@ -118,6 +118,7 @@ urlpatterns = [
     url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
+    url(r'^published_content/(?P<pk>\d+)/$', communityview.published_content, name='published_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 
     url(r'^reset/$',
@@ -220,4 +221,3 @@ urlpatterns += [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

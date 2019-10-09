@@ -30,6 +30,7 @@ from django.core.mail import EmailMessage
 from django.contrib import messages as auth_messages
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
+from Media.models import Media
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
@@ -171,13 +172,16 @@ def user_dashboard(request):
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-        articlescontributed = []
-        articlespublished = []
+        articles = []
+        images = []
+        audio = []
+        video = []
         for i in range(1, 13):
-            articlescontributed.append(Articles.objects.filter(created_by=request.user, state__initial=False, state__final=False, created_at__year=yearby, created_at__month=i).count())
-            articlespublished.append(Articles.objects.filter(created_by=request.user, state__final=True, created_at__year=yearby, created_at__month=i).count())
-
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articlescontributed':articlescontributed,'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent})
+            articles.append(Articles.objects.filter(created_by=request.user, state__initial=False, created_at__year=yearby, created_at__month=i).count())
+            images.append(Media.objects.filter(created_by=request.user, mediatype='Image', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+            audio.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+            video.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__initial=False, created_at__year=yearby, created_at__month=i).count())
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articles':articles, 'user_profile':user_profile, 'lstContent':lstContent, 'images':images, 'audio':audio, 'video':video})
     else:
         return redirect('login')
 

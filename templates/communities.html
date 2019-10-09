@@ -69,7 +69,7 @@
               {% if community.image_thumbnail %}
               <img src="{{ MEDIA_URL }}{{ community.image_thumbnail}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
               {% else %}
-              <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+              <img src="{{ MEDIA_URL }}default/community_image_thumbnail_default.jpg" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
               {%endif%}
 
               <div class="mix-details">
@@ -85,7 +85,7 @@
                   <i class="fa fa-search"></i>View Image
                 </a>
                 {% else %}
-                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}default/community_image_default.png" class="mix-preview fancybox-button">
+                <a data-rel="fancybox-button" title="{{community.name}}" href="{{ MEDIA_URL }}default/community_image_default.jpg" class="mix-preview fancybox-button">
                   <i class="fa fa-search"></i>View Image
                 </a>
                 {% endif %}
