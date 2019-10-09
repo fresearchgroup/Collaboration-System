@@ -287,5 +287,3 @@ def favourites(request):
                 obj = favourite.objects.filter(user = user, resource = resource_id, category= category).delete()
                 return HttpResponse('removed')
         return HttpResponse('ok')
-
-
