@@ -125,8 +125,8 @@ $(document).ready(function() {
                               <div class="input-group">
                               <input class="form-control" name="next" type="hidden" value="{{ redirect_to }}">
                               </div>
-                              <div class="col-md-8 col-sm-8 ">
-                              <select class="form-control" name="language">
+                              <div class="col-md-12 col-sm-12 ">
+                              <select class="form-control" name="language" onchange="this.form.submit()">
                                   {% get_current_language as LANGUAGE_CODE %}
                                   {% get_available_languages as LANGUAGES %}
                                   {% get_language_info_list for LANGUAGES as languages %}
@@ -136,9 +136,6 @@ $(document).ready(function() {
                                       </option>
                                   {% endfor %}
                               </select>
-                          </div>
-                          <div class="col-md-2 col-sm-2 ">
-                              <input type="submit" value="Go">
                           </div>
                           </form>
                   
