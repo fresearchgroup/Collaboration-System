@@ -80,7 +80,7 @@
                   <a href="{% url feed.data.actor_href feed.data.actor_href_id %}">{{feed.actor}}</a>
                   {% else %}
                   <i class="fa fa-file-text" style="color:red;"></i>
-                  <a href="{% url feed.data.actor_href feed.data.actor_href_id %}" data-toggle="tooltip" title="{{feed.actor}}">{{feed.actor|truncatewords:4}}</a>
+                  <a href="{% url feed.data.actor_href feed.data.actor_href_id %}" data-toggle="tooltip" title="{{feed.actor.title}}">{{feed.actor.title|truncatewords:4}}</a>
                   {% endif %}
                 </h4>
                 <h5>{{feed.verb}} </h5>
