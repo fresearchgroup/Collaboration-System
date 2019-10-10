@@ -221,9 +221,6 @@ LANGUAGES = (
     ('hi', gettext('Hindi'))
 )
 
-
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
-MODELTRANSLATION_LANGUAGES = ('en', 'hi')
 MODELTRANSLATION_TRANSLATION_FILES = (
     'Community.translation',
 )
