@@ -223,6 +223,8 @@ LANGUAGES = (
 
 MODELTRANSLATION_TRANSLATION_FILES = (
     'Community.translation',
+    'BasicArticle.translation',
+    'Media.translation',
 )
 
 # Static files (CSS, JavaScript, Images)
