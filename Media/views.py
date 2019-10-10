@@ -6,8 +6,10 @@ from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import Metadata
 import requests
+import datetime
 from django.urls import reverse
 from django.contrib import messages
+from feeds.views import create_resource_feed
 from django.views.generic import CreateView, UpdateView
 from workflow.models import States
 from .forms import *
@@ -44,7 +46,7 @@ class MediaCreateView(CreateView):
 					return redirect('community_view', self.kwargs['pk'])
 				return redirect('home')
 			messages.warning(self.request, 'Media type not available')
-			return redirect('community_view', self.kwargs['pk']) 
+			return redirect('community_view', self.kwargs['pk'])
 		return redirect('login')
 
 	def form_valid(self, form):
@@ -53,7 +55,7 @@ class MediaCreateView(CreateView):
 		self.object.created_by = self.request.user
 		self.object.state = States.objects.get(initial=True)
 		self.object.save()
-        
+
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityMedia.objects.create(media=self.object, user=self.request.user, community=community)
 
@@ -139,6 +141,12 @@ class MediaUpdateView(UpdateView):
 		"""
 		self.object = form.save(commit=False)
 		self.object.save()
+		if self.is_visible():
+			self.process_visible()
+		if self.is_publishable():
+			self.process_publishable()
+		if self.object.state.final:
+			self.process_final()
 		return super(MediaUpdateView, self).form_valid(form)
 
 	def is_communitymember(self, request, community):
@@ -152,6 +160,45 @@ class MediaUpdateView(UpdateView):
 		community = CommunityMembership.objects.get(user=request.user, community=community)
 		return community.role
 
+	def is_visible(self):
+		if self.object.state == States.objects.get(name='visible'):
+			return True
+		return False
+
+	def is_publishable(self):
+		if self.object.state == States.objects.get(name='publishable'):
+			return True
+		return False
+
+	def process_final(self):
+		self.object.published_on = datetime.datetime.now()
+		self.object.published_by=self.request.user
+		self.object.save()
+		if self.object.mediatype == 'IMAGE':
+			create_resource_feed(self.object,'image_published',self.object.created_by)
+		if self.object.mediatype == 'AUDIO':
+			create_resource_feed(self.object,'audio_published',self.object.created_by)
+		if self.object.mediatype == 'VIDEO':
+			create_resource_feed(self.object,'video_published',self.object.created_by)
+		return
+
+	def process_visible(self):
+		if self.object.mediatype == 'IMAGE':
+			create_resource_feed(self.object,'image_edit',self.object.created_by)
+		if self.object.mediatype == 'AUDIO':
+			create_resource_feed(self.object,'audio_edit',self.object.created_by)
+		if self.object.mediatype == 'VIDEO':
+			create_resource_feed(self.object,'video_edit',self.object.created_by)
+		return
+
+	def process_publishable(self):
+		if self.object.mediatype == 'IMAGE':
+			create_resource_feed(self.object,'image_no_edit',self.request.user)
+		if self.object.mediatype == 'AUDIO':
+			create_resource_feed(self.object,'audio_no_edit',self.request.user)
+		if self.object.mediatype == 'VIDEO':
+			create_resource_feed(self.object,'video_no_edit',self.request.user)
+		return
 	def get_success_url(self):
 		"""
 		Returns the supplied URL.
@@ -174,7 +221,7 @@ def media_reports(request, pk):
 		except CommunityMedia.DoesNotExist:
 			return redirect('home')
 		return render(request, 'reports_media.html', {'gcmedia':gcmedia })
-	
+
 	return redirect('login')
 
 def get_belongsto(pk, uid):
@@ -184,11 +231,11 @@ def get_belongsto(pk, uid):
 	return commgrp, membership
 
 def display_published_media(request, mediatype):
-	try: 
+	try:
 		cmedialist = CommunityMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
 
 		medialist = list(cmedialist)
-		
+
 		page = request.GET.get('page', 1)
 		paginator = Paginator(list(medialist), 5)
 		try:
