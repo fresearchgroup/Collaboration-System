@@ -206,6 +206,7 @@ urlpatterns = [
     url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
 
     url(r'api/search/', include('search.api.urls', namespace = 'api-search')),
+   url(r'i18n/', include('django.conf.urls.i18n')),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
