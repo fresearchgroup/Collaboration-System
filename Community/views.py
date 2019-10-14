@@ -495,7 +495,7 @@ class CreateSubCommunityView(CreateView):
 			if self.is_community_admin():
 				self.object = None
 				return super(CreateSubCommunityView, self).get(request, *args, **kwargs)
-			messages.warning(self.request, 'You are not a member of this community.')
+			messages.warning(self.request, 'Sorry, only a community admin can add more groups/sub-communities')
 			return redirect(self.success_url, self.kwargs['pk'])
 		return redirect('home')
 
