@@ -8,7 +8,7 @@ from rest_framework import viewsets
 from UserRolesPermission.views import user_dashboard
 from django.contrib.auth.models import Group as Roles
 from rolepermissions.roles import assign_role
-from UserRolesPermission.roles import CommunityAdmin
+from UserRolesPermission.permission import SuperAdminMixin
 from django.contrib.auth.models import User
 from workflow.models import States
 from django.db.models import Q
@@ -377,18 +377,12 @@ class UpdateCommunityView(UpdateView):
 		return url
 
 
-class CreateCommunityView(CreateView):
+class CreateCommunityView(SuperAdminMixin, CreateView):
 	form_class = CommunityCreateForm
 	model = Community
 	template_name = 'create_community.html'
 	#community_admin = Roles.objects.get(name='community_admin')
 	success_url = 'community_view'
-
-	def get(self, request, *args, **kwargs):
-		if request.user.is_superuser:
-			self.object = None
-			return super(CreateCommunityView, self).get(request, *args, **kwargs)
-		return redirect('home')
 
 	def form_valid(self, form):
 		"""
