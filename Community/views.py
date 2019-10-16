@@ -42,6 +42,7 @@ from django.db.models import F
 
 def display_communities(request):
 	category=None
+	sortby=None
 	if request.method == 'POST':
 		if 'sortby' in request.POST:
 			sortby = request.POST['sortby']
@@ -59,7 +60,7 @@ def display_communities(request):
 			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.filter(parent=None).order_by('name')
-	return render(request, 'communities.html',{'communities':communities, 'category':category})
+	return render(request, 'communities.html',{'communities':communities, 'category':category, 'sortby':sortby})
 
 def community_view(request, pk):
 	try:

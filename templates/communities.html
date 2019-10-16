@@ -46,10 +46,29 @@
     <div class="form-group">
       <label for="Sorting">Sort by</label>
       <select id="select_community" name="sortby" class="btn btn-primary" onchange="this.form.submit()">
-        <option value="a_to_z">Name: A to Z</option>
-        <option value="z_to_a">Name: Z to A</option>
-        <option value="oldest">oldest</option>
-        <option value="latest">Latest</option>
+        {% if sortby == 'a_to_z' %}
+          <option value="a_to_z" selected>Name: A to Z</option>
+        {% else %}
+          <option value="a_to_z">Name: A to Z</option>
+        {% endif %}
+
+        {% if sortby == 'z_to_a' %}
+          <option value="z_to_a" selected>Name: Z to A</option>
+        {% else %}
+          <option value="z_to_a">Name: Z to A</option>
+        {% endif %}
+
+        {% if sortby == 'oldest' %}
+          <option value="oldest" selected>Oldest</option>
+        {% else %}
+          <option value="oldest">Oldest</option>
+        {% endif %}
+
+        {% if sortby == 'latest' %}
+          <option value="latest" selected>Latest</option>
+        {% else %}
+          <option value="latest">Latest</option>
+        {% endif %}
       </select>
 
     </div>
