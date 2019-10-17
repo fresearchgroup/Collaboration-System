@@ -4,6 +4,7 @@ from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from notification.views import notify_update_media_state, notify_edit_media
 from metadata.models import Metadata
 import requests
 import datetime
@@ -147,6 +148,12 @@ class MediaUpdateView(UpdateView):
 			self.process_publishable()
 		if self.object.state.final:
 			self.process_final()
+		if (self.object.mediatype == 'IMAGE') :
+			notify_edit_media(self.request.user, self.object, "your image got edited")
+		if (self.object.mediatype == 'AUDIO') :
+			notify_edit_media(self.request.user, self.object, "your audio got edited")
+		if (self.object.mediatype == 'VIDEO') :
+			notify_edit_media(self.request.user, self.object, "your video got edited")
 		return super(MediaUpdateView, self).form_valid(form)
 
 	def is_communitymember(self, request, community):
@@ -176,10 +183,13 @@ class MediaUpdateView(UpdateView):
 		self.object.save()
 		if self.object.mediatype == 'IMAGE':
 			create_resource_feed(self.object,'image_published',self.object.created_by)
+			notify_update_media_state(self.request.user, self.object,'published')
 		if self.object.mediatype == 'AUDIO':
 			create_resource_feed(self.object,'audio_published',self.object.created_by)
+			notify_update_media_state(self.request.user, self.object,'published')
 		if self.object.mediatype == 'VIDEO':
 			create_resource_feed(self.object,'video_published',self.object.created_by)
+			notify_update_media_state(self.request.user, self.object,'published')
 		return
 
 	def process_visible(self):
@@ -198,7 +208,9 @@ class MediaUpdateView(UpdateView):
 			create_resource_feed(self.object,'audio_no_edit',self.request.user)
 		if self.object.mediatype == 'VIDEO':
 			create_resource_feed(self.object,'video_no_edit',self.request.user)
+		notify_update_media_state(self.request.user,self.object,'publishable')
 		return
+
 	def get_success_url(self):
 		"""
 		Returns the supplied URL.

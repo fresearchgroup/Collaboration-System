@@ -1,4 +1,4 @@
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community, CommunityCourses
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community, CommunityCourses,CommunityMedia
 from Group.models import GroupArticles, GroupMembership, Group
 from django.contrib.auth.models import Group as Roles
 from notifications.signals import notify
@@ -188,7 +188,7 @@ def notify_remove_or_add_user(sender, user, target, action_type):
 
         if action_type == 'added':
             verb = 'You have been added to the ' + place + ' as ' +  assigned_role
-            notify.send(sender=sender, verb=verb, recipient=user, target=target, 
+            notify.send(sender=sender, verb=verb, recipient=user, target=target,
                         target_url=target_url, sender_url='display_user_profile', sender_url_name=sender.username)
 
         if previous_role == 'publisher':
@@ -303,14 +303,14 @@ def notify_edit_article(user, article, current_state):
 
 def notify_edit_course(user, course, verb):
     if(user != course.created_by):
-        try: 
+        try:
             commcourses = CommunityCourses.objects.get(course=course)
             membership = CommunityMembership.objects.get(user=user, community=commcourses.community.pk)
             sender_rolename = membership.role.name
             notify.send(sender=user, verb=verb, recipient=course.created_by,
-                        target=course, target_url="course_view", 
+                        target=course, target_url="course_view",
                         sender_url='display_user_profile',
-                        sender_url_name=user.username, 
+                        sender_url_name=user.username,
                         sender_rolename=sender_rolename)
         except CommunityMembership.DoesNotExist:
             errormessage = 'You are not a member of the community'
@@ -331,20 +331,100 @@ def notify_update_course_state(user, course, action):
         if action == 'publishable':
             notify.send(sender=user, recipient=comm_pub_admin,
                         verb='This course has been made publishable', target=course,
-                        target_url="course_view", sender_url="display_user_profile", 
+                        target_url="course_view", sender_url="display_user_profile",
                         sender_url_name=user.username, sender_rolename=sender_rolename)
 
         elif action == 'publish':
             notify.send(sender=user, recipient=course.created_by,
                         verb='Your course has been published', target=course,
-                        target_url="course_view", sender_url="display_user_profile", 
+                        target_url="course_view", sender_url="display_user_profile",
                         sender_url_name=user.username, sender_rolename=sender_rolename)
 
             notify.send(sender=user, recipient=comm_pub_admin,
                         verb='Course has been published', target=course,
-                        target_url="course_view", sender_url="display_user_profile", 
+                        target_url="course_view", sender_url="display_user_profile",
                         sender_url_name=user.username, sender_rolename=sender_rolename)
 
+def notify_edit_media(user, media, verb):
+    if(user != media.created_by):
+        try:
+            commmedia = CommunityMedia.objects.get(media=media)
+            membership = CommunityMembership.objects.get(user=user, community=commmedia.community.pk)
+            sender_rolename = membership.role.name
+            notify.send(sender=user, verb=verb, recipient=media.created_by,
+                        target=media, target_url="media_view",
+                        sender_url='display_user_profile',
+                        sender_url_name=user.username,
+                        sender_rolename=sender_rolename)
+        except CommunityMembership.DoesNotExist:
+            errormessage = 'You are not a member of the community'
+
+def notify_update_media_state(user, media, action):
+    if CommunityMedia.objects.filter(media=media).exists():
+        commmedia = CommunityMedia.objects.get(media=media)
+        membership = CommunityMembership.objects.get(user=user, community=commmedia.community.pk)
+        sender_rolename = membership.role.name
+        comm_admin_list = []
+        comm_publisher_list = []
+        comm_pub_admin = []
+        comm_admin_list = get_comm_list(commmedia.community,'community_admin',media)
+        comm_publisher_list = get_comm_list(commmedia.community,'publisher',media)
+        comm_pub_admin = comm_admin_list + comm_publisher_list
+
+        if action == 'publishable':
+            if commmedia.media.mediatype == 'IMAGE' :
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='This image has been made publishable', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+        elif action == 'published':
+            if commmedia.media.mediatype == 'IMAGE' :
+                notify.send(sender=user, recipient=media.created_by,
+                        verb='Your image has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='Image has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+        if action == 'publishable':
+            if commmedia.media.mediatype == 'AUDIO' :
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='This audio has been made publishable', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+        elif action == 'published':
+            if commmedia.media.mediatype == 'AUDIO' :
+                notify.send(sender=user, recipient=media.created_by,
+                        verb='Your audio has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='Audio has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+        if action == 'publishable':
+            if commmedia.media.mediatype == 'VIDEO' :
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='This video has been made publishable', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+        elif action == 'published':
+            if commmedia.media.mediatype == 'VIDEO' :
+                notify.send(sender=user, recipient=media.created_by,
+                        verb='Your video has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
+
+                notify.send(sender=user, recipient=comm_pub_admin,
+                        verb='Video has been published', target=media,
+                        target_url="media_view", sender_url="display_user_profile",
+                        sender_url_name=user.username, sender_rolename=sender_rolename)
 
 def get_comm_list(comm, rolename, resource):
     list = []
@@ -354,4 +434,3 @@ def get_comm_list(comm, rolename, resource):
         if resource.created_by != member.user:
             list.append(member.user)
     return list
-
