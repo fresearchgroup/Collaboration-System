@@ -36,3 +36,4 @@ django-mysql==3.2.0
 confluent-kafka==1.1.0
 elasticsearch-dsl==7.0.0
 elasticsearch==7.0.2
+django-modeltranslation==0.13.3

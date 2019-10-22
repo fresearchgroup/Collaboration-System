@@ -58,6 +58,30 @@ https://github.com/fresearchgroup/Community-Content-Tools
 This system is used to recommend articles based on his/her activity in the sytem. Please refer to the installation steps given in the repository below:
 https://github.com/fresearchgroup/Community-Recommendation
 
+### Translation
+		
+		Accepting Unicode(UTF8) Charcter Input for CharField in Django and Varchar field in Mysql.
+
+				Steps:
+
+				#For altering Database charecter set to UTF8(utf8mb4)
+
+				1. ALTER DATABASE database_name CHARACTER SET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+				#For altering table characterset to UTF8(utf8mb4)
+
+				2. ALTER TABLE table_name CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+				#For altering table columns to  characterset to UTF8(utf8mb4)
+
+				3. ALTER TABLE table_name CHANGE column_name column_name VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+
+				4. Run this management commund
+							python3 manage.py update_translation_fields
+
+
+
 ### APIs 
 
    ####Community APIs
