@@ -30,6 +30,9 @@
     {% endfor %}
 
 {% endif %}
+<h2>In {% for language in languages %} 
+                  {% if language.code == LANGUAGE_CODE %} {{ language.name_local }}{% endif %}
+            {% endfor %}</h2>
 <br/>
    <form method="post" enctype="multipart/form-data" novalidate>
                       {% csrf_token %}

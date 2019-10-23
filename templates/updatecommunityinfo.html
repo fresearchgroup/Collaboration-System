@@ -63,7 +63,9 @@
 
 </ul>
 <br/>
-
+<h2>In {% for language in languages %} 
+                  {% if language.code == LANGUAGE_CODE %} {{ language.name_local }}{% endif %}
+            {% endfor %}</h2>
 <div class="container-fluid alert alert-primary" role="alert">
   <div class="row">
     <div class="col-sm-12">
