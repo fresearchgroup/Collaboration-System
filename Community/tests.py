@@ -86,7 +86,7 @@ class RequestCommunityCreationTest(TestCase):
 		url = reverse('request_community_creation')
 		data = {
 			'name': 'Indian Festivals',
-			'category': 'festival'
+			# 'category': 'festival'
 		}
 		response = self.client.post(url, data)
 		self.assertFalse(RequestCommunityCreation.objects.exists())
@@ -101,7 +101,7 @@ class HandleCommunityCreationRequestsTest(TestCase):
 		url = reverse('handle_community_creation_requests')
 		data = {
 			'name': 'Indian Festivals',
-			'category': 'festival'
+			# 'category': 'festival'
 		}
 		response = self.client.post(url, data)
 		self.assertFalse(Community.objects.exists())
@@ -117,7 +117,7 @@ class ManageCommunityTest(TestCase):
 		url = reverse('manage_community', kwargs={'pk': 1})
 		data = {
 			'name': 'Indian Festivals',
-			'category': 'festival'
+			# 'category': 'festival'
 		}
 		response = self.client.post(url, data)
 		self.assertFalse(Community.objects.exists())
@@ -128,7 +128,7 @@ class UpdateCommunityInfoTest(TestCase):
 		url = reverse('update_community_info', kwargs={'pk': 2})
 		data = {
 			'name': 'Indian Festivals',
-			'category': 'festival'
+			# 'category': 'festival'
 		}
 		response = self.client.post(url, data)
 		self.assertFalse(Community.objects.exists())
@@ -144,7 +144,7 @@ class CreateCommunityTest(TestCase):
 		url = reverse('create_community')
 		data = {
 			'name': 'Indian Festivals',
-			'category': 'festival'
+			# 'category': 'festival'
 		}
 		response = self.client.post(url, data)
 		self.assertFalse(Community.objects.exists())

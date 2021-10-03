@@ -185,10 +185,10 @@
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateImage" data-whatever="@mdo"><p><i class="fa fa-picture-o" style="font-size:42px;"></i></p>Image</button>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateAudio" data-whatever="@mdo"><p><i class="fa fa-music" style="font-size:42px;"></i></p>Audio</button>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateVideo" data-whatever="@mdo"><p><i class="fa fa-film" style="font-size:42px;"></i></p>Video</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateGroup" data-whatever="@mdo"><p><i class="fa fa-soccer-ball-o" style="font-size:42px;"></i></p>Group</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateCourse" data-whatever="@mdo"><p><i class="fa fa-briefcase" style="font-size:42px;"></i></p>Course</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateGroup" data-whatever="@mdo"><p><i class="fa fa-soccer-ball-o" style="font-size:42px;"></i></p>Sub-Community</button>
+                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateCourse" data-whatever="@mdo"><p><i class="fa fa-briefcase" style="font-size:42px;"></i></p>Course</button> -->
                             
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>Interactive <br /> Content</button>
+                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>Interactive <br /> Content</button> -->
                           </div>
                           <div class="modal-footer">
                 
@@ -477,16 +477,20 @@
         <div class="col-md-9">
           <div class="content-page">
             <div class="row margin-bottom-10">
-              {% for cat in community.category.get_children %}
+              {% for child in children %}
               <div class="col-md-4 col-sm-4 gallery-item">
                 <a data-rel="fancybox-button"
                   title=""
-                  href="{% url 'categorized_communities' cat.pk  community.pk %}"
+                  href="{% url 'community_view' child.pk  %}"
                   class="fancybox-button">
-                  <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{cat.image}}" class="img-responsive">
+                  {% if community.image %}
+                    <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{child.image}}" class="img-responsive">
+                  {% else %}
+                    <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}default/community_image_default.png" class="img-responsive">
+                  {%endif%}                  
                   <div class="zoomix"><i class="fa fa-search"></i></div>
                 </a>
-                <h3> <a href="{% url 'categorized_communities' cat.pk  community.pk %}">{{cat.name}}</a> </h3>
+                <h3> <a href="{% url 'community_view' child.pk %}">{{child.name}}</a> </h3>
               </div>
               {% endfor %}
             </div>

@@ -6,7 +6,7 @@ class CommunitySerializer(serializers.ModelSerializer):
 	created_by = serializers.ReadOnlyField(source='created_by.username')
 	class Meta:
 		model = Community
-		fields = ('id', 'name', 'desc','category', 'created_at', 'created_by', 'pk')
+		fields = ('id', 'name', 'desc', 'created_at', 'created_by', 'pk')
 
 
 

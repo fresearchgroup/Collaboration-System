@@ -3,9 +3,21 @@ from .models import Community, CommunityMembership, CommunityArticles, Community
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
 from django.db.models import Manager
+from mptt.admin import DraggableMPTTAdmin
 # Register your models here.
 
-admin.site.register(Community)
+admin.site.register(
+    Community,
+    DraggableMPTTAdmin,
+    list_display=(
+        'tree_actions',
+        'indented_title',
+        # ...more fields if you feel like it...
+    ),
+    list_display_links=(
+        'indented_title',
+    ),)
+
 admin.site.register( CommunityMembership)
 admin.site.register( CommunityGroups)
 admin.site.register( RequestCommunityCreation)

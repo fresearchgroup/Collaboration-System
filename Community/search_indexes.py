@@ -7,7 +7,7 @@ from haystack.fields import CharField
 
 class CommunityIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.EdgeNgramField(document=True, model_attr='name')
-    category = indexes.CharField(model_attr='category', faceted=True)
+    # category = indexes.CharField(model_attr='category', faceted=True)
     created_at = indexes.DateTimeField(model_attr='created_at', faceted=True)
 
     # for spelling suggestions

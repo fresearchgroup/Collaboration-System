@@ -207,7 +207,7 @@ def handle_community_creation_requests(request):
 					name = rcommunity.name,
 					desc = rcommunity.desc,
 					tag_line = rcommunity.tag_line,
-					category = rcommunity.category,
+					# category = rcommunity.category,
 					created_by = rcommunity.requestedby,
 					forum_link = forum_link
 
@@ -758,7 +758,7 @@ def community_media_create(request):
 class FacetedSearchView(BaseFacetedSearchView, TemplateView):
 
     form_class = FacetedProductSearchForm
-    facet_fields = ['category', 'created_at', 'views']
+    facet_fields = ['created_at', 'views']
     template_name = 'search_result.html'
     #paginate_by = 3
     # context_object_name = 'object_list'
