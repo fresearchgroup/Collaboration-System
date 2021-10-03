@@ -98,8 +98,8 @@ fieldset[disabled] .btn-primary.active {
 
 .btn-success {
     color: #fff;
-    background-color: #45B6AF;
-    border-color: #3ea49d;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .btn-success:hover,
@@ -107,25 +107,25 @@ fieldset[disabled] .btn-primary.active {
 .btn-success:active,
 .btn-success.active {
     color: #fff;
-    background-color: #3b9c96;
-    border-color: #307f7a;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .open .btn-success.dropdown-toggle {
     color: #fff;
-    background-color: #3b9c96;
-    border-color: #307f7a;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .btn-success:active,
 .btn-success.active {
     background-image: none;
-    background-color: #348a84;
+    background-color: #89216B;
 }
 
 .btn-success:active:hover,
 .btn-success.active:hover {
-    background-color: #37918b;
+    background-color: #89216B;
 }
 
 .open .btn-success.dropdown-toggle {
@@ -278,8 +278,8 @@ fieldset[disabled] .btn-warning.active {
 
 .btn-danger {
     color: #fff;
-    background-color: #F3565D;
-    border-color: #f13e46;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .btn-danger:hover,
@@ -287,25 +287,25 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger:active,
 .btn-danger.active {
     color: #fff;
-    background-color: #f1353d;
-    border-color: #ec111b;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .open .btn-danger.dropdown-toggle {
     color: #fff;
-    background-color: #f1353d;
-    border-color: #ec111b;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .btn-danger:active,
 .btn-danger.active {
     background-image: none;
-    background-color: #ef1d26;
+    background-color: #89216B;
 }
 
 .btn-danger:active:hover,
 .btn-danger.active:hover {
-    background-color: #f0262f;
+    background-color: #89216B;
 }
 
 .open .btn-danger.dropdown-toggle {
@@ -327,12 +327,12 @@ fieldset[disabled] .btn-danger:hover,
 fieldset[disabled] .btn-danger:focus,
 fieldset[disabled] .btn-danger:active,
 fieldset[disabled] .btn-danger.active {
-    background-color: #F3565D;
-    border-color: #f13e46;
+    background-color: #89216B;
+    border-color: #89216B;
 }
 
 .btn-danger .badge {
-    color: #F3565D;
+    color: #89216B;
     background-color: #fff;
 }
 
