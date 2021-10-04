@@ -1140,13 +1140,14 @@ steps block and steps block elements
 
 /* breadcrumb */
 .breadcrumb {
-	background: none;
-	padding: 0;
-	font: 14px "Open Sans", sans-serif;
-	color: #5f6d7b;
-	margin-bottom: 22px;
+	background: #89216B;
+	padding: 8px;
+	font: 16px "Open Sans", sans-serif;
+	color: #FFFFFF;
+	width: fit-content;
+	margin-bottom: 42px;
 }
-.breadcrumb > li + li:before {
+.breadcrumb >\ li + li:before {
 	content: "\f105 ";
     -moz-osx-font-smoothing: grayscale;
     display: inline-block;
@@ -1154,13 +1155,16 @@ steps block and steps block elements
     font-style: normal;
     font-weight: normal;
     line-height: 1;
-    color: #5f6d7b;
+    color: #FFFFFF;
 }
 .breadcrumb a {
-	color: #5f6d7b;
+	color: #FFFFFF;
+}
+.breadcrumb a:hover {
+	color:#F6BE00;
 }
 .breadcrumb > .active {
-	color: #89216B;
+	color: #FFFFFF;
 }
 
 /* paginations */
