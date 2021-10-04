@@ -554,7 +554,9 @@
 
           <!-- BEGIN TOP CONTRIBUTORS PHOTOS STREAM -->
           <div class="blog-photo-stream margin-bottom-20">
-            <h2>Top Contributors</h2>
+            {% if top_contributors %}
+              <h2>Top Contributors</h2>
+            {% endif %}
             <ul class="list-unstyled">
               {% for top in top_contributors %}
                 <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}{{top.photo}}"></a></li>
@@ -577,7 +579,9 @@
             <!-- BEGIN LEFT SIDEBAR -->
             <div class="col-md-3 col-sm-3 blog-sidebar">
               <div class="recent-news margin-bottom-3">
-                <h2>Published Articles</h2>
+                {% if pubarticlescount >= 1 %}
+                  <h2>Published Articles</h2>
+                {% endif %}
                 {{myhtml|safe}}{% autoescape off%}
                 {% for article in pubarticles %}
                     <h3><a href="{% url 'article_view' article.id %}">{{article.title}}</a></h3>
