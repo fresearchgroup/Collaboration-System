@@ -792,14 +792,14 @@
 		margin-right: 0;
 	}
 	.content-form-page .btn-default {
-		margin-top: 10px;
+		margin-top: 0px;
 	}
 	.price-availability-block .availability {
 	    clear: left;
 	    float: left;
 	}
 	.product-page-options .pull-left {
-		margin-bottom: 10px;
+		margin-bottom: 0px;
 	}
 }
 /* END max width 320px */

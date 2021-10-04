@@ -764,8 +764,8 @@ body.page-header-fixed {
 	-webkit-transition: all 0.1s ease;
 }*/
 .reduce-header .site-logo {
-	padding-top: 9px;
-	padding-bottom: 11px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 @media (min-width: 1025px) {
 	.reduce-header .header-navigation > ul > li > a {
