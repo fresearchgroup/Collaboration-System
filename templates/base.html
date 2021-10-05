@@ -117,8 +117,8 @@ $(document).ready(function() {
                 <ul class="list-unstyled list-inline pull-right">
                     {% if user.is_authenticated %}
                     {% else %}
-                    <li><a href="{% url 'login' %}?next={{request.path}}">Log In</a></li>
-                    <li><a href="{% url 'signup' %}">Sign up</a></li>
+                    <li><a href="{% url 'login' %}?next={{request.path}}" style="color:white; font-weight: bold;">Log In</a></li>
+                    <li><a href="{% url 'signup' %}" style="color:white; font-weight: bold;">Sign up</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -195,7 +195,7 @@ $(document).ready(function() {
         <!-- BEGIN TOP SEARCH -->
         <li class="menu-search">
           <span class="sep"></span>
-          <i class="fa fa-search search-btn"></i>
+          <i class="fa fa-search search-btn" style="color:white;"></i>
           <div class="search-box">
             <form method ='get' action="/search/">
              <table style="text-align:center;">
