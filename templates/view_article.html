@@ -5,7 +5,7 @@
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
-     <li class="breadcrumb-item active">{{ article.article.title }} </li>
+     <li class="breadcrumb-item">{{ article.article.title }} </li>
     {% endblock %}
     {% block content %}
 <div class="container-fluid ">
