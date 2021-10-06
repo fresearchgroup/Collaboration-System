@@ -20,3 +20,22 @@
     margin-right: 0px;
     margin-left: 0px;
 }
+
+.icp-content-comm-title-image {
+    background-image: url("text-border.png");
+    height: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: center;
+    margin-top: 35px;
+}
+
+.icp-content-comm-title-text {
+    text-align: center;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #BF4040;
+    font-weight: bold;
+}
