@@ -393,13 +393,13 @@ class CreateCommunityView(CreateView):
 		self.object = form.save(commit=False)
 		self.object.image_thumbnail = form.cleaned_data.get('image')
 
-		forum_link, fid = self.create_forum(self.object.name, self.object.desc)
-		if forum_link is not False:
-			self.object.forum_link = forum_link
-			self.object.forum = fid
-		else:
-			messages.warning(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
-			return super(CreateCommunityView, self).form_invalid(form)
+		# forum_link, fid = self.create_forum(self.object.name, self.object.desc)
+		# if forum_link is not False:
+		# 	self.object.forum_link = forum_link
+		# 	self.object.forum = fid
+		# else:
+		# 	messages.warning(self.request, 'Cannot Create Forum for this community. Please check if default forum is created.')
+		# 	return super(CreateCommunityView, self).form_invalid(form)
 		self.object.save()
 
 		if self.object.image_thumbnail:
