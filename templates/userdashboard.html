@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}
   {% if user.is_authenticated %}
-  <li class="breadcrumb-item active">{{user.username}}'s Dashboard</li>
+  <li class="breadcrumb-item">{{user.username}}'s Dashboard</li>
   <li class="breadcrumb-item active">
   	   <a href="{% url 'user_insight_dashboard'%}">Insights</a>
   </li>
@@ -135,15 +135,15 @@ var articlesContributed = {{articlescontributed}};
           <tr>
             <td>
               {% if content.type == 'article' %}
-                <i class="fa fa-file-text" style="color:red;"></i> Article
+                <i class="fa fa-file-text" style="color:#89216B;"></i> Article
               {% endif %}
               {% if content.type == 'course' %}
-                <i class="fa fa-briefcase" style="color:red;"></i> Course
+                <i class="fa fa-briefcase" style="color:#89216B;"></i> Course
               {% endif %}
               {% if content.type == 'Media' %}
-                {% if content.media.mediatype == 'IMAGE' %}<i class="fa fa-picture-o" style="color:red;"></i> Image {% endif %}
-                {% if content.media.mediatype == 'AUDIO' %}<i class="fa fa-music" style="color:red;"></i> Audio {% endif %}
-                {% if content.media.mediatype == 'VIDEO' %}<i class="fa fa-film" style="color:red;"></i> Video {% endif %}
+                {% if content.media.mediatype == 'IMAGE' %}<i class="fa fa-picture-o" style="color:#89216B;"></i> Image {% endif %}
+                {% if content.media.mediatype == 'AUDIO' %}<i class="fa fa-music" style="color:#89216B;"></i> Audio {% endif %}
+                {% if content.media.mediatype == 'VIDEO' %}<i class="fa fa-film" style="color:#89216B;"></i> Video {% endif %}
               {% endif %}
             </td>
             <td>
@@ -197,10 +197,11 @@ var articlesContributed = {{articlescontributed}};
 {% block javascript %}
   <script src="{% static 'jquery-pagination/pagination.js' %}"></script>
   <script>
-    $.ajax({
-      url: '/api/reputation/score',
-      type: 'GET',
-      success: function(mycommunities) {
+    // $.ajax({
+      // url: '/api/reputation/score',
+      // type: 'GET',
+      // success: function(mycommunities) {
+        $ (function () {
         (function(name) {
 
           var container = $('#pagination-mycommunities');
@@ -209,13 +210,13 @@ var articlesContributed = {{articlescontributed}};
             var result = [];
 
             var i = 0;
-            var badgeLevelMapping = {
-              '1': 'btn-secondary',
-              '2': 'btn-danger',
-              '3': 'btn-warning',
-              '4': 'btn-primary',
-              '5': 'btn-success'
-            };
+            // var badgeLevelMapping = {
+            //   '1': 'btn-secondary',
+            //   '2': 'btn-danger',
+            //   '3': 'btn-warning',
+            //   '4': 'btn-primary',
+            //   '5': 'btn-success'
+            // };
             for (i = 0; i < mycommunities.length; i++) {
               var temp = '';
               var comm = mycommunities[i];
@@ -231,18 +232,18 @@ var articlesContributed = {{articlescontributed}};
               var url = "{% url 'community_view' 999 %}";
               temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
               
-              var badgeDiv = $("<div>", {
-                'css': {
-                  'margin': '10px'
-                }
-              });
+              // var badgeDiv = $("<div>", {
+              //   'css': {
+              //     'margin': '10px'
+              //   }
+              // });
 
-              for (var j = 0; j < comm.badges.length; j++) {
-                var badge = comm.badges[j].badge;
-                badgeDiv.append('<span class="btn ' + badgeLevelMapping[badge.level] + '" style="width: 50px; margin: 5px;">' + badge.title + '</span>');
-              }
+              // for (var j = 0; j < comm.badges.length; j++) {
+              //   var badge = comm.badges[j].badge;
+              //   badgeDiv.append('<span class="btn ' + badgeLevelMapping[badge.level] + '" style="width: 50px; margin: 5px;">' + badge.title + '</span>');
+              // }
 
-              temp += badgeDiv.prop('outerHTML');
+              // temp += badgeDiv.prop('outerHTML');
 
               result.push(temp);
             }
@@ -271,7 +272,7 @@ var articlesContributed = {{articlescontributed}};
           };
           container.pagination(options);
         })('mycommunities-pagination');
-      }
-    });
+      })
+    // });
   </script>
 {% endblock %}
