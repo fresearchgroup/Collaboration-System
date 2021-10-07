@@ -33,7 +33,7 @@
   {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'community_content' community.pk %}">Community Content</a>
+    <a class="nav-link" href="{% url 'community_content' community.pk %}">Contributions</a>
   </li>
    <li class="nav-item">
     <a class="nav-link" href="{% url 'community_feed' community.pk %}">Feeds</a>
