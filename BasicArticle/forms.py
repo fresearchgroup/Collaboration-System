@@ -45,5 +45,6 @@ class ArticleCreateForm(forms.ModelForm):
 		self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
 		self.fields['image'].required = False
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
+		self.fields['tags'].required = False
 		if not settings.REALTIME_EDITOR:
 			self.fields['body'].widget.attrs.update({'class': 'form-control'})
