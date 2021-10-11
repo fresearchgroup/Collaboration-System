@@ -4,13 +4,20 @@
 {% load static %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
-     <li class="breadcrumb-item">{{ article.article.title }} </li>
-    {% endblock %}
-    {% block content %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% for cat in article.community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item">{{ article.community.name }}</li>
+  <li class="breadcrumb-item">Articles</li>
+    <li class="breadcrumb-item">{{ article.article.title }} </li>
+{% endblock %}
+
+{% block content %}
 <div class="container-fluid ">
   <div class="row">
-    <div class="col-sm-9">
+    <div class="col-sm-12">
       <div>
       <ul class="nav nav-tabs">
         <li class="nav-item active">
@@ -28,12 +35,12 @@
           <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
         </li>
         {% endif %}
-        <li class="nav-item">
+        <!-- <li class="nav-item">
               <a class="nav-link" href="{% url 'article_dashboard' article.article.pk %}">Insights</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{% url 'article_reports' article.article.pk %}">Reports</a>
-        </li>
+        </li> -->
       </ul>
       </div>
       {% if messages %}
@@ -52,21 +59,21 @@
             <li><i class="fa fa-user"></i> <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </li>
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
             {% get_comment_count for article as comment_count %}
-            <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li>
-            <li><i class="fa fa-eye"></i> {{count}} views </li>
+            <!-- <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li> -->
+            <!-- <li><i class="fa fa-eye"></i> {{count}} views </li> -->
 
             {% if article.community.name %}
-            <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> Community </li>
+            <li><i class="fa fa-users"></i> <a href="{% url 'community_view' article.community.pk %}">{{article.community.name}}</a> </li>
             {% endif %}
             {% if article.group.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
             {% endif %}
             {%if user.is_authenticated %}
-            {%if is_fav %}
+            <!-- {%if is_fav %}
             <li><i id ="fav_submit" class="fa fa-star"></i>Favourites</li>
             {% else %}
             <li><i id ="fav_submit" class="fa fa-star-o"></i>Favourites</li>
-            {%endif%}
+            {%endif%} -->
             <form methd = "post">
                 <input id="username" type="hidden" value="{{request.user.username}}"/>
                 <input id="rid" type="hidden" value="{{article.article.pk}}"/>
@@ -77,15 +84,15 @@
             {% endif %}
             
           </ul>
-        <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;">
+        <!-- <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;"> -->
           {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
           
-        </p>
+        <!-- </p> -->
         
-        {% include "includes/reputation_buttons.html" with id=article.article.id resource_type="article" %}
+        <!-- {% include "includes/reputation_buttons.html" with id=article.article.id resource_type="article" %} -->
       </div>
     </div>
-    <div class="col-sm-3"><br/><br/>
+    <!-- <div class="col-sm-3"><br/><br/>
       <div class="alert alert-info" role="alert">
         This article belongs to -
         {% if article.community.name %}
@@ -105,11 +112,11 @@
 	<div class="alert alert-info" id="recommendations" role="alert">
 	<h4>Recommended for you -</h4></br>
         </div>
-    </div>
+    </div> -->
   </div>
 </div>
 
-<h2>Comments</h2>
+<!-- <h2>Comments</h2>
 
 {% if comment_count %}
 <hr/>
@@ -126,13 +133,13 @@
   <h3>Leave a Comment</h3>
   <label>Message</label>
    {% render_comment_form for article %}
-</div>
+</div> -->
 
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'js/favourite.js' %}"></script>
+<!-- <script src="{% static 'js/favourite.js' %}"></script> -->
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 var id = {{article.article.id}};
 
 $(function(){
@@ -204,5 +211,5 @@ $(window).load(function() {
                       
                     });
           });
-</script>
+</script> -->
 {% endblock %}
