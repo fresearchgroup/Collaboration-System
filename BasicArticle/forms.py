@@ -25,6 +25,7 @@ class ArticleUpdateForm(forms.ModelForm):
 		self.fields['image'].required = False
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
+		self.fields['tags'].required = False
 		states = getStatesCommunity(self.instance.state.id, role)
 		self.fields['state'].queryset = States.objects.filter(name__in=states)
 
