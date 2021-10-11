@@ -31,6 +31,7 @@ class MediaCreateView(CreateView):
 		# Call the base implementation first to get a context
 		context = super().get_context_data(**kwargs)
 		context['community'] = Community.objects.get(pk=self.kwargs['pk'])
+		context['mediatype'] = self.kwargs['mediatype']
 		return context
 
 	def get(self, request, *args, **kwargs):

@@ -39,7 +39,8 @@ class MediaCreateForm(forms.ModelForm):
 			Div(
                 Field('title'),
                 Field('media_type'),
-                Field('medialink','value'),
+                Field('medialink'),
+                # Field('medialink','value'),
                 Field('mediafile'),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'Create')),
