@@ -18,19 +18,18 @@
 
 {% block content %}
 
-
+  {% if membership.role.name == 'community_admin' %}
 <ul class="nav nav-tabs">
   <li class="nav-item active">
     <a class="nav-link " href="#">View</a>
   </li>
-  {% if membership.role.name == 'community_admin' %}
+  
   <li class="nav-item">
     <a class="nav-link " href="{% url 'manage_community' community.pk %}">Manage Community</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'update_community_info' community.pk %}">Update community Info</a>
   </li>
-  {%endif%}
   {% if membership.role.name == 'author' or membership.role.name == 'publisher' or membership.role.name == 'community_admin' %}
   <li class="nav-item">
     <a class="nav-link" href="{% url 'community_content' community.pk %}">Contributions</a>
@@ -51,6 +50,8 @@
   </li>
   {% endif %} -->
 </ul>
+{%endif%}
+
 {% if messages %}
     {% for message in messages %}
       {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
@@ -70,594 +71,80 @@
             {{ community.name}}
           </h2>
         </div>
-          {% if community.image %}
+          <!-- {% if community.image %}
           <img src="{{ MEDIA_URL }}{{ community.image}}" alt="image" class="img-responsive" style="width: 100%; height:350px;">
           {% else %}
           <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="width: 100%; height:350px;">
-          {%endif%}
+          {%endif%} -->
       </div>
     </div>
 
+  
 
-    <!-- BEGIN SIDEBAR & CONTENT -->
-    <div class="row ">
-      <!-- BEGIN CONTENT -->
-      <div class="col-md-12 col-sm-12">
-        <div class="content-page">
-          <div class="row">
 
-            <!-- BEGIN LEFT SIDEBAR -->
-            <div class="col-md-9 col-sm-9 blog-posts">
-              <div class="row">
-                <div class="col-md-12 col-sm-12">
-                  {{myhtml|safe}}{% autoescape off%}
-                  <div id="initial">
-                    {{community.desc|truncatewords:170}}
-                    <a href="#" onclick="descShowHide()" id="morelink"><i class="fa fa-arrow-circle-down" style="color:#89216B;"></i> More</a>
-                  </div>
-                  <div id="final" style="display:none;">
-                    {{community.desc}}
-                    <a href="#" onclick="descShowHide()" id="morelink"> <i class="fa fa-arrow-circle-up" style="color:#89216B;"></i> Less</a>
-                  </div>
-                  {% endautoescape%}                  
-                </div>
-              </div>
-            </div>
-            <!-- END LEFT SIDEBAR -->
 
-            <!-- BEGIN RIGHT SIDEBAR -->
-            <div class="col-md-3 col-sm-3 blog-sidebar">
-              <ul class="blog-info">
-                <li><i class="fa fa-institution"></i>Since: {{community.created_at.date}}</li><br />
-                <li><i class="fa fa-users"></i> {{subscribers}} Members </li><br />
-                <li><i class="fa fa-file-text"></i>{{pubarticlescount}} Published articles</li><br />
-                <li><i class="fa fa-soccer-ball-o"></i>{{childrencount}} Sub-Communities </li><br />
-                <hr />
-                <li>
-                  {% if membership.role  %}
-                    {% if membership.role.name == 'author' %}
-                      <i class="fa fa-pencil"></i>Author
-                      {% elif membership.role.name == 'publisher' %}
-                        <i class="fa fa-print"></i>Publisher
-                      {% else %}
-                        <i class="fa fa-trophy"></i>Community Admin 
-                      {% endif %}
-                    {% else %}
-                      Want to know more ...
-                  {% endif %}                
-                </li>
-              </ul>
+    {% if community.level == 0 %}
+    <table id="listPow" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      <thead>
+          <tr style="background-color:#89216B">
+            <th style="color:white">Name</th>
+            <th style="color:white">Location</th>
+            <th style="color:white">Status</th>
+          </tr>
+      </thead>
+      <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for child in children %}
+          <tr>
+            <td>
+              <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+            </td>
+            <td>
+              {{child.location}}
+            </td>
+            <td>
+              {{child.status}}
+            </td>
+          </tr>
+        {% endfor %}
+        {% endautoescape%}
+      </tbody>
+    </table>
+  {% endif %}
 
-              <div class="row margin-bottom-40">
-                  <div class="">
-                      {% if membership == 'FALSE' %}
-                      <b> <form id = "subscribe" method = "post" action ="{% url 'community_subscribe' %}">
-                        <div class="form-group">
-                              {% csrf_token %}
-                              <input type="hidden" name="cid" value={{ community.pk}}>
-                      </div>
-                        <button id="join-us" type="submit" class="btn btn-primary" style="margin-left: 15px;"><i class="fa fa-sign-in margin-right-10"></i>Join Us</button>
-                
-                      </form>
-                
-                    </b>
-                    {%else%}
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id = "Unsubscribe" style="margin-left: 15px; margin-top:10px;"><i class="fa fa-sign-out margin-right-10"></i>Unsubscribe</button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        {% if message == 0 %}
-                        <form method = "post" action ="{% url 'community_unsubscribe' %}">
-                          <div class="form-group">
-                            {% csrf_token %}
-                            <label for="message-text" class="col-form-label">Are you sure you want to unsubscribe from this community</label>
-                            <input type="hidden" name="cid" value={{ community.pk}}>
-                          </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button id="communityUnsubscribe" type="submit" class="btn btn-primary" id = "Yes">Yes</button>
-                        </form>
-                        {%else%}
-                          <label for="message-text" class="col-form-label">Before unsubscribing please assign some other community admin</label>
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
-                        {%endif %}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <br />
-                    <button type="button" id="create_resource_id" class="btn btn-success" data-toggle="modal" data-target="#modalCreate" data-whatever="@mdo" style="margin-left: 15px; margin-top:10px;"><i class="fa fa-plus-circle margin-right-10"></i>Create Resource</button>
-                    <div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="CreateModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Choose a Resource</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateArticle" data-whatever="@mdo"><p><i class="fa fa-file-text-o" style="font-size:42px;"></i></p>Article</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateImage" data-whatever="@mdo"><p><i class="fa fa-picture-o" style="font-size:42px;"></i></p>Image</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateAudio" data-whatever="@mdo"><p><i class="fa fa-music" style="font-size:42px;"></i></p>Audio</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateVideo" data-whatever="@mdo"><p><i class="fa fa-film" style="font-size:42px;"></i></p>Video</button>
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateGroup" data-whatever="@mdo"><p><i class="fa fa-soccer-ball-o" style="font-size:42px;"></i></p>Sub-Community</button>
-                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateCourse" data-whatever="@mdo"><p><i class="fa fa-briefcase" style="font-size:42px;"></i></p>Course</button> -->
-                            
-                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCreateh5p" data-whatever="@mdo"><p><i class="fa fa-camera-retro" style="font-size:42px;"></i></p>Interactive <br /> Content</button> -->
-                          </div>
-                          <div class="modal-footer">
-                
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                    <div class="modal fade" id="modalCreateArticle" tabindex="-1" role="dialog" aria-labelledby="CreateArticleModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form method = "get" action ="{% url 'community_article_create' community.pk %}">
-                              <div class="form-group">
-                                <h4>I confirm that I understand the following terms.</h4>
-                                <ul>
-                                <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                </ul>
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-                                  I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                </div><br />
-                                <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button id="articleCreate" type="submit" class="btn btn-primary">Yes</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                    <div class="modal fade" id="modalCreateImage" tabindex="-1" role="dialog" aria-labelledby="CreateImageModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form method = "get" action ="{% url 'community_media_create' community.pk 'IMAGE'%}">
-                              <div class="form-group">
-                                <h4>I confirm that I understand the following terms.</h4>
-                                <ul>
-                                <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                </ul>
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="checkimage" required>
-                                  I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                </div><br />
-                                <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button id="imageCreate" type="submit" class="btn btn-primary">Yes</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                    <div class="modal fade" id="modalCreateAudio" tabindex="-1" role="dialog" aria-labelledby="CreateAudioModal" aria-hidden="true">
-                        <div class="modal-dialog text-left" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form method = "get" action ="{% url 'community_media_create' community.pk 'AUDIO' %}">
-                                <div class="form-group">
-                                  <h4>I confirm that I understand the following terms.</h4>
-                                  <ul>
-                                  <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                  <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                  <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                  <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                  </ul>
-                                  <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="checkimage" required>
-                                    I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                  </div><br />
-                                  <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                  <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                              <button id="audioCreate" type="submit" class="btn btn-primary">Yes</button>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                
-                      <div class="modal fade" id="modalCreateVideo" tabindex="-1" role="dialog" aria-labelledby="CreateVideoModal" aria-hidden="true">
-                          <div class="modal-dialog text-left" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <form method = "get" action ="{% url 'community_media_create' community.pk 'VIDEO' %}">
-                                  <div class="form-group">
-                                    <h4>I confirm that I understand the following terms.</h4>
-                                    <ul>
-                                    <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                    <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                    <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                    <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                    </ul>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input" id="checkimage" required>
-                                      I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                    </div><br />
-                                    <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                    <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                                  </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <button id="videoCreate" type="submit" class="btn btn-primary">Yes</button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>          
-                
-                    <div class="modal fade" id="modalCreateGroup" tabindex="-1" role="dialog" aria-labelledby="CreateGroupModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form method = "get" action ="{% url 'community_group' community.pk%}">
-                              <div class="form-group">
-                                <h4>I confirm that I understand the following terms.</h4>
-                                <ul>
-                                <li> Since I am creating a group, I shall be the group admin and will manage my group appropriately</li>
-                                <li> Resource created by anyone in my group should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                </ul>
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="exampleCheck2" required>
-                                  I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                </div><br />
-                                <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button id="no" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button id="groupCreate" type="submit" class="btn btn-primary">Yes</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                    <div class="modal fade" id="modalCreateCourse" tabindex="-1" role="dialog" aria-labelledby="CreateCourseModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form method = "post" action ="{% url 'community_course_create' %}">
-                              <div class="form-group">
-                                {% csrf_token %}
-                                <input type="hidden" name="cid" value={{ community.pk}}>
-                                <input type="hidden" name="status" value='0'>
-                                <input type="hidden" name="courseof" value='community'>
-                                <h4>I confirm that I understand the following terms.</h4>
-                                <ul>
-                                <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                </ul>
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="exampleCheck3" required>
-                                  I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                </div><br />
-                                <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button id="courseCreate" type="submit"  class="btn btn-primary">Yes</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                    <div class="modal fade" id="modalCreateh5p" tabindex="-1" role="dialog" aria-labelledby="Createh5pModal" aria-hidden="true">
-                      <div class="modal-dialog text-left" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                              {% csrf_token %}
-                            <form method = "post" action="{% url 'community_h5p_create' %}">
-                              <div class="form-group">
-                                {% csrf_token %}
-                                <input type="hidden" name="cid" value={{ community.pk}}>
-                                <input type="hidden" name="status" value='0'>
-                                <input type="hidden" name="courseof" value='community'>
-                                <h4>I confirm that I understand the following terms.</h4>
-                                <ul>
-                                <li> Resource created on this portal should not contain explicit or harmful material that is inappropriate for young learners. For more details, please refer to the guidelines </li>
-                                <li> Resource will not collect any sensitive data or personal information about users, such as name, address, photo or other personally identifiable information. For more details,please refer to the Data and privacy policy</li>
-                                <li> Resource should not violate copyright laws. For more details, please refer to the License policy</li>
-                                <li> Resource created or uploaded on this portal will be available for free and public use without limitations- for both commercial and noncommercial purposes</li>
-                                </ul>
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input" id="exampleCheck4" required>
-                                  I accept these terms and conditions and agree to my work being licenced under <a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY 4.0 </a>
-                                </div><br />
-                                <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive" style="width:150px"><br />
-                                <h5><b>I understand that in the case of a violation of any of these terms, my content can be removed by Collaborative Communities.</b></h5>
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-primary" id = "Yes">Yes</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {% endif %}
-                    <!-- activities END -->
-                  </div>
-              </div>
-            </div>
-            <!-- END RIGHT SIDEBAR -->
-          </div>
-        </div>
-      </div>
-      <!-- END CONTENT -->
-    </div>
-    <!-- END SIDEBAR & CONTENT -->
-
-    <!-- BEGIN SIDEBAR & CONTENT -->
-    <div class="row">
-        <!-- BEGIN CONTENT -->
-        <div class="col-md-9">
-          <div class="content-page">
-            <div class="row margin-bottom-10">
-              {% for child in children %}
-              <div class="col-md-4 col-sm-4 gallery-item">
-                <a data-rel="fancybox-button"
-                  title=""
-                  href="{% url 'community_view' child.pk  %}"
-                  class="fancybox-button">
-                  {% if child.image_thumbnail %}
-                    <img src="{{ MEDIA_URL }}{{ child.image_thumbnail}}" alt="image" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid #89216B;">
-                  {% else %}
-                    <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid #89216B;">
-                  {% endif %}
-                  <div class="zoomix"><i class="fa fa-search"></i></div>
-                </a>
-                <h3> <a href="{% url 'community_view' child.pk %}">{{child.name}}</a> </h3>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-
-          <!-- BEGIN MEMBERS -->
-          <h2>Members</h2>
-          <div class="recent-news margin-bottom-10">
-            {% for mem in communitymem %}
-              <div class="row margin-bottom-10">
-                <div class="col-md-3">
-                  {% if mem.photo %}
-                    <img class="img-responsive" src="{{ MEDIA_URL }}{{mem.photo}}">
-                  {% else %}
-                    <img class="img-responsive" src="{{ MEDIA_URL }}default/avatar.png">
-                  {%endif%}
-                </div>
-                <div class="col-md-9 recent-news-inner">
-                  <h3>
-                    {% if mem.role.name == 'author' %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-pencil"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% elif mem.role.name == 'publisher' %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-print"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% else %}
-                      <a href="{% url 'display_user_profile' mem.user.username %}">
-                        <i class="fa fa-trophy"></i>
-                        {{mem.user.username}}
-                      </a>
-                    {% endif %}
-                  </h3>
-                  <p>
-                    Last Seen: {{mem.user.last_login|date}} <br />
-                    Member Since: {{mem.user.date_joined|date}}
-                  </p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-          <!-- END MEMBERS -->
-
-          <hr />
-
-          <!-- GROUPS START -->
-          {% if children %}
-          <h2 class="no-top-space">Sub Communities</h2>
-          <ul class="nav sidebar-categories margin-bottom-40">
-            <div class="data-container"></div>
-          </ul>
-          <div id="pagination-commgroups" class="margin-bottom-20"></div>
-          <!-- GROUPS END -->
-          {% endif %}
-          <hr />
-
-          <!-- BEGIN TOP CONTRIBUTORS PHOTOS STREAM -->
-          <div class="blog-photo-stream margin-bottom-20">
-            {% if top_contributors %}
-              <h2>Top Contributors</h2>
+  {% if community.level == 1 %}
+  <table id="listPow" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+          <th style="color:white">Name</th>
+          <th style="color:white">Contribute</th>
+        </tr>
+    </thead>
+    <tbody>
+      {{myhtml|safe}}{% autoescape off%}
+      {% for child in children %}
+        <tr>
+          <td>
+            <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+          </td>
+          <td>
+            {% if user.is_authenticated %}
+              <a href="{% url 'community_article_create' child.pk %}"><button type="button" class="btn btn-success"><p><i class="fa fa-file-text-o" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'IMAGE'%}"><button type="button" class="btn btn-success"><p><i class="fa fa-picture-o" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'AUDIO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-music" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'VIDEO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-film" style="font-size:24px;"></i></p></button></a>
             {% endif %}
-            <ul class="list-unstyled">
-              {% for top in top_contributors %}
-                <li><a href="{% url 'display_user_profile' top.user__username %}"><img alt="" src="{{ MEDIA_URL }}{{top.photo}}"></a></li>
-              {% endfor %}
-            </ul>
-          </div>
-          <!-- END TOP CONTRIBUTORS STREAM -->
+          </td>
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+  {% endif %}
 
-        </div>
-        <!-- END CONTENT -->
-      </div>
-    <!-- END SIDEBAR & CONTENT -->
 
-    <!-- BEGIN SIDEBAR & CONTENT -->
-    <div class="row ">
-      <!-- BEGIN CONTENT -->
-      <div class="col-md-12 col-sm-12">
-        <div class="content-page">
-          <div class="icp-content-comm-title-image">
-            <h2 class="icp-content-comm-title-text">
-              {% if pubarticlescount >= 1 %}
-                Published Articles
-              {% endif %}
-            </h2>
-          </div>
-          {{myhtml|safe}}{% autoescape off%}
-          {% for article in pubarticles %}
-            <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
-              <h3><a href="{% url 'article_view' article.id %}">{{article.title}}</a></h3>
-              <p>{{ article.body|striptags|truncatewords:5 }}</p>
-            </div>
-          {% endfor %}
-          {% endautoescape%}
-        </div>
-      </div>
-      <!-- END CONTENT -->
-    </div>
-    <!-- END SIDEBAR & CONTENT -->
   </div>
 </div>
 
 
-{% endblock %}
-
-{% block javascript %}
-<script src="{% static 'jquery-pagination/pagination.js' %}"></script>
-<script>
-    $(function () {
-        (function (name) {
-            var container = $('#pagination-commgroups');
-
-            var sources = function () {
-                var result = [];
-                {% for child in children %}
-                var temp = ''
-                temp += '<li><a href="{% url 'community_view' child.pk %}">' + '{{child.name}}' + '</a></li>'
-                result.push(temp);
-                {% endfor %}
-                return result;
-            }();
-
-            var options = {
-                dataSource: sources,
-                pageSize: 5,
-                showGoInput: true,
-                showGoButton: true,
-                showPageNumbers: false,
-                showNavigator: true,
-
-                callback: function (data, pagination) {
-                    var dataHtml = '';
-                    //Get the datasource (item)
-                    $.each(data, function (index, item) {
-                        dataHtml += item ;
-                    });
-                    //Add data to container
-                    container.prev().html(dataHtml);
-                }
-            };
-            container.pagination(options);
-        })('commgroups-pagination');
-    })
-</script> 
-
-
-
-<script>
-    function descShowHide() {
-        var x = document.getElementById("final");
-        var y = document.getElementById("initial");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-            y.style.display = "none";
-        } else {
-            x.style.display = "none";
-            y.style.display = "block";
-        }
-    }
-</script>
 {% endblock %}

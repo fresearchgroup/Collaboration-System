@@ -19,6 +19,7 @@ def get_file_path(instance, filename):
 class Community(MPTTModel):
 
 		name = models.CharField(max_length=100)
+		location = models.CharField(max_length=100, null=True)
 		desc = models.TextField()
 		image = models.ImageField(null=True, upload_to=get_file_path)
 		image_thumbnail = models.ImageField(null=True, upload_to=get_file_path)
