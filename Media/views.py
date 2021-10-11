@@ -102,6 +102,13 @@ class MediaUpdateView(UpdateView):
 	context_object_name = 'media'
 	success_url = 'media_view'
 
+	def get_form_kwargs(self):
+		print("get form kwargs")
+		kwargs = super(MediaUpdateView, self).get_form_kwargs()
+		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
+		kwargs.update({'mediatype': self.object.mediatype})
+		return kwargs
+
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			self.object = self.get_object()
@@ -126,13 +133,8 @@ class MediaUpdateView(UpdateView):
 		community = self.get_community()
 		if self.is_communitymember(self.request, community):
 			context['role'] = self.get_communityrole(self.request, community)
+			context['community'] = community
 		return context
-
-	def get_form_kwargs(self):
-		kwargs = super(MediaUpdateView, self).get_form_kwargs()
-		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
-		kwargs.update({'mediatype': self.object.mediatype})
-		return kwargs
 
 	def form_valid(self, form):
 		"""
