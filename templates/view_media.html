@@ -13,14 +13,21 @@
     color: black;
   }
 </style>
-{% endblock %} {% load mptt_tags %} {% block breadcrumb %}
-{% if gcmedia.community.name %}
-<li class="breadcrumb-item active"><a href="{% url 'community_view' gcmedia.community.pk %}"> {{ gcmedia.community.name }} </a></li>
-{% endif %}
+{% endblock %} {% load mptt_tags %} 
 
-<li class="breadcrumb-item active">{{ gcmedia.media.mediatype }} </li>
-<li class="breadcrumb-item active">{{ gcmedia.media.title }} </li>
-{% endblock %} {% block content %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% for cat in gcmedia.community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item">{{ gcmedia.community.name }}</li>
+  <li class="breadcrumb-item">View {{ gcmedia.media.mediatype|lower }}</li>
+  <li class="breadcrumb-item">{{ gcmedia.media.title }} </li>
+{% endblock %} 
+
+{% block content %}
 
 <div class="container-fluid ">
   <div class="row">
@@ -37,9 +44,9 @@
               </li>
             {%endif%} 
           {% endif %}
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="{% url 'media_reports' gcmedia.media.pk%}" id="media_reports_id" class="nav-link">Reports</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -102,16 +109,16 @@
         <i class="fa fa-calendar"></i> {{gcmedia.media.created_at}} 
       </h4>
 
-      <h4>
+      <!-- <h4>
       {% if gcmedia.community.name %}
         <i class="fa fa-users"></i> <a href="{% url 'community_view' gcmedia.community.pk %}">{{gcmedia.community.name}}</a> Community
       {% endif %}
       {% if gcmedia.group.name %}
         <i class="fa fa-users"></i> <a href="{% url 'group_view' gcmedia.group.pk %}">{{gcmedia.group.name}}</a> Group
       {% endif %}      
-      </h4>
+      </h4> -->
 
-      <h4>
+      <!-- <h4>
         {% if gcmedia.media.state.name == 'draft' %}
           <i class="fa fa-cut"></i> Draft 
         {% endif %} 
@@ -127,12 +134,12 @@
         {% if gcmedia.media.state.name == 'publish' %}
           <i class="fa fa-save"></i> Published 
         {% endif %}
-      </h4>
+      </h4> -->
 
-      <h4>
+      <!-- <h4>
         {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.metadata.description}} {% endautoescape%}
-      </h4>
-      {% if user.is_authenticated %} 
+      </h4> -->
+      <!-- {% if user.is_authenticated %} 
         {% if gcmedia.media.state.name != 'publish'%}
           {% if gcmedia.media.metadata %}
             <h5><a id="metadata_edit_id" class="nav-link" href="{% url 'metadata_update' gcmedia.media.pk gcmedia.media.metadata.pk %}">Update metadata</a></h5>
@@ -140,10 +147,10 @@
             <h5><a id="metadata_create_id" class="nav-link" href="{% url 'metadata_create' gcmedia.community.pk gcmedia.media.pk%}">Add metadata</a></h5>
           {% endif %}
         {%endif%} 
-      {% endif %}
+      {% endif %} -->
     </div>
   </div>
-  {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %}
+  <!-- {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %} -->
 
 </div>
 <br />
