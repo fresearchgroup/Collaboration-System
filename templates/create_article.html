@@ -11,7 +11,12 @@
 </style>
 {% endblock %}
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{community.name}} Community</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% for cat in community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
   <li class="breadcrumb-item">Create an Article</li>
 {% endblock %}
 {% load static %}
