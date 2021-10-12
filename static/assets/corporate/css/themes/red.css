@@ -1,6 +1,26 @@
 a {
 	color: #89216B;
 }
+
+.paginate_button {
+	width: 34px;
+	height: 34px;
+	padding: 10px;
+	background: white;
+	color: black;
+	text-align: center;
+	margin-left: 10px;
+}
+.paginate_button.current {
+	width: 34px;
+	height: 34px;
+	padding: 10px;
+	background: #89216B;
+	color: white;
+	text-align: center;
+	margin-left: 10px;
+}
+
 a:hover {
 	color: #89216B;
 }
