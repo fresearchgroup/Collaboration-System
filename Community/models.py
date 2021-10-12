@@ -23,6 +23,11 @@ class Community(MPTTModel):
 		city = models.CharField(max_length=30, null=True)
 		state = models.CharField(max_length=30, null=True)
 		pincode = models.PositiveIntegerField(null=True)
+		contribution_status_choices = (
+			('Ongoing', 'Ongoing'),
+			('Completed', 'Completed'),
+		)
+		contribution_status = models.CharField(choices=contribution_status_choices, max_length=20, default='Ongoing')
 		desc = models.TextField()
 		image = models.ImageField(null=True, upload_to=get_file_path)
 		image_thumbnail = models.ImageField(null=True, upload_to=get_file_path)
