@@ -140,8 +140,8 @@ $(document).ready(function() {
     <div class="header-navigation pull-right font-transform-inherit">
       <ul>
       <li><a href="#">About Us</a></li>
-      <li><a href="{% url 'display_communities' %}">Communities</a></li>
-      <li class="dropdown" id="resources">
+      <li><a href="{% url 'display_communities' %}">Places of Worship</a></li>
+      <!-- <li class="dropdown" id="resources">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
           Resources
         </a>
@@ -152,7 +152,7 @@ $(document).ready(function() {
           <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
           <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>
         </ul>
-      </li>
+      </li> -->
       <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 			<li><a href="{% url 'FAQs' %}">FAQs</a></li>
 
@@ -178,7 +178,7 @@ $(document).ready(function() {
 
             <li><a href="{% url 'view_profile' %}">My Profile</a></li>
             <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'badges_progress_dashboard' %}">Badge Progress</a></li>
+            <!-- <li><a href="{% url 'badges_progress_dashboard' %}">Badge Progress</a></li> -->
             <li><a href="{% url 'logout' %}">Log out</a></li>
           </ul>
         </li>
@@ -193,7 +193,7 @@ $(document).ready(function() {
         {% endif %}
 
         <!-- BEGIN TOP SEARCH -->
-        <li class="menu-search">
+        <!-- <li class="menu-search">
           <span class="sep"></span>
           <i class="fa fa-search search-btn" style="color:white;"></i>
           <div class="search-box">
@@ -215,7 +215,7 @@ $(document).ready(function() {
               </div>
             </form>
           </div>
-        </li>
+        </li> -->
         <!-- END TOP SEARCH -->
       </ul>
     </div>
