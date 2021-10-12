@@ -100,7 +100,18 @@
               <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
             </td>
             <td>
-              {{child.location}}
+              {% if child.area %}
+                {{child.area}}, 
+              {% endif %}
+              {% if child.city %}
+                {{child.city}}, 
+              {% endif %}
+              {% if child.state %}
+                {{child.state}}, 
+              {% endif %}
+              {% if child.pincode %}
+                {{child.pincode}}
+              {% endif %}
             </td>
             <td>
               {{child.status}}
