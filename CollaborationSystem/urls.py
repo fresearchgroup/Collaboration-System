@@ -190,6 +190,7 @@ urlpatterns = [
     url(r'media_view/(?P<pk>\d+)/$', mediaview.media_view, name='media_view'),
     url(r'^media_edit/(?P<pk>\d*)/$', mediaview.MediaUpdateView.as_view(), name='media_edit'),
     url(r'media_reports/(?P<pk>\d+)/$', mediaview.media_reports, name='media_reports'),
+    url(r'^submit_media/$', mediaview.submit_media, name='submit_media'),
 
     url(r'^display_published_media/(?P<mediatype>[\w\-]+)/$', mediaview.display_published_media, name='display_published_media'),
     url(r'^upload_task/', taskview.upload_task, name='upload_task'),

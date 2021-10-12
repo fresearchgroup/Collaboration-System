@@ -209,3 +209,12 @@ def display_published_media(request, mediatype):
 			return render(request, 'video_published.html',{'mediaPublished':mediaPublished})
 	except CommunityMedia.DoesNotExist:
 		errormessage = 'No published media in community'
+
+def submit_media(request):
+	if request.method == 'POST':
+		state = States.objects.get(name='submitted')
+		pk = request.POST['pk']
+		media = Media.objects.get(pk=pk)
+		media.state = state
+		media.save()
+		return redirect('media_view',pk=pk)

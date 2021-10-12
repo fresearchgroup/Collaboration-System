@@ -120,7 +120,12 @@
 
       <h4>
         {% if gcmedia.media.state.name == 'draft' %}
-        <i class="fa fa-cut"></i> Not submitted
+          <i class="fa fa-cut"></i> Not submitted <br /><br />
+          <form method="post" action="{% url 'submit_media' %}">
+            {% csrf_token %}
+            <input type='hidden' name = 'pk' value ={{gcmedia.media.pk}} />
+            <button type="radio" name ="status" value="submit" class="btn btn-success" >Submit</button>
+          </form>
         {% endif %} 
         {% if gcmedia.media.state.name == 'submitted' %}
         <i class="fa fa-arrow-circle-right"></i> Submitted
