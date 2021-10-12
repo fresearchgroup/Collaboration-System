@@ -85,7 +85,8 @@ def media_view(request, pk):
 		gcmedia = CommunityMedia.objects.get(media=pk)
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
-	if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
+	# if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
+	if gcmedia.media.created_by != request.user:
 		return redirect('home')
 	# canEdit = ""
 	# if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
