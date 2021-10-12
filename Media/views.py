@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from .models import Media
 from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
-from workflow.views import canEditResourceCommunity, getStatesCommunity
+from workflow.views import canEditResourceCommunity, canEditResource, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import Metadata
 import requests
@@ -38,11 +38,13 @@ class MediaCreateView(CreateView):
 		if request.user.is_authenticated:
 			if self.kwargs['mediatype'] in dict(self.model.media_types):
 				if Community.objects.filter(pk=self.kwargs['pk']).exists():
-					if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
-						self.object = None
-						return super(MediaCreateView, self).get(request, *args, **kwargs)
-					messages.success(self.request, 'Please join this community to create content')
-					return redirect('community_view', self.kwargs['pk'])
+					# if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+					# 	self.object = None
+					# 	return super(MediaCreateView, self).get(request, *args, **kwargs)
+					# messages.success(self.request, 'Please join this community to create content')
+					# return redirect('community_view', self.kwargs['pk'])
+					self.object = None
+					return super(MediaCreateView, self).get(request, *args, **kwargs)
 				return redirect('home')
 			messages.warning(self.request, 'Media type not available')
 			return redirect('community_view', self.kwargs['pk']) 
@@ -106,7 +108,7 @@ class MediaUpdateView(UpdateView):
 	def get_form_kwargs(self):
 		print("get form kwargs")
 		kwargs = super(MediaUpdateView, self).get_form_kwargs()
-		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
+		# kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
 		kwargs.update({'mediatype': self.object.mediatype})
 		return kwargs
 
@@ -119,22 +121,28 @@ class MediaUpdateView(UpdateView):
 				messages.warning(request, 'Published content are not editable.')
 				return redirect('media_view',pk=self.object.pk)
 			community = self.get_community()
-			if self.is_communitymember(request, community):
-				role = self.get_communityrole(request, community)
-				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
-					response=super(MediaUpdateView, self).get(request, *args, **kwargs)
-					return response
-				return redirect('media_view',pk=self.object.pk)
-			return redirect('community_view',pk=community.pk)
+			# if self.is_communitymember(request, community):
+			# 	role = self.get_communityrole(request, community)
+			# 	if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+			# 		response=super(MediaUpdateView, self).get(request, *args, **kwargs)
+			# 		return response
+			# 	return redirect('media_view',pk=self.object.pk)
+			# return redirect('community_view',pk=community.pk)
+			if canEditResource(self.object.state.name, self.object, request):
+				response=super(MediaUpdateView, self).get(request, *args, **kwargs)
+				return response
+			return redirect('media_view',pk=self.object.pk)
 		return redirect('login')
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
 		context = super().get_context_data(**kwargs)
 		community = self.get_community()
-		if self.is_communitymember(self.request, community):
-			context['role'] = self.get_communityrole(self.request, community)
-			context['community'] = community
+		# if self.is_communitymember(self.request, community):
+		# 	context['role'] = self.get_communityrole(self.request, community)
+		# 	context['community'] = community
+		# return context
+		context['community'] = community
 		return context
 
 	def form_valid(self, form):
