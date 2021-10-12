@@ -27,7 +27,7 @@ from Reputation.models import ArticleScoreLog
 import requests
 from etherpad.views import getHTML, getText, deletePad, create_session_community, create_session_group, get_pad_id, get_pad_usercount
 from django.contrib import messages
-from workflow.views import canEditResourceCommunity
+from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
 
@@ -128,11 +128,14 @@ class ArticleCreateView(CreateView):
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			if Community.objects.filter(pk=self.kwargs['pk']).exists():
-				if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
-					self.object = None
-					return super(ArticleCreateView, self).get(request, *args, **kwargs)
-				messages.success(self.request, 'Please join this community to create article.')
-				return redirect('community_view', self.kwargs['pk'])
+				# if self.is_communitymember(request, Community.objects.get(pk=self.kwargs['pk'])):
+				# 	self.object = None
+				# 	return super(ArticleCreateView, self).get(request, *args, **kwargs)
+				# messages.success(self.request, 'Please join this community to create article.')
+				# return redirect('community_view', self.kwargs['pk'])
+
+				self.object = None
+				return super(ArticleCreateView, self).get(request, *args, **kwargs)
 			return redirect('home')
 		return redirect('login')
 
@@ -185,7 +188,7 @@ class ArticleEditView(UpdateView):
 		Returns the keyword arguments for instantiating the form.
 		"""
 		kwargs = super(ArticleEditView, self).get_form_kwargs()
-		kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
+		# kwargs.update({'role': self.get_communityrole(self.request, self.get_community())})
 		return kwargs
 
 	def get(self, request, *args, **kwargs):
@@ -197,28 +200,41 @@ class ArticleEditView(UpdateView):
 				messages.warning(request, 'Published content are not editable.')
 				return redirect('article_view',pk=self.object.pk)
 			community = self.get_community()
-			if self.is_communitymember(request, community):
-				role = self.get_communityrole(request, community)
-				if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
-					response=super(ArticleEditView, self).get(request, *args, **kwargs)
-					if settings.REALTIME_EDITOR:
-						sessionid = create_session_community(request, community.id)
-						response.set_cookie('sessionID', sessionid)
-					return response
-				return redirect('article_view',pk=self.object.pk)
-			return redirect('commnity_view',pk=community.pk)
+
+			# if self.is_communitymember(request, community):
+			# 	role = self.get_communityrole(request, community)
+			# 	if canEditResourceCommunity(self.object.state.name, role.name, self.object, request):
+			# 		response=super(ArticleEditView, self).get(request, *args, **kwargs)
+			# 		if settings.REALTIME_EDITOR:
+			# 			sessionid = create_session_community(request, community.id)
+			# 			response.set_cookie('sessionID', sessionid)
+			# 		return response
+			# 	return redirect('article_view',pk=self.object.pk)
+			# return redirect('commnity_view',pk=community.pk)
+			if canEditResource(self.object.state.name, self.object, request):
+				response=super(ArticleEditView, self).get(request, *args, **kwargs)
+				if settings.REALTIME_EDITOR:
+					sessionid = create_session_community(request, community.id)
+					response.set_cookie('sessionID', sessionid)
+				return response
+			return redirect('article_view',pk=self.object.pk)
 		return redirect('login')
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
 		context = super().get_context_data(**kwargs)
 		community = self.get_community()
-		if self.is_communitymember(self.request, community):
-			context['role'] = self.get_communityrole(self.request, community)
-			context['community'] = community
-			if settings.REALTIME_EDITOR:
-				context['url'] = settings.ETHERPAD_URL
-				context['padid'] = get_pad_id(self.object.pk)
+		# if self.is_communitymember(self.request, community):
+		# 	context['role'] = self.get_communityrole(self.request, community)
+		# 	context['community'] = community
+		# 	if settings.REALTIME_EDITOR:
+		# 		context['url'] = settings.ETHERPAD_URL
+		# 		context['padid'] = get_pad_id(self.object.pk)
+		# return context
+		context['community'] = community
+		if settings.REALTIME_EDITOR:
+			context['url'] = settings.ETHERPAD_URL
+			context['padid'] = get_pad_id(self.object.pk)
 		return context
 
 	def form_valid(self, form):

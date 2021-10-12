@@ -3,6 +3,12 @@ from django.contrib import messages
 from workflow.models import States, Transitions
 from django.contrib.auth.models import Group as Roles
 
+def canEditResource(state, resource, request):
+	if state=='publish':
+		messages.warning(request, 'You cannot edit content which is already published')
+		return False
+	return True
+
 def canEditResourceCommunity(state, role, resource, request):
 	if state=='publishable' and role=='author':
 		messages.warning(request, 'Since it is publishable only the publishers can edit this')
