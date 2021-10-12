@@ -118,23 +118,23 @@
       {% endif %}      
       </h4> -->
 
-      <!-- <h4>
+      <h4>
         {% if gcmedia.media.state.name == 'draft' %}
-          <i class="fa fa-cut"></i> Draft 
+        <i class="fa fa-cut"></i> Not submitted
         {% endif %} 
-        {% if gcmedia.media.state.name == 'private' %}
-          <i class="fa fa-eye-slash"></i> Private 
+        {% if gcmedia.media.state.name == 'submitted' %}
+        <i class="fa fa-arrow-circle-right"></i> Submitted
         {% endif %} 
-        {% if gcmedia.media.state.name == 'visible' %}
-          <i class="fa fa-bullhorn"></i> Visible 
+        {% if gcmedia.media.state.name == 'accepted' %}
+        <i class="fa fa-check-circle"></i> Accepted
         {% endif %} 
-        {% if gcmedia.media.state.name == 'publishable' %}
-          <i class="fa fa-bell"></i> Publishable 
+        {% if gcmedia.media.state.name == 'rejected' %}
+        <i class="fa fa-times-circle"></i> Rejected
         {% endif %} 
         {% if gcmedia.media.state.name == 'publish' %}
-          <i class="fa fa-save"></i> Published 
+        <i class="fa fa-newspaper-o"></i> Published
         {% endif %}
-      </h4> -->
+      </h4>
 
       <!-- <h4>
         {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.metadata.description}} {% endautoescape%}

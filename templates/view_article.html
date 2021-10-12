@@ -58,7 +58,7 @@
           <ul class="blog-info">
             <li><i class="fa fa-user"></i> <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </li>
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
-            {% get_comment_count for article as comment_count %}
+            <!-- {% get_comment_count for article as comment_count %} -->
             <!-- <li><i class="fa fa-comments"></i> {{ comment_count }} comments </li> -->
             <!-- <li><i class="fa fa-eye"></i> {{count}} views </li> -->
 
@@ -67,6 +67,21 @@
             {% endif %}
             {% if article.group.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
+            {% endif %}
+            {% if article.article.state.name == 'draft' %}
+            <li><i class="fa fa-cut"></i> Not submitted </li>
+            {% endif %} 
+            {% if article.article.state.name == 'submitted' %}
+            <li><i class="fa fa-arrow-circle-right"></i> Submitted </li>
+            {% endif %} 
+            {% if article.article.state.name == 'accepted' %}
+            <li><i class="fa fa-check-circle"></i> Accepted </li>
+            {% endif %} 
+            {% if article.article.state.name == 'rejected' %}
+            <li><i class="fa fa-times-circle"></i> Rejected </li>
+            {% endif %} 
+            {% if article.article.state.name == 'publish' %}
+            <li><i class="fa fa-newspaper-o"></i> Published </li>
             {% endif %}
             {%if user.is_authenticated %}
             <!-- {%if is_fav %}
