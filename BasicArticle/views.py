@@ -91,7 +91,8 @@ def view_article(request, pk):
 	"""
 	try:
 		article = CommunityArticles.objects.get(article=pk)
-		if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
+		if article.article.created_by != request.user:
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
@@ -346,4 +347,12 @@ class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = Articles
 
 
+def submit_article(request):
+	if request.method == 'POST':
+		state = States.objects.get(name='submitted')
+		pk = request.POST['pk']
+		article = Articles.objects.get(pk=pk)
+		article.state = state
+		article.save()
+		return redirect('article_view',pk=pk)
 

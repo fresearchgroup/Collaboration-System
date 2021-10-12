@@ -83,6 +83,7 @@ urlpatterns = [
     url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
+    url(r'^submit_article/$', articleview.submit_article, name='submit_article'),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
     url(r'^mydashboard/badges$', user_views.badges_progress_dashboard, name='badges_progress_dashboard'),
