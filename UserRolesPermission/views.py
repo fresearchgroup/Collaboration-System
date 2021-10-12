@@ -2,6 +2,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
+from Media.models import Media
 from .forms import SignUpForm
 from .roles import Author
 from rolepermissions.roles import assign_role
@@ -109,13 +110,18 @@ def user_dashboard(request):
 
         pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
 
-        articlescontributed = []
         articlespublished = []
-        for i in range(1, 13):
-            articlescontributed.append(Articles.objects.filter(created_by=request.user, state__initial=False, state__final=False, created_at__year=yearby, created_at__month=i).count())
-            articlespublished.append(Articles.objects.filter(created_by=request.user, state__final=True, created_at__year=yearby, created_at__month=i).count())
+        imagepublished = []
+        audiopublished = []
+        videopublished = []
 
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities,'articlescontributed':articlescontributed,'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent})
+        for i in range(1, 13):
+            articlespublished.append(Articles.objects.filter(created_by=request.user, state__final=True, created_at__year=yearby, created_at__month=i).count())
+            imagepublished.append(Media.objects.filter(created_by=request.user, mediatype='Image', state__final=True, created_at__year=yearby, created_at__month=i).count())
+            audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__final=True, created_at__year=yearby, created_at__month=i).count())
+            videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__final=True, created_at__year=yearby, created_at__month=i).count())
+
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number})
     else:
         return redirect('login')
 

@@ -6,26 +6,42 @@
 
 var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
-  type: 'line',
+  type: 'bar',
   data: {
     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     datasets: [
-      {
-        data: articlesContributed,
-	label: "Articles Contributed",
-	backgroundColor: 'rgba(255, 0, 0, 1)',
-	borderColor: 'rgba(255, 0, 0, 1)',
-	borderWidth: 1,
-	fill: false
-      },
-      {
-        data: articlesPublished,
-	label: "Articles Published",
-	backgroundColor: 'rgba(0, 0, 255, 1)',
-	borderColor: 'rgba(0, 0, 255, 1)',
-	borderWidth: 1,
-	fill: false
-      }
+        {
+            data: articlesPublished,
+            label: "Articles Published",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            borderWidth: 1,
+            fill: false
+        },
+        {
+            data: imagePublished,
+            label: "Images Published",
+            backgroundColor: 'rgb(54, 162, 235)',
+            borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 1,
+            fill: false
+        },
+        {
+            data: audioPublished,
+            label: "Audio Published",
+            backgroundColor: 'rgb(255, 159, 64)',
+            borderColor: 'rgb(255, 159, 64)',
+            borderWidth: 1,
+            fill: false
+        },
+        {
+            data: videoPublished,
+            label: "Video Published",
+            backgroundColor: 'rgb(153, 102, 255)',
+            borderColor: 'rgb(153, 102, 255)',
+            borderWidth: 1,
+            fill: false
+        }
     ]
   },
     options: {
