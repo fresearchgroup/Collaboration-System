@@ -50,16 +50,18 @@ class MediaCreateForm(forms.ModelForm):
 class MediaUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Media
-		fields = ['title', 'mediafile', 'medialink', 'state']
+		# fields = ['title', 'mediafile', 'medialink', 'state']
+		fields = ['title', 'mediafile', 'medialink']
 
 	def __init__(self, *args, **kwargs):
 		role = kwargs.pop('role', None)
 		mtype = kwargs.pop('mediatype', None)
 		super().__init__(*args, **kwargs)
 		self.fields['title'].widget.attrs.update({'class': 'form-control'})
-		self.fields['state'].widget.attrs.update({'class': 'form-control'})
-		states = getStatesCommunity(self.instance.state.id, role)
-		self.fields['state'].queryset = States.objects.filter(name__in=states)
+		# self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		# self.fields['state'].required = False
+		# states = getStatesCommunity(self.instance.state.id, role)
+		# self.fields['state'].queryset = States.objects.filter(name__in=states)
 		self.fields['mediafile'].required = False
 		if mtype == 'IMAGE':
 		    self.fields['mediafile'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select image for upload...'})
@@ -78,7 +80,7 @@ class MediaUpdateForm(forms.ModelForm):
                 Field('media_type'),
                 Field('medialink'),
                 Field('mediafile'),
-				Field('state'),
+				# Field('state'),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'Update')),
                 )
