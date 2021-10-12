@@ -28,6 +28,7 @@ class ArticleUpdateForm(forms.ModelForm):
 		self.fields['tags'].required = False
 		states = getStatesCommunity(self.instance.state.id, role)
 		self.fields['state'].queryset = States.objects.filter(name__in=states)
+		self.fields['state'].required = False
 
 		if not settings.REALTIME_EDITOR:
 			self.fields['body'].widget.attrs.update({'class': 'form-control'})
