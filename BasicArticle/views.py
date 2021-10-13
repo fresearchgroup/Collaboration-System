@@ -195,7 +195,9 @@ class ArticleEditView(UpdateView):
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			self.object = self.get_object()
-			if self.object.state.initial and self.object.created_by != request.user:
+			# if self.object.state.initial and self.object.created_by != request.user:
+			u = User.objects.get(username=request.user)
+			if self.object.created_by != request.user and not (u.groups.filter(name='curator').exists()):				
 				return redirect('home')
 			if self.object.state.final:
 				messages.warning(request, 'Published content are not editable.')
