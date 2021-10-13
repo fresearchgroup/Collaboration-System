@@ -104,6 +104,8 @@ urlpatterns = [
     url(r'^request_community_creation/$', communityview.RequestCommunityCreationView.as_view(), name='request_community_creation'),
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
 
+    url(r'^curate_content/$', communityview.curate_content, name='curate_content'),
+
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
     url(r'^uploadphoto/$', user_views.upload_image, name='upload_photo'),
 

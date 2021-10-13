@@ -43,6 +43,8 @@ from .forms import FacetedProductSearchForm
 from UserRolesPermission.models import ProfileImage
 from django.db.models import Count
 from django.db.models import F
+from BasicArticle.models import Articles
+from Media.models import Media
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -796,3 +798,31 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
         object_list = context['object_list']
         return context
 
+def curate_content(request):
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			pk = request.POST['pk']
+			conttype = request.POST['type']
+			status = request.POST['status']
+			if status == 'accept':
+				state = States.objects.get(name='accepted')
+			if status == 'reject':
+				state = States.objects.get(name='rejected')
+			if conttype == 'Article':
+				article = Articles.objects.get(pk=pk)
+				article.state = state
+				article.save()
+			if conttype == 'Media':
+				media = Media.objects.get(pk=pk)
+				media.state = state
+				media.save()
+
+		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') | Q(article__state__name='accepted') | Q(article__state__name='rejected'))
+		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='accepted') | Q(media__state__name='rejected'))
+		for cart in commarticles:
+			cart.type = 'Article'
+		for cmedia in commmedia:
+			cmedia.type = 'Media'
+		lstContent = list(commarticles) + list(commmedia)
+		return render(request, 'curate_content.html',{'lstContent':lstContent})
+	return redirect('login')

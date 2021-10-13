@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item">Curate Contributions</li>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12" style="margin-bottom: 20px;">
+    <table id="myArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+          <th style="color:white">Place of Worship</th>
+          <th style="color:white">Location</th>
+          <th style="color:white">Sub-category</th>
+          <th style="color:white">Content Type</th>
+          <th style="color:white">Contributed by</th>
+          <th style="color:white">Contributed on</th>
+          <th style="color:white">Content title</th>
+          <th style="color:white">Status</th>
+          <th style="color:white">Actions</th>
+        </tr>
+    </thead>
+      <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for content in lstContent %}
+            <tr>
+                <td>{{content.community.parent.name}}</td>
+                <td>
+                    {% if content.community.parent.area %}
+                        {{content.community.parent.area}}, 
+                    {% endif %}
+                    {% if content.community.parent.city %}
+                        {{content.community.parent.city}}, 
+                    {% endif %}
+                    {% if content.community.parent.state %}
+                        {{content.community.parent.state}}, 
+                    {% endif %}
+                    {% if content.community.parent.pincode %}
+                        {{content.community.parent.pincode}}
+                    {% endif %}
+                </td>
+                <td>{{content.community.name}}</td>
+                <td>
+                    {% if content.type == 'Article' %}
+                        <i class="fa fa-file-text" style="color:#89216B;"></i> Article
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                        {% if content.media.mediatype == 'IMAGE' %}<i class="fa fa-picture-o" style="color:#89216B;"></i> Image {% endif %}
+                        {% if content.media.mediatype == 'AUDIO' %}<i class="fa fa-music" style="color:#89216B;"></i> Audio {% endif %}
+                        {% if content.media.mediatype == 'VIDEO' %}<i class="fa fa-film" style="color:#89216B;"></i> Video {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if content.type == 'Article' %}
+                        {{content.user.username}}
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                        {{content.user.username}}
+                    {% endif %}                    
+                </td>
+                <td>
+                    {% if content.type == 'Article' %}
+                        {{content.article.created_at}}
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                        {{content.media.created_at}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if content.type == 'Article' %}
+                    <a href="{% url 'article_view' content.article.pk %}"> {{ content.article }}  </a>
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                    <a href="{% url 'media_view' content.media.pk %}"> {{ content.media.title }}  </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if content.type == 'Article' %}
+                        {{content.article.state.name}}
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                        {{content.media.state.name}}
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'curate_content' %}">
+                        <input type='hidden' name = 'type' value ={{content.type}} />
+                        {% csrf_token %}
+                        {% if content.type == 'Article' %}
+                            <input type='hidden' name = 'pk' value ={{content.article.pk}} />
+                            {% if content.article.state.name == 'submitted' %}
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="radio" name ="status" value="accept" class="btn btn-success" style="background-color: green;">Accept</button>
+                                <button type="radio" name ="status" value="reject" class="btn btn-danger" style="background-color: red;">Reject</button>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                        {% if content.type == 'Media' %}
+                            <input type='hidden' name = 'pk' value ={{content.media.pk}} />
+                            {% if content.media.state.name == 'submitted' %}
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="radio" name ="status" value="accept" class="btn btn-success" style="background-color: green;">Accept</button>
+                                <button type="radio" name ="status" value="reject" class="btn btn-danger" style="background-color: red;">Reject</button>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </form>
+                </td>            
+            </tr>
+        {% endfor %}
+        {% endautoescape%}
+      </tbody>
+    </table>
+</div>
+<br />
+{% endblock %}
