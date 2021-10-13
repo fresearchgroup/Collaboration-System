@@ -157,5 +157,10 @@
   </div>
 </div>
 
+{% if membership.role.name == 'community_admin' %}
+<form method = "get" action ="{% url 'community_group' community.pk%}">
+  <button type="radio" name ="status" value="submit" class="btn btn-success" >Create sub-community</button>
+</form>
+{% endif %}
 
 {% endblock %}
