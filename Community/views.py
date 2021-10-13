@@ -45,6 +45,7 @@ from django.db.models import Count
 from django.db.models import F
 from BasicArticle.models import Articles
 from Media.models import Media
+from django.contrib.auth.models import User
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -799,7 +800,8 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
         return context
 
 def curate_content(request):
-	if request.user.is_superuser:
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
 		if request.method == 'POST':
 			pk = request.POST['pk']
 			conttype = request.POST['type']
