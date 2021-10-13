@@ -92,7 +92,8 @@ def view_article(request, pk):
 	try:
 		article = CommunityArticles.objects.get(article=pk)
 		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
-		if article.article.created_by != request.user:
+		u = User.objects.get(username=request.user)
+		if article.article.created_by != request.user and not (u.groups.filter(name='curator').exists()):
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
