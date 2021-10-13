@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from workflow.models import States
 from .forms import *
+from django.contrib.auth.models import User
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -88,7 +89,8 @@ def media_view(request, pk):
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
 	# if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
-	if gcmedia.media.created_by != request.user:
+	u = User.objects.get(username=request.user)
+	if gcmedia.media.created_by != request.user and not (u.groups.filter(name='curator').exists()):
 		return redirect('home')
 	# canEdit = ""
 	# if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
@@ -115,7 +117,9 @@ class MediaUpdateView(UpdateView):
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			self.object = self.get_object()
-			if self.object.state.initial and self.object.created_by != request.user:
+			# if self.object.state.initial and self.object.created_by != request.user:
+			u = User.objects.get(username=request.user)
+			if self.object.created_by != request.user and not (u.groups.filter(name='curator').exists()):
 				return redirect('home')
 			if self.object.state.final:
 				messages.warning(request, 'Published content are not editable.')
