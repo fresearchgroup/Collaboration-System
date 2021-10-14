@@ -161,7 +161,67 @@
           </div>
         {% endif %} 
         {% if gcmedia.media.state.name == 'submitted' %}
-        <i class="fa fa-arrow-circle-right"></i> Submitted
+          <i class="fa fa-arrow-circle-right"></i> Submitted
+          {% for group_for in request.user.groups.all %}
+            {% if group_for.name == 'curator' %}
+              <button type="radio" name="mediaacceptstatus" value="accept" class="btn btn-success" data-toggle="modal" data-target="#modalAcceptMedia" data-whatever="@mdo" id="mediaacceptstatus" style="background-color: green;">Accept</button>
+              <div class="modal fade" id="modalAcceptMedia" tabindex="-1" role="dialog" aria-labelledby="AcceptMediaModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method = "post" action ="{% url 'curate_content' %}">
+                        {% csrf_token %}
+                        <input type='hidden' name = 'status' value='accept'/>
+                        <input type='hidden' name = 'type' value ='Media' />
+                        <input type='hidden' name = 'pk' value ={{gcmedia.media.pk}} />
+                        <div class="form-group">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button id="mediaAccept" type="submit" class="btn btn-primary">Yes</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="radio" name="mediarejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectMedia" data-whatever="@mdo" id="mediarejectstatus" style="background-color: red;">Reject</button>
+              <div class="modal fade" id="modalRejectMedia" tabindex="-1" role="dialog" aria-labelledby="RejectMediaModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method = "post" action ="{% url 'curate_content' %}">
+                        {% csrf_token %}
+                        <input type='hidden' name = 'status' value='reject'/>
+                        <input type='hidden' name = 'type' value ='Media' />
+                        <input type='hidden' name = 'pk' value ={{gcmedia.media.pk}} />
+                        <div class="form-group">
+                          <label for="reason-text" class="col-form-label">Reason</label>
+                          <textarea class="form-control" id="reason-text"></textarea>                                              
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
         {% endif %} 
         {% if gcmedia.media.state.name == 'accepted' %}
         <i class="fa fa-check-circle"></i> Accepted
