@@ -188,46 +188,49 @@ def handle_community_creation_requests(request):
 		if request.method == 'POST':
 			pk = request.POST['pk']
 			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
-			user=rcommunity.requestedby
+			user = request.user
+			community_parent = request.POST['community_parent']
+			parent = Community.objects.get(pk=community_parent)
 			status = request.POST['status']
 			if status=='approve' and rcommunity.status!='approved':
 
 				# Create Forum for this community
-				cursor = connection.cursor()
-				cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-				tree_id = cursor.fetchone()[0] + 1
-				slug = "-".join(rcommunity.name.lower().split())
-				#return HttpResponse(str(tree_id))
-				insert_stmt = (
-					  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
-					  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-					)
-				data = (rcommunity.name, slug, rcommunity.desc, 0,0,0,1,1,2,tree_id,0,0,0)
-				try:
-					cursor.execute(insert_stmt, data)
-					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-					forum_link = slug + '-' + str(cursor.fetchone()[0])
-				except:
-					errormessage = 'Can not create default forum for this community'
-					return render(request, 'new_community.html', {'errormessage':errormessage})
+				# cursor = connection.cursor()
+				# cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
+				# tree_id = cursor.fetchone()[0] + 1
+				# slug = "-".join(rcommunity.name.lower().split())
+				# #return HttpResponse(str(tree_id))
+				# insert_stmt = (
+				# 	  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
+				# 	  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+				# 	)
+				# data = (rcommunity.name, slug, rcommunity.desc, 0,0,0,1,1,2,tree_id,0,0,0)
+				# try:
+				# 	cursor.execute(insert_stmt, data)
+				# 	cursor.execute(''' select id from forum_forum order by id desc limit 1''')
+				# 	forum_link = slug + '-' + str(cursor.fetchone()[0])
+				# except:
+				# 	errormessage = 'Can not create default forum for this community'
+				# 	return render(request, 'new_community.html', {'errormessage':errormessage})
 
 				communitycreation = Community.objects.create(
 					name = rcommunity.name,
 					desc = rcommunity.desc,
 					tag_line = rcommunity.tag_line,
 					# category = rcommunity.category,
-					created_by = rcommunity.requestedby,
-					forum_link = forum_link
+					created_by = user,
+					parent = parent
+					# forum_link = forum_link
 
 					)
 
 				#create the ether id for community
-				create_community_ether(communitycreation)
+				# create_community_ether(communitycreation)
 
-				create_wiki_for_community(communitycreation)
+				# create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
-					user = rcommunity.requestedby,
+					user = user,
 					community = communitycreation,
 					role = communityadmin
 					)
@@ -239,8 +242,8 @@ def handle_community_creation_requests(request):
 				rcommunity.status = 'rejected'
 				rcommunity.save()
 
-
-		requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
+		# requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
+		requestcommunitycreation=RequestCommunityCreation.objects.all()
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 	else:
 		return redirect('login')

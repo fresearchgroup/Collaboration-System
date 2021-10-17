@@ -12,6 +12,7 @@
   <table class="table">
     <thead class="thead-inverse">
       <tr>
+        <th>Place of Worship</th>
         <th>Name</th>
         <th>Description</th>
         <th>Purpose</th>
@@ -24,6 +25,7 @@
     {{myhtml|safe}}{% autoescape off%}
       {% for req in requestcommunitycreation %}
         <tr>
+          <td>{{ req.parent.name }}</td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
           <td><small class="text-muted d-block">{{ req.purpose }}</small></td>
@@ -33,6 +35,7 @@
             <form method="post" action="{% url 'handle_community_creation_requests' %}">
                  {% csrf_token %}
                  <input type='hidden' name = 'pk' value ={{req.pk}} />
+                 <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />
                  <div class="btn-group" role="group" aria-label="Basic example">
 
                        <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
