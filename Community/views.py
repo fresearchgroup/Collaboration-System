@@ -184,7 +184,9 @@ class RequestCommunityCreationView(CreateView):
 
 def handle_community_creation_requests(request):
 
-	if request.user.is_superuser:
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
+	# if request.user.is_superuser:
 		if request.method == 'POST':
 			pk = request.POST['pk']
 			rcommunity=RequestCommunityCreation.objects.get(pk=pk)

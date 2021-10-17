@@ -168,13 +168,13 @@ $(document).ready(function() {
             <li><a href="{% url 'create_community' %}">Create Community</a></li>
             <li><a href="{% url 'transition' %}"> Manage Workflow</a></li>
             <li><a href="{% url 'manage_reputation' %}">Manage Reputation</a></li>
-            <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
             <li><a href="{% url 'create_faq' %}">Add an FAQ</a></li>
             <li><a href="{% url 'upload_task' %}">Create Task</a></li>
             {% endif%}
 
             {% for group_for in request.user.groups.all %}
               {% if group_for.name == 'curator' %}
+                <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
                 <li><a href="{% url 'curate_content' %}">Curate Contributions</a></li>
               {% endif %}
             {% endfor %}
