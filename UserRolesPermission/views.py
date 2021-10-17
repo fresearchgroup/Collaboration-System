@@ -108,7 +108,7 @@ def user_dashboard(request):
 
         lstContent = list(commarticles) + list(commmedia) + list(commcourses)
 
-        pendingcommunities=RequestCommunityCreation.objects.filter(status='Request', requestedby=request.user)
+        myrequestedcommunities=RequestCommunityCreation.objects.filter(requestedby=request.user)
 
         articlespublished = []
         imagepublished = []
@@ -121,7 +121,7 @@ def user_dashboard(request):
             audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__final=True, created_at__year=yearby, created_at__month=i).count())
             videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__final=True, created_at__year=yearby, created_at__month=i).count())
 
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'pendingcommunities':pendingcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number})
     else:
         return redirect('login')
 

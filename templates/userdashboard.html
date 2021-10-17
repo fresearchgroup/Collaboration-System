@@ -95,7 +95,7 @@ var videoPublished = {{videopublished}};
       <div class="col-md-4">
         {% if pendingcommunities %}
         <div class="pricing hover-effect">
-          <div class="pricing-head">
+          <!-- <div class="pricing-head">
             <h3>Pending Requests</h3>
             <h4>
             <span style="text-align:left; padding-left:20px; padding-top:10px">
@@ -106,7 +106,7 @@ var videoPublished = {{videopublished}};
         {% endautoescape%}
             </span>
             </h4>
-          </div>
+          </div> -->
 <!--      <div class="pricing-footer">
             <a href="javascript:;" class="btn btn-primary">
                Sign Up <i class="m-icon-swapright m-icon-white"></i>
@@ -121,6 +121,7 @@ var videoPublished = {{videopublished}};
 </div>
 </div>
 
+<h2 style="text-align: center;">My Contributions</h2>
 <div class="col-md-12" style="margin-bottom: 20px;">
     <table id="myArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
@@ -193,6 +194,35 @@ var videoPublished = {{videopublished}};
       </tbody>
     </table>
 </div>
+
+{% if myrequestedcommunities %}
+  <h2 style="text-align: center;">My requested Place of Worship</h2>
+  <table class="table" id="handleCommReq" style="margin-bottom: 20px;" cellspacing="0" width="100%">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Place of Worship</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Purpose</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{myhtml|safe}}{% autoescape off%}
+      {% for req in myrequestedcommunities %}
+        <tr>
+          <td>{{ req.parent.name }}</td>
+          <td>{{ req.name }}</td>
+          <td><small class="text-muted d-block">{{ req.desc }}</small></td>
+          <td><small class="text-muted d-block">{{ req.purpose }}</small></td>
+          <td>{{ req.status }}</td>
+        </tr>
+      {% endfor %}
+      {% endautoescape%}
+    </tbody>
+  </table>
+{% endif %}
+
 <br />
 
 {% endblock %}
