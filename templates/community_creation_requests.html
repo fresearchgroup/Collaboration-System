@@ -18,6 +18,7 @@
         <th>Purpose</th>
         <th>Requested by</th>
         <th>Email</th>
+        <th>Status</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -31,17 +32,19 @@
           <td><small class="text-muted d-block">{{ req.purpose }}</small></td>
           <td>{{ req.requestedby }}</td>
           <td>{{ req.email }}</td>
+          <td>{{ req.status }}</td>
           <td>
-            <form method="post" action="{% url 'handle_community_creation_requests' %}">
-                 {% csrf_token %}
-                 <input type='hidden' name = 'pk' value ={{req.pk}} />
-                 <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />
-                 <div class="btn-group" role="group" aria-label="Basic example">
-
-                       <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
-                       <button type="radio" name ="status" value="reject" class="btn btn-danger"> Reject</button>
-                 </div>
-            </form>
+            {% if req.status == 'Request' %}
+              <form method="post" action="{% url 'handle_community_creation_requests' %}">
+                {% csrf_token %}
+                <input type='hidden' name = 'pk' value ={{req.pk}} />
+                <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
+                  <button type="radio" name ="status" value="reject" class="btn btn-danger" style="margin-left: 5px;"> Reject</button>
+                </div>
+              </form>
+            {% endif %}
           </td>
         </tr>
       {% endfor %}
