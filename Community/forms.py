@@ -31,15 +31,20 @@ class CommunityCreateForm(forms.ModelForm):
 class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = RequestCommunityCreation
-		fields = ['name', 'desc', 'tag_line', 'purpose']
+		fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
 
 	def __init__(self, *args, **kwargs):
+		community = kwargs.pop('cid', None)
 		super().__init__(*args, **kwargs)
 		self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name', 'ng-pattern':'/^[a-z A-Z ()]*$/'})
 		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
 		# self.fields['category'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tag_line'].widget.attrs.update({'class': 'form-control', 'ng-model':'tag_line', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
 		self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
+		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
+		self.fields['parent'].empty_label = None
+		if community:
+			self.fields['parent'].queryset = Community.objects.filter(pk=community)
 
 class CommunityUpdateForm(forms.ModelForm):
 

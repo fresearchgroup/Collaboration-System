@@ -92,6 +92,7 @@ class RequestCommunityCreation(models.Model):
 	requestedby = models.ForeignKey(User, null=True)
 	email = models.CharField(null=True, max_length=100)
 	status = models.CharField(null=True, default ='Request', max_length=100)
+	parent = models.ForeignKey(Community, null=True, related_name='communityparent')
 
 	def __str__(self):
 		return self.name

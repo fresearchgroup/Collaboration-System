@@ -39,13 +39,6 @@
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
 
-                <div class="form-group">
-                    <label for="title">Category</label>
-                    {{ form.category }}
-                    <div class="invalid-feedback">
-                      {{ form.category.errors }}
-                    </div>
-                  </div>
                   <div class="form-group">
                     <label for="title">Tag Line</label>
                     {{ form.tag_line }}
@@ -58,6 +51,17 @@
                    <div class="invalid-feedback">{{ form.purpose.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
                   </div>
                 </div>
+
+                {% if form.parent %}
+                <div class="form-group">
+                  <label for="title">Place of Worship for</label>
+                  {{ form.parent }}
+                  <div class="invalid-feedback">
+                    {{ form.parent.errors }}
+                  </div>
+                </div>
+                {% endif %}
+
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit" ng-disabled="form.$invalid">Submit</button>
               </div>

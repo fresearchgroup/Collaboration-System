@@ -145,6 +145,11 @@ class RequestCommunityCreationView(CreateView):
 	template_name = 'request_community_creation.html'
 	success_url = 'request_community_creation'
 
+	def get_form_kwargs(self):
+		kwargs = super(RequestCommunityCreationView, self).get_form_kwargs()
+		kwargs['cid'] = self.request.GET.get('cid')
+		return kwargs
+
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
 			self.object = None
