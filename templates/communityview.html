@@ -90,6 +90,7 @@
             <th style="color:white">Name</th>
             <th style="color:white">Location</th>
             <th style="color:white">Contribution Status</th>
+            <th style="color:white">Contribute</th>
           </tr>
       </thead>
       <tbody>
@@ -97,7 +98,7 @@
         {% for child in children %}
           <tr>
             <td>
-              <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+              {{child.name}}
             </td>
             <td>
               {% if child.area %}
@@ -115,6 +116,16 @@
             </td>
             <td>
               {{child.contribution_status}}
+            </td>
+            <td>
+              {% if child.contribution_status == 'Ongoing' %}
+                {% if user.is_authenticated %}
+                  <a href="{% url 'community_article_create' child.pk %}"><button type="button" class="btn btn-success"><p><i class="fa fa-file-text-o" style="font-size:24px;"></i></p></button></a>
+                  <a href="{% url 'community_media_create' child.pk 'IMAGE'%}"><button type="button" class="btn btn-success"><p><i class="fa fa-picture-o" style="font-size:24px;"></i></p></button></a>
+                  <a href="{% url 'community_media_create' child.pk 'AUDIO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-music" style="font-size:24px;"></i></p></button></a>
+                  <a href="{% url 'community_media_create' child.pk 'VIDEO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-film" style="font-size:24px;"></i></p></button></a>
+                {% endif %}
+              {% endif %}
             </td>
           </tr>
         {% endfor %}
