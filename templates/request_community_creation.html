@@ -40,17 +40,31 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="title">Tag Line</label>
-                    {{ form.tag_line }}
-                    <div class="invalid-feedback">{{ form.tag_line.errors }}<span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
+                    <label for="title">Area</label>
+                    {{ form.area }}
+                    <div class="invalid-feedback">{{ form.area.errors }}<span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
                   </div>
+
                   <div class="form-group">
-                    <label for="title">Purpose</label>
-                    {{ form.purpose }}
-                    <small id="bodyhelp" class="form-text text-muted">Mention the purpose of creating this community</small>
-                   <div class="invalid-feedback">{{ form.purpose.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
+                    <label for="title">City</label>
+                    {{ form.city }}
+                    <div class="invalid-feedback">{{ form.city.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
+                    </div>
                   </div>
-                </div>
+
+                  <div class="form-group">
+                    <label for="title">State</label>
+                    {{ form.state }}
+                    <div class="invalid-feedback">{{ form.state.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Pincode</label>
+                    {{ form.pincode }}
+                    <div class="invalid-feedback">{{ form.pincode.errors }}<span class="label" style="color:red" ng-show = "form.purpose.$error.pattern" >Only alphabets are allowed</span>
+                    </div>
+                  </div>
 
                 {% if form.parent %}
                 <div class="form-group">

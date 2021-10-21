@@ -31,7 +31,8 @@ class CommunityCreateForm(forms.ModelForm):
 class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = RequestCommunityCreation
-		fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
+		# fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
+		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('cid', None)
@@ -39,8 +40,12 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name', 'ng-pattern':'/^[a-z A-Z ()]*$/'})
 		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
 		# self.fields['category'].widget.attrs.update({'class': 'form-control'})
-		self.fields['tag_line'].widget.attrs.update({'class': 'form-control', 'ng-model':'tag_line', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
-		self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
+		# self.fields['tag_line'].widget.attrs.update({'class': 'form-control', 'ng-model':'tag_line', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
+		# self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
+		self.fields['area'].widget.attrs.update({'class': 'form-control'})
+		self.fields['city'].widget.attrs.update({'class': 'form-control'})
+		self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
 		if community:

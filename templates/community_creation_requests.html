@@ -15,7 +15,10 @@
         <th>Place of Worship</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Purpose</th>
+        <th>Area</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Pincode</th>
         <th>Requested by</th>
         <th>Email</th>
         <th>Status</th>
@@ -29,7 +32,10 @@
           <td>{{ req.parent.name }}</td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
-          <td><small class="text-muted d-block">{{ req.purpose }}</small></td>
+          <td><small class="text-muted d-block">{{ req.area }}</small></td>
+          <td><small class="text-muted d-block">{{ req.city }}</small></td>
+          <td><small class="text-muted d-block">{{ req.state }}</small></td>
+          <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
           <td>{{ req.requestedby }}</td>
           <td>{{ req.email }}</td>
           <td>{{ req.status }}</td>

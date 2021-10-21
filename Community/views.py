@@ -218,7 +218,10 @@ def handle_community_creation_requests(request):
 				communitycreation = Community.objects.create(
 					name = rcommunity.name,
 					desc = rcommunity.desc,
-					tag_line = rcommunity.tag_line,
+					area = rcommunity.area,
+					city = rcommunity.city,
+					state = rcommunity.state,
+					pincode = rcommunity.pincode,
 					# category = rcommunity.category,
 					created_by = user,
 					parent = parent

@@ -86,6 +86,10 @@ class CommunityGroups(models.Model):
 class RequestCommunityCreation(models.Model):
 	name = models.CharField(null=True, max_length=100)
 	desc = models.TextField()
+	area = models.CharField(max_length=30, null=True)
+	city = models.CharField(max_length=30, null=True)
+	state = models.CharField(max_length=30, null=True)
+	pincode = models.PositiveIntegerField(null=True)
 	category = models.ForeignKey(Category,null =True)
 	tag_line = models.CharField(null=True, max_length=500)
 	purpose = models.TextField()
