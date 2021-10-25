@@ -126,17 +126,26 @@ var videoPublished = {{videopublished}};
     <table id="myArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
         <tr style="background-color:#89216B">
+          <th style="color:white">Faith</th>
+          <th style="color:white">Place of Worship</th>
           <th style="color:white">Type</th>
-          <th style="color:white">Content</th>
           <th style="color:white">Status</th>
-          <th style="color:white">Community</th>
           <th style="color:white">Created</th>
+          <th style="color:white">Action</th>
         </tr>
     </thead>
       <tbody>
         {{myhtml|safe}}{% autoescape off%}
         {% for content in lstContent %}
           <tr>
+            <td>{{ content.community.parent }}</td>
+
+            <td>
+              {% if content.belongsto == 'community' %}
+                <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
+              {% endif %}
+            </td>
+
             <td>
               {% if content.type == 'article' %}
                 <i class="fa fa-file-text" style="color:#89216B;"></i> Article
@@ -150,17 +159,7 @@ var videoPublished = {{videopublished}};
                 {% if content.media.mediatype == 'VIDEO' %}<i class="fa fa-film" style="color:#89216B;"></i> Video {% endif %}
               {% endif %}
             </td>
-            <td>
-              {% if content.type == 'article' %}
-                <a href="{% url 'article_view' content.article.pk %}"> {{ content.article }}  </a>
-              {% endif %}
-              {% if content.type == 'course' %}
-                <a href="{% url 'course_view' content.course.pk %}"> {{ content.course }}  </a>
-              {% endif %}
-              {% if content.type == 'Media' %}
-                <a href="{% url 'media_view' content.media.pk %}"> {{ content.media.title }}  </a>
-              {% endif %}
-            </td>
+
             <td>
               {% if content.type == 'article' %}
                 {{content.article.state.name}}
@@ -171,12 +170,8 @@ var videoPublished = {{videopublished}};
               {% if content.type == 'Media' %}
                 {{content.media.state.name}}
               {% endif %}
-            </td>
-            <td>
-              {% if content.belongsto == 'community' %}
-                <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
-              {% endif %}
-            </td>
+            </td>            
+
             <td>
               {% if content.type == 'article' %}
                 {{content.article.created_at}}
@@ -186,6 +181,18 @@ var videoPublished = {{videopublished}};
               {% endif %}
               {% if content.type == 'Media' %}
                 {{content.media.created_at}}
+              {% endif %}
+            </td>            
+
+            <td>
+              {% if content.type == 'article' %}
+                <a href="{% url 'article_view' content.article.pk %}"> View  </a>
+              {% endif %}
+              {% if content.type == 'course' %}
+                <a href="{% url 'course_view' content.course.pk %}"> View </a>
+              {% endif %}
+              {% if content.type == 'Media' %}
+                <a href="{% url 'media_view' content.media.pk %}"> View </a>
               {% endif %}
             </td>
           </tr>
