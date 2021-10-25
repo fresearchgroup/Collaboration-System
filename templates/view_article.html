@@ -11,7 +11,7 @@
   {% endfor %}
   <li class="breadcrumb-item">{{ article.community.name }}</li>
   <li class="breadcrumb-item">View Article</li>
-    <li class="breadcrumb-item">{{ article.article.title }} </li>
+    <!-- <li class="breadcrumb-item">{{ article.article.title }} </li> -->
 {% endblock %}
 
 {% block content %}
@@ -54,7 +54,7 @@
 {% endif %}
       <br/>
       <div class="blog-item">
-        <h2><a href="#">{{ article.article.title }} </a></h2>
+        <!-- <h2><a href="#">{{ article.article.title }} </a></h2> -->
           <ul class="blog-info">
             <li><i class="fa fa-user"></i> <a href="{% url 'display_user_profile' article.article.created_by %}">{{article.article.created_by}}</a> </li>
             <li><i class="fa fa-calendar"></i> {{article.article.created_at}} </li>
@@ -100,7 +100,33 @@
             
           </ul>
         <!-- <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;"> -->
-          {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
+          {{myhtml|safe}}
+          {% autoescape off%} 
+          {% if article.article.introduction %}
+            <h3> Introduction </h3>
+            {{article.article.introduction}}
+          {% endif %}
+          {% if article.article.architecture %}
+            <h3> Architecture </h3>
+            {{article.article.architecture}}
+          {% endif %}
+          {% if article.article.rituals %}
+            <h3> Rituals </h3>
+            {{article.article.rituals}}
+          {% endif %}
+          {% if article.article.ceremonies %}
+            <h3> Ceremonies </h3>
+            {{article.article.ceremonies}}
+          {% endif %}
+          {% if article.article.tales %}
+            <h3> Tales </h3>
+            {{article.article.tales}}
+          {% endif %}
+          {% if article.article.more_information %}
+            <h3> More Information </h3>
+            {{article.article.more_information}}
+          {% endif %}
+          {% endautoescape%}
           {% if article.article.state.name == 'draft' %}
             <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                
             <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog" aria-labelledby="SubmitArticleModal" aria-hidden="true">
