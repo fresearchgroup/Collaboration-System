@@ -33,15 +33,15 @@
             <form method="post" enctype="multipart/form-data" novalidate>
                       {% csrf_token %}
 
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="title">Title</label>
                     {{ form.title }}
                     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                     <div class="invalid-feedback">
                       {{ form.title.errors }}
                     </div>
-                  </div>
-                {% if form.body %}
+                  </div> -->
+                <!-- {% if form.body %}
                     <div class="form-group">
                       <label for="title">Body</label>
                       {{ form.body }}
@@ -49,7 +49,49 @@
                         {{ form.body.errors }}
                       </div>
                     </div>
-                {% endif %}
+                {% endif %} -->                
+                    <div class="form-group">
+                      <label for="title">Introduction</label>
+                      {{ form.introduction }}
+                      <div class="invalid-feedback">
+                        {{ form.introduction.errors }}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="title">Architecture</label>
+                      {{ form.architecture }}
+                      <div class="invalid-feedback">
+                        {{ form.architecture.errors }}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="title">Rituals</label>
+                      {{ form.rituals }}
+                      <div class="invalid-feedback">
+                        {{ form.rituals.errors }}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="title">Ceremonies</label>
+                      {{ form.ceremonies }}
+                      <div class="invalid-feedback">
+                        {{ form.ceremonies.errors }}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="title">Tales</label>
+                      {{ form.tales }}
+                      <div class="invalid-feedback">
+                        {{ form.tales.errors }}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="title">More Information</label>
+                      {{ form.more_information }}
+                      <div class="invalid-feedback">
+                        {{ form.more_information.errors }}
+                      </div>
+                    </div>    
 
                   <!-- <div class="form-group custom-file">
                     <label for="image">Article Image</label>
@@ -78,9 +120,69 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
-<script>
+<!-- <script>
   ClassicEditor
     .create( document.querySelector( '#id_body' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script> -->
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_introduction' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_architecture' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_rituals' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_ceremonies' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_tales' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_more_information' ) )
     .then( editor => {
       console.log( editor );
     } )
