@@ -45,6 +45,19 @@ class ArticleUpdateForm(forms.ModelForm):
 		self.fields['state'].queryset = States.objects.filter(name__in=states)
 		self.fields['state'].required = False
 
+	def clean(self):
+		cleaned_data = super(ArticleUpdateForm, self).clean()
+		introduction_data = cleaned_data.get("introduction")
+		architecture_data = cleaned_data.get("architecture")
+		rituals_data = cleaned_data.get("rituals")
+		ceremonies_data = cleaned_data.get("ceremonies")
+		tales_data = cleaned_data.get("tales")
+		more_information_data = cleaned_data.get("more_information")
+
+		if (introduction_data == '<p>&nbsp;</p>' and architecture_data == '<p>&nbsp;</p>' and rituals_data == '<p>&nbsp;</p>' and ceremonies_data == '<p>&nbsp;</p>' and tales_data == '<p>&nbsp;</p>' and more_information_data == '<p>&nbsp;</p>'):
+			msg = "Please enter information for atleast one of the categories"
+			self.add_error('tags', msg)
+
 		# if not settings.REALTIME_EDITOR:
 		# 	self.fields['body'].widget.attrs.update({'class': 'form-control'})
 
@@ -79,3 +92,17 @@ class ArticleCreateForm(forms.ModelForm):
 		self.fields['tags'].required = False
 		# if not settings.REALTIME_EDITOR:
 		# 	self.fields['body'].widget.attrs.update({'class': 'form-control'})
+
+	def clean(self):
+		cleaned_data = super(ArticleCreateForm, self).clean()
+		introduction_data = cleaned_data.get("introduction")
+		architecture_data = cleaned_data.get("architecture")
+		rituals_data = cleaned_data.get("rituals")
+		ceremonies_data = cleaned_data.get("ceremonies")
+		tales_data = cleaned_data.get("tales")
+		more_information_data = cleaned_data.get("more_information")
+
+		if (introduction_data == '<p>&nbsp;</p>' and architecture_data == '<p>&nbsp;</p>' and rituals_data == '<p>&nbsp;</p>' and ceremonies_data == '<p>&nbsp;</p>' and tales_data == '<p>&nbsp;</p>' and more_information_data == '<p>&nbsp;</p>'):
+			msg = "Please enter information for atleast one of the categories"
+			self.add_error('tags', msg)
+

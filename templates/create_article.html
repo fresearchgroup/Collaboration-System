@@ -32,7 +32,10 @@
 
             <form method="post" enctype="multipart/form-data" novalidate>
                       {% csrf_token %}
-
+                      <div class="invalid-feedback" style="color: red; font-weight: bold;">
+                        {{ form.tags.errors }}
+                      </div>
+  
                   <!-- <div class="form-group">
                     <label for="title">Title</label>
                     {{ form.title }}
@@ -101,9 +104,9 @@
                     <label for="title">Keywords</label>
                     <small id="bodyhelp" class="form-text text-muted"><p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;" >Clear</a></p></small>
                     {{ form.tags }}
-                    <div class="invalid-feedback">
+                    <!-- <div class="invalid-feedback" style="color: red; font-weight: bold;">
                       {{ form.tags.errors }}
-                    </div>
+                    </div> -->
                   </div>
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Save</button>
