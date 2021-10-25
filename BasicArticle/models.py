@@ -12,8 +12,14 @@ def get_file_path(instance, filename):
     return os.path.join('article', filename)
 
 class Articles(models.Model):
-	title = models.CharField(max_length=100)
+	title = models.CharField(max_length=100, null=True)
 	body = models.TextField(null=True)
+	introduction = models.TextField(null=True)
+	architecture = models.TextField(null=True)
+	rituals = models.TextField(null=True)
+	ceremonies = models.TextField(null=True)
+	tales = models.TextField(null=True)
+	more_information = models.TextField(null=True)
 	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')
@@ -27,8 +33,8 @@ class Articles(models.Model):
 		from django.urls import reverse
 		return reverse('article_view', kwargs={'pk': self.id})
 	
-	def __str__(self):
-		return self.title
+	#def __str__(self):
+		#return self.pk
 
 class ArticleViewLogs(models.Model):
     article = models.ForeignKey(Articles, related_name='articleviews')
