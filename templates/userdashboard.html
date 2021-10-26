@@ -138,11 +138,11 @@ var videoPublished = {{videopublished}};
         {{myhtml|safe}}{% autoescape off%}
         {% for content in lstContent %}
           <tr>
-            <td>{{ content.community.parent }}</td>
+            <td><a href="{% url 'community_view' content.community.parent.pk %}">{{ content.community.parent }}</a></td>
 
             <td>
               {% if content.belongsto == 'community' %}
-                <a href="{% url 'community_view' content.community.pk %}">{{ content.community }}</a>
+                {{ content.community }}
               {% endif %}
             </td>
 
@@ -221,7 +221,7 @@ var videoPublished = {{videopublished}};
     {{myhtml|safe}}{% autoescape off%}
       {% for req in myrequestedcommunities %}
         <tr>
-          <td>{{ req.parent.name }}</td>
+          <td><a href="{% url 'community_view' req.parent.pk %}">{{ req.parent.name }}</a></td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
           <td><small class="text-muted d-block">{{ req.area }}</small></td>
