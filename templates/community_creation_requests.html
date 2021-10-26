@@ -4,7 +4,7 @@
 <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
 
   {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Community Requests Dashboard</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">PoW Creation Requests</a></li>
   {% endif %}
 {% endblock %}
 
@@ -29,7 +29,7 @@
     {{myhtml|safe}}{% autoescape off%}
       {% for req in requestcommunitycreation %}
         <tr>
-          <td>{{ req.parent.name }}</td>
+          <td><a href="{% url 'community_view' req.parent.pk %}">{{ req.parent.name }}</a></td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
           <td><small class="text-muted d-block">{{ req.area }}</small></td>
@@ -38,7 +38,13 @@
           <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
           <td>{{ req.requestedby }}</td>
           <td>{{ req.email }}</td>
-          <td>{{ req.status }}</td>
+          <td>
+            {% if req.status == 'Request' %}
+              requested
+            {% else %}
+              {{ req.status }}
+            {% endif %}
+          </td>
           <td>
             {% if req.status == 'Request' %}
               <form method="post" action="{% url 'handle_community_creation_requests' %}">
@@ -46,8 +52,8 @@
                 <input type='hidden' name = 'pk' value ={{req.pk}} />
                 <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />
                 <div class="btn-group" role="group" aria-label="Basic example">
-                  <button type="radio" name ="status" value="approve" class="btn btn-success" >Approve  </button>
-                  <button type="radio" name ="status" value="reject" class="btn btn-danger" style="margin-left: 5px;"> Reject</button>
+                  <button type="radio" name ="status" value="approve" class="btn btn-success" style="background-color: red; margin-bottom: 5px;">Approve  </button> <br />
+                  <button type="radio" name ="status" value="reject" class="btn btn-danger" style="background-color: green;"> Reject</button>
                 </div>
               </form>
             {% endif %}

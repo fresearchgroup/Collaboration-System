@@ -174,7 +174,7 @@ $(document).ready(function() {
 
             {% for group_for in request.user.groups.all %}
               {% if group_for.name == 'curator' %}
-                <li><a href="{% url 'handle_community_creation_requests' %}">Handle Community Requests</a></li>
+                <li><a href="{% url 'handle_community_creation_requests' %}">Handle PoW Creation Requests</a></li>
                 <li><a href="{% url 'curate_content' %}">Curate Contributions</a></li>
               {% endif %}
             {% endfor %}

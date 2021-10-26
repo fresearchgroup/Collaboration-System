@@ -164,7 +164,7 @@ class RequestCommunityCreationView(CreateView):
 		self.object.requestedby = self.request.user
 		self.object.email = self.request.user.email
 		self.object.save()
-		messages.success(self.request, 'Request for community creation successfully submited.')
+		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)
 
 	def get_success_url(self):
