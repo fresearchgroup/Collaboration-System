@@ -103,30 +103,31 @@
           {{myhtml|safe}}
           {% autoescape off%} 
           {% if article.article.introduction %}
-            <h3> Introduction </h3>
+            <h3 style="margin-top: 20px;"> Introduction </h3>
             {{article.article.introduction}}
           {% endif %}
           {% if article.article.architecture %}
-            <h3> Architecture </h3>
+            <h3 style="margin-top: 20px;"> Architecture </h3>
             {{article.article.architecture}}
           {% endif %}
           {% if article.article.rituals %}
-            <h3> Rituals </h3>
+            <h3 style="margin-top: 20px;"> Rituals </h3>
             {{article.article.rituals}}
           {% endif %}
           {% if article.article.ceremonies %}
-            <h3> Ceremonies </h3>
+            <h3 style="margin-top: 20px;"> Ceremonies </h3>
             {{article.article.ceremonies}}
           {% endif %}
           {% if article.article.tales %}
-            <h3> Tales </h3>
+            <h3 style="margin-top: 20px;"> Tales </h3>
             {{article.article.tales}}
           {% endif %}
           {% if article.article.more_information %}
-            <h3> More Information </h3>
+            <h3 style="margin-top: 20px;"> More Information </h3>
             {{article.article.more_information}}
           {% endif %}
           {% endautoescape%}
+          <p style="margin-bottom: 20px;"></p>
           {% if article.article.state.name == 'draft' %}
             <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                
             <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog" aria-labelledby="SubmitArticleModal" aria-hidden="true">
