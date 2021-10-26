@@ -100,7 +100,7 @@ def community_view(request, pk):
 			comm.photo = user_profile.photo
 		except ProfileImage.DoesNotExist:
 			user_profile = "No Image available"
-	children = community.get_children()
+	children = community.get_children().order_by('-contribution_status')
 	childrencount = children.count()
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
