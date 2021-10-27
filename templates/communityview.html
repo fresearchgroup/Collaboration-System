@@ -88,7 +88,10 @@
       <thead>
           <tr style="background-color:#89216B">
             <th style="color:white">Name</th>
-            <th style="color:white">Location</th>
+            <th style="color:white">Area</th>
+            <th style="color:white">City</th>
+            <th style="color:white">State</th>
+            <th style="color:white">Pincode</th>
             <th style="color:white">Accepting Contributions</th>
             <th style="color:white">Contribute</th>
           </tr>
@@ -101,18 +104,16 @@
               {{child.name}}
             </td>
             <td>
-              {% if child.area %}
-                {{child.area}}, 
-              {% endif %}
-              {% if child.city %}
-                {{child.city}}, 
-              {% endif %}
-              {% if child.state %}
-                {{child.state}}, 
-              {% endif %}
-              {% if child.pincode %}
-                {{child.pincode}}
-              {% endif %}
+              {{child.area}}
+            </td>
+            <td>
+              {{child.city}}
+            </td>
+            <td>
+              {{child.state}}
+            </td>
+            <td>
+              {{child.pincode}}
             </td>
             <td>
               {% if child.contribution_status == 'Ongoing' %} 
