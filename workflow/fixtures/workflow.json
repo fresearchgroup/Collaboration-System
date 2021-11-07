@@ -1,47 +1,52 @@
 [
-	{"model": "workflow.states", 
-	"pk": 1, 
-	"fields": {"name": "draft", "desc": "save as draft state"}
-}, 
-{"model": "workflow.states", 
-	"pk": 2, 
-	"fields": {"name": "visible", "desc": "this state make the content visible to community"}
-}, 
-{"model": "workflow.states",
- "pk": 3, 
- "fields": {"name": "publish",
-  "desc": "save as visible state"}
-}, 
-{"model": "workflow.states",
- "pk": 4, 
- "fields": {"name": "private",
-  "desc": "this state make the content visible to group"}
-}, 
-{"model": "workflow.states",
- "pk": 5, 
- "fields": {"name": "publishable",
-  "desc": "this content makes the content ready for publishing"}
-}, 
-{"model": "workflow.transitions",
- "pk": 1,
-  "fields": {"name": "Make Visible to Group", "from_state": 1, "to_state": 4}
-}, 
-
-{"model": "workflow.transitions",
- "pk": 3,
-  "fields": {"name": "Make Visible to Community", "from_state": 4, "to_state": 2}
-}, 
-{"model": "workflow.transitions",
- "pk": 4, 
- "fields": {"name": "Ready for Publishing", "from_state": 2, "to_state": 5}
-},
- {"model": "workflow.transitions",
-  "pk": 5,
-   "fields": {"name": "Publish", "from_state": 5, "to_state": 3}
-
-},
-{"model": "workflow.transitions",
-  "pk": 6,
-   "fields": {"name": "Publish", "from_state": 5, "to_state": 2}
-}
+  {
+    "model": "workflow.states",
+    "pk": 1,
+    "fields": {"name": "draft", "desc": "save as draft state", "initial": 1}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 2,
+    "fields": {"name": "submitted", "desc": "submit content for reviewing"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 3,
+    "fields": {"name": "reviewSarted", "desc": "contribution taken up for review by curator"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 4,
+    "fields": {"name": "accepted", "desc": "contribution accepted for further action"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 5,
+    "fields": {"name": "merged", "desc": "contribution merged"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 6,
+    "fields": {"name": "sentForApproval", "desc": "merged contribution sent for approval"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 7,
+    "fields": {"name": "publish", "desc": "contribution published", "final": 1}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 8,
+    "fields": {"name": "sentToModify", "desc": "contribution sent back to the contributor for modification"}
+  },
+  {
+    "model": "workflow.states",
+    "pk": 9,
+    "fields": {"name": "rejected", "desc": "contribution rejected"}
+  },
+  {
+    "model": "workflow.transitions",
+    "pk": 1,
+    "fields": {"name": "Send for reviewing", "from_state": 1, "to_state": 2}
+  }
 ]
