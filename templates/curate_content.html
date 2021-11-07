@@ -10,13 +10,13 @@
     <table id="myArticles" class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
         <tr style="background-color:#89216B">
+          <th style="color:white">Faith</th>
           <th style="color:white">Place of Worship</th>
           <th style="color:white">Location</th>
-          <th style="color:white">Sub-category</th>
-          <th style="color:white">Content Type</th>
+          <th style="color:white">Section</th>
+          <th style="color:white">Type</th>
           <th style="color:white">Contributed by</th>
           <th style="color:white">Contributed on</th>
-          <th style="color:white">Content title</th>
           <th style="color:white">Status</th>
           <th style="color:white">Actions</th>
         </tr>
@@ -25,6 +25,7 @@
         {{myhtml|safe}}{% autoescape off%}
         {% for content in lstContent %}
             <tr>
+                <td>{{content.community.parent.parent.name}}</td>
                 <td>{{content.community.parent.name}}</td>
                 <td>
                     {% if content.community.parent.area %}
@@ -67,14 +68,14 @@
                         {{content.media.created_at}}
                     {% endif %}
                 </td>
-                <td>
+                <!-- <td>
                     {% if content.type == 'Article' %}
                     <a href="{% url 'article_view' content.article.pk %}"> {{ content.article }}  </a>
                     {% endif %}
                     {% if content.type == 'Media' %}
                     <a href="{% url 'media_view' content.media.pk %}"> {{ content.media.title }}  </a>
                     {% endif %}
-                </td>
+                </td> -->
                 <td>
                     {% if content.type == 'Article' %}
                         {{content.article.state.name}}
@@ -83,142 +84,16 @@
                         {{content.media.state.name}}
                     {% endif %}
                 </td>
+
                 <td>
-                    <!-- <form method="post" action="{% url 'curate_content' %}"> -->
-                        <!-- <input type='hidden' name = 'type' value ={{content.type}} /> -->
-                        <!-- {% csrf_token %} -->
-                        {% if content.type == 'Article' %}
-                            <input type='hidden' name = 'pk' value ={{content.article.pk}} />
-                            {% if content.article.state.name == 'submitted' %}
-                            <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
-                                <button type="radio" name="articleacceptstatus" value="accept" class="btn btn-success" data-toggle="modal" data-target="#modalAcceptArticle" data-whatever="@mdo" id="articleacceptstatus" style="background-color: green;">Accept</button>
-                                <div class="modal fade" id="modalAcceptArticle" tabindex="-1" role="dialog" aria-labelledby="AcceptArticleModal" aria-hidden="true">
-                                  <div class="modal-dialog text-left" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <form method = "post" action ="{% url 'curate_content' %}">
-                                          {% csrf_token %}
-                                          <input type='hidden' name = 'status' value='accept'/>
-                                          <input type='hidden' name = 'type' value ={{content.type}} />
-                                          <input type='hidden' name = 'pk' value ={{content.article.pk}} />
-                                          <div class="form-group">
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                    
-                                <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Reject</button>
-                                <div class="modal fade" id="modalRejectArticle" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
-                                  <div class="modal-dialog text-left" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <form method = "post" action ="{% url 'curate_content' %}">
-                                          {% csrf_token %}
-                                          <input type='hidden' name = 'status' value='reject'/>
-                                          <input type='hidden' name = 'type' value ={{content.type}} />
-                                          <input type='hidden' name = 'pk' value ={{content.article.pk}} />
-                                          <div class="form-group">
-                                            <label for="reason-text" class="col-form-label">Reason</label>
-                                            <textarea class="form-control" id="reason-text"></textarea>                                              
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                            <!-- </div> -->
-                            {% endif %}
-                        {% endif %}
-                        {% if content.type == 'Media' %}
-                            <input type='hidden' name = 'pk' value ={{content.media.pk}} />
-                            {% if content.media.state.name == 'submitted' %}
-                            <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
-
-
-                                <button type="radio" name="mediaacceptstatus" value="accept" class="btn btn-success" data-toggle="modal" data-target="#modalAcceptMedia" data-whatever="@mdo" id="mediaacceptstatus" style="background-color: green;">Accept</button>
-                                <div class="modal fade" id="modalAcceptMedia" tabindex="-1" role="dialog" aria-labelledby="AcceptMediaModal" aria-hidden="true">
-                                  <div class="modal-dialog text-left" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <form method = "post" action ="{% url 'curate_content' %}">
-                                          {% csrf_token %}
-                                          <input type='hidden' name = 'status' value='accept'/>
-                                          <input type='hidden' name = 'type' value ={{content.type}} />
-                                          <input type='hidden' name = 'pk' value ={{content.media.pk}} />
-                                          <div class="form-group">
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <button id="mediaAccept" type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                    
-                                <button type="radio" name="mediarejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectMedia" data-whatever="@mdo" id="mediarejectstatus" style="background-color: red;">Reject</button>
-                                <div class="modal fade" id="modalRejectMedia" tabindex="-1" role="dialog" aria-labelledby="RejectMediaModal" aria-hidden="true">
-                                  <div class="modal-dialog text-left" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <form method = "post" action ="{% url 'curate_content' %}">
-                                          {% csrf_token %}
-                                          <input type='hidden' name = 'status' value='reject'/>
-                                          <input type='hidden' name = 'type' value ={{content.type}} />
-                                          <input type='hidden' name = 'pk' value ={{content.media.pk}} />
-                                          <div class="form-group">
-                                            <label for="reason-text" class="col-form-label">Reason</label>
-                                            <textarea class="form-control" id="reason-text"></textarea>                                              
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                            <!-- </div> -->
-                            {% endif %}
-                        {% endif %}
-                    <!-- </form> -->
-                </td>            
+                    {% if content.type == 'Article' %}
+                    <a href="{% url 'article_view' content.article.pk %}"> View  </a>
+                    {% endif %}
+                    {% if content.type == 'Media' %}
+                    <a href="{% url 'media_view' content.media.pk %}"> View  </a>
+                    {% endif %}
+                </td>                
+                
             </tr>
         {% endfor %}
         {% endautoescape%}
