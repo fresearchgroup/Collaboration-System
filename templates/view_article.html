@@ -10,7 +10,7 @@
     <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
   {% endfor %}
   <li class="breadcrumb-item">{{ article.community.name }}</li>
-  <li class="breadcrumb-item">View Article</li>
+  <li class="breadcrumb-item">View Content</li>
     <!-- <li class="breadcrumb-item">{{ article.article.title }} </li> -->
 {% endblock %}
 
@@ -100,7 +100,8 @@
             
           </ul>
         <!-- <p id="view_article_html" style="background: #f4f4f4;border: 0;border-radius: 5px!important;padding: 20px;"> -->
-          {{myhtml|safe}}
+          {{myhtml|safe}}{% autoescape off%} {{article.article.body}}{% endautoescape%}
+          <!-- {{myhtml|safe}}
           {% autoescape off%} 
           {% if article.article.introduction %}
             <h3 style="margin-top: 20px;"> Introduction </h3>
@@ -126,7 +127,7 @@
             <h3 style="margin-top: 20px;"> More Information </h3>
             {{article.article.more_information}}
           {% endif %}
-          {% endautoescape%}
+          {% endautoescape%} -->
           <p style="margin-bottom: 20px;"></p>
           {% if article.article.state.name == 'draft' %}
             <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                

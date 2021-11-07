@@ -44,7 +44,7 @@
                       {{ form.title.errors }}
                     </div>
                   </div> -->
-                <!-- {% if form.body %}
+                {% if form.body %}
                     <div class="form-group">
                       <label for="title">Body</label>
                       {{ form.body }}
@@ -52,8 +52,8 @@
                         {{ form.body.errors }}
                       </div>
                     </div>
-                {% endif %} -->                
-                    <div class="form-group">
+                {% endif %}
+                    <!-- <div class="form-group">
                       <label for="title">Introduction</label>
                       {{ form.introduction }}
                       <div class="invalid-feedback">
@@ -94,7 +94,7 @@
                       <div class="invalid-feedback">
                         {{ form.more_information.errors }}
                       </div>
-                    </div>    
+                    </div>     -->
 
                   <!-- <div class="form-group custom-file">
                     <label for="image">Article Image</label>
@@ -123,7 +123,7 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
-<!-- <script>
+<script>
   ClassicEditor
     .create( document.querySelector( '#id_body' ) )
     .then( editor => {
@@ -132,8 +132,8 @@
     .catch( error => {
       console.error( error );
     } );
-</script> -->
-<script>
+</script>
+<!-- <script>
   ClassicEditor
     .create( document.querySelector( '#id_introduction' ) )
     .then( editor => {
@@ -192,7 +192,7 @@
     .catch( error => {
       console.error( error );
     } );
-</script>
+</script> -->
 
 <script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>

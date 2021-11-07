@@ -17,8 +17,8 @@
   <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
 {% endfor %}
 <li class="breadcrumb-item">{{ community }}</li>
-<li class="breadcrumb-item">Edit Article</li>
-  <li class="breadcrumb-item">{{ article.title }} </li>
+<li class="breadcrumb-item">Edit Content</li>
+  <!-- <li class="breadcrumb-item">{{ article.title }} </li> -->
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -78,7 +78,7 @@
                       {{ form.title.errors }}
                     </div>
                   </div> -->
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="title">Introduction</label>
                     {{ form.introduction }}
                     <div class="invalid-feedback">
@@ -119,8 +119,16 @@
                     <div class="invalid-feedback">
                       {{ form.more_information.errors }}
                     </div>
-                  </div>                 
+                  </div> -->
 
+
+                  <div class="form-group">
+                    <label for="title">Body</label>
+                    {{ form.body }}
+                    <div class="invalid-feedback">
+                      {{ form.body.errors }}
+                    </div>
+                  </div>                  
                 <!-- {% if form.body %}
                     <div class="form-group">
                       <label for="title">Body</label>
@@ -180,7 +188,7 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
-<!-- <script>
+<script>
   ClassicEditor
     .create( document.querySelector( '#id_body' ) )
     .then( editor => {
@@ -189,8 +197,8 @@
     .catch( error => {
       console.error( error );
     } );
-</script> -->
-<script>
+</script>
+<!-- <script>
   ClassicEditor
     .create( document.querySelector( '#id_introduction' ) )
     .then( editor => {
@@ -249,7 +257,7 @@
     .catch( error => {
       console.error( error );
     } );
-</script>
+</script> -->
 
 <script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
