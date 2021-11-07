@@ -128,6 +128,7 @@ var videoPublished = {{videopublished}};
         <tr style="background-color:#89216B">
           <th style="color:white">Faith</th>
           <th style="color:white">Place of Worship</th>
+          <th style="color:white">Section</th>
           <th style="color:white">Type</th>
           <th style="color:white">Status</th>
           <th style="color:white">Created</th>
@@ -138,6 +139,8 @@ var videoPublished = {{videopublished}};
         {{myhtml|safe}}{% autoescape off%}
         {% for content in lstContent %}
           <tr>
+            <td><a href="{% url 'community_view' content.community.parent.parent.pk %}">{{ content.community.parent.parent }}</a></td>
+
             <td><a href="{% url 'community_view' content.community.parent.pk %}">{{ content.community.parent }}</a></td>
 
             <td>
