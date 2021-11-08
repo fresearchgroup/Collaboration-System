@@ -257,7 +257,12 @@ def handle_community_creation_requests(request):
 				rcommunity.save()
 
 		# requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
-		requestcommunitycreation=RequestCommunityCreation.objects.all()
+		rids = RequestCommunityCreation.objects.all().values_list('pk', flat=True)
+		requestcommunitycreation = []
+		for i in rids:
+			rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=i).order_by('-actionon')[:1]
+			for r in rcom:
+				requestcommunitycreation.append(r)
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 	else:
 		return redirect('login')

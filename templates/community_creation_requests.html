@@ -29,15 +29,15 @@
     {{myhtml|safe}}{% autoescape off%}
       {% for req in requestcommunitycreation %}
         <tr>
-          <td><a href="{% url 'community_view' req.parent.pk %}">{{ req.parent.name }}</a></td>
+          <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a></td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
           <td><small class="text-muted d-block">{{ req.area }}</small></td>
           <td><small class="text-muted d-block">{{ req.city }}</small></td>
           <td><small class="text-muted d-block">{{ req.state }}</small></td>
           <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
-          <td>{{ req.requestedby }}</td>
-          <td>{{ req.email }}</td>
+          <td>{{ req.requestcommunity.requestedby }}</td>
+          <td>{{ req.requestcommunity.email }}</td>
           <td>
             {% if req.status == 'Request' %}
               requested
