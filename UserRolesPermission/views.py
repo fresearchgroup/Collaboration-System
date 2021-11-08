@@ -1,6 +1,6 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from Community.models import CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
 from BasicArticle.models import Articles
 from Media.models import Media
 from .forms import SignUpForm
@@ -108,7 +108,16 @@ def user_dashboard(request):
 
         lstContent = list(commarticles) + list(commmedia) + list(commcourses)
 
-        myrequestedcommunities=RequestCommunityCreation.objects.filter(requestedby=request.user)
+        myrequestedcommunities = RequestCommunityCreation.objects.filter(requestedby=request.user)
+        rids = []
+        for mycom in myrequestedcommunities:
+            rids.append(mycom.pk)
+
+        myrequestedcommunities = []
+        for i in rids:
+            rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=i).order_by('-actionon')[:1]
+            for r in rcom:
+                myrequestedcommunities.append(r)
 
         articlespublished = []
         imagepublished = []

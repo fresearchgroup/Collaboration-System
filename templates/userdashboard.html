@@ -225,7 +225,7 @@ var videoPublished = {{videopublished}};
     {{myhtml|safe}}{% autoescape off%}
       {% for req in myrequestedcommunities %}
         <tr>
-          <td><a href="{% url 'community_view' req.parent.pk %}">{{ req.parent.name }}</a></td>
+          <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a></td>
           <td>{{ req.name }}</td>
           <td><small class="text-muted d-block">{{ req.desc }}</small></td>
           <td><small class="text-muted d-block">{{ req.area }}</small></td>
