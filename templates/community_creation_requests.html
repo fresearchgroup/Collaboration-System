@@ -38,22 +38,17 @@
           <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
           <td>{{ req.requestcommunity.requestedby }}</td>
           <td>{{ req.requestcommunity.email }}</td>
+          <td>{{ req.status }}</td>
           <td>
-            {% if req.status == 'Request' %}
-              requested
-            {% else %}
-              {{ req.status }}
-            {% endif %}
-          </td>
-          <td>
-            {% if req.status == 'Request' %}
+            {% if req.status == 'Requested' %}
               <form method="post" action="{% url 'handle_community_creation_requests' %}">
                 {% csrf_token %}
                 <input type='hidden' name = 'pk' value ={{req.pk}} />
                 <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />
                 <div class="btn-group" role="group" aria-label="Basic example">
-                  <button type="radio" name ="status" value="approve" class="btn btn-success" style="background-color: red; margin-bottom: 5px;">Approve  </button> <br />
-                  <button type="radio" name ="status" value="reject" class="btn btn-danger" style="background-color: green;"> Reject</button>
+                  <button type="radio" name ="status" value="approve" class="btn btn-link">Accept</button>
+                  <button type="radio" name ="status" value="reject" class="btn btn-link">Reject as Pow Exists</button>
+                  <button type="radio" name ="status" value="reject" class="btn btn-link">Send for modification</button>
                 </div>
               </form>
             {% endif %}
