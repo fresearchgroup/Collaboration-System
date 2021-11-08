@@ -83,23 +83,47 @@ class CommunityGroups(models.Model):
 	user = models.ForeignKey(User, null=True, related_name='communitygroups')
 	community = models.ForeignKey(Community, null=True, related_name='communitygroups')
 
+# class RequestCommunityCreation(models.Model):
+# 	name = models.CharField(null=True, max_length=100)
+# 	desc = models.TextField()
+# 	area = models.CharField(max_length=30, null=True)
+# 	city = models.CharField(max_length=30, null=True)
+# 	state = models.CharField(max_length=30, null=True)
+# 	pincode = models.PositiveIntegerField(null=True)
+# 	category = models.ForeignKey(Category,null =True)
+# 	tag_line = models.CharField(null=True, max_length=500)
+# 	purpose = models.TextField()
+# 	requestedby = models.ForeignKey(User, null=True)
+# 	email = models.CharField(null=True, max_length=100)
+# 	status = models.CharField(null=True, default ='Request', max_length=100)
+# 	parent = models.ForeignKey(Community, null=True, related_name='communityparent')
+
+# 	def __str__(self):
+# 		return self.name
+
 class RequestCommunityCreation(models.Model):
+	requestedby = models.ForeignKey(User, null=True)
+	email = models.CharField(null=True, max_length=100)
+	parent = models.ForeignKey(Community, null=True, related_name='communityparent')
+
+	# def __str__(self):
+	# 	return self.requestedby
+
+class RequestCommunityCreationDetails(models.Model):
+	requestcommunity = models.ForeignKey(RequestCommunityCreation, related_name='requestcommunitycreation')
 	name = models.CharField(null=True, max_length=100)
 	desc = models.TextField()
 	area = models.CharField(max_length=30, null=True)
 	city = models.CharField(max_length=30, null=True)
 	state = models.CharField(max_length=30, null=True)
 	pincode = models.PositiveIntegerField(null=True)
-	category = models.ForeignKey(Category,null =True)
-	tag_line = models.CharField(null=True, max_length=500)
-	purpose = models.TextField()
-	requestedby = models.ForeignKey(User, null=True)
-	email = models.CharField(null=True, max_length=100)
-	status = models.CharField(null=True, default ='Request', max_length=100)
-	parent = models.ForeignKey(Community, null=True, related_name='communityparent')
+	status = models.CharField(null=True, default='Requested', max_length=100)
+	actionby = models.ForeignKey(User, null=True)
+	actionon = models.DateTimeField(null=True, auto_now_add=True)
+	reason = models.TextField(null=True)
 
-	def __str__(self):
-		return self.name
+	# def __str__(self):
+	# 	return self.name
 
 class CommunityCourses(models.Model):
 	course = models.ForeignKey(Course, null=True, related_name='communitycourses')
