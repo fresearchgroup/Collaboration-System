@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
 from django.db.models import Manager
@@ -21,6 +21,7 @@ admin.site.register(
 admin.site.register( CommunityMembership)
 admin.site.register( CommunityGroups)
 admin.site.register( RequestCommunityCreation)
+admin.site.register( RequestCommunityCreationDetails)
 admin.site.register(CommunityCourses)
 admin.site.register(CommunityMedia)
 

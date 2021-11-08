@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 # from .models import CommunityGroups
 from UserRolesPermission.views import user_dashboard
@@ -141,7 +141,7 @@ def community_unsubscribe(request):
 
 class RequestCommunityCreationView(CreateView):
 	form_class = RequestCommunityCreateForm
-	model = RequestCommunityCreation
+	model = RequestCommunityCreationDetails
 	template_name = 'request_community_creation.html'
 	success_url = 'request_community_creation'
 
@@ -161,8 +161,17 @@ class RequestCommunityCreationView(CreateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
-		self.object.requestedby = self.request.user
-		self.object.email = self.request.user.email
+		self.object.actionby = self.request.user
+
+		cid = form.cleaned_data.get('parent')
+		parent = Community.objects.get(name=cid)
+
+		rcommunity = RequestCommunityCreation.objects.create(
+			requestedby = self.request.user,
+			email = self.request.user.email,
+			parent = parent
+		)
+		self.object.requestcommunity = rcommunity
 		self.object.save()
 		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)

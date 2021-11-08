@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Community, RequestCommunityCreation
+from .models import Community, RequestCommunityCreation, RequestCommunityCreationDetails
 from Categories.models import Category
 from mptt.forms import TreeNodeChoiceField
 from haystack.forms import FacetedSearchForm
@@ -29,13 +29,17 @@ class CommunityCreateForm(forms.ModelForm):
 		# self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
 
 class RequestCommunityCreateForm(forms.ModelForm):
+
+	parent = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
+
 	class Meta:
-		model = RequestCommunityCreation
+		model = RequestCommunityCreationDetails
 		# fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
 		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('cid', None)
+
 		super().__init__(*args, **kwargs)
 		# self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name', 'ng-pattern':'/^[a-z A-Z ()]*$/'})
 		self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name'})
@@ -49,8 +53,14 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
+		self.fields['parent'].widget.attrs['readonly'] = True
 		if community:
-			self.fields['parent'].queryset = Community.objects.filter(pk=community)
+			community = Community.objects.get(pk=community)
+			self.fields['parent'].initial = community
+		# self.fields['parent'].widget.attrs.update({'class': 'form-control'})
+		# self.fields['parent'].empty_label = None
+		# if community:
+		# 	self.fields['parent'].queryset = Community.objects.filter(pk=community)
 
 class CommunityUpdateForm(forms.ModelForm):
 
