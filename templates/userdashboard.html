@@ -219,6 +219,7 @@ var videoPublished = {{videopublished}};
         <th>State</th>
         <th>Pincode</th>
         <th>Status</th>
+        <th>Reason</th>
       </tr>
     </thead>
     <tbody>
@@ -287,6 +288,7 @@ var videoPublished = {{videopublished}};
               {{ req.status }}
             {% endif %}
           </td>
+          <td>{{ req.reason }}</td>
         </tr>
       {% endfor %}
       {% endautoescape%}
