@@ -195,7 +195,7 @@ def handle_community_creation_requests(request):
 
 	u = User.objects.get(username=request.user)
 	if u.groups.filter(name='curator').exists():
-	# if request.user.is_superuser:
+		# if request.user.is_superuser:
 		if request.method == 'POST':
 			pk = request.POST['pk']
 			rcommunity=RequestCommunityCreation.objects.get(pk=pk)
@@ -203,56 +203,54 @@ def handle_community_creation_requests(request):
 			community_parent = request.POST['community_parent']
 			parent = Community.objects.get(pk=community_parent)
 			status = request.POST['status']
-			if status=='approve' and rcommunity.status!='approved':
 
-				# Create Forum for this community
-				# cursor = connection.cursor()
-				# cursor.execute(''' select tree_id from forum_forum order by tree_id DESC limit 1''')
-				# tree_id = cursor.fetchone()[0] + 1
-				# slug = "-".join(rcommunity.name.lower().split())
-				# #return HttpResponse(str(tree_id))
-				# insert_stmt = (
-				# 	  "INSERT INTO forum_forum (created,updated,name,slug,description,link_redirects,type,link_redirects_count,display_sub_forum_list,lft,rght,tree_id,level,direct_posts_count,direct_topics_count) "
-				# 	  "VALUES (NOW(), NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-				# 	)
-				# data = (rcommunity.name, slug, rcommunity.desc, 0,0,0,1,1,2,tree_id,0,0,0)
-				# try:
-				# 	cursor.execute(insert_stmt, data)
-				# 	cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-				# 	forum_link = slug + '-' + str(cursor.fetchone()[0])
-				# except:
-				# 	errormessage = 'Can not create default forum for this community'
-				# 	return render(request, 'new_community.html', {'errormessage':errormessage})
-
+			if status=='accept':
+				name = request.POST['name']
+				desc = request.POST['description']
+				area = request.POST['area']
+				city = request.POST['city']
+				state = request.POST['state']
+				pincode = request.POST['pincode']
 				communitycreation = Community.objects.create(
-					name = rcommunity.name,
-					desc = rcommunity.desc,
-					area = rcommunity.area,
-					city = rcommunity.city,
-					state = rcommunity.state,
-					pincode = rcommunity.pincode,
-					# category = rcommunity.category,
+					name = name,
+					desc = desc,
+					area = area,
+					city = city,
+					state = state,
+					pincode = pincode,
 					created_by = user,
-					parent = parent
-					# forum_link = forum_link
+					parent = parent,
+					contributed_by = rcommunity.requestedby
+				)
 
-					)
-
-				#create the ether id for community
-				# create_community_ether(communitycreation)
-
-				# create_wiki_for_community(communitycreation)
+				requestcommunitycreationdetails = RequestCommunityCreationDetails.objects.create(
+					requestcommunity = rcommunity,
+					name = communitycreation.name,
+					desc = communitycreation.desc,
+					area = communitycreation.area,
+					city = communitycreation.city,
+					state = communitycreation.state,
+					pincode = communitycreation.pincode,
+					status = 'accepted',
+					actionby = user,
+					actionon = datetime.datetime.now()
+				)
+				Community.objects.create(name='Introduction', created_by = user, parent = communitycreation)
+				Community.objects.create(name='Architecture', created_by = user, parent = communitycreation)
+				Community.objects.create(name='Rituals', created_by = user, parent = communitycreation)
+				Community.objects.create(name='Ceremonies', created_by = user, parent = communitycreation)
+				Community.objects.create(name='Tales', created_by = user, parent = communitycreation)
+				Community.objects.create(name='More Information', created_by = user, parent = communitycreation)
+				
 				communityadmin = Roles.objects.get(name='community_admin')
 				communitymembership = CommunityMembership.objects.create(
 					user = user,
 					community = communitycreation,
 					role = communityadmin
-					)
+				)
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
-				rcommunity.status = 'approved'
-				rcommunity.save()
 
-			if status=='reject' and rcommunity.status!='rejected':
+			if status=='reject':
 				rcommunity.status = 'rejected'
 				rcommunity.save()
 

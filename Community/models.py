@@ -17,7 +17,7 @@ def get_file_path(instance, filename):
 
 
 class Community(MPTTModel):
-
+	
 		name = models.CharField(max_length=100)
 		area = models.CharField(max_length=30, null=True)
 		city = models.CharField(max_length=30, null=True)
@@ -35,6 +35,7 @@ class Community(MPTTModel):
 		tag_line = models.CharField(null=True, max_length=500)
 		created_at = models.DateTimeField(null=True, auto_now_add=True)
 		created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
+		contributed_by = models.ForeignKey(User,null =True, related_name='contributed_by')
 		forum_link = models.CharField(null=True, max_length=100)
 		forum = models.PositiveIntegerField(null=True)
 		parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
