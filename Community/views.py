@@ -223,7 +223,7 @@ def handle_community_creation_requests(request):
 					contributed_by = rcommunity.requestedby
 				)
 
-				requestcommunitycreationdetails = RequestCommunityCreationDetails.objects.create(
+				RequestCommunityCreationDetails.objects.create(
 					requestcommunity = rcommunity,
 					name = communitycreation.name,
 					desc = communitycreation.desc,
@@ -243,16 +243,29 @@ def handle_community_creation_requests(request):
 				Community.objects.create(name='More Information', created_by = user, parent = communitycreation)
 				
 				communityadmin = Roles.objects.get(name='community_admin')
-				communitymembership = CommunityMembership.objects.create(
+				CommunityMembership.objects.create(
 					user = user,
 					community = communitycreation,
 					role = communityadmin
 				)
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 
-			if status=='reject':
-				rcommunity.status = 'rejected'
-				rcommunity.save()
+			if status=='rejectExists':
+				reason = request.POST['reason']
+				rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=pk).order_by('-actionon')[:1]
+				RequestCommunityCreationDetails.objects.create(
+					requestcommunity = rcommunity,
+					name = rcom[0].name,
+					desc = rcom[0].desc,
+					area = rcom[0].area,
+					city = rcom[0].city,
+					state = rcom[0].state,
+					pincode = rcom[0].pincode,
+					status = 'rejected',
+					reason = reason,
+					actionby = user,
+					actionon = datetime.datetime.now()
+				)
 
 		# requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		rids = RequestCommunityCreation.objects.all().values_list('pk', flat=True)

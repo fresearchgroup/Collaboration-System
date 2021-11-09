@@ -124,12 +124,12 @@
                     </div>
                   </div>
 
-                  <a href="#modalRejectmodify" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject as PoW exists"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
+                  <a href="#modalRejectasExists" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
                   <div class="modal fade" id="modalRejectasExists" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h3 class="modal-title" id="exampleModalLabel">Rejecting as PoW exists</h3>
+                          <h3 class="modal-title" id="exampleModalLabel">Rejecting the requested Place of Worship</h3>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -138,11 +138,11 @@
                           <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
                             {% csrf_token %}
                             <input type='hidden' name = 'status' value='rejectExists'/>
-                            <input type='hidden' name = 'pk' value ={{req.pk}} />
-                            <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />            
+                            <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
+                            <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
                             <div class="form-group">
-                              <label for="reason-text" class="col-form-label">Enter the existing URL</label>
-                              <textarea class="form-control" id="reason-text"></textarea>                                              
+                              <label for="reason-text" class="col-form-label">Enter the reason for rejection</label>
+                              <textarea class="form-control" id="reason-text" name = 'reason' required></textarea>                                              
                             </div>
                         </div>
                         <div class="modal-footer">
