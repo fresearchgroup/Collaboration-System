@@ -191,6 +191,31 @@ class RequestCommunityCreationView(CreateView):
 				" a get_absolute_url method on the Model.")
 		return url
 
+def update_community_requests(request):
+	pk = request.POST['pk']
+	rcommunity=RequestCommunityCreation.objects.get(pk=pk)
+	user = request.user
+	name = request.POST['name']
+	desc = request.POST['description']
+	area = request.POST['area']
+	city = request.POST['city']
+	state = request.POST['state']
+	pincode = request.POST['pincode']
+
+	RequestCommunityCreationDetails.objects.create(
+		requestcommunity = rcommunity,
+		name = name,
+		desc = desc,
+		area = area,
+		city = city,
+		state = state,
+		pincode = pincode,
+		status = 'Requested',
+		actionby = user,
+		actionon = datetime.datetime.now()
+	)
+	return redirect('user_dashboard')
+
 def handle_community_creation_requests(request):
 
 	u = User.objects.get(username=request.user)
@@ -249,8 +274,8 @@ def handle_community_creation_requests(request):
 					role = communityadmin
 				)
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
-
-			if status=='rejectExists':
+		
+			if status=='modify' or status=='rejected':
 				reason = request.POST['reason']
 				rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=pk).order_by('-actionon')[:1]
 				RequestCommunityCreationDetails.objects.create(
@@ -261,7 +286,7 @@ def handle_community_creation_requests(request):
 					city = rcom[0].city,
 					state = rcom[0].state,
 					pincode = rcom[0].pincode,
-					status = 'rejected',
+					status = status,
 					reason = reason,
 					actionby = user,
 					actionon = datetime.datetime.now()
