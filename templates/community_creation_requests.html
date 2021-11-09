@@ -64,7 +64,7 @@
 
                             <div class="form-group">
                               <label for="name">Name</label>
-                              <input class="form-control form-control-sm" id="name" name = 'name' type="text" value={{ req.name }} required>
+                              <input class="form-control form-control-sm" id="name" name = 'name' type="text" value="{{ req.name }}" required>
                             </div>
                             <div class="form-group">
                               <label for="desc">Description</label>
@@ -72,19 +72,19 @@
                             </div>
                             <div class="form-group">
                               <label for="area">Area</label>
-                              <input class="form-control form-control-sm" id="area" name = 'area' type="text" value={{ req.area }} required>
+                              <input class="form-control form-control-sm" id="area" name = 'area' type="text" value="{{ req.area }}" required>
                             </div>
                             <div class="form-group">
                               <label for="city">City</label>
-                              <input class="form-control form-control-sm" id="city" name = 'city' type="text" value={{ req.city }} required>
+                              <input class="form-control form-control-sm" id="city" name = 'city' type="text" value="{{ req.city }}" required>
                             </div>
                             <div class="form-group">
                               <label for="state">State</label>
-                              <input class="form-control form-control-sm" id="state" name = 'state' type="text" value={{ req.state }} required>
+                              <input class="form-control form-control-sm" id="state" name = 'state' type="text" value="{{ req.state }}" required>
                             </div>
                             <div class="form-group">
                               <label for="pincode">Pincode</label>
-                              <input class="form-control form-control-sm" id="pincode" name = 'pincode' type="text" value={{ req.pincode }} required>
+                              <input class="form-control form-control-sm" id="pincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
                             </div>
                           </div>
                         <div class="modal-footer">
@@ -109,12 +109,12 @@
                         <div class="modal-body">
                           <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
                             {% csrf_token %}
-                            <input type='hidden' name = 'status' value='rejectModify'/>
+                            <input type='hidden' name = 'status' value='modify'/>
                             <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
-                            <input type='hidden' name = 'community_parent' value ={{req.parent.pk}} />            
+                            <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
                             <div class="form-group">
                               <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
-                              <textarea class="form-control" id="reason-text"></textarea>                                              
+                              <textarea class="form-control" id="reason-text" name='reason'></textarea>                                              
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -139,7 +139,7 @@
                         <div class="modal-body">
                           <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
                             {% csrf_token %}
-                            <input type='hidden' name = 'status' value='rejectExists'/>
+                            <input type='hidden' name = 'status' value='rejected'/>
                             <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
                             <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
                             <div class="form-group">
