@@ -22,6 +22,7 @@
         <th>Requested by</th>
         <th>Email</th>
         <th>Status</th>
+        <th>Reason</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -39,6 +40,7 @@
           <td>{{ req.requestcommunity.requestedby }}</td>
           <td>{{ req.requestcommunity.email }}</td>
           <td>{{ req.status }}</td>
+          <td>{{ req.reason }}</td>
           <td>
             {% if req.status == 'Requested' %}
                 <div class="btn-group" role="group" aria-label="Basic example">
