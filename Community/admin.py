@@ -20,8 +20,22 @@ admin.site.register(
 
 admin.site.register( CommunityMembership)
 admin.site.register( CommunityGroups)
-admin.site.register( RequestCommunityCreation)
-admin.site.register( RequestCommunityCreationDetails)
+# admin.site.register( RequestCommunityCreation)
+# admin.site.register( RequestCommunityCreationDetails)
+
+class RequestCommunityCreationAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'requestedby', 'email', 'parent', ]
+admin.site.register(RequestCommunityCreation, RequestCommunityCreationAdmin)
+
+class RequestCommunityCreationDetailsAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'requestcommunity_id', 'requestcommunity_parent', 'name',
+                    'desc', 'area',
+                    'city', 'state', 'pincode', 'actionby', 'actionon', 'reason', ]
+
+    def requestcommunity_parent(self, instance):
+        return instance.requestcommunity.parent                    
+admin.site.register(RequestCommunityCreationDetails, RequestCommunityCreationDetailsAdmin)
+
 admin.site.register(CommunityCourses)
 admin.site.register(CommunityMedia)
 
