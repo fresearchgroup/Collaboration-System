@@ -28,9 +28,9 @@ class RequestCommunityCreationAdmin(admin.ModelAdmin):
 admin.site.register(RequestCommunityCreation, RequestCommunityCreationAdmin)
 
 class RequestCommunityCreationDetailsAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'requestcommunity_id', 'requestcommunity_parent', 'name',
-                    'desc', 'area',
-                    'city', 'state', 'pincode', 'actionby', 'actionon', 'reason', ]
+    list_display = ['pk', 'requestcommunity_id', 'requestcommunity_parent', 
+                    'name','desc', 'area', 'city', 'state', 
+                    'pincode', 'actionby', 'actionon', 'status', 'reason', ]
 
     def requestcommunity_parent(self, instance):
         return instance.requestcommunity.parent                    
