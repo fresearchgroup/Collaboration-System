@@ -77,9 +77,10 @@
           <td>{{ req.actionon }}</td>
           <td>{{ req.reason }}</td>
           <td>
-            {% if req.status == 'Requested' and req.assignedto == request.user %}
-                <div class="btn-group" role="group" aria-label="Basic example">
+              <div class="btn-group" role="group" aria-label="Basic example">
 
+                {% if req.status == 'Requested' or req.status == 'modify' %}
+                  {% if req.assignedto == request.user %}
                   <a href="#modalaccept" data-toggle="modal"><i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i></a> 
                   <div class="modal fade" id="modalaccept" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
@@ -131,36 +132,6 @@
                     </div>
                   </div>
 
-                  <a href="#modalRejectmodify" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
-                  <div class="modal fade" id="modalRejectmodify" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
-                    <div class="modal-dialog text-left" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h3 class="modal-title" id="exampleModalLabel">Send back for modification</h3>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
-                            {% csrf_token %}
-                            <input type='hidden' name = 'status' value='modify'/>
-                            <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
-                            <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
-                            <div class="form-group">
-                              <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
-                              <textarea class="form-control" id="reason-text" name='reason'></textarea>                                              
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                          <button id="commReject" type="submit" class="btn btn-primary">Yes</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <a href="#modalRejectasExists" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
                   <div class="modal fade" id="modalRejectasExists" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
@@ -190,9 +161,42 @@
                       </div>
                     </div>
                   </div>
-
-                </div>
-            {% endif %}
+                  {% endif %}
+                {% endif %}
+                  
+                {% if req.status == 'Requested' and req.assignedto == request.user %}
+                  <a href="#modalRejectmodify" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
+                  <div class="modal fade" id="modalRejectmodify" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
+                    <div class="modal-dialog text-left" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h3 class="modal-title" id="exampleModalLabel">Send back for modification</h3>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
+                            {% csrf_token %}
+                            <input type='hidden' name = 'status' value='modify'/>
+                            <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
+                            <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
+                            <div class="form-group">
+                              <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
+                              <textarea class="form-control" id="reason-text" name='reason'></textarea>                                              
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                          <button id="commReject" type="submit" class="btn btn-primary">Yes</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            
           </td>
         </tr>
       {% endfor %}
