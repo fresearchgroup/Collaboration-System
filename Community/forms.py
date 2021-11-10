@@ -35,7 +35,7 @@ class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = RequestCommunityCreationDetails
 		# fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
-		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent']
+		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent', 'reason']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('cid', None)
@@ -54,6 +54,9 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
 		self.fields['parent'].widget.attrs['readonly'] = True
+		self.fields['reason'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
+		self.fields['reason'].required = False
+
 		if community:
 			community = Community.objects.get(pk=community)
 			self.fields['parent'].initial = community

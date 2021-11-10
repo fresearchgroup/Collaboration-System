@@ -201,6 +201,7 @@ def update_community_requests(request):
 	city = request.POST['city']
 	state = request.POST['state']
 	pincode = request.POST['pincode']
+	reason = request.POST['reason']
 
 	RequestCommunityCreationDetails.objects.create(
 		requestcommunity = rcommunity,
@@ -212,6 +213,7 @@ def update_community_requests(request):
 		pincode = pincode,
 		status = 'Requested',
 		actionby = user,
+		reason = reason,
 		actionon = datetime.datetime.now()
 	)
 	return redirect('user_dashboard')

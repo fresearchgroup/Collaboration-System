@@ -219,7 +219,7 @@ var videoPublished = {{videopublished}};
         <th>State</th>
         <th>Pincode</th>
         <th>Status</th>
-        <th>Reason</th>
+        <th>Comments</th>
       </tr>
     </thead>
     <tbody>
@@ -274,6 +274,10 @@ var videoPublished = {{videopublished}};
                         <div class="form-group">
                           <label for="pincode">Pincode</label>
                           <input class="form-control form-control-sm" id="pincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="reason">Please provide additional comments here if needed</label>
+                          <textarea class="form-control is-invalid" id="reason" name = 'reason'></textarea>
                         </div>
                       </div>
                     <div class="modal-footer">
