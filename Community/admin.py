@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreationAssignee, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
 from django.db.models import Manager
@@ -24,7 +24,7 @@ admin.site.register( CommunityGroups)
 # admin.site.register( RequestCommunityCreationDetails)
 
 class RequestCommunityCreationAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'requestedby', 'email', 'parent', ]
+    list_display = ['pk', 'requestedby', 'requestedon', 'email', 'parent', ]
 admin.site.register(RequestCommunityCreation, RequestCommunityCreationAdmin)
 
 class RequestCommunityCreationDetailsAdmin(admin.ModelAdmin):
@@ -35,6 +35,10 @@ class RequestCommunityCreationDetailsAdmin(admin.ModelAdmin):
     def requestcommunity_parent(self, instance):
         return instance.requestcommunity.parent                    
 admin.site.register(RequestCommunityCreationDetails, RequestCommunityCreationDetailsAdmin)
+
+class RequestCommunityCreationAssigneeAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'requestcommunity_id', 'assignedto', 'assignedon', ]
+admin.site.register(RequestCommunityCreationAssignee, RequestCommunityCreationAssigneeAdmin)
 
 admin.site.register(CommunityCourses)
 admin.site.register(CommunityMedia)
