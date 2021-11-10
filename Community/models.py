@@ -104,11 +104,17 @@ class CommunityGroups(models.Model):
 
 class RequestCommunityCreation(models.Model):
 	requestedby = models.ForeignKey(User, null=True)
+	requestedon = models.DateTimeField(null=True, auto_now_add=True)
 	email = models.CharField(null=True, max_length=100)
 	parent = models.ForeignKey(Community, null=True, related_name='communityparent')
 
 	# def __str__(self):
 	# 	return self.requestedby
+
+class RequestCommunityCreationAssignee(models.Model):
+	requestcommunity = models.ForeignKey(RequestCommunityCreation, related_name='requestcommunitycreationassignee')
+	assignedto = models.ForeignKey(User, null=True)
+	assignedon = models.DateTimeField(null=True, auto_now_add=True)
 
 class RequestCommunityCreationDetails(models.Model):
 	requestcommunity = models.ForeignKey(RequestCommunityCreation, related_name='requestcommunitycreation')
