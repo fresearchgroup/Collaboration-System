@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
 from rest_framework import viewsets
 # from .models import CommunityGroups
 from UserRolesPermission.views import user_dashboard
@@ -167,12 +167,25 @@ class RequestCommunityCreationView(CreateView):
 		parent = Community.objects.get(name=cid)
 
 		rcommunity = RequestCommunityCreation.objects.create(
+			requestedon = datetime.datetime.now(),
 			requestedby = self.request.user,
 			email = self.request.user.email,
 			parent = parent
 		)
 		self.object.requestcommunity = rcommunity
 		self.object.save()
+
+		curators = User.objects.filter(groups__name='curator').exclude(username='admin').order_by('pk')
+		curatorCount = curators.count()
+		requestCount = RequestCommunityCreation.objects.all().count()
+		curatorNo = requestCount % curatorCount
+		assignedto = curators[curatorNo]
+
+		RequestCommunityCreationAssignee.objects.create(
+			requestcommunity = rcommunity,
+			assignedto = assignedto,
+			assignedon = datetime.datetime.now()
+		)
 		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)
 
@@ -294,13 +307,18 @@ def handle_community_creation_requests(request):
 					actionon = datetime.datetime.now()
 				)
 
-		# requestcommunitycreation=RequestCommunityCreation.objects.filter(status='Request')
 		rids = RequestCommunityCreation.objects.all().values_list('pk', flat=True)
 		requestcommunitycreation = []
 		for i in rids:
 			rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=i).order_by('-actionon')[:1]
+			assignees = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=i).order_by('-assignedon')[:1]
 			for r in rcom:
+				r.assignedto = assignees[0].assignedto
+				r.assignedon = assignees[0].assignedon
 				requestcommunitycreation.append(r)
+			for r in requestcommunitycreation:
+				print(r.name)
+				print(r.assignedto)
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 	else:
 		return redirect('login')
