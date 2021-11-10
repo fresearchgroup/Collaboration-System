@@ -244,6 +244,13 @@ def handle_community_creation_requests(request):
 			parent = Community.objects.get(pk=community_parent)
 			status = request.POST['status']
 
+			if status == 'changeassignee':
+				RequestCommunityCreationAssignee.objects.create(
+					requestcommunity = rcommunity,
+					assignedto = user,
+					assignedon = datetime.datetime.now()
+				)
+
 			if status=='accept':
 				name = request.POST['name']
 				desc = request.POST['description']
@@ -316,9 +323,6 @@ def handle_community_creation_requests(request):
 				r.assignedto = assignees[0].assignedto
 				r.assignedon = assignees[0].assignedon
 				requestcommunitycreation.append(r)
-			for r in requestcommunitycreation:
-				print(r.name)
-				print(r.assignedto)
 		return render(request, 'community_creation_requests.html',{'requestcommunitycreation':requestcommunitycreation})
 	else:
 		return redirect('login')
