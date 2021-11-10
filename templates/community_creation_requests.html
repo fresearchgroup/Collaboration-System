@@ -28,12 +28,12 @@
         <tr>
           <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a></td>
           <td>
-            Name: {{ req.name }} <br />
-            Description: {{ req.desc }} <br />
-            Area: {{ req.area }} <br />
-            City: {{ req.city }} <br />
-            State: {{ req.state }} <br />
-            Pincode: {{ req.pincode }}
+            <b>Name:</b> {{ req.name }} <br />
+            <b>Description:</b> {{ req.desc }} <br />
+            <b>Area:</b> {{ req.area }} <br />
+            <b>City:</b> {{ req.city }} <br />
+            <b>State:</b> {{ req.state }} <br />
+            <b>Pincode:</b> {{ req.pincode }}
           </td>
           <td>
             {{ req.requestcommunity.requestedby }} <br />
@@ -48,7 +48,7 @@
           <td>{{ req.actionon }}</td>
           <td>{{ req.reason }}</td>
           <td>
-            {% if req.status == 'Requested' %}
+            {% if req.status == 'Requested' and req.assignedto == request.user %}
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                   <a href="#modalaccept" data-toggle="modal"><i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i></a> 
