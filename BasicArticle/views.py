@@ -253,12 +253,12 @@ class ArticleEditView(UpdateView):
 				return super(ArticleEditView, self).form_invalid(form)
 		self.object.save()
 		form.save_m2m()
-		if self.is_visible():
-			self.process_visible()
-		if self.is_publishable():
-			self.process_publishable()
-		if self.object.state.final:
-			self.process_final()
+		# if self.is_visible():
+		# 	self.process_visible()
+		# if self.is_publishable():
+		# 	self.process_publishable()
+		# if self.object.state.final:
+		# 	self.process_final()
 		return super(ArticleEditView, self).form_valid(form)
 
 	def is_communitymember(self, request, community):
