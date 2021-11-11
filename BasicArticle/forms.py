@@ -16,7 +16,7 @@ class ArticleUpdateForm(forms.ModelForm):
 			# fields = ['title', 'image', 'state', 'tags']
 			pass
 		else:
-			fields = ['body', 'state', 'tags']
+			fields = ['body', 'tags']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'state', 'tags']
 
 
@@ -39,12 +39,12 @@ class ArticleUpdateForm(forms.ModelForm):
 		# self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
 		# self.fields['image'].required = False
 		self.fields['body'].widget.attrs.update({'class': 'form-control'})
-		self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		#self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].required = False
-		states = getStatesCommunity(self.instance.state.id, role)
-		self.fields['state'].queryset = States.objects.filter(name__in=states)
-		self.fields['state'].required = False
+		#states = getStatesCommunity(self.instance.state.id, role)
+		#self.fields['state'].queryset = States.objects.filter(name__in=states)
+		#self.fields['state'].required = False
 
 	def clean(self):
 		cleaned_data = super(ArticleUpdateForm, self).clean()
