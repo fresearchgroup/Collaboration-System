@@ -82,7 +82,7 @@ def community_view(request, pk):
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
 	pubarticles = CommunityArticles.objects.raw('select ba.id, ba.body, ba.title, workflow_states.name as state from  workflow_states, BasicArticle_articles as ba , Community_communityarticles as ca  where ba.state_id=workflow_states.id and  ca.article_id =ba.id and ca.community_id=%s and ba.state_id in (select id from workflow_states as w where w.name = "publish");', [community.pk])
-	pubarticlescount = len(list(pubarticles))
+	#pubarticlescount = len(list(pubarticles))
 
 	top_contributors = CommunityArticles.objects.values('user__username').annotate(num=Count('user__username')).filter(community=community).order_by('-num')[:8]
 	for top in top_contributors:
@@ -102,7 +102,7 @@ def community_view(request, pk):
 			user_profile = "No Image available"
 	children = community.get_children().order_by('-contribution_status')
 	childrencount = children.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'pubarticlescount':pubarticlescount, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
