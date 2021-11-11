@@ -125,7 +125,7 @@ def user_dashboard(request):
         videopublished = []
 
         for i in range(1, 13):
-            articlespublished.append(Articles.objects.filter(created_by=request.user, state__final=True, created_at__year=yearby, created_at__month=i).count())
+            articlespublished.append(Articles.objects.filter(created_by=request.user, created_at__year=yearby, created_at__month=i).count())
             imagepublished.append(Media.objects.filter(created_by=request.user, mediatype='Image', state__final=True, created_at__year=yearby, created_at__month=i).count())
             audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__final=True, created_at__year=yearby, created_at__month=i).count())
             videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__final=True, created_at__year=yearby, created_at__month=i).count())
@@ -142,13 +142,13 @@ def badges_progress_dashboard(request):
 
 def home(request):
 	state = States.objects.get(name='publish')
-	articles=Articles.objects.filter(state=state).order_by('-views')[:3]
-	articlesdate=Articles.objects.filter(state=state).order_by('-created_at')[:3]
+	articles=Articles.objects.all().order_by('-views')[:3]
+	articlesdate=Articles.objects.all().order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
 	userphoto=ProfileImage.objects.all().order_by('?')[:15]
 	countcommunity = Community.objects.filter(parent = None).count()
 	countsubcomm = Community.objects.filter(~Q(parent = None)).count()
-	countarticles = Articles.objects.filter(state=state).count()
+	countarticles = Articles.objects.all().count()
 	countusers = User.objects.all().count()
 	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
