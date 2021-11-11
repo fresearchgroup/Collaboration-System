@@ -126,9 +126,9 @@ def user_dashboard(request):
 
         for i in range(1, 13):
             articlespublished.append(Articles.objects.filter(created_by=request.user, created_at__year=yearby, created_at__month=i).count())
-            imagepublished.append(Media.objects.filter(created_by=request.user, mediatype='Image', state__final=True, created_at__year=yearby, created_at__month=i).count())
-            audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', state__final=True, created_at__year=yearby, created_at__month=i).count())
-            videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', state__final=True, created_at__year=yearby, created_at__month=i).count())
+            imagepublished.append(Media.objects.filter(created_by=request.user, mediatype='Image', created_at__year=yearby, created_at__month=i).count())
+            audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', created_at__year=yearby, created_at__month=i).count())
+            videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', created_at__year=yearby, created_at__month=i).count())
 
         return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number})
     else:
