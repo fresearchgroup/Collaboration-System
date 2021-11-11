@@ -94,6 +94,7 @@ class MediaCreateView(CreateView):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
+		statehistory = MediaStates.objects.filter(media=gcmedia.media)
 		state = get_state_media(gcmedia.media)
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
@@ -106,7 +107,7 @@ def media_view(request, pk):
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state})
+	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory})
 
 class MediaUpdateView(UpdateView):
 	form_class = MediaUpdateForm

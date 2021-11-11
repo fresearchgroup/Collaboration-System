@@ -252,6 +252,34 @@
 
 </div>
 <br />
+
+<h2>State history</h2>
+
+  <table id="mediaHistory" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+          <th style="color:white">Status</th>
+          <th style="color:white">Action by</th>
+          <th style="color:white">Action on</th>
+        </tr>
+    </thead>
+      <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for history in statehistory %}
+          <tr>
+            <td>{{ history.state.name }}</td>
+            <td>{{ history.changedby.username }}</td>
+            <td>{{ history.changedon }}</td>
+          </tr>
+        {% endfor %}
+        {% endautoescape%}
+      </tbody>
+    </table>
+    <br /><br /><br />
+
+
+
+
 {% endblock %} 
 {% block javascript %} 
 {% endblock %}
