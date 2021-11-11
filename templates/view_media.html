@@ -38,7 +38,7 @@
             <a class="nav-link " href="{% url 'media_view' gcmedia.media.pk %}">View</a>
           </li>
           {% if user.is_authenticated %} 
-            {% if gcmedia.media.state.name != 'publish'%}
+            {% if state.name != 'publish'%}
               <li class="nav-item ">
                 <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' gcmedia.media.pk %}">Edit</a>
               </li>
@@ -119,7 +119,7 @@
       </h4> -->
 
       <h4>
-        {% if gcmedia.media.state.name == 'draft' %}
+        {% if state.name == 'draft' %}
           <i class="fa fa-cut"></i> Not submitted <br /><br />
           <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                
           <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog" aria-labelledby="SubmitArticleModal" aria-hidden="true">
@@ -160,7 +160,7 @@
             </div>
           </div>
         {% endif %} 
-        {% if gcmedia.media.state.name == 'submitted' %}
+        {% if state.name == 'submitted' %}
           <i class="fa fa-arrow-circle-right"></i> Submitted
           {% for group_for in request.user.groups.all %}
             {% if group_for.name == 'curator' %}
@@ -223,13 +223,13 @@
             {% endif %}
           {% endfor %}
         {% endif %} 
-        {% if gcmedia.media.state.name == 'accepted' %}
+        {% if state.name == 'accepted' %}
         <i class="fa fa-check-circle"></i> Accepted
         {% endif %} 
-        {% if gcmedia.media.state.name == 'rejected' %}
+        {% if state.name == 'rejected' %}
         <i class="fa fa-times-circle"></i> Rejected
         {% endif %} 
-        {% if gcmedia.media.state.name == 'publish' %}
+        {% if state.name == 'publish' %}
         <i class="fa fa-newspaper-o"></i> Published
         {% endif %}
       </h4>

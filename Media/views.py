@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .models import Media
+from .models import Media, MediaStates
 from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
 from workflow.views import canEditResourceCommunity, canEditResource, getStatesCommunity
@@ -12,6 +12,7 @@ from django.views.generic import CreateView, UpdateView
 from workflow.models import States
 from .forms import *
 from django.contrib.auth.models import User
+import datetime
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -55,11 +56,18 @@ class MediaCreateView(CreateView):
 		self.object = form.save(commit=False)
 		self.object.mediatype = self.kwargs['mediatype']
 		self.object.created_by = self.request.user
-		self.object.state = States.objects.get(initial=True)
+		state = States.objects.get(initial=True)
 		self.object.save()
         
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityMedia.objects.create(media=self.object, user=self.request.user, community=community)
+
+		MediaStates.objects.create(
+			media = self.object,
+			state = state,
+			changedby = self.request.user,
+			changedon = datetime.datetime.now()
+		)
 
 		return super(MediaCreateView, self).form_valid(form)
 
@@ -86,6 +94,7 @@ class MediaCreateView(CreateView):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
+		state = get_state_media(gcmedia.media)
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
 	# if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
@@ -97,7 +106,7 @@ def media_view(request, pk):
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia})
+	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state})
 
 class MediaUpdateView(UpdateView):
 	form_class = MediaUpdateForm
@@ -121,9 +130,9 @@ class MediaUpdateView(UpdateView):
 			u = User.objects.get(username=request.user)
 			if self.object.created_by != request.user and not (u.groups.filter(name='curator').exists()):
 				return redirect('home')
-			if self.object.state.final:
-				messages.warning(request, 'Published content are not editable.')
-				return redirect('media_view',pk=self.object.pk)
+			# if self.object.state.final:
+			# 	messages.warning(request, 'Published content are not editable.')
+			# 	return redirect('media_view',pk=self.object.pk)
 			community = self.get_community()
 			# if self.is_communitymember(request, community):
 			# 	role = self.get_communityrole(request, community)
@@ -132,7 +141,8 @@ class MediaUpdateView(UpdateView):
 			# 		return response
 			# 	return redirect('media_view',pk=self.object.pk)
 			# return redirect('community_view',pk=community.pk)
-			if canEditResource(self.object.state.name, self.object, request):
+			state = get_state_media(self.object)
+			if canEditResource(state.name, self.object, request):
 				response=super(MediaUpdateView, self).get(request, *args, **kwargs)
 				return response
 			return redirect('media_view',pk=self.object.pk)
@@ -228,6 +238,14 @@ def submit_media(request):
 		state = States.objects.get(name='submitted')
 		pk = request.POST['pk']
 		media = Media.objects.get(pk=pk)
-		media.state = state
-		media.save()
+		MediaStates.objects.create(
+			media = media,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now()
+		)
 		return redirect('media_view',pk=pk)
+
+def get_state_media(media):
+	mediastates = MediaStates.objects.filter(media=media).order_by('-changedon')[:1]
+	return mediastates[0].state
