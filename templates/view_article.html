@@ -68,19 +68,19 @@
             {% if article.group.name %}
             <li><i class="fa fa-users"></i> <a href="{% url 'group_view' article.group.pk %}">{{article.group.name}}</a> Group</li>
             {% endif %}
-            {% if article.article.state.name == 'draft' %}
+            {% if state.name == 'draft' %}
             <li><i class="fa fa-cut"></i> Not submitted </li>
             {% endif %} 
-            {% if article.article.state.name == 'submitted' %}
+            {% if state.name == 'submitted' %}
             <li><i class="fa fa-arrow-circle-right"></i> Submitted </li>
             {% endif %} 
-            {% if article.article.state.name == 'accepted' %}
+            {% if state.name == 'accepted' %}
             <li><i class="fa fa-check-circle"></i> Accepted </li>
             {% endif %} 
-            {% if article.article.state.name == 'rejected' %}
+            {% if state.name == 'rejected' %}
             <li><i class="fa fa-times-circle"></i> Rejected </li>
             {% endif %} 
-            {% if article.article.state.name == 'publish' %}
+            {% if state.name == 'publish' %}
             <li><i class="fa fa-newspaper-o"></i> Published </li>
             {% endif %}
             {%if user.is_authenticated %}
@@ -129,7 +129,7 @@
           {% endif %}
           {% endautoescape%} -->
           <p style="margin-bottom: 20px;"></p>
-          {% if article.article.state.name == 'draft' %}
+          {% if state.name == 'draft' %}
             <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                
             <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog" aria-labelledby="SubmitArticleModal" aria-hidden="true">
               <div class="modal-dialog text-left" role="document">

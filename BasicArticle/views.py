@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Articles, ArticleViewLogs
+from .models import ArticleStates, Articles, ArticleViewLogs
 from django.views.generic import CreateView, UpdateView
 from reversion_compare.views import HistoryCompareDetailView
 from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
@@ -91,6 +91,7 @@ def view_article(request, pk):
 	"""
 	try:
 		article = CommunityArticles.objects.get(article=pk)
+		state = get_state_article(article.article)
 		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 		u = User.objects.get(username=request.user)
 		if article.article.created_by != request.user and not (u.groups.filter(name='curator').exists()):
@@ -102,7 +103,7 @@ def view_article(request, pk):
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
 	
-	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
+	return render(request, 'view_article.html', {'article': article, 'state': state, 'count':count, 'is_fav':is_fav})
 
 def reports_article(request, pk):
 	try:
@@ -143,12 +144,17 @@ class ArticleCreateView(CreateView):
 	def form_valid(self, form):
 		self.object = form.save(commit=False)
 		self.object.created_by = self.request.user
-		self.object.state = States.objects.get(initial=True)
+		state = States.objects.get(initial=True)
 		self.object.save()
 		form.save_m2m()
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
-		
+		ArticleStates.objects.create(
+			article = self.object,
+			state = state,
+			changedby = self.request.user,
+			changedon = datetime.datetime.now()
+		)
 		if settings.REALTIME_EDITOR:
 			try:
 				create_article_ether_community(community.pk, self.object)
@@ -199,9 +205,9 @@ class ArticleEditView(UpdateView):
 			u = User.objects.get(username=request.user)
 			if self.object.created_by != request.user and not (u.groups.filter(name='curator').exists()):				
 				return redirect('home')
-			if self.object.state.final:
-				messages.warning(request, 'Published content are not editable.')
-				return redirect('article_view',pk=self.object.pk)
+			# if self.object.state.final:
+			# 	messages.warning(request, 'Published content are not editable.')
+			# 	return redirect('article_view',pk=self.object.pk)
 			community = self.get_community()
 
 			# if self.is_communitymember(request, community):
@@ -214,7 +220,8 @@ class ArticleEditView(UpdateView):
 			# 		return response
 			# 	return redirect('article_view',pk=self.object.pk)
 			# return redirect('commnity_view',pk=community.pk)
-			if canEditResource(self.object.state.name, self.object, request):
+			state = get_state_article(self.object)
+			if canEditResource(state.name, self.object, request):
 				response=super(ArticleEditView, self).get(request, *args, **kwargs)
 				if settings.REALTIME_EDITOR:
 					sessionid = create_session_community(request, community.id)
@@ -371,7 +378,14 @@ def submit_article(request):
 		state = States.objects.get(name='submitted')
 		pk = request.POST['pk']
 		article = Articles.objects.get(pk=pk)
-		article.state = state
-		article.save()
+		ArticleStates.objects.create(
+			article = article,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now()
+		)
 		return redirect('article_view',pk=pk)
 
+def get_state_article(article):
+	articlestates = ArticleStates.objects.filter(article=article).order_by('-changedon')[:1]
+	return articlestates[0].state
