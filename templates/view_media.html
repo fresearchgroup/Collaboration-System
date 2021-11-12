@@ -261,6 +261,7 @@
           <th style="color:white">Status</th>
           <th style="color:white">Action by</th>
           <th style="color:white">Action on</th>
+          <th style="color:white">Comments</th>
         </tr>
     </thead>
       <tbody>
@@ -270,6 +271,7 @@
             <td>{{ history.state.name }}</td>
             <td>{{ history.changedby.username }}</td>
             <td>{{ history.changedon }}</td>
+            <td>{{ history.comments }}</td>
           </tr>
         {% endfor %}
         {% endautoescape%}

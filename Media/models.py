@@ -43,3 +43,4 @@ class MediaStates(models.Model):
 	state = models.ForeignKey(States, null=True,related_name='mediaworkflow')
 	changedby = models.ForeignKey(User,null=True,related_name='mediachangedby')
 	changedon = models.DateTimeField(null=True, auto_now_add=True)
+	comments = models.TextField(null=True)
