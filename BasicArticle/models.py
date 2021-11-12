@@ -40,6 +40,7 @@ class ArticleStates(models.Model):
 	state = models.ForeignKey(States, null=True,related_name='articleworkflow')
 	changedby = models.ForeignKey(User,null=True,related_name='articlechangedby')
 	changedon = models.DateTimeField(null=True, auto_now_add=True)
+	comments = models.TextField(null=True)
 
 class ArticleViewLogs(models.Model):
     article = models.ForeignKey(Articles, related_name='articleviews')
