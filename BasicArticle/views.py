@@ -154,7 +154,8 @@ class ArticleCreateView(CreateView):
 			article = self.object,
 			state = state,
 			changedby = self.request.user,
-			changedon = datetime.datetime.now()
+			changedon = datetime.datetime.now(),
+			body = self.object.body
 		)
 		if settings.REALTIME_EDITOR:
 			try:
@@ -261,6 +262,14 @@ class ArticleEditView(UpdateView):
 				return super(ArticleEditView, self).form_invalid(form)
 		self.object.save()
 		form.save_m2m()
+		state = get_state_article(self.object)
+		ArticleStates.objects.create(
+			article = self.object,
+			state = state,
+			changedby = self.request.user,
+			changedon = datetime.datetime.now(),
+			body = self.object.body
+		)
 		# if self.is_visible():
 		# 	self.process_visible()
 		# if self.is_publishable():
@@ -383,7 +392,8 @@ def submit_article(request):
 			article = article,
 			state = state,
 			changedby = request.user,
-			changedon = datetime.datetime.now()
+			changedon = datetime.datetime.now(),
+			body = article.body
 		)
 		return redirect('article_view',pk=pk)
 
