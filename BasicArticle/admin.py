@@ -28,5 +28,13 @@ class VersionedArticleAdmin(CompareVersionAdmin):
 
 
 admin.site.register(Articles, VersionedArticleAdmin)
-admin.site.register(ArticleStates)
+
+class ArticleStatesAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'article_id', 'state_name', 'changedby', 'changedon', ]
+
+    def state_name(self, instance):
+        return instance.state.name 
+
+admin.site.register(ArticleStates, ArticleStatesAdmin)
+
 admin.site.register(ArticleViewLogs, VersionedArticleAdmin)
