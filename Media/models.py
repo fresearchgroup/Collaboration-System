@@ -28,6 +28,7 @@ class Media(models.Model):
 	mediafile = models.FileField(null=True,upload_to=get_file_path)
 	medialink = models.CharField(max_length=300, null=True)
 	metadata = models.ForeignKey(Metadata, null=True,related_name='media_metadata')
+	state = models.ForeignKey(States, null=True,related_name='mediacurrentstate')
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='media_author')
 	published_on=models.DateTimeField(null=True)

@@ -57,6 +57,7 @@ class MediaCreateView(CreateView):
 		self.object.mediatype = self.kwargs['mediatype']
 		self.object.created_by = self.request.user
 		state = States.objects.get(initial=True)
+		self.object.state = state
 		self.object.save()
         
 		community = Community.objects.get(pk=self.kwargs['pk'])
@@ -239,6 +240,8 @@ def submit_media(request):
 		state = States.objects.get(name='submitted')
 		pk = request.POST['pk']
 		media = Media.objects.get(pk=pk)
+		media.state = state
+		media.save()
 		MediaStates.objects.create(
 			media = media,
 			state = state,
