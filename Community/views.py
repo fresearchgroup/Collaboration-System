@@ -897,6 +897,8 @@ def curate_content(request):
 				state = States.objects.get(name='reviewSarted')
 			if status == 'accept':
 				state = States.objects.get(name='accepted')
+			if status == 'modify':
+				state = States.objects.get(name='sentToModify')
 			if status == 'reject':
 				state = States.objects.get(name='rejected')
 

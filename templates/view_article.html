@@ -227,12 +227,13 @@
                   <div class="modal-dialog text-left" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
+                        <h3 class="modal-title" id="exampleModalLabel">Accept Contribution</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
                       <div class="modal-body">
+                        Are you sure you want to accept this contribution?
                         <form method = "post" action ="{% url 'curate_content' %}">
                           {% csrf_token %}
                           <input type='hidden' name = 'status' value='accept'/>
@@ -249,12 +250,12 @@
                     </div>
                   </div>
                 </div>
-                <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Reject</button>
+                <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Modify</button>
                 <div class="modal fade" id="modalRejectArticle" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                   <div class="modal-dialog text-left" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLabel">Are you sure</h3>
+                        <h3 class="modal-title" id="exampleModalLabel">Send back for modification</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -262,11 +263,11 @@
                       <div class="modal-body">
                         <form method = "post" action ="{% url 'curate_content' %}">
                           {% csrf_token %}
-                          <input type='hidden' name = 'status' value='reject'/>
+                          <input type='hidden' name = 'status' value='modify'/>
                           <input type='hidden' name = 'type' value ='Article' />
                           <input type='hidden' name = 'pk' value ={{article.article.pk}} />
                           <div class="form-group">
-                            <label for="reason-text" class="col-form-label">Reason</label>
+                            <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
                             <textarea class="form-control" id="reason-text"></textarea>                                              
                           </div>
                       </div>
