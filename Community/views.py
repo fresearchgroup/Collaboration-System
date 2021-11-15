@@ -893,14 +893,26 @@ def curate_content(request):
 			pk = request.POST['pk']
 			conttype = request.POST['type']
 			status = request.POST['status']
+			if status == 'markreview':
+				state = States.objects.get(name='reviewSarted')
 			if status == 'accept':
 				state = States.objects.get(name='accepted')
 			if status == 'reject':
 				state = States.objects.get(name='rejected')
+
 			if conttype == 'Article':
 				article = Articles.objects.get(pk=pk)
 				article.state = state
 				article.save()
+				ArticleStates.objects.create(
+					article = article,
+					state = state,
+					changedby = request.user,
+					changedon = datetime.datetime.now(),
+					body = article.body
+				)
+				return redirect('article_view',pk=pk)
+
 			if conttype == 'Media':
 				media = Media.objects.get(pk=pk)
 				media.state = state

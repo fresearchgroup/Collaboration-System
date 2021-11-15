@@ -192,6 +192,36 @@
           {% for group_for in request.user.groups.all %}
             {% if group_for.name == 'curator' %}
               {% if article.article.state.name == 'submitted' %}
+                <button type="radio" name="articlemarkreview" value="markreview" class="btn btn-success" data-toggle="modal" data-target="#modalarticlemarkreview" data-whatever="@mdo" id="articlemarkreview">Mark for review</button>
+                <div class="modal fade" id="modalarticlemarkreview" tabindex="-1" role="dialog" aria-labelledby="modalarticlemarkreview" aria-hidden="true">
+                  <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel">Start reviewing</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure that you want to start reviewing this content? Once this review process begins the contributor will not be allowed to edit it.
+                        <form method = "post" action ="{% url 'curate_content' %}">
+                          {% csrf_token %}
+                          <input type='hidden' name = 'status' value='markreview'/>
+                          <input type='hidden' name = 'type' value='Article'/>
+                          <input type='hidden' name = 'pk' value ={{article.article.pk}} />
+                          <div class="form-group">
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button id="articlestartreview" type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              {% if article.article.state.name == 'reviewSarted' %}
                 <button type="radio" name="articleacceptstatus" value="accept" class="btn btn-success" data-toggle="modal" data-target="#modalAcceptArticle" data-whatever="@mdo" id="articleacceptstatus" style="background-color: green;">Accept</button>
                 <div class="modal fade" id="modalAcceptArticle" tabindex="-1" role="dialog" aria-labelledby="AcceptArticleModal" aria-hidden="true">
                   <div class="modal-dialog text-left" role="document">
