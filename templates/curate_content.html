@@ -12,17 +12,14 @@
         <tr style="background-color:#89216B">
           <th style="color:white">Faith</th>
           <th style="color:white">Place of Worship</th>
-          <th style="color:white">Location</th>
           <th style="color:white">Section</th>
           <th style="color:white">Type</th>
-          <th style="color:white">Contributed by</th>
-          <th style="color:white">Contributed on</th>
+          <th style="color:white">Contributed</th>
           <th style="color:white">Status</th>
-          <th style="color:white">Action On</th>
-          <th style="color:white">Action By</th>
+          <th style="color:white">Action</th>
           <th style="color:white">Assignee</th>
           <th style="color:white">Comments</th>
-          <th style="color:white">Actions</th>
+          <th style="color:white"></th>
         </tr>
     </thead>
       <tbody>
@@ -30,21 +27,20 @@
         {% for content in lstContent %}
             <tr>
               <td><a href="{% url 'community_view' content.community.parent.parent.pk %}">{{content.community.parent.parent.name}}</a></td>
-              <td><a href="{% url 'community_view' content.community.parent.pk %}">{{content.community.parent.name}}</a></td>
-                <td>
-                    {% if content.community.parent.area %}
-                        {{content.community.parent.area}}, 
-                    {% endif %}
-                    {% if content.community.parent.city %}
-                        {{content.community.parent.city}}, 
-                    {% endif %}
-                    {% if content.community.parent.state %}
-                        {{content.community.parent.state}}, 
-                    {% endif %}
-                    {% if content.community.parent.pincode %}
-                        {{content.community.parent.pincode}}
-                    {% endif %}
-                </td>
+              <td>
+                <a href="{% url 'community_view' content.community.parent.pk %}">{{content.community.parent.name}}</a>
+                {% if content.community.parent.area %}
+                    {{content.community.parent.area}}, 
+                {% endif %}
+                {% if content.community.parent.city %}
+                    {{content.community.parent.city}}, 
+                {% endif %}
+                {% if content.community.parent.state %}
+                    {{content.community.parent.state}}, 
+                {% endif %}
+                {% if content.community.parent.pincode %}
+                    {{content.community.parent.pincode}}
+                {% endif %}
                 <td>{{content.community.name}}</td>
                 <td>
                     {% if content.type == 'Article' %}
@@ -57,14 +53,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if content.type == 'Article' %}
-                        {{content.user.username}}
-                    {% endif %}
-                    {% if content.type == 'Media' %}
-                        {{content.user.username}}
-                    {% endif %}                    
-                </td>
-                <td>
+                    {{content.user.username}} <br />
                     {% if content.type == 'Article' %}
                         {{content.article.created_at}}
                     {% endif %}
@@ -89,10 +78,8 @@
                     {% endif %}
                 </td>
                 <td>
+                    {{content.changedby}} <br />
                     {{content.changedon}}
-                </td>
-                <td>
-                    {{content.changedby}}
                 </td>
                 <td>
                     {{content.assignedto}}
