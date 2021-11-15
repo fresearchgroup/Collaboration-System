@@ -395,6 +395,27 @@ def submit_article(request):
 			changedon = datetime.datetime.now(),
 			body = article.body
 		)
+
+		commparentpk = request.POST['commparentpk']
+		community = Community.objects.get(pk=commparentpk)
+		role = Roles.objects.get(name='curator')
+
+		if CommunityMembership.objects.filter(community=community, role=role).exists() :
+			# Send email to curator
+			pass
+		else:
+			curators = User.objects.filter(groups__name='curator').exclude(username='admin').order_by('pk')
+			curatorCount = curators.count()
+			level1commCount = Community.objects.filter(level=1).count()
+			curatorNo = level1commCount % curatorCount
+			assignedto = curators[curatorNo]
+			CommunityMembership.objects.create(
+				user = assignedto,
+				community = community,
+				role = role,
+				assignedon = datetime.datetime.now()
+			)
+
 		return redirect('article_view',pk=pk)
 
 def get_state_article(article):

@@ -161,6 +161,7 @@
                     <form method = "post" action ="{% url 'submit_article' %}">
                       {% csrf_token %}
                       <input type='hidden' name = 'pk' value ={{article.article.pk}} />
+                      <input type='hidden' name = 'commparentpk' value ={{article.community.parent.pk}} />
                       <div class="form-group">
                         <h4>I confirm that I understand the following terms.</h4>
                         <ul>
