@@ -18,6 +18,9 @@
           <th style="color:white">Contributed by</th>
           <th style="color:white">Contributed on</th>
           <th style="color:white">Status</th>
+          <th style="color:white">Action On</th>
+          <th style="color:white">Action By</th>
+          <th style="color:white">Assignee</th>
           <th style="color:white">Actions</th>
         </tr>
     </thead>
@@ -84,7 +87,15 @@
                         {{content.media.state.name}}
                     {% endif %}
                 </td>
-
+                <td>
+                    {{content.changedon}}
+                </td>
+                <td>
+                    {{content.changedby}}
+                </td>
+                <td>
+                    {{content.assignedto}}
+                </td>
                 <td>
                     {% if content.type == 'Article' %}
                     <a href="{% url 'article_view' content.article.pk %}"> View  </a>

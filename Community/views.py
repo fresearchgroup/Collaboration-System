@@ -43,8 +43,8 @@ from .forms import FacetedProductSearchForm
 from UserRolesPermission.models import ProfileImage
 from django.db.models import Count
 from django.db.models import F
-from BasicArticle.models import Articles
-from Media.models import Media
+from BasicArticle.models import ArticleStates, Articles
+from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 
 def display_communities(request):
@@ -909,9 +909,25 @@ def curate_content(request):
 		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') | Q(article__state__name='accepted') | Q(article__state__name='rejected'))
 		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='accepted') | Q(media__state__name='rejected'))
 		for cart in commarticles:
+			role = Roles.objects.get(name='curator')
+			commembership = CommunityMembership.objects.filter(community=cart.community.parent, role=role).order_by('-assignedon')[:1]
 			cart.type = 'Article'
+			articlestate = ArticleStates.objects.filter(article=cart.article).order_by('-changedon')[:1]
+			cart.changedon = articlestate[0].changedon
+			cart.changedby = articlestate[0].changedby
+			cart.comments = articlestate[0].comments
+			cart.assignedto = commembership[0].user.username
+			cart.assignedon = commembership[0].assignedon
 		for cmedia in commmedia:
+			role = Roles.objects.get(name='curator')
+			commembership = CommunityMembership.objects.filter(community=cmedia.community.parent, role=role).order_by('-assignedon')[:1]
 			cmedia.type = 'Media'
+			mediastate = MediaStates.objects.filter(media=cmedia.media).order_by('-changedon')[:1]
+			cmedia.changedon = mediastate[0].changedon
+			cmedia.changedby = mediastate[0].changedby
+			cmedia.comments = mediastate[0].comments
+			cmedia.assignedto = commembership[0].user.username
+			cmedia.assignedon = commembership[0].assignedon
 		lstContent = list(commarticles) + list(commmedia)
 		return render(request, 'curate_content.html',{'lstContent':lstContent})
 	return redirect('login')
