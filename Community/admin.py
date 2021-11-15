@@ -18,7 +18,11 @@ admin.site.register(
         'indented_title',
     ),)
 
-admin.site.register( CommunityMembership)
+class CommunityMembershipAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'user', 'community', 'role', 'assignedon', ]
+admin.site.register(CommunityMembership, CommunityMembershipAdmin)
+
+
 admin.site.register( CommunityGroups)
 # admin.site.register( RequestCommunityCreation)
 # admin.site.register( RequestCommunityCreationDetails)

@@ -69,6 +69,7 @@ class CommunityMembership(models.Model):
 	user = models.ForeignKey(User, related_name='communitymembership')
 	community = models.ForeignKey(Community, related_name='communitymembership')
 	role = models.ForeignKey(Roles, null=True, related_name='communitymembership')
+	assignedon = models.DateTimeField(null=True, auto_now_add=True)
 
 class CommunityArticles(models.Model):
 	article = models.ForeignKey(Articles, related_name='communityarticles')
