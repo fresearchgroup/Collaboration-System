@@ -2,10 +2,19 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from workflow.models import States, Transitions
 from django.contrib.auth.models import Group as Roles
+from django.contrib.auth.models import User
 
 def canEditResource(state, resource, request):
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
+		isCurator = True
+	else:
+		isCurator = False
 	if state=='publish':
 		messages.warning(request, 'You cannot edit content which is already published')
+		return False
+	if state=='reviewSarted' and isCurator==False:
+		messages.warning(request, 'You cannot edit this content as it is currently in review')
 		return False
 	return True
 
