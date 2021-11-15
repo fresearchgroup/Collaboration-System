@@ -14,6 +14,7 @@ def get_file_path(instance, filename):
 class Articles(models.Model):
 	title = models.CharField(max_length=100, null=True)
 	body = models.TextField(null=True)
+	state = models.ForeignKey(States, null=True,related_name='articlecurrentstate')
 	image = models.ImageField(null=True,upload_to=get_file_path)
 	created_at = models.DateTimeField(auto_now_add=True)
 	created_by = models.ForeignKey(User,null=True,related_name='article_author')

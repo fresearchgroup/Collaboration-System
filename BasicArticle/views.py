@@ -146,6 +146,7 @@ class ArticleCreateView(CreateView):
 		self.object = form.save(commit=False)
 		self.object.created_by = self.request.user
 		state = States.objects.get(initial=True)
+		self.object.state = state
 		self.object.save()
 		form.save_m2m()
 		community = Community.objects.get(pk=self.kwargs['pk'])
@@ -388,6 +389,8 @@ def submit_article(request):
 		state = States.objects.get(name='submitted')
 		pk = request.POST['pk']
 		article = Articles.objects.get(pk=pk)
+		article.state = state
+		article.save()
 		ArticleStates.objects.create(
 			article = article,
 			state = state,
