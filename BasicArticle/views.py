@@ -91,7 +91,7 @@ def view_article(request, pk):
 	"""
 	try:
 		article = CommunityArticles.objects.get(article=pk)
-		statehistory = ArticleStates.objects.filter(article=article.article)
+		statehistory = ArticleStates.objects.filter(article=article.article).order_by('-changedon')
 		state = get_state_article(article.article)
 		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 		u = User.objects.get(username=request.user)
