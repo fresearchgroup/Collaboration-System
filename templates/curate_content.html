@@ -21,6 +21,7 @@
           <th style="color:white">Action On</th>
           <th style="color:white">Action By</th>
           <th style="color:white">Assignee</th>
+          <th style="color:white">Comments</th>
           <th style="color:white">Actions</th>
         </tr>
     </thead>
@@ -95,6 +96,9 @@
                 </td>
                 <td>
                     {{content.assignedto}}
+                </td>
+                <td>
+                    {{content.comments}}
                 </td>
                 <td>
                     {% if content.type == 'Article' %}
