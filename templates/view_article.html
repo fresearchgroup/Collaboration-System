@@ -191,8 +191,8 @@
           {% for group_for in request.user.groups.all %}
             {% if group_for.name == 'curator' %}
               {% if request.user == curator %}
-                {% if article.article.state.name == 'submitted' %}
-                  <button type="radio" name="articlemarkreview" value="markreview" class="btn btn-success" data-toggle="modal" data-target="#modalarticlemarkreview" data-whatever="@mdo" id="articlemarkreview">Mark for review</button>
+                {% if article.article.state.name == 'submitted' or article.article.state.name == 'sentToModify' %}
+                  <button type="radio" name="articlemarkreview" value="markreview" class="btn btn-success" data-toggle="modal" data-target="#modalarticlemarkreview" data-whatever="@mdo" id="articlemarkreview">Lock and Mark for review</button>
                   <div class="modal fade" id="modalarticlemarkreview" tabindex="-1" role="dialog" aria-labelledby="modalarticlemarkreview" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
@@ -252,7 +252,7 @@
                   </div>
                 {% endif %} <!-- review started -->
                 {% if article.article.state.name == 'reviewStarted' %}
-                  <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: red;">Modify</button>
+                  <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: red;">Send for modification</button>
                   <div class="modal fade" id="modalModifyArticle" tabindex="-1" role="dialog" aria-labelledby="ModifyArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
