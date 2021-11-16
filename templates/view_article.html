@@ -440,7 +440,7 @@
                     i++;
                 }
             }
-            let output = htmldiff(a[0], a[1]);
+            let output = htmldiff(a[1], a[0]);
             document.getElementById("showoutput-title").innerHTML = "Comparing " + title[0] + " Vs " + title[1];
             document.getElementById("showoutput").innerHTML = output;
             $("#modalshowcompare").modal('show');
