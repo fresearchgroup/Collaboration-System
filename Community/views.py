@@ -916,6 +916,7 @@ def curate_content(request):
 				comments = request.POST['reason']
 			if status == 'reject':
 				state = States.objects.get(name='rejected')
+				comments = request.POST['reason']
 
 			if conttype == 'Article':
 				article = Articles.objects.get(pk=pk)

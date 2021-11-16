@@ -282,6 +282,37 @@
                     </div>
                   </div>
                 {% endif %} <!-- review started -->
+                {% if article.article.state.name == 'reviewStarted' %}
+                  <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalrejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Reject</button>
+                  <div class="modal fade" id="modalrejectArticle" tabindex="-1" role="dialog" aria-labelledby="rejectArticleModal" aria-hidden="true">
+                    <div class="modal-dialog text-left" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h3 class="modal-title" id="exampleModalLabel">Reject this contribution</h3>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form method = "post" action ="{% url 'curate_content' %}">
+                            {% csrf_token %}
+                            <input type='hidden' name = 'status' value='reject'/>
+                            <input type='hidden' name = 'type' value ='Article' />
+                            <input type='hidden' name = 'pk' value ={{article.article.pk}} />
+                            <div class="form-group">
+                              <label for="reason-text" class="col-form-label">Enter more details as to why this contribution is being rejected</label>
+                              <textarea class="form-control" id="reason-text" name="reason"></textarea>                                              
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                          <button id="articleReject" type="submit" class="btn btn-primary">Yes</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %} <!-- review started -->
               {% else %}  <!-- check if the current user is the assigned curator -->
                 <button type="radio" class="btn btn-success" data-toggle="modal" data-target="#modalassigntome">Assign curation activity to me</button>
                 <div class="modal fade" id="modalassigntome" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
