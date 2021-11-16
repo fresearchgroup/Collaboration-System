@@ -106,6 +106,7 @@ urlpatterns = [
     url(r'^update_community_requests/$', communityview.update_community_requests, name='update_community_requests'),
 
     url(r'^curate_content/$', communityview.curate_content, name='curate_content'),
+    url(r'^assign_community_curation/$', communityview.assign_community_curation, name='assign_community_curation'),
 
     url(r'^updateprofile/$', user_views.update_profile, name='update_profile'),
     url(r'^uploadphoto/$', user_views.upload_image, name='upload_photo'),

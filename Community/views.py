@@ -886,6 +886,19 @@ class FacetedSearchView(BaseFacetedSearchView, TemplateView):
         object_list = context['object_list']
         return context
 
+def assign_community_curation(request):
+	pk = request.POST['community_parent']
+	community = Community.objects.get(pk=pk)
+	role = Roles.objects.get(name='curator')
+	CommunityMembership.objects.create(
+		user = request.user,
+		community = community,
+		role = role,
+		assignedon = datetime.datetime.now()
+	)
+	articlepk = request.POST['articlepk']
+	return redirect('article_view',pk=articlepk)
+
 def curate_content(request):
 	u = User.objects.get(username=request.user)
 	if u.groups.filter(name='curator').exists():

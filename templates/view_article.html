@@ -286,6 +286,32 @@
                     </div>
                   </div>
                 {% endif %} <!-- review started -->
+              {% else %}  <!-- check if the current user is the assigned curator -->
+                <button type="radio" class="btn btn-success" data-toggle="modal" data-target="#modalassigntome">Assign curation activity to me</button>
+                <div class="modal fade" id="modalassigntome" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
+                  <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel">Assign this activity to yourself?</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form method = "post" action ="{% url 'assign_community_curation' %}">
+                          {% csrf_token %}
+                          <input type='hidden' name = 'articlepk' value ={{article.article.pk}} />
+                          <input type='hidden' name = 'community_parent' value ={{article.community.parent.pk}} />            
+                          Are you sure you want to assign the whole curation activity of {{article.community.parent.name}} to yourself? 
+                        </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               {% endif %} <!-- check if the current user is the assigned curator -->
             {% endif %} <!-- check if the current user has a curator role in the system -->
           {% endfor %}
