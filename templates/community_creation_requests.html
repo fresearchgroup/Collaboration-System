@@ -132,8 +132,8 @@
                     </div>
                   </div>
 
-                  <a href="#modalRejectasExists" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
-                  <div class="modal fade" id="modalRejectasExists" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
+                  <a href="#modalRejectasExists{{req.pk}}" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
+                  <div class="modal fade" id="modalRejectasExists{{req.pk}}" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -165,8 +165,8 @@
                 {% endif %}
                   
                 {% if req.status == 'Requested' and req.assignedto == request.user %}
-                  <a href="#modalRejectmodify" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
-                  <div class="modal fade" id="modalRejectmodify" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
+                  <a href="#modalRejectmodify{{req.pk}}" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
+                  <div class="modal fade" id="modalRejectmodify{{req.pk}}" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
