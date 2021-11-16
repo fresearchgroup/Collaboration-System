@@ -88,21 +88,15 @@
 
             <li><i class="fa fa-print" aria-hidden="true"></i>{{curator}}</li>
 
-            {% if state.name == 'draft' %}
-            <li><i class="fa fa-cut"></i> Not submitted </li>
-            {% endif %} 
-            {% if state.name == 'submitted' %}
-            <li><i class="fa fa-arrow-circle-right"></i> Submitted </li>
-            {% endif %} 
-            {% if state.name == 'accepted' %}
-            <li><i class="fa fa-check-circle"></i> Accepted </li>
-            {% endif %} 
-            {% if state.name == 'rejected' %}
-            <li><i class="fa fa-times-circle"></i> Rejected </li>
-            {% endif %} 
-            {% if state.name == 'publish' %}
-            <li><i class="fa fa-newspaper-o"></i> Published </li>
-            {% endif %}
+            <li>
+              {% if state.name == 'draft' %}<i class="fa fa-cut"></i>{% endif %} 
+              {% if state.name == 'submitted' %}<i class="fa fa-arrow-circle-right"></i>{% endif %} 
+              {% if state.name == 'accepted' %}<i class="fa fa-check-circle"></i>{% endif %} 
+              {% if state.name == 'rejected' %}<i class="fa fa-times-circle"></i>{% endif %} 
+              {% if state.name == 'publish' %}<i class="fa fa-newspaper-o"></i>{% endif %}
+              {{state.name}}
+            </li>
+
             {%if user.is_authenticated %}
             <!-- {%if is_fav %}
             <li><i id ="fav_submit" class="fa fa-star"></i>Favourites</li>
