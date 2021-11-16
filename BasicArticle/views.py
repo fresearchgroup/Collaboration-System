@@ -92,6 +92,7 @@ def view_article(request, pk):
 	try:
 		article = CommunityArticles.objects.get(article=pk)
 		statehistory = ArticleStates.objects.filter(article=article.article).order_by('-changedon')
+		curator = CommunityMembership.objects.filter(community=article.community.parent).order_by('-assignedon')[:1]
 		state = get_state_article(article.article)
 		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 		u = User.objects.get(username=request.user)
@@ -104,7 +105,7 @@ def view_article(request, pk):
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
 	
-	return render(request, 'view_article.html', {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav})
+	return render(request, 'view_article.html', {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav, 'curator':curator[0].user})
 
 def reports_article(request, pk):
 	try:
