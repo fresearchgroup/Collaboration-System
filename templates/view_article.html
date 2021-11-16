@@ -250,6 +250,8 @@
                       </div>
                     </div>
                   </div>
+                {% endif %} <!-- review started -->
+                {% if article.article.state.name == 'reviewStarted' %}
                   <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: red;">Modify</button>
                   <div class="modal fade" id="modalModifyArticle" tabindex="-1" role="dialog" aria-labelledby="ModifyArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
