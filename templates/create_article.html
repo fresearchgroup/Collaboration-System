@@ -108,6 +108,13 @@
                       {{ form.tags.errors }}
                     </div> -->
                   </div>
+                  <div class="form-group">
+                    <label for="comments">Comments</label>
+                    {{ form.comments }}
+                    <div class="invalid-feedback">
+                      {{ form.comments.errors }}
+                    </div>
+                  </div>
                 <div class="form-group">
                 <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Save</button>
               </div>

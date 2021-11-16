@@ -10,13 +10,14 @@ class NewArticleForm(forms.Form):
 
 
 class ArticleUpdateForm(forms.ModelForm):
+	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
 	class Meta:
 		model = Articles
 		if settings.REALTIME_EDITOR:
 			# fields = ['title', 'image', 'state', 'tags']
 			pass
 		else:
-			fields = ['body', 'tags']
+			fields = ['body', 'tags', 'comments']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'state', 'tags']
 
 
@@ -42,6 +43,8 @@ class ArticleUpdateForm(forms.ModelForm):
 		#self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].required = False
+		self.fields['comments'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
+		self.fields['comments'].required = False
 		#states = getStatesCommunity(self.instance.state.id, role)
 		#self.fields['state'].queryset = States.objects.filter(name__in=states)
 		#self.fields['state'].required = False
@@ -63,13 +66,14 @@ class ArticleUpdateForm(forms.ModelForm):
 		# 	self.fields['body'].widget.attrs.update({'class': 'form-control'})
 
 class ArticleCreateForm(forms.ModelForm):
+	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
 	class Meta:
 		model = Articles
 		if settings.REALTIME_EDITOR:
 			# fields = ['title', 'image', 'tags']
 			pass
 		else:
-			fields = ['body', 'tags']
+			fields = ['body', 'tags', 'comments']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'tags']
 
 	def __init__(self, *args, **kwargs):
@@ -92,6 +96,8 @@ class ArticleCreateForm(forms.ModelForm):
 		self.fields['body'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].required = False
+		self.fields['comments'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
+		self.fields['comments'].required = False
 		# if not settings.REALTIME_EDITOR:
 		# 	self.fields['body'].widget.attrs.update({'class': 'form-control'})
 

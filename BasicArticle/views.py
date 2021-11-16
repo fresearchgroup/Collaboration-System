@@ -151,12 +151,14 @@ class ArticleCreateView(CreateView):
 		form.save_m2m()
 		community = Community.objects.get(pk=self.kwargs['pk'])
 		CommunityArticles.objects.create(article=self.object, user = self.request.user , community =community )
+		comments = self.request.POST['comments']
 		ArticleStates.objects.create(
 			article = self.object,
 			state = state,
 			changedby = self.request.user,
 			changedon = datetime.datetime.now(),
-			body = self.object.body
+			body = self.object.body,
+			comments = comments
 		)
 		if settings.REALTIME_EDITOR:
 			try:
@@ -264,12 +266,14 @@ class ArticleEditView(UpdateView):
 		self.object.save()
 		form.save_m2m()
 		state = get_state_article(self.object)
+		comments = self.request.POST['comments']
 		ArticleStates.objects.create(
 			article = self.object,
 			state = state,
 			changedby = self.request.user,
 			changedon = datetime.datetime.now(),
-			body = self.object.body
+			body = self.object.body,
+			comments = comments
 		)
 		# if self.is_visible():
 		# 	self.process_visible()
