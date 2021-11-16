@@ -81,8 +81,8 @@
 
                 {% if req.status == 'Requested' or req.status == 'modify' %}
                   {% if req.assignedto == request.user %}
-                  <a href="#modalaccept" data-toggle="modal"><i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i></a> 
-                  <div class="modal fade" id="modalaccept" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
+                  <a href="#modalaccept{{req.id}}" data-toggle="modal"><i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i></a> 
+                  <div class="modal fade" id="modalaccept{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
