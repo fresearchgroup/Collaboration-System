@@ -146,7 +146,8 @@
           {% endif %}
           {% endautoescape%} -->
           <p style="margin-bottom: 20px;"></p>
-          {% if state.name == 'draft' %}
+          {% if state.name == 'draft' or state.name == 'sentToModify' %}
+            {% if request.user == article.article.created_by %}
             <button type="radio" name="status" class="btn btn-success" data-toggle="modal" data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>                
             <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog" aria-labelledby="SubmitArticleModal" aria-hidden="true">
               <div class="modal-dialog text-left" role="document">
@@ -186,6 +187,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
           {% endif %}
         <!-- </p> -->
 
@@ -250,8 +252,8 @@
                     </div>
                   </div>
                 </div>
-                <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalRejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Modify</button>
-                <div class="modal fade" id="modalRejectArticle" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
+                <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: red;">Modify</button>
+                <div class="modal fade" id="modalModifyArticle" tabindex="-1" role="dialog" aria-labelledby="ModifyArticleModal" aria-hidden="true">
                   <div class="modal-dialog text-left" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -268,7 +270,7 @@
                           <input type='hidden' name = 'pk' value ={{article.article.pk}} />
                           <div class="form-group">
                             <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
-                            <textarea class="form-control" id="reason-text"></textarea>                                              
+                            <textarea class="form-control" id="reason-text" name="reason"></textarea>                                              
                           </div>
                       </div>
                       <div class="modal-footer">
