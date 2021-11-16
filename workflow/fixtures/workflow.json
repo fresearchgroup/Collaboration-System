@@ -12,7 +12,7 @@
   {
     "model": "workflow.states",
     "pk": 3,
-    "fields": {"name": "reviewSarted", "desc": "contribution taken up for review by curator"}
+    "fields": {"name": "reviewStarted", "desc": "contribution taken up for review by curator"}
   },
   {
     "model": "workflow.states",

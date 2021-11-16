@@ -894,7 +894,7 @@ def curate_content(request):
 			conttype = request.POST['type']
 			status = request.POST['status']
 			if status == 'markreview':
-				state = States.objects.get(name='reviewSarted')
+				state = States.objects.get(name='reviewStarted')
 			if status == 'accept':
 				state = States.objects.get(name='accepted')
 			if status == 'modify':
@@ -920,8 +920,8 @@ def curate_content(request):
 				media.state = state
 				media.save()
 
-		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') | Q(article__state__name='accepted') | Q(article__state__name='rejected'))
-		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='accepted') | Q(media__state__name='rejected'))
+		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') | Q(article__state__name='reviewStarted') |  Q(article__state__name='accepted') |Q(article__state__name='rejected'))
+		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='reviewStarted') | Q(media__state__name='accepted') | Q(media__state__name='rejected'))
 		for cart in commarticles:
 			role = Roles.objects.get(name='curator')
 			commembership = CommunityMembership.objects.filter(community=cart.community.parent, role=role).order_by('-assignedon')[:1]
