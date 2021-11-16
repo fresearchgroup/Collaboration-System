@@ -13,8 +13,11 @@ def canEditResource(state, resource, request):
 	if state=='publish':
 		messages.warning(request, 'You cannot edit content which is already published')
 		return False
-	if state=='reviewSarted' and isCurator==False:
+	if state=='reviewStarted' and isCurator==False:
 		messages.warning(request, 'You cannot edit this content as it is currently in review')
+		return False
+	if state=='accepted' and isCurator==False:
+		messages.warning(request, 'You cannot edit this content as it has been accepted')
 		return False
 	return True
 
