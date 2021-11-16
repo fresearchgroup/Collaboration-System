@@ -235,8 +235,8 @@ var videoPublished = {{videopublished}};
           <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
           <td>
             {% if req.status == 'modify' %}
-              <a href="#updatedetails" data-toggle="modal">{{ req.status }}</a>
-              <div class="modal fade" id="updatedetails" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
+              <a href="#updatedetails{{req.requestcommunity.pk}}" data-toggle="modal">{{ req.status }}</a>
+              <div class="modal fade" id="updatedetails{{req.requestcommunity.pk}}" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
                 <div class="modal-dialog text-left" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
