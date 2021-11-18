@@ -72,12 +72,12 @@ def community_view(request, pk):
 		message = 0
 		community = Community.objects.get(pk=pk)
 		uid = request.user.id
-		membership = CommunityMembership.objects.get(user =uid, community = community.pk)
+		membership = CommunityMembership.objects.filter(user =uid, community = community.pk)
 		role = Roles.objects.get(name='community_admin')
-		if membership.role == role:
-			count = CommunityMembership.objects.filter(community=community,role=role).count()
-			if count < 2:
-				message = 1
+		# if membership.role == role:
+		# 	count = CommunityMembership.objects.filter(community=community,role=role).count()
+		# 	if count < 2:
+		# 		message = 1
 	except CommunityMembership.DoesNotExist:
 		membership = 'FALSE'
 	subscribers = CommunityMembership.objects.filter(community = pk).count()
@@ -101,6 +101,29 @@ def community_view(request, pk):
 		except ProfileImage.DoesNotExist:
 			user_profile = "No Image available"
 	children = community.get_children().order_by('-contribution_status')
+
+	for child in children:
+		grandchildren = child.get_children()
+		draftCount = 0
+		submittedCount = 0
+		inreviewCount = 0
+		modifyCount = 0
+		acceptedCount = 0
+		rejectedCount = 0
+		for gc in grandchildren:
+			draftCount += CommunityArticles.objects.filter(community=gc, article__state__name='draft').count()
+			submittedCount += CommunityArticles.objects.filter(community=gc, article__state__name='submitted').count()
+			inreviewCount += CommunityArticles.objects.filter(community=gc, article__state__name='reviewStarted').count()
+			modifyCount += CommunityArticles.objects.filter(community=gc, article__state__name='sentToModify').count()
+			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='accepted').count()
+			rejectedCount += CommunityArticles.objects.filter(community=gc, article__state__name='rejected').count()
+		child.draftCount = draftCount
+		child.submittedCount = submittedCount
+		child.inreviewCount = inreviewCount
+		child.modifyCount = modifyCount
+		child.acceptedCount = acceptedCount
+		child.rejectedCount = rejectedCount
+
 	childrencount = children.count()
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
 

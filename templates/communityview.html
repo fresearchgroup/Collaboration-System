@@ -88,11 +88,14 @@
       <thead>
           <tr style="background-color:#89216B">
             <th style="color:white">Name</th>
-            <th style="color:white">Area</th>
-            <th style="color:white">City</th>
-            <th style="color:white">State</th>
-            <th style="color:white">Pincode</th>
+            <th style="color:white">Address</th>
             <th style="color:white">Accepting Contributions</th>
+            <th style="color:white">Draft</th>
+            <th style="color:white">Submitted</th>
+            <th style="color:white">In-review</th>
+            <th style="color:white">Modify</th>
+            <th style="color:white">Accepted</th>
+            <th style="color:white">Rejected</th>
             <th style="color:white">Action</th>
           </tr>
       </thead>
@@ -104,16 +107,7 @@
               <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
             </td>
             <td>
-              {{child.area}}
-            </td>
-            <td>
-              {{child.city}}
-            </td>
-            <td>
-              {{child.state}}
-            </td>
-            <td>
-              {{child.pincode}}
+              {{child.area}}, {{child.city}}, {{child.state}}, {{child.pincode}}
             </td>
             <td>
               {% if child.contribution_status == 'Ongoing' %} 
@@ -122,6 +116,12 @@
                 No
               {% endif %}
             </td>
+            <td>{{child.draftCount}}</td>
+            <td>{{child.submittedCount}}</td>
+            <td>{{child.inreviewCount}}</td>
+            <td>{{child.modifyCount}}</td>
+            <td>{{child.acceptedCount}}</td>
+            <td>{{child.rejectedCount}}</td>
             <td>
               {% if child.contribution_status == 'Ongoing' %}
                 {% if user.is_authenticated %}
