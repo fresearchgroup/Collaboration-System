@@ -1017,7 +1017,11 @@ def view_all_content(request, pk1, state):
 		ceremonies = CommunityArticles.objects.filter(community__name='Ceremonies', community__parent=community, article__state__name=state)
 		tales = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
 		moreinfo = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
-		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo})
+		if MergedArticles.objects.filter(community=community).exists():
+			merged = True
+		else:
+			merged = False
+		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged})
 	return redirect('login')
 
 def merge_content(request, pk):

@@ -143,7 +143,11 @@
 </div> <!-- main -->
 
 <div style="text-align: center;">
-    <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>
+    {% if merged %}
+        <h4><b>This contribution has been merged. Click <a href="{% url 'view_merged_content' community.pk %}">here</a> to view it.</b></h4>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>        
+    {% endif %}
 </div>
 <br /><br /><br />
 
