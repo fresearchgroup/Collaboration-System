@@ -98,6 +98,7 @@
                 <th style="color:white">Modify</th>
                 <th style="color:white">Accepted</th>
                 <th style="color:white">Rejected</th>
+                <th style="color:white">Merged content</th>
               {% endif %}
             {% endfor %}
             <th style="color:white">Action</th>
@@ -163,6 +164,11 @@
                     <a href="{% url 'display_curation_list' pk1=child.pk pk2='rejected' %}">{{child.rejectedCount}}</a>
                   {% else %}
                     {{child.rejectedCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.merged %}
+                    <a href="{% url 'view_merged_content' child.pk %}">view merged content</a>
                   {% endif %}
                 </td>
               {% endif %}

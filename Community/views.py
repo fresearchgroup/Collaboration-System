@@ -123,6 +123,10 @@ def community_view(request, pk):
 		child.modifyCount = modifyCount
 		child.acceptedCount = acceptedCount
 		child.rejectedCount = rejectedCount
+		if MergedArticles.objects.filter(community=child).exists():
+			child.merged = True
+		else:
+			child.merged = False
 
 	childrencount = children.count()
 	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
