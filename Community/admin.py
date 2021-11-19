@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreationAssignee, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreationAssignee, RequestCommunityCreation, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia, MergedArticles
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
 from django.db.models import Manager
@@ -68,3 +68,7 @@ class CommunityArticlesAdmin(CompareVersionAdmin):
 
 
 admin.site.register(CommunityArticles, CommunityArticlesAdmin)
+
+class MergedArticlesAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'community', 'state', 'changedby', 'changedon', 'originalarticles', ]
+admin.site.register(MergedArticles, MergedArticlesAdmin)
