@@ -9,6 +9,7 @@ from Media.models import Media
 from mptt.models import MPTTModel, TreeForeignKey
 from Categories.models import Category
 from django.db import connection
+from workflow.models import States
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -142,3 +143,29 @@ class CommunityMedia(models.Model):
 	media = models.ForeignKey(Media, null=True, related_name='communitymedia')
 	user = models.ForeignKey(User, null=True, related_name='communitymedia')
 	community = models.ForeignKey(Community, null=True, related_name='communitymedia')	
+
+class MergedArticles(models.Model):
+	community = models.ForeignKey(Community, related_name='communitymergedarticles')
+	introduction = models.TextField(null=True)
+	architecture = models.TextField(null=True)
+	rituals = models.TextField(null=True)
+	ceremonies = models.TextField(null=True)
+	tales = models.TextField(null=True)
+	moreinfo = models.TextField(null=True)
+	state = models.ForeignKey(States, null=True,related_name='mergedarticlecurrentstate')
+	changedby = models.ForeignKey(User,null=True,related_name='mergedarticle_author')
+	changedon = models.DateTimeField(auto_now_add=True)
+	originalarticles = models.TextField(null=True)
+
+class MergedArticleStates(models.Model):
+	mergedarticle = models.ForeignKey(MergedArticles, related_name='mergedarticleinfo')
+	state = models.ForeignKey(States, null=True,related_name='mergedarticleworkflow')
+	changedby = models.ForeignKey(User,null=True,related_name='mergedarticlechangedby')
+	changedon = models.DateTimeField(null=True, auto_now_add=True)
+	comments = models.TextField(null=True)
+	introduction = models.TextField(null=True)
+	architecture = models.TextField(null=True)
+	rituals = models.TextField(null=True)
+	ceremonies = models.TextField(null=True)
+	tales = models.TextField(null=True)
+	moreinfo = models.TextField(null=True)
