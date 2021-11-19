@@ -152,7 +152,8 @@
                 </td>
                 <td>
                   {% if child.acceptedCount > 0 %}
-                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='accepted' %}">{{child.acceptedCount}}</a>
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='accepted' %}">{{child.acceptedCount}}</a> <br />
+                    <a href="{% url 'view_all_content' pk1=child.pk state='accepted' %}">View all for merging</a>
                   {% else %}
                     {{child.acceptedCount}}
                   {% endif %}

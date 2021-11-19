@@ -996,3 +996,16 @@ def get_content(commarticles, commmedia):
 		cmedia.assignedon = commembership[0].assignedon
 	lstContent = list(commarticles) + list(commmedia)
 	return lstContent
+
+def view_all_content(request, pk1, state):
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
+		community = Community.objects.get(pk=pk1)
+		introduction = CommunityArticles.objects.filter(community__name='Introduction', community__parent=community, article__state__name=state)
+		architecture = CommunityArticles.objects.filter(community__name='Architecture', community__parent=community, article__state__name=state)
+		rituals = CommunityArticles.objects.filter(community__name='Rituals', community__parent=community, article__state__name=state)
+		ceremonies = CommunityArticles.objects.filter(community__name='Ceremonies', community__parent=community, article__state__name=state)
+		tales = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
+		moreinfo = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
+		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo})
+	return redirect('login')

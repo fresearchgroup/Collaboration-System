@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <style>
+    .sectiontitle{
+      margin-top: 40px;
+      font-weight: bold;
+    }
+  </style>
+{% endblock %} 
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">PoW Creation Requests</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="main" style="margin-bottom: 50px;">
+    <div class="container">
+
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 col-sm-12">
+                <div class="icp-content-comm-title-image">
+                    <h2 class="icp-content-comm-title-text">
+                        {{ community.name}}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="sectiontitle">Introduction</h3>
+        <div style="margin-left:30px;">
+            {% if introduction %}
+                {% for obj in introduction %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}                
+        </div>
+
+        <h3 class="sectiontitle">Archiecture</h3>
+        <div style="margin-left:30px;">
+            {% if architecture %}
+                {% for obj in architecture %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}            
+        </div>
+
+        <h3 class="sectiontitle">Rituals</h3>
+        <div style="margin-left:30px;">
+            {% if rituals %}
+                {% for obj in rituals %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}            
+        </div>
+
+        <h3 class="sectiontitle">Ceremonies</h3>
+        <div style="margin-left:30px;">
+            {% if ceremonies %}
+                {% for obj in ceremonies %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}            
+        </div>
+
+        <h3 class="sectiontitle">Tales</h3>
+        <div style="margin-left:30px;">
+            {% if tales %}
+                {% for obj in tales %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}                
+        </div>
+
+        <h3 class="sectiontitle">More Information</h3>
+        <div style="margin-left:30px;">
+            {% if moreinfo %}
+                {% for obj in moreinfo %}
+                    <b>By {{obj.article.created_by}}</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <hr style="height:2px; border-width:0; background-color:#89216B;">
+                {% endfor %}
+            {% else %}
+                No contribution in this section
+            {% endif %}
+        </div>
+
+    </div> <!-- container -->
+</div> <!-- main -->
+
+
+{% endblock %}
