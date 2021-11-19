@@ -429,3 +429,33 @@ def submit_article(request):
 def get_state_article(article):
 	articlestates = ArticleStates.objects.filter(article=article).order_by('-changedon')[:1]
 	return articlestates[0].state
+
+def add_content_by_curator(request):
+	commpk = request.POST['pk']
+	section = request.POST['section']
+	body = request.POST['body']
+	user = request.user
+	state = States.objects.get(name='accepted')
+	parent = Community.objects.get(pk=commpk)
+	community = Community.objects.get(name=section, parent=parent)
+	article = Articles.objects.create(
+		body = body,
+		state = state,
+		created_at = datetime.datetime.now(),
+		created_by = user
+	)
+	parent = Community.objects.get(pk=commpk)
+	community = Community.objects.get(name=section, parent=parent)
+	CommunityArticles.objects.create(
+		article=article, 
+		user = request.user, 
+		community =community 
+	)
+	ArticleStates.objects.create(
+		article = article,
+		state = state,
+		changedby = request.user,
+		changedon = datetime.datetime.now(),
+		body = body
+	)
+	return redirect('view_all_content',pk1=commpk, state='accepted')

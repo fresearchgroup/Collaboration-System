@@ -79,6 +79,8 @@ urlpatterns = [
     url(r'^article-reports/(?P<pk>\d*)/$', articleview.reports_article, name='article_reports'),
     url(r'^ajax/article_text/(?P<pk>\d*)/$', articleview.article_text, name='article_text'),
 
+    url(r'^add_content_by_curator/$', articleview.add_content_by_curator, name='add_content_by_curator'),
+
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
     url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),

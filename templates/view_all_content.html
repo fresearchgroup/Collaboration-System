@@ -42,10 +42,11 @@
                 {% endfor %}
             {% else %}
                 No contribution in this section
+                <button name="Introduction" onClick="addContent(this)">Click to add content</button>
             {% endif %}                
         </div>
 
-        <h3 class="sectiontitle">Archiecture</h3>
+        <h3 class="sectiontitle">Architecture</h3>
         <div style="margin-left:30px;">
             {% if architecture %}
                 {% for obj in architecture %}
@@ -55,6 +56,7 @@
                 {% endfor %}
             {% else %}
                 No contribution in this section
+                <button name="Architecture" onClick="addContent(this)">Click to add content</button>
             {% endif %}            
         </div>
 
@@ -67,7 +69,8 @@
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
             {% else %}
-                No contribution in this section
+                No contribution in this section 
+                <button name="Rituals" onClick="addContent(this)">Click to add content</button>
             {% endif %}            
         </div>
 
@@ -81,6 +84,7 @@
                 {% endfor %}
             {% else %}
                 No contribution in this section
+                <button name="Ceremonies" onClick="addContent(this)">Click to add content</button>
             {% endif %}            
         </div>
 
@@ -94,6 +98,7 @@
                 {% endfor %}
             {% else %}
                 No contribution in this section
+                <button name="Tales" onClick="addContent(this)">Click to add content</button>
             {% endif %}                
         </div>
 
@@ -113,5 +118,47 @@
     </div> <!-- container -->
 </div> <!-- main -->
 
+<div class="modal fade" id="addContentModal" tabindex="-1" role="dialog" aria-labelledby="addContentModal" aria-hidden="true">
+    <div class="modal-dialog text-left" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modaltitleaddcontent">Add content for</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method = "post" action ="{% url 'add_content_by_curator' %}">
+            {% csrf_token %}
+            <input type='hidden' name='pk' value="{{community.pk}}" />
+            <input id="modalSection" type='hidden' name='section' value='' />
+            <div class="form-group">
+              <label for="reason-text" class="col-form-label">Enter content</label>
+              <textarea class="form-control" id="body" name='body'></textarea>                                              
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button id="commReject" type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
+
+
+{% endblock %}
+
+{% block javascript %}
+
+<script type="text/javascript">
+    function addContent(clicked_object) {
+        title = clicked_object.getAttribute('name');
+        document.getElementById("modaltitleaddcontent").innerHTML = "Add content for " + title;
+        document.getElementById("modalSection").value=title;
+        $("#addContentModal").modal('show');
+    }
+</script>
+  
 {% endblock %}
