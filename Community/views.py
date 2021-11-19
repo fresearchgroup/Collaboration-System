@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia, MergedArticles, MergedArticleStates
 from rest_framework import viewsets
 # from .models import CommunityGroups
 from UserRolesPermission.views import user_dashboard
@@ -1014,4 +1014,91 @@ def view_all_content(request, pk1, state):
 		tales = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
 		moreinfo = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
 		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo})
+	return redirect('login')
+
+def merge_content(request, pk):
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
+		state = 'accepted'
+		introduction = ''
+		architecture = ''
+		rituals = ''
+		ceremonies = ''
+		tales = ''
+		moreinfo = ''
+		originals = []
+		community = Community.objects.get(pk=pk)
+
+		introductionQuery = CommunityArticles.objects.filter(community__name='Introduction', community__parent=community, article__state__name=state)
+		for obj in introductionQuery:
+			introduction += obj.article.body
+			introduction += '<br />'
+			originals.append(obj.article.pk)
+
+		architectureQuery = CommunityArticles.objects.filter(community__name='Architecture', community__parent=community, article__state__name=state)
+		for obj in architectureQuery:
+			architecture += obj.article.body
+			architecture += '<br />'
+			originals.append(obj.article.pk)
+
+		ritualsQuery = CommunityArticles.objects.filter(community__name='Rituals', community__parent=community, article__state__name=state)
+		for obj in ritualsQuery:
+			rituals += obj.article.body
+			rituals += '<br />'
+			originals.append(obj.article.pk)
+		
+		ceremoniesQuery = CommunityArticles.objects.filter(community__name='Ceremonies', community__parent=community, article__state__name=state)
+		for obj in ceremoniesQuery:
+			ceremonies += obj.article.body
+			ceremonies += '<br />'
+			originals.append(obj.article.pk)
+		
+		talesQuery = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
+		for obj in talesQuery:
+			tales += obj.article.body
+			tales += '<br />'
+			originals.append(obj.article.pk)
+		
+		moreinfoQuery = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
+		for obj in moreinfoQuery:
+			moreinfo += obj.article.body
+			moreinfo += '<br />'
+			originals.append(obj.article.pk)
+
+		state = States.objects.get(name='merged')
+		merged = MergedArticles.objects.create(
+			community = community,
+			introduction = introduction,
+			architecture = architecture,
+			rituals = rituals,
+			ceremonies = ceremonies,
+			tales = tales,
+			moreinfo = moreinfo,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now(),
+			originalarticles = originals
+		)
+
+		MergedArticleStates.objects.create (
+			mergedarticle = merged,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now(),
+			introduction = introduction,
+			architecture = architecture,
+			rituals = rituals,
+			ceremonies = ceremonies,
+			tales = tales,
+			moreinfo = moreinfo
+		)
+		return render(request, 'view_merged_content.html',{'merged':merged})
+	return redirect('login')
+
+def view_merged_content(request, pk):
+	u = User.objects.get(username=request.user)
+	if u.groups.filter(name='curator').exists():
+		community = Community.objects.get(pk=pk)
+		merged = MergedArticles.objects.get(community=community)
+		return render(request, 'view_merged_content.html',{'merged':merged})
 	return redirect('login')
