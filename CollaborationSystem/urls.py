@@ -105,6 +105,9 @@ urlpatterns = [
     url(r'^handle_community_creation_requests/$', communityview.handle_community_creation_requests, name='handle_community_creation_requests'),
     url(r'^update_community_requests/$', communityview.update_community_requests, name='update_community_requests'),
 
+    url(r'^display_curation_list/$', communityview.display_curation_list, name='display_curation_list'),
+    url(r'^display_curation_list/(?P<pk1>\w+)/(?P<pk2>\w+)/$', communityview.display_curation_list, name='display_curation_list'),
+
     url(r'^curate_content/$', communityview.curate_content, name='curate_content'),
     url(r'^assign_community_curation/$', communityview.assign_community_curation, name='assign_community_curation'),
 
