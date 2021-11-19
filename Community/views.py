@@ -953,6 +953,12 @@ def curate_content(request):
 					body = article.body,
 					comments = comments
 				)
+				if 'redirecto' in request.POST:
+					redirecto = request.POST['redirecto']
+					if redirecto == 'view_all_content':
+						commpk = request.POST['commpk']
+						state =  request.POST['state']
+						return redirect('view_all_content', commpk, state)
 				return redirect('article_view',pk=pk)
 
 			if conttype == 'Media':
