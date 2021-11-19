@@ -90,12 +90,16 @@
             <th style="color:white">Name</th>
             <th style="color:white">Address</th>
             <th style="color:white">Accepting Contributions</th>
-            <th style="color:white">Draft</th>
-            <th style="color:white">Submitted</th>
-            <th style="color:white">In-review</th>
-            <th style="color:white">Modify</th>
-            <th style="color:white">Accepted</th>
-            <th style="color:white">Rejected</th>
+            {% for group_for in request.user.groups.all %}
+              {% if group_for.name == 'curator' %}
+                <th style="color:white">Draft</th>
+                <th style="color:white">Submitted</th>
+                <th style="color:white">In-review</th>
+                <th style="color:white">Modify</th>
+                <th style="color:white">Accepted</th>
+                <th style="color:white">Rejected</th>
+              {% endif %}
+            {% endfor %}
             <th style="color:white">Action</th>
           </tr>
       </thead>
@@ -116,48 +120,53 @@
                 No
               {% endif %}
             </td>
-            <td>
-              {% if child.draftCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='draft' %}">{{child.draftCount}}</a>
-              {% else %}
-                {{child.draftCount}}
+            {% for group_for in request.user.groups.all %}
+              {% if group_for.name == 'curator' %}
+                <td>
+                  {% if child.draftCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='draft' %}">{{child.draftCount}}</a>
+                  {% else %}
+                    {{child.draftCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.submittedCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='submitted' %}">{{child.submittedCount}}</a>
+                  {% else %}
+                    {{child.submittedCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.inreviewCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='reviewStarted' %}">{{child.inreviewCount}}</a>
+                  {% else %}
+                    {{child.inreviewCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.modifyCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='sentToModify' %}">{{child.modifyCount}}</a>
+                  {% else %}
+                    {{child.modifyCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.acceptedCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='accepted' %}">{{child.acceptedCount}}</a>
+                  {% else %}
+                    {{child.acceptedCount}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if child.rejectedCount > 0 %}
+                    <a href="{% url 'display_curation_list' pk1=child.pk pk2='rejected' %}">{{child.rejectedCount}}</a>
+                  {% else %}
+                    {{child.rejectedCount}}
+                  {% endif %}
+                </td>
               {% endif %}
-            </td>
-            <td>
-              {% if child.submittedCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='submitted' %}">{{child.submittedCount}}</a>
-              {% else %}
-                {{child.submittedCount}}
-              {% endif %}
-            </td>
-            <td>
-              {% if child.inreviewCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='reviewStarted' %}">{{child.inreviewCount}}</a>
-              {% else %}
-                {{child.inreviewCount}}
-              {% endif %}
-            </td>
-            <td>
-              {% if child.modifyCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='sentToModify' %}">{{child.modifyCount}}</a>
-              {% else %}
-                {{child.modifyCount}}
-              {% endif %}
-            </td>
-            <td>
-              {% if child.acceptedCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='accepted' %}">{{child.acceptedCount}}</a>
-              {% else %}
-                {{child.acceptedCount}}
-              {% endif %}
-            </td>
-            <td>
-              {% if child.rejectedCount > 0 %}
-                <a href="{% url 'display_curation_list' pk1=child.pk pk2='rejected' %}">{{child.rejectedCount}}</a>
-              {% else %}
-                {{child.rejectedCount}}
-              {% endif %}
-            </td>
+            {% endfor %}
+    
             <td>
               {% if child.contribution_status == 'Ongoing' %}
                 {% if user.is_authenticated %}
