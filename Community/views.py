@@ -1100,7 +1100,7 @@ def merge_content(request, pk):
 			tales = tales,
 			moreinfo = moreinfo
 		)
-		return render(request, 'view_merged_content.html',{'merged':merged})
+		return redirect('view_merged_content',pk=pk)
 	return redirect('login')
 
 def view_merged_content(request, pk):
