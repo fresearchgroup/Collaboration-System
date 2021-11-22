@@ -36,11 +36,22 @@
             </div>
         </div>
 
+        <div class="blog-item">
+          <ul class="blog-info">
+            <li><i class="fa fa-user"></i><a href="{% url 'display_user_profile' merged.changedby %}">{{merged.changedby}}</a> </li>
+            <li><i class="fa fa-calendar"></i> {{merged.changedon}} </li>
+            <li>
+              {% if merged.state.name == 'merged' %}<i class="fa fa-sitemap fa-rotate-90" aria-hidden="true"></i>{% endif %} 
+              {{merged.state}} 
+            </li>
+          </ul>
+        </div>
+
         <div class="col-sm-12">
           <div>
             <ul class="nav nav-tabs" style="margin-left: -15px; margin-bottom: 40px;">
               <li class="nav-item active"><a class="nav-link " href="">View</a></li>
-              <li class="nav-item "><a id="mergedarticle_edit_id" class="nav-link " href="">Edit</a></li>
+              <li class="nav-item"><a id="mergedarticle_edit_id" class="nav-link " href="{% url 'merged_article_edit' merged.pk %}">Edit</a></li>
             </ul>
           </div>
         </div>

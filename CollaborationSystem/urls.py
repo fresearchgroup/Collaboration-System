@@ -83,6 +83,7 @@ urlpatterns = [
 
     url(r'^h5p-view/(?P<pk>\d*)/$', communityview.h5p_view, name='h5p_view'),
     url(r'^article-edit/(?P<pk>\d*)/$', articleview.ArticleEditView.as_view(), name='article_edit'),
+    url(r'^merged-article-edit/(?P<pk>\d*)/$', articleview.MergedArticleEditView.as_view(), name='merged_article_edit'),
     url(r'^article-delete/(?P<pk>\d*)/$', articleview.delete_article, name='article_delete'),
     url(r'^article-revision/(?P<pk>\d*)/$', articleview.SimpleModelHistoryCompareView.as_view(template_name='revision_article.html'), name='article_revision' ),
     url(r'^submit_article/$', articleview.submit_article, name='submit_article'),

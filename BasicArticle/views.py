@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm
+from .forms import NewArticleForm, ArticleUpdateForm, ArticleCreateForm, MergedArticleUpdateForm
 from django.http import Http404, HttpResponse, JsonResponse
 from .models import ArticleStates, Articles, ArticleViewLogs
 from django.views.generic import CreateView, UpdateView
 from reversion_compare.views import HistoryCompareDetailView
-from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community
+from Community.models import CommunityArticles, CommunityMembership, CommunityGroups, Community, MergedArticles, MergedArticleStates
 from Group.models import GroupArticles, GroupMembership
 from django.contrib.auth.models import Group as Roles
 from workflow.models import States, Transitions
@@ -459,3 +459,76 @@ def add_content_by_curator(request):
 		body = body
 	)
 	return redirect('view_all_content',pk1=commpk, state='accepted')
+
+
+class MergedArticleEditView(UpdateView):
+	form_class = MergedArticleUpdateForm
+	model = MergedArticles
+	template_name = 'edit_merged_article.html'
+	pk_url_kwarg = 'pk'
+	context_object_name = 'article'
+	success_url = 'view_merged_content'
+
+	def get_form_kwargs(self):
+		kwargs = super(MergedArticleEditView, self).get_form_kwargs()
+		return kwargs
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated:
+			self.object = self.get_object()
+			u = User.objects.get(username=request.user)
+			if self.object.changedby != request.user and not (u.groups.filter(name='curator').exists()):				
+				return redirect('home')
+			# state = get_state_article(self.object)
+
+			articlestates = MergedArticleStates.objects.filter(mergedarticle=self.object).order_by('-changedon')[:1]
+			state = articlestates[0].state
+			response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
+			return response
+			# if canEditResource(state.name, self.object, request):
+			# 	response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
+			# 	return response
+			return redirect('article_view',pk=self.object.pk)
+		return redirect('login')
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		# community = self.get_community()
+		# context['community'] = self.object.commu
+		return context
+
+	def form_valid(self, form):
+		self.object = form.save(commit=False)
+		self.object.save()
+		form.save_m2m()
+		comments = self.request.POST['comments']
+		MergedArticleStates.objects.create(
+			mergedarticle = self.object,
+			state = self.object.state,
+			changedby = self.request.user,
+			changedon = datetime.datetime.now(),
+			introduction = self.object.introduction,
+			architecture = self.object.architecture,
+			rituals = self.object.rituals,
+			ceremonies = self.object.ceremonies,
+			tales = self.object.tales,
+			moreinfo = self.object.moreinfo,
+			comments = comments
+		)
+		return super(MergedArticleEditView, self).form_valid(form)
+
+	def get_success_url(self):
+		"""
+		Returns the supplied URL.
+		"""
+		if self.success_url:
+			return reverse(self.success_url,kwargs={'pk': self.object.community.pk})
+		else:
+			try:
+				url = self.object.get_absolute_url()
+			except AttributeError:
+				raise ImproperlyConfigured(
+				"No URL to redirect to.  Either provide a url or define"
+				" a get_absolute_url method on the Model.")
+		return url
+

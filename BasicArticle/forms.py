@@ -1,5 +1,6 @@
 from django import forms
 from .models import Articles
+from Community.models import MergedArticles
 from workflow.views import getStatesCommunity
 from workflow.models import States
 from django.conf import settings
@@ -114,3 +115,21 @@ class ArticleCreateForm(forms.ModelForm):
 	# 		msg = "Please enter information for atleast one of the categories"
 	# 		self.add_error('tags', msg)
 
+class MergedArticleUpdateForm(forms.ModelForm):
+	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
+	class Meta:
+		model = MergedArticles
+		fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'moreinfo']
+
+	def __init__(self, *args, **kwargs):
+		role = kwargs.pop('role', None)
+		super().__init__(*args, **kwargs)
+		self.fields['introduction'].widget.attrs.update({'class': 'form-control'})
+		self.fields['architecture'].widget.attrs.update({'class': 'form-control'})
+		self.fields['rituals'].widget.attrs.update({'class': 'form-control'})
+		self.fields['ceremonies'].widget.attrs.update({'class': 'form-control'})
+		self.fields['tales'].widget.attrs.update({'class': 'form-control'})
+		self.fields['moreinfo'].widget.attrs.update({'class': 'form-control'})
+		self.fields['moreinfo'].required = False
+		self.fields['comments'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
+		self.fields['comments'].required = False

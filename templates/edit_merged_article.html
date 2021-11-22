@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+  <style>
+    .ck-editor__editable {
+      min-height: 200px;
+    }
+  </style>
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% for cat in article.community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item">{{ article.community.name }}</li>
+  <li class="breadcrumb-item">Edit Merged Content</li>
+{% endblock %}
+
+{% block content %}
+<div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link " href="{% url 'view_merged_content' article.pk %}">View</a>
+    </li>
+    {% if user.is_authenticated %}
+      {% if article.state.name != 'publish' %}
+        <li class="nav-item active">
+          <a class="nav-link " href="">Edit</a>
+        </li>
+      {% endif%}
+    {% endif %}
+  </ul>
+</div>
+{% if messages %}
+  {% for message in messages %}
+    {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+  {% endfor %}
+{% endif %}
+<br />
+
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  <div class="invalid-feedback" style="color: red; font-weight: bold;">
+    {{ form.tags.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="title">Introduction</label>
+    {{ form.introduction }}
+    <div class="invalid-feedback">
+      {{ form.introduction.errors }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="title">Architecture</label>
+    {{ form.architecture }}
+    <div class="invalid-feedback">
+      {{ form.architecture.errors }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="title">Rituals</label>
+    {{ form.rituals }}
+    <div class="invalid-feedback">
+      {{ form.rituals.errors }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="title">Ceremonies</label>
+    {{ form.ceremonies }}
+    <div class="invalid-feedback">
+      {{ form.ceremonies.errors }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="title">Tales</label>
+    {{ form.tales }}
+    <div class="invalid-feedback">
+      {{ form.tales.errors }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="title">More Information</label>
+    {{ form.moreinfo }}
+    <div class="invalid-feedback">
+      {{ form.moreinfo.errors }}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Keywords</label>
+    <small id="bodyhelp" class="form-text text-muted">
+      <p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;">Clear</a></p>
+    </small>
+    {{ form.tags }}
+    <!-- <div class="invalid-feedback" style="color: red; font-weight: bold;">
+                      {{ form.tags.errors }}
+                    </div> -->
+  </div>
+  <div class="form-group">
+    <label for="comments">Comments</label>
+    {{ form.comments }}
+    <div class="invalid-feedback">
+      {{ form.comments.errors }}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-outline-info" name="submit" value='submit' id="submit">Save</button>
+  </div>
+
+</form>
+
+<br />
+</div>
+
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_introduction'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_architecture'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_rituals'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_ceremonies'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_tales'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_moreinfo'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+
+<script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+  (function ($) {
+    if (!$.curCSS) {
+      $.curCSS = $.css;
+    }
+  })(jQuery);
+
+  $("#id_tags").tagit({
+
+    caseSensitive: false,
+    allowDuplicates: false,
+
+  });
+</script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}
