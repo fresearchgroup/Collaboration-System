@@ -7,6 +7,18 @@
       margin-top: 20px;
       font-weight: bold;
     }
+    del {
+      text-decoration: line-through;
+      background-color: #fbb6c2;
+      color: #555;
+    }
+    ins {
+      text-decoration: none;
+      background-color: #d4fcbc;
+    }
+    .modal-content{
+      margin-top: 100px;
+    }    
   </style>
 {% endblock %} 
 
@@ -86,6 +98,43 @@
             {{myhtml|safe}}{% autoescape off%} {{merged.moreinfo}} {% endautoescape%}
         </div>
 
+
+        <h2 style="margin-top: 30px;">History</h2>
+
+        <table id="mergedArticleHistory" class="table table-striped table-bordered" cellspacing="0" width="100%" style="font-size: small;">
+          <thead>
+              <tr style="background-color:#89216B">
+                <th style="color:white">Status</th>
+                <th style="color:white">Action by</th>
+                <th style="color:white">Action on</th>
+                <th style="color:white">Comments</th>
+                <!-- <th style="color:white">Content</th> -->
+                <th style="color:white"></th>
+              </tr>
+          </thead>
+            <tbody id="parent">
+              {{myhtml|safe}}{% autoescape off%}
+              {% for history in statehistory %}
+                <tr>
+                  <td>{{ history.state.name }}</td>
+                  <td>{{ history.changedby.username }}</td>
+                  <td>{{ history.changedon }}</td>
+                  <td>{{ history.comments }}</td>
+                  <!-- <td>{{ history.body }}</td> -->
+                  <td style="text-align: right;"><input type="checkbox" id="history" name="history" value="{{history.introduction|escape}}{{history.architecture|escape}}{{history.rituals|escape}}{{history.ceremonies|escape}}{{history.tales|escape}}{{history.moreinfo|escape}}" data-title="{{history.changedon}}"></td>
+                </tr>
+              {% endfor %}
+              <tr style="text-align: right;">
+                <td colspan="6" style="text-align: right;">Select 2 checkboxes and click <button id="compare">Compare</button></td>
+              </tr>
+          {% endautoescape%}
+            </tbody>
+        </table>
+          <br /><br /><br />
+      
+
+
+
     </div> <!-- container -->
 </div> <!-- main -->
 
@@ -148,10 +197,55 @@
     </div>
 </div>
 
+<div id="modalshowcompare" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="showoutput-title" style="font-weight: bold;">Modal Title</h5>
+          </div>
+          <div class="modal-body" id="showoutput">
+              <p></p>
+          </div>
+      </div>
+  </div>
+</div>
+
 
 {% endblock %}
 
 {% block javascript %}
+<script src="{% static 'js/htmldiff.js' %}"></script>
+
+<script type="text/javascript">
+  $(function(){
+      $("#compare").click(function(){
+          nochecked = $("#parent input:checkbox:checked").length;
+          if (nochecked < 2) {
+            alert("select atleast 2 checkboxes for comparing")
+          }
+          if (nochecked > 2) {
+            alert("select 2 checkboxes only for comparing")
+          }
+          if (nochecked == 2){
+            let i=0;
+            const a = [];
+            const title = [];
+            var checkboxes = document.getElementsByName('history');
+            for (var checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    a[i] = checkbox.value;
+                    title[i] = checkbox.getAttribute('data-title');
+                    i++;
+                }
+            }
+            let output = htmldiff(a[1], a[0]);
+            document.getElementById("showoutput-title").innerHTML = "Comparing " + title[0] + " Vs " + title[1];
+            document.getElementById("showoutput").innerHTML = output;
+            $("#modalshowcompare").modal('show');
+          }
+      });
+  });
+</script>
 
 
 {% endblock %}

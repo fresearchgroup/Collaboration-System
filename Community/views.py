@@ -1108,5 +1108,6 @@ def view_merged_content(request, pk):
 	if u.groups.filter(name='curator').exists():
 		community = Community.objects.get(pk=pk)
 		merged = MergedArticles.objects.get(community=community)
-		return render(request, 'view_merged_content.html',{'merged':merged})
+		statehistory = MergedArticleStates.objects.filter(mergedarticle=merged).order_by('-changedon')
+		return render(request, 'view_merged_content.html',{'merged':merged, 'statehistory':statehistory})
 	return redirect('login')
