@@ -9,12 +9,16 @@
     }
   </style>
 {% endblock %} 
-{% block breadcrumb %}
-<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
 
-  {% if user.is_authenticated %}
-  <li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Merged Content</a></li>
-  {% endif %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  {% for cat in merged.community.get_ancestors %}
+    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+  {% endfor %}
+  <li class="breadcrumb-item active"><a href="{% url 'community_view' merged.community.pk %}">{{ merged.community.name }}</a></li>
+  <li class="breadcrumb-item">Merged Contributions</li>
 {% endblock %}
 
 {% block content %}
