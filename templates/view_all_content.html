@@ -145,8 +145,12 @@
 <div style="text-align: center;">
     {% if merged %}
         <h4><b>This contribution has been merged. Click <a href="{% url 'view_merged_content' community.pk %}">here</a> to view it.</b></h4>
-    {% else %}
-        <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>        
+    {% else %} <!-- not merged -->
+        {% if introduction and rituals and architecture and ceremonies and tales %}
+            <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>
+        {% else %}
+            <h4><b>Not all sections have contributions. Click 'Add content' under the respective section(s) to add a contribution so as to proceed with merging. </b></h4>
+        {% endif %}
     {% endif %}
 </div>
 <br /><br /><br />
