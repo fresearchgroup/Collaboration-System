@@ -1111,3 +1111,24 @@ def view_merged_content(request, pk):
 		statehistory = MergedArticleStates.objects.filter(mergedarticle=merged).order_by('-changedon')
 		return render(request, 'view_merged_content.html',{'merged':merged, 'statehistory':statehistory})
 	return redirect('login')
+
+def send_for_approval(request):
+	pk = request.POST['pk']
+	merged = MergedArticles.objects.get(pk=pk)
+	state = States.objects.get(name='sentForApproval')
+	merged.state = state
+	merged.save()
+
+	MergedArticleStates.objects.create (
+		mergedarticle = merged,
+		state = state,
+		changedby = request.user,
+		changedon = datetime.datetime.now(),
+		introduction = merged.introduction,
+		architecture = merged.architecture,
+		rituals = merged.rituals,
+		ceremonies = merged.ceremonies,
+		tales = merged.tales,
+		moreinfo = merged.moreinfo
+	)
+	return redirect('view_merged_content',pk=merged.community.pk)

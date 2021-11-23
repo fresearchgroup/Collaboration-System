@@ -114,6 +114,8 @@ urlpatterns = [
     url(r'^merge_content/(?P<pk>\d+)/$', communityview.merge_content, name='merge_content'),
     url(r'^view_merged_content/(?P<pk>\d+)/$', communityview.view_merged_content, name='view_merged_content'),
 
+    url(r'^send_for_approval/$', communityview.send_for_approval, name='send_for_approval'),
+
     url(r'^view_all_content/(?P<pk1>\w+)/(?P<state>\w+)/$', communityview.view_all_content, name='view_all_content'),
 
     url(r'^curate_content/$', communityview.curate_content, name='curate_content'),
