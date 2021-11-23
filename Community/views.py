@@ -1105,17 +1105,27 @@ def merge_content(request, pk):
 
 def view_merged_content(request, pk):
 	u = User.objects.get(username=request.user)
-	if u.groups.filter(name='curator').exists():
+	if u.groups.filter(name='curator').exists() or u.groups.filter(name='icpapprover').exists():
 		community = Community.objects.get(pk=pk)
 		merged = MergedArticles.objects.get(community=community)
 		statehistory = MergedArticleStates.objects.filter(mergedarticle=merged).order_by('-changedon')
 		return render(request, 'view_merged_content.html',{'merged':merged, 'statehistory':statehistory})
 	return redirect('login')
 
-def send_for_approval(request):
+def curate_merged(request):
 	pk = request.POST['pk']
 	merged = MergedArticles.objects.get(pk=pk)
-	state = States.objects.get(name='sentForApproval')
+	status = request.POST['status']
+
+	if status == 'sendForApproval':
+		state = States.objects.get(name='sentForApproval')
+
+	if status == 'recurate':
+		state = States.objects.get(name='merged')
+
+	if status == 'accept':
+		state = States.objects.get(name='publish')
+
 	merged.state = state
 	merged.save()
 

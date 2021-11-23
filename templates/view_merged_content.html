@@ -98,32 +98,101 @@
             {{myhtml|safe}}{% autoescape off%} {{merged.moreinfo}} {% endautoescape%}
         </div>
 
-        {% if merged.state.name == 'merged' %}
-        <button type="radio" name="sendforapproval" value="sendforapproval" class="btn btn-success" data-toggle="modal" data-target="#modalsendforapproval" data-whatever="@mdo" id="sendforapproval">Send for approval</button>
-        <div class="modal fade" id="modalsendforapproval" tabindex="-1" role="dialog" aria-labelledby="RecurateMergedArticleModal" aria-hidden="true">
-          <div class="modal-dialog text-left" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Send for approval</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+        {% for group_for in request.user.groups.all %}
+          {% if group_for.name == 'curator' %}
+            {% if merged.state.name == 'merged' %}
+              <button type="radio" name="sendforapproval" value="sendforapproval" class="btn btn-success" data-toggle="modal" data-target="#modalsendforapproval" data-whatever="@mdo" id="sendforapproval">Send for approval</button>
+              <div class="modal fade" id="modalsendforapproval" tabindex="-1" role="dialog" aria-labelledby="RecurateMergedArticleModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" id="exampleModalLabel">Send for approval</h3>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method = "post" action ="{% url 'curate_merged' %}">
+                        {% csrf_token %}
+                        <input type='hidden' name = 'pk' value ={{merged.pk}} />
+                        <input type='hidden' name = 'status' value ='sendForApproval' />
+                        Are you sure that you want to send this collated content for approval?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button id="sendforapproval" type="submit" class="btn btn-primary">Yes</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="modal-body">
-                <form method = "post" action ="{% url 'send_for_approval' %}">
-                  {% csrf_token %}
-                  <input type='hidden' name = 'pk' value ={{merged.pk}} />
-                  Are you sure that you want to send this collated content for approval?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button id="sendforapproval" type="submit" class="btn btn-primary">Yes</button>
-                </form>
+            {% endif %} <!-- merged state -->
+          {% endif %}
+        {% endfor %}
+
+    {% for group_for in request.user.groups.all %}
+      {% if group_for.name == 'icpapprover' %}
+        {% if merged.state.name == 'sentForApproval' %}
+          <button type="radio" name="mergedarticlerecuratestatus" value="re-curate" class="btn btn-success" data-toggle="modal" data-target="#modalRecurateMergedArticle" data-whatever="@mdo" id="mergedarticlerecuratestatus" style="background-color: red;">Recurate</button>
+          <div class="modal fade" id="modalRecurateMergedArticle" tabindex="-1" role="dialog" aria-labelledby="RecurateMergedArticleModal" aria-hidden="true">
+            <div class="modal-dialog text-left" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="exampleModalLabel">Send for recuration</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method = "post" action ="{% url 'curate_merged' %}">
+                    {% csrf_token %}
+                    <input type='hidden' name = 'status' value='recurate'/>
+                    <input type='hidden' name = 'pk' value ={{merged.pk}} />
+                    <div class="form-group">
+                      <label for="reason-text" class="col-form-label">Enter more details about what modification are required</label>
+                      <textarea class="form-control" id="reason-text" name="reason"></textarea>                                              
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {% endif %} <!-- merged state -->
+        {% endif %} <!-- sentForApproval -->
+        {% if merged.state.name == 'sentForApproval' %}
+          <button type="radio" name="mergedarticleacceptstatus" value="accept" class="btn btn-success" data-toggle="modal" data-target="#modalAcceptMergedArticle" data-whatever="@mdo" id="mergedarticleacceptstatus">Accept</button>
+          <div class="modal fade" id="modalAcceptMergedArticle" tabindex="-1" role="dialog" aria-labelledby="AcceptMergedArticleModal" aria-hidden="true">
+            <div class="modal-dialog text-left" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="exampleModalLabel">Accept for publishing on ICP</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method = "post" action ="{% url 'curate_merged' %}">
+                    {% csrf_token %}
+                    <input type='hidden' name = 'status' value='accept'/>
+                    <input type='hidden' name = 'pk' value ={{merged.pk}} />
+                    <div class="form-group">
+                      Accept and proceed with publishing on ICP?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %} <!-- sentForApproval -->
+      {% endif %}
+    {% endfor %}
 
 
         <h2 style="margin-top: 30px;">History</h2>
