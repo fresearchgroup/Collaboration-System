@@ -95,8 +95,13 @@
 
         <h3 class="sectiontitle">More Information</h3>
         <div style="margin-left:30px;">
-            {{myhtml|safe}}{% autoescape off%} {{merged.moreinfo}} {% endautoescape%}
+            {% if merged.moreinfo %}
+              {{myhtml|safe}}{% autoescape off%} {{merged.moreinfo}} {% endautoescape%}
+            {% else %}
+              No content in this section
+            {% endif %}
         </div>
+        <br /><br />
 
         {% for group_for in request.user.groups.all %}
           {% if group_for.name == 'curator' %}
