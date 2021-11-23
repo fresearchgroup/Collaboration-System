@@ -232,7 +232,7 @@
                   <td>{{ history.changedon }}</td>
                   <td>{{ history.comments }}</td>
                   <!-- <td>{{ history.body }}</td> -->
-                  <td style="text-align: right;"><input type="checkbox" id="history" name="history" value="{{history.introduction|escape}}{{history.architecture|escape}}{{history.rituals|escape}}{{history.ceremonies|escape}}{{history.tales|escape}}{{history.moreinfo|escape}}" data-title="{{history.changedon}}"></td>
+                  <td style="text-align: right;"><input type="checkbox" id="history" name="history" value="<h4>Introduction</h4> {{history.introduction|escape}} <h4>Architecture</h4> {{history.architecture|escape}} <h4>Rituals</h4> {{history.rituals|escape}} <h4>Ceremonies</h4> {{history.ceremonies|escape}} <h4>Tales</h4> {{history.tales|escape}} <h4>More information</h4> {{history.moreinfo|escape}}" data-title="{{history.changedon}}"></td>
                 </tr>
               {% endfor %}
               <tr style="text-align: right;">
