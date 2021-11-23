@@ -221,7 +221,13 @@
               {{myhtml|safe}}{% autoescape off%}
               {% for history in statehistory %}
                 <tr>
-                  <td>{{ history.state.name }}</td>
+                  <td>
+                    {% if forloop.counter != statehistory.count and history.state.name == 'merged' %}
+                      re-curate
+                    {% else %}
+                      {{ history.state.name }}
+                    {% endif %}
+                  </td>
                   <td>{{ history.changedby.username }}</td>
                   <td>{{ history.changedon }}</td>
                   <td>{{ history.comments }}</td>
