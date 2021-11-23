@@ -1116,12 +1116,15 @@ def curate_merged(request):
 	pk = request.POST['pk']
 	merged = MergedArticles.objects.get(pk=pk)
 	status = request.POST['status']
+	comments = ''
 
 	if status == 'sendForApproval':
 		state = States.objects.get(name='sentForApproval')
+		comments = request.POST['reason']
 
 	if status == 'recurate':
 		state = States.objects.get(name='merged')
+		comments = request.POST['reason']
 
 	if status == 'accept':
 		state = States.objects.get(name='publish')
@@ -1139,6 +1142,7 @@ def curate_merged(request):
 		rituals = merged.rituals,
 		ceremonies = merged.ceremonies,
 		tales = merged.tales,
-		moreinfo = merged.moreinfo
+		moreinfo = merged.moreinfo,
+		comments = comments
 	)
 	return redirect('view_merged_content',pk=merged.community.pk)
