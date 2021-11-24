@@ -10,6 +10,10 @@ def canEditResource(state, resource, request):
 		isCurator = True
 	else:
 		isCurator = False
+	if u.groups.filter(name='icpapprover').exists():
+		isApprover = True
+	else:
+		isApprover = False
 	if state=='publish':
 		messages.warning(request, 'You cannot edit content which is already published')
 		return False
@@ -21,6 +25,12 @@ def canEditResource(state, resource, request):
 		return False
 	if state=='rejected':
 		messages.warning(request, 'You cannot edit this content as it has been rejected')
+		return False
+	if state=='merged' and isApprover==True:
+		messages.warning(request, 'You cannot edit this content as it is under curation')
+		return False
+	if state=='sentForApproval' and isCurator==True:
+		messages.warning(request, 'You cannot edit this content as it is currently in the approval phase')
 		return False
 	return True
 
