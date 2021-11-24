@@ -151,7 +151,7 @@
 
     {% for group_for in request.user.groups.all %}
       {% if group_for.name == 'icpapprover' %}
-        {% if merged.state.name == 'sentForApproval' %}
+        {% if merged.state.name == 'sentForApproval' or merged.state.name == 'publish'%}
           <button type="radio" name="mergedarticlerecuratestatus" value="re-curate" class="btn btn-success" data-toggle="modal" data-target="#modalRecurateMergedArticle" data-whatever="@mdo" id="mergedarticlerecuratestatus" style="background-color: red;">Recurate</button>
           <div class="modal fade" id="modalRecurateMergedArticle" tabindex="-1" role="dialog" aria-labelledby="RecurateMergedArticleModal" aria-hidden="true">
             <div class="modal-dialog text-left" role="document">
