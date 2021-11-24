@@ -105,7 +105,8 @@ def community_view(request, pk):
 	for child in children:
 		curatorrole = Roles.objects.get(name='curator')
 		curatorname = CommunityMembership.objects.filter(community=child, role=curatorrole).order_by('-assignedon')[:1]
-		child.curatorname = curatorname[0].user
+		if curatorname.count() > 0:
+			child.curatorname = curatorname[0].user
 
 		grandchildren = child.get_children()
 		draftCount = 0
