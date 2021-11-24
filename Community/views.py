@@ -928,8 +928,11 @@ def assign_community_curation(request):
 		role = role,
 		assignedon = datetime.datetime.now()
 	)
-	articlepk = request.POST['articlepk']
-	return redirect('article_view',pk=articlepk)
+	if 'articlepk' in request.POST:
+		articlepk = request.POST['articlepk']
+		return redirect('article_view',pk=articlepk)
+	else:
+		return redirect('view_all_content', pk1=pk, state='accepted')
 
 def curate_content(request):
 	u = User.objects.get(username=request.user)
@@ -1022,11 +1025,14 @@ def view_all_content(request, pk1, state):
 		ceremonies = CommunityArticles.objects.filter(community__name='Ceremonies', community__parent=community, article__state__name=state)
 		tales = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
 		moreinfo = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
+		curatorrole = Roles.objects.get(name='curator')
+		curatorname = CommunityMembership.objects.filter(community=community, role=curatorrole).order_by('-assignedon')[:1]
+		curatorname = curatorname[0].user
 		if MergedArticles.objects.filter(community=community).exists():
 			merged = True
 		else:
 			merged = False
-		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged})
+		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged, 'curatorname':curatorname})
 	return redirect('login')
 
 def merge_content(request, pk):
