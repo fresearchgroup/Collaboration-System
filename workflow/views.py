@@ -19,6 +19,9 @@ def canEditResource(state, resource, request):
 	if state=='accepted' and isCurator==False:
 		messages.warning(request, 'You cannot edit this content as it has been accepted')
 		return False
+	if state=='rejected':
+		messages.warning(request, 'You cannot edit this content as it has been rejected')
+		return False
 	return True
 
 def canEditResourceCommunity(state, role, resource, request):
