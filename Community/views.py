@@ -103,6 +103,10 @@ def community_view(request, pk):
 	children = community.get_children().order_by('-contribution_status')
 
 	for child in children:
+		curatorrole = Roles.objects.get(name='curator')
+		curatorname = CommunityMembership.objects.filter(community=child, role=curatorrole).order_by('-assignedon')[:1]
+		child.curatorname = curatorname[0].user
+
 		grandchildren = child.get_children()
 		draftCount = 0
 		submittedCount = 0
@@ -117,6 +121,7 @@ def community_view(request, pk):
 			modifyCount += CommunityArticles.objects.filter(community=gc, article__state__name='sentToModify').count()
 			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='accepted').count()
 			rejectedCount += CommunityArticles.objects.filter(community=gc, article__state__name='rejected').count()
+
 		child.draftCount = draftCount
 		child.submittedCount = submittedCount
 		child.inreviewCount = inreviewCount

@@ -92,6 +92,7 @@
             <th style="color:white">Accepting Contributions</th>
             {% for group_for in request.user.groups.all %}
               {% if group_for.name == 'curator' or group_for.name == 'icpapprover' %}
+                <th style="color:white">Curator</th>
                 <th style="color:white">Draft</th>
                 <th style="color:white">Submitted</th>
                 <th style="color:white">In-review</th>
@@ -123,6 +124,7 @@
             </td>
             {% for group_for in request.user.groups.all %}
               {% if group_for.name == 'curator' or group_for.name == 'icpapprover' %}
+                <td>{{child.curatorname}}</td>
                 <td>
                   {% if child.draftCount > 0 %}
                     <a href="{% url 'display_curation_list' pk1=child.pk pk2='draft' %}">{{child.draftCount}}</a>
