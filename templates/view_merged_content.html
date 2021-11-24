@@ -68,6 +68,16 @@
           </div>
         </div>
 
+        {% if messages %}
+          <div class="alert alert-warning" role="alert">
+            <ul class="messages">
+                {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
         <h3 class="sectiontitle">Introduction</h3>
         <div style="margin-left:30px;">
             {{myhtml|safe}}{% autoescape off%} {{merged.introduction}} {% endautoescape%}

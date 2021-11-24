@@ -477,18 +477,17 @@ class MergedArticleEditView(UpdateView):
 		if request.user.is_authenticated:
 			self.object = self.get_object()
 			u = User.objects.get(username=request.user)
-			if self.object.changedby != request.user and not (u.groups.filter(name='curator').exists()):				
+			if not (u.groups.filter(name='curator').exists()) and not (u.groups.filter(name='icpapprover').exists()):				
 				return redirect('home')
 			# state = get_state_article(self.object)
 
 			articlestates = MergedArticleStates.objects.filter(mergedarticle=self.object).order_by('-changedon')[:1]
 			state = articlestates[0].state
-			response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
-			return response
-			# if canEditResource(state.name, self.object, request):
-			# 	response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
-			# 	return response
-			return redirect('article_view',pk=self.object.pk)
+			# response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
+			if canEditResource(state.name, self.object, request):
+				response=super(MergedArticleEditView, self).get(request, *args, **kwargs)
+				return response
+			return redirect('view_merged_content',pk=self.object.community.pk)
 		return redirect('login')
 
 	def get_context_data(self, **kwargs):
