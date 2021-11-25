@@ -99,19 +99,17 @@ class SubCommunityCreateForm(forms.ModelForm):
 
 	class Meta:
 		model = Community
-		fields = ['name', 'desc', 'image', 'tag_line', 'parent']
+		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('community', None)
 		super().__init__(*args, **kwargs)
 		self.fields['name'].widget.attrs.update({'class': 'form-control'})
 		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
-		self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
-		self.fields['image'].required = False
-		# self.fields['category'].widget.attrs.update({'class': 'form-control'})
-		# self.fields['category'].required = False
-		self.fields['tag_line'].widget.attrs.update({'class': 'form-control'})
-		self.fields['tag_line'].required = False
+		self.fields['area'].widget.attrs.update({'class': 'form-control'})
+		self.fields['city'].widget.attrs.update({'class': 'form-control'})
+		self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
 		if community:

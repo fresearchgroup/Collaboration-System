@@ -135,7 +135,13 @@ def community_view(request, pk):
 			child.merged = False
 
 	childrencount = children.count()
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount})
+
+	createpow = False
+	if request.user.is_authenticated:
+		u = User.objects.get(username=request.user)
+		if u.groups.filter(name='curator').exists():
+			createpow = True
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
@@ -610,10 +616,11 @@ class CreateSubCommunityView(CreateView):
 
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
-			if self.is_member_of_parent():
+			u = User.objects.get(username=request.user)
+			if u.groups.filter(name='curator').exists():
 				self.object = None
 				return super(CreateSubCommunityView, self).get(request, *args, **kwargs)
-			messages.warning(self.request, 'You are not a member of this community.')
+			messages.warning(self.request, 'You cannot create a pow')
 			return redirect(self.success_url, self.kwargs['pk'])
 		return redirect('home')
 
@@ -646,10 +653,17 @@ class CreateSubCommunityView(CreateView):
 			role = Roles.objects.get(name='community_admin')
 			)
 
-		try:
-			create_community_ether(self.object)
-		except Exception as e:
-			messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
+		Community.objects.create(name='Introduction', created_by = self.object.created_by, parent = self.object)
+		Community.objects.create(name='Architecture', created_by = self.object.created_by, parent = self.object)
+		Community.objects.create(name='Rituals', created_by = self.object.created_by, parent = self.object)
+		Community.objects.create(name='Ceremonies', created_by = self.object.created_by, parent = self.object)
+		Community.objects.create(name='Tales', created_by = self.object.created_by, parent = self.object)
+		Community.objects.create(name='More Information', created_by = self.object.created_by, parent = self.object)
+
+		# try:
+		# 	create_community_ether(self.object)
+		# except Exception as e:
+		# 	messages.warning(self.request, 'Cannot create ether id for this Community. Please check whether Etherpad service is running.')
 
 		return super(CreateSubCommunityView, self).form_valid(form)
 

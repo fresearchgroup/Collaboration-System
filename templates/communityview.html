@@ -182,14 +182,20 @@
       </tbody>
     </table>
 
-    {% if user.is_authenticated and not request.user.is_superuser %}
-      <h4>
-        Can't find a {{ community.name }}? 
-        <form method = "get" action ="{% url 'request_community_creation' %}">
-          <input type="hidden" name="cid" value={{community.pk}}>
-          <button type="radio" name ="status" value="submit" class="btn btn-success" >Click to add</button>
-        </form>
-      </h4>
+    {% if createpow or request.user.is_superuser %}
+      <form method = "get" action ="{% url 'community_group' community.pk%}">
+        <button type="radio" name ="status" value="submit" class="btn btn-success" >Click to create a {{ community.name }}</button>
+      </form>
+    {% else %}
+      {% if user.is_authenticated %}
+        <h4>
+          Can't find a {{ community.name }}? 
+          <form method = "get" action ="{% url 'request_community_creation' %}">
+            <input type="hidden" name="cid" value={{community.pk}}>
+            <button type="radio" name ="status" value="submit" class="btn btn-success" >Click to add</button>
+          </form>
+        </h4>
+      {% endif %}
     {% endif %}
   {% endif %}
 

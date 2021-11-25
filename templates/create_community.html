@@ -51,7 +51,31 @@
                   <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
                   </div>
 
-                  <div class="form-group custom-file">
+                  <div class="form-group">
+                    <label for="title">Area</label>
+                    {{ form.area }}
+                    <div class="invalid-feedback">{{ form.area.errors }}</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">City</label>
+                    {{ form.city }}
+                    <div class="invalid-feedback">{{ form.city.errors }}</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">State</label>
+                    {{ form.state }}
+                    <div class="invalid-feedback">{{ form.state.errors }}</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Pincode</label>
+                    {{ form.pincode }}
+                    <div class="invalid-feedback">{{ form.pincode.errors }}</div>
+                  </div>
+
+                  <!-- <div class="form-group custom-file">
                     <label for="image">Image</label>
                       {{form.image}}
                       {{form.x}}
@@ -61,7 +85,7 @@
                       <div class="invalid-feedback">
                       {{ form.image.errors }}
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="form-group">
                     <label for="title">Category</label>
                     {{ form.category }}
@@ -69,13 +93,13 @@
                       {{ form.category.errors }}
                     </div>
                   </div> -->
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="title">Tag Line</label>
                     {{ form.tag_line }}
                     <div class="invalid-feedback">
                       {{ form.tag_line.errors }}
                     </div>
-                  </div>
+                  </div> -->
                   {% if form.created_by %}
                   <div class="form-group">
                     <label for="title">Assign Admin</label>
