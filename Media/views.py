@@ -96,7 +96,7 @@ class MediaCreateView(CreateView):
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)
-		statehistory = MediaStates.objects.filter(media=gcmedia.media)
+		statehistory = MediaStates.objects.filter(media=gcmedia.media).order_by('-changedon')
 		state = get_state_media(gcmedia.media)
 		curator = CommunityMembership.objects.filter(community=gcmedia.community.parent).order_by('-assignedon')[:1]
 	except CommunityMedia.DoesNotExist:
