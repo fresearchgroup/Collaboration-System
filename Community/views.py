@@ -946,6 +946,9 @@ def assign_community_curation(request):
 	if 'articlepk' in request.POST:
 		articlepk = request.POST['articlepk']
 		return redirect('article_view',pk=articlepk)
+	elif 'mediapk' in request.POST:
+		mediapk = request.POST['mediapk']
+		return redirect('media_view',pk=mediapk)
 	else:
 		return redirect('view_all_content', pk1=pk, state='accepted')
 
@@ -992,6 +995,20 @@ def curate_content(request):
 				media = Media.objects.get(pk=pk)
 				media.state = state
 				media.save()
+				MediaStates.objects.create(
+					media = media,
+					state = state,
+					changedby = request.user,
+					changedon = datetime.datetime.now(),
+					comments = comments
+				)
+				if 'redirecto' in request.POST:
+					redirecto = request.POST['redirecto']
+					if redirecto == 'view_all_content':
+						commpk = request.POST['commpk']
+						state =  request.POST['state']
+						return redirect('view_all_content', commpk, state)
+				return redirect('media_view',pk=pk)
 
 def display_curation_list(request, pk1='', pk2=''):
 	# pk1-community pk, pk2-state name

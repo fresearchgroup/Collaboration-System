@@ -13,6 +13,7 @@ from workflow.models import States
 from .forms import *
 from django.contrib.auth.models import User
 import datetime
+from django.contrib.auth.models import Group as Roles
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -97,6 +98,7 @@ def media_view(request, pk):
 		gcmedia = CommunityMedia.objects.get(media=pk)
 		statehistory = MediaStates.objects.filter(media=gcmedia.media)
 		state = get_state_media(gcmedia.media)
+		curator = CommunityMembership.objects.filter(community=gcmedia.community.parent).order_by('-assignedon')[:1]
 	except CommunityMedia.DoesNotExist:
 		return redirect('home')
 	# if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
@@ -108,7 +110,7 @@ def media_view(request, pk):
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory})
+	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user})
 
 class MediaUpdateView(UpdateView):
 	form_class = MediaUpdateForm
@@ -248,6 +250,26 @@ def submit_media(request):
 			changedby = request.user,
 			changedon = datetime.datetime.now()
 		)
+
+		commparentpk = request.POST['commparentpk']
+		community = Community.objects.get(pk=commparentpk)
+		role = Roles.objects.get(name='curator')
+
+		if CommunityMembership.objects.filter(community=community, role=role).exists() :
+			# Send email to curator
+			pass
+		else:
+			curators = User.objects.filter(groups__name='curator').exclude(username='admin').order_by('pk')
+			curatorCount = curators.count()
+			level1commCount = Community.objects.filter(level=1).count()
+			curatorNo = level1commCount % curatorCount
+			assignedto = curators[curatorNo]
+			CommunityMembership.objects.create(
+				user = assignedto,
+				community = community,
+				role = role,
+				assignedon = datetime.datetime.now()
+			)
 		return redirect('media_view',pk=pk)
 
 def get_state_media(media):
