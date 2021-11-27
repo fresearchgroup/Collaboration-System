@@ -1064,7 +1064,8 @@ def view_all_content(request, pk1, state):
 			merged = True
 		else:
 			merged = False
-		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged, 'curatorname':curatorname})
+		media = CommunityMedia.objects.filter(community__parent=community, media__state__name=state)
+		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged, 'curatorname':curatorname, 'media':media})
 	return redirect('login')
 
 def merge_content(request, pk):

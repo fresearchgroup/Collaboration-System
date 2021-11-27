@@ -43,9 +43,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}
                         <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -63,9 +63,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}    
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -83,9 +83,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -103,9 +103,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname  %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -123,9 +123,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -143,9 +143,9 @@
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
-                            <button name="modify" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
                         {% endif %}
-                        <button name="reject" class="btn btn-primary" data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
+                        <button name="reject" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Reject</button>
                     {% endif %}
                     <hr style="height:2px; border-width:0; background-color:#89216B;">
                 {% endfor %}
@@ -153,6 +153,63 @@
                 No contribution in this section
             {% endif %}
         </div>
+
+        <h3 class="sectiontitle">Gallery</h3>
+        <div class="content-page">
+            <div class="row margin-bottom-10">
+                {% for gcmedia in media %}
+                    <div class="col-md-3 col-sm-4 gallery-item">
+                        {% if gcmedia.media.mediatype == 'IMAGE' %}
+                            <a data-rel="fancybox-button" title="{{gcmedia.media.title}}" href="{{ MEDIA_URL }}{{gcmedia.media.mediafile}}" class="fancybox-button">
+                                {% if gcmedia.media.mediafile %}
+                                    <img src="{{ MEDIA_URL }}{{gcmedia.media.mediafile}}" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid red;" >
+                                {% else %}
+                                    <img src="{{ MEDIA_URL }}{{gcmedia.media.medialink}}" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid red;" >
+                                {% endif %}
+                                <div class="zoomix"><i class="fa fa-search"></i></div>
+                            </a>
+                        {% endif %}
+                        {% if gcmedia.media.mediatype == 'AUDIO' %}
+                            {% if gcmedia.media.mediafile %}
+                                <audio controls>
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+                                </audio>
+                            {% else %}
+                                <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                            {% endif %}
+                        {% endif %}
+                        {% if gcmedia.media.mediatype == 'VIDEO' %}
+                            {% if gcmedia.media.mediafile %}
+                                <video class="img-responsive margin-bottom-10" style="height: 250px; width: 100%; border: 1px solid red;" controls>
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
+                                </video>      
+                            {% else %}
+                                <iframe height="250px" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                            {% endif %}
+                        {% endif %}
+                        <h5 style="text-align: center; font-weight: bold;">
+                            {{gcmedia.media.title}} -- {{gcmedia.media.created_by}} <br />
+                        </h5>
+                        {% if not merged and request.user == curatorname  %}
+                            <button class="btn btn-link"  name="modify" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button class="btn btn-link"  name="reject" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Reject</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        
+
+
+
+
 
     </div> <!-- container -->
 </div> <!-- main -->
@@ -239,7 +296,7 @@
             {% csrf_token %}
             <input id="modalArticlepk" type='hidden' name='pk' value='' />
             <input id="modalStatus" type='hidden' name='status' value='' />
-            <input type='hidden' name='type' value='Article' />
+            <input id="modalType" type='hidden' name='type' value='' />
             <input type='hidden' name='redirecto' value='view_all_content' />
             <input type='hidden' name='commpk' value='{{community.pk}}' />
             <input id="modalState" type='hidden' name='state' value='dfsf' />
@@ -278,6 +335,8 @@
         document.getElementById("modalArticlepk").value=articlepk;
         state = clicked_object.getAttribute('data-article-state');
         document.getElementById("modalState").value=state;
+        type = clicked_object.getAttribute('data-type');
+        document.getElementById("modalType").value=type;
         $("#modifyrejectModal").modal('show');
     }
 </script>
