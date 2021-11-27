@@ -1157,9 +1157,10 @@ def view_merged_content(request, pk):
 	u = User.objects.get(username=request.user)
 	if u.groups.filter(name='curator').exists() or u.groups.filter(name='icpapprover').exists():
 		community = Community.objects.get(pk=pk)
+		media = CommunityMedia.objects.filter(community__parent=community, media__state__name='accepted')
 		merged = MergedArticles.objects.get(community=community)
 		statehistory = MergedArticleStates.objects.filter(mergedarticle=merged).order_by('-changedon')
-		return render(request, 'view_merged_content.html',{'merged':merged, 'statehistory':statehistory})
+		return render(request, 'view_merged_content.html',{'merged':merged, 'media':media, 'statehistory':statehistory})
 	return redirect('login')
 
 def curate_merged(request):

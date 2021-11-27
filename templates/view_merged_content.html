@@ -111,7 +111,62 @@
               No content in this section
             {% endif %}
         </div>
-        <br /><br />
+
+
+        <h3 class="sectiontitle">Gallery</h3>
+        <div class="content-page">
+            <div class="row margin-bottom-10">
+                {% for gcmedia in media %}
+                    <div class="col-md-3 col-sm-4 gallery-item">
+                        {% if gcmedia.media.mediatype == 'IMAGE' %}
+                            {% if gcmedia.media.mediafile %}
+                                <a data-rel="fancybox-button" title="{{gcmedia.media.title}}" href="{{ MEDIA_URL }}{{gcmedia.media.mediafile}}" class="fancybox-button">
+                                    <img src="{{ MEDIA_URL }}{{gcmedia.media.mediafile}}" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid red;" >
+                                    <div class="zoomix"><i class="fa fa-search"></i></div>
+                                </a>
+                            {% else %}
+                                <a data-rel="fancybox-button" title="{{gcmedia.media.title}}" href="{{gcmedia.media.medialink}}" class="fancybox-button">
+                                    <img src="{{gcmedia.media.medialink}}" class="img-responsive" style="height: 250px; width: 100%; border: 1px solid red;" >
+                                    <div class="zoomix"><i class="fa fa-search"></i></div>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        {% if gcmedia.media.mediatype == 'AUDIO' %}
+                            {% if gcmedia.media.mediafile %}
+                                <audio controls>
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+                                </audio>
+                            {% else %}
+                                <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                            {% endif %}
+                        {% endif %}
+                        {% if gcmedia.media.mediatype == 'VIDEO' %}
+                            {% if gcmedia.media.mediafile %}
+                                <video class="img-responsive margin-bottom-10" style="height: 250px; width: 100%; border: 1px solid red;" controls>
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
+                                    <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
+                                </video>      
+                            {% else %}
+                                <iframe height="250px" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                            {% endif %}
+                        {% endif %}
+                        <h5 style="text-align: center; font-weight: bold;">
+                            {{gcmedia.media.title}} -- {{gcmedia.media.created_by}} <br />
+                        </h5>
+                        {% if not merged and request.user == curatorname  %}
+                            <button class="btn btn-link"  name="modify" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Ask contributor to modify</button>
+                            <button class="btn btn-link"  name="reject" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Reject</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
 
         {% for group_for in request.user.groups.all %}
           {% if group_for.name == 'curator' %}
