@@ -117,11 +117,17 @@ def community_view(request, pk):
 		rejectedCount = 0
 		for gc in grandchildren:
 			draftCount += CommunityArticles.objects.filter(community=gc, article__state__name='draft').count()
+			draftCount += CommunityMedia.objects.filter(community=gc, media__state__name='draft').count()
 			submittedCount += CommunityArticles.objects.filter(community=gc, article__state__name='submitted').count()
+			submittedCount += CommunityMedia.objects.filter(community=gc, media__state__name='submitted').count()
 			inreviewCount += CommunityArticles.objects.filter(community=gc, article__state__name='reviewStarted').count()
+			inreviewCount += CommunityMedia.objects.filter(community=gc, media__state__name='reviewStarted').count()
 			modifyCount += CommunityArticles.objects.filter(community=gc, article__state__name='sentToModify').count()
+			modifyCount += CommunityMedia.objects.filter(community=gc, media__state__name='sentToModify').count()
 			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='accepted').count()
+			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='accepted').count()
 			rejectedCount += CommunityArticles.objects.filter(community=gc, article__state__name='rejected').count()
+			rejectedCount += CommunityMedia.objects.filter(community=gc, media__state__name='rejected').count()
 
 		child.draftCount = draftCount
 		child.submittedCount = submittedCount
