@@ -1159,6 +1159,8 @@ def merge_content(request, pk):
 			tales = tales,
 			moreinfo = moreinfo
 		)
+		community.contribution_status = 'Completed'
+		community.save()
 		return redirect('view_merged_content',pk=pk)
 	return redirect('login')
 

@@ -109,7 +109,11 @@
         {% for child in children %}
           <tr>
             <td>
-              <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+              {% if child.contribution_status == 'Ongoing' %} 
+                <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+              {% else %}
+                {{child.name}}
+              {% endif %}
             </td>
             <td>
               {{child.area}}, {{child.city}}, {{child.state}}, {{child.pincode}}
