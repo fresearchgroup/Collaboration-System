@@ -1066,12 +1066,21 @@ def view_all_content(request, pk1, state):
 		curatorrole = Roles.objects.get(name='curator')
 		curatorname = CommunityMembership.objects.filter(community=community, role=curatorrole).order_by('-assignedon')[:1]
 		curatorname = curatorname[0].user
+
+		allowMerging = True
+		pedingarticles = CommunityArticles.objects.filter(community__parent=community)
+		pedingarticles = pedingarticles.filter( Q(article__state__name='submitted') | Q(article__state__name='reviewStarted') | Q(article__state__name='sentToModify') ).count()
+		pedingmedia = CommunityMedia.objects.filter(community__parent=community)
+		pedingmedia = pedingmedia.filter( Q(media__state__name='submitted') | Q(media__state__name='reviewStarted') | Q(media__state__name='sentToModify') ).count()
+		if pedingarticles > 0 or pedingmedia > 0:
+			allowMerging = False
+
 		if MergedArticles.objects.filter(community=community).exists():
 			merged = True
 		else:
 			merged = False
 		media = CommunityMedia.objects.filter(community__parent=community, media__state__name=state)
-		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged, 'curatorname':curatorname, 'media':media})
+		return render(request, 'view_all_content.html',{'community':community, 'introduction':introduction, 'architecture':architecture, 'rituals':rituals, 'ceremonies':ceremonies, 'tales':tales, 'moreinfo':moreinfo, 'merged':merged, 'curatorname':curatorname, 'media':media, 'allowMerging':allowMerging})
 	return redirect('login')
 
 def merge_content(request, pk):

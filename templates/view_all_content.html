@@ -223,7 +223,11 @@
     {% else %} <!-- not merged -->
         {% if introduction and rituals and architecture and ceremonies and tales %}
             {% if request.user == curatorname %}
-                <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>
+                {% if allowMerging %}
+                    <a class="btn btn-primary" href="{% url 'merge_content' community.pk %}">Merge contributions into one</a>
+                {% else %}
+                    <h4><b>There are some contributions which are either in the submitted state, in review state, or sent for modification. Please curate and either accept or reject them.</b></h4>
+                {% endif %}
             {% else %}
                 <button type="radio" class="btn btn-success" data-toggle="modal" data-target="#modalassigntome">Assign curation activity to me</button>
                 <div class="modal fade" id="modalassigntome" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
