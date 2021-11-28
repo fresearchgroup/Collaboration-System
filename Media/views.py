@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from .models import Media, MediaStates
 from workflow.models import States
 from Community.models import CommunityMedia, CommunityMembership, Community
+from Community.views import MergedArticles
 from workflow.views import canEditResourceCommunity, canEditResource, getStatesCommunity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from metadata.models import Metadata
@@ -105,12 +106,17 @@ def media_view(request, pk):
 	u = User.objects.get(username=request.user)
 	if gcmedia.media.created_by != request.user and not (u.groups.filter(name='curator').exists()):
 		return redirect('home')
+	merged = ''
+	if MergedArticles.objects.filter(community=gcmedia.community.parent).exists():
+		merged = True
+	else:
+		merged = False
 	# canEdit = ""
 	# if CommunityMembership.objects.filter(user=request.user.id, community=cmedia.community).exists():
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user})
+	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user, 'merged':merged})
 
 class MediaUpdateView(UpdateView):
 	form_class = MediaUpdateForm
