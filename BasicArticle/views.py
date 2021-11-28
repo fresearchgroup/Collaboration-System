@@ -104,8 +104,12 @@ def view_article(request, pk):
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
+	if MergedArticles.objects.filter(community=article.community.parent).exists():
+		merged = True
+	else:
+		merged = False
 	
-	return render(request, 'view_article.html', {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav, 'curator':curator[0].user})
+	return render(request, 'view_article.html', {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav, 'curator':curator[0].user, 'merged':merged})
 
 def reports_article(request, pk):
 	try:
