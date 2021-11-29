@@ -34,6 +34,7 @@ class Media(models.Model):
 	published_on=models.DateTimeField(null=True)
 	published_by=models.ForeignKey(User,null=True,related_name='media_publisher')
 	views = models.PositiveIntegerField(default=0)
+	publishedlink = models.CharField(max_length=200, null=True)
 
 	def get_absolute_url(self):
 		from django.urls import reverse

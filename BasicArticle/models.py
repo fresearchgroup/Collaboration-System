@@ -22,6 +22,7 @@ class Articles(models.Model):
 	published_by = models.ForeignKey(User,null=True,related_name='article_publisher')
 	views = models.PositiveIntegerField(default=0)
 	tags = TaggableManager()
+	publishedlink = models.CharField(max_length=200, null=True)
 
 	def get_absolute_url(self):
 		from django.urls import reverse
