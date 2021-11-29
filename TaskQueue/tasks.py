@@ -7,11 +7,12 @@ from celery import shared_task
 from django.db import connection
 from django.contrib.auth.models import Group as Roles
 from Community.views import create_wiki_for_community
-from Community.models import Community, CommunityMembership
+from Community.models import Community, CommunityMembership, Locations
 from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from etherpad.models import EtherCommunity
 from .models import Task
+import pandas as pd
 
 # @shared_task
 def createbulkcommunity(taskid):
@@ -89,6 +90,25 @@ def createbulkcommunity(taskid):
 
 		# result =  epclient.createGroupIfNotExistsFor(community.id)
 		# EtherCommunity.objects.create(community=community, community_ether_id=result['groupID'])
+	task.status = True
+	task.save()
+	return "Task completed with success!"
+
+def createlocations(taskid):
+	task = Task.objects.get(pk=taskid)
+	path = task.tfile.path
+	tmp_data=pd.read_csv(path,sep=',')
+	df_records = tmp_data.to_dict('records')
+	locations = [
+		Locations(
+			pincode = record['Pincode'], 
+			city = record['City'], 
+			district = record['District'], 
+			state = record['State'],
+		)
+		for record in df_records
+	]
+	Locations.objects.bulk_create(locations)
 	task.status = True
 	task.save()
 	return "Task completed with success!"
