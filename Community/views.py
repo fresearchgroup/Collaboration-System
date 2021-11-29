@@ -46,6 +46,7 @@ from django.db.models import F
 from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
+import ast
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -1190,6 +1191,22 @@ def curate_merged(request):
 
 	if status == 'accept':
 		state = States.objects.get(name='publish')
+
+	if status == 'publishedonicp':
+		state = States.objects.get(name='publishedICP')
+		publishedlink = request.POST['publishedlink']
+		merged.publishedlink = publishedlink
+		originalarticles = merged.originalarticles
+		originalarticles = ast.literal_eval(originalarticles)
+		articles = Articles.objects.filter(pk__in=originalarticles)
+		for article in articles:
+			article.publishedlink = publishedlink
+			article.save()
+		commmedia = CommunityMedia.objects.filter(community__parent=merged.community, media__state__name='accepted').values_list('media', flat=True)
+		medias = Media.objects.filter(pk__in=commmedia)
+		for media in medias:
+			media.publishedlink = publishedlink
+			media.save()
 
 	merged.state = state
 	merged.save()
