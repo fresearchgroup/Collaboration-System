@@ -1095,6 +1095,7 @@ def merge_content(request, pk):
 		tales = ''
 		moreinfo = ''
 		originals = []
+		originalmedia = []
 		community = Community.objects.get(pk=pk)
 
 		introductionQuery = CommunityArticles.objects.filter(community__name='Introduction', community__parent=community, article__state__name=state)
@@ -1133,6 +1134,10 @@ def merge_content(request, pk):
 			moreinfo += '<br />'
 			originals.append(obj.article.pk)
 
+		medias = CommunityMedia.objects.filter(community__parent=community, media__state__name=state)
+		for obj in medias:
+			originalmedia.append(obj.media.pk)
+
 		state = States.objects.get(name='merged')
 		merged = MergedArticles.objects.create(
 			community = community,
@@ -1145,7 +1150,8 @@ def merge_content(request, pk):
 			state = state,
 			changedby = request.user,
 			changedon = datetime.datetime.now(),
-			originalarticles = originals
+			originalarticles = originals,
+			originalmedia = originalmedia
 		)
 
 		MergedArticleStates.objects.create (
@@ -1188,25 +1194,19 @@ def curate_merged(request):
 	if status == 'recurate':
 		state = States.objects.get(name='merged')
 		comments = request.POST['reason']
+		originalstate = States.objects.get(name='accepted')
+		change_state_orginal_contributions(merged, originalstate, request)
 
 	if status == 'accept':
 		state = States.objects.get(name='publish')
+		change_state_orginal_contributions(merged, state, request)
 
 	if status == 'publishedonicp':
 		state = States.objects.get(name='publishedICP')
 		publishedlink = request.POST['publishedlink']
 		merged.publishedlink = publishedlink
-		originalarticles = merged.originalarticles
-		originalarticles = ast.literal_eval(originalarticles)
-		articles = Articles.objects.filter(pk__in=originalarticles)
-		for article in articles:
-			article.publishedlink = publishedlink
-			article.save()
-		commmedia = CommunityMedia.objects.filter(community__parent=merged.community, media__state__name='accepted').values_list('media', flat=True)
-		medias = Media.objects.filter(pk__in=commmedia)
-		for media in medias:
-			media.publishedlink = publishedlink
-			media.save()
+		set_published_link(merged, publishedlink)
+		change_state_orginal_contributions(merged, state, request)		
 
 	merged.state = state
 	merged.save()
@@ -1225,3 +1225,46 @@ def curate_merged(request):
 		comments = comments
 	)
 	return redirect('view_merged_content',pk=merged.community.pk)
+
+def set_published_link(merged, publishedlink):
+	originalarticles = merged.originalarticles
+	originalarticles = ast.literal_eval(originalarticles)
+	articles = Articles.objects.filter(pk__in=originalarticles)
+	for article in articles:
+		article.publishedlink = publishedlink
+		article.save()
+	originalmedia = merged.originalmedia
+	originalmedia = ast.literal_eval(originalmedia)
+	medias = Media.objects.filter(pk__in=originalmedia)
+	for media in medias:
+		media.publishedlink = publishedlink
+		media.save()
+
+
+def change_state_orginal_contributions(merged, state, request):
+	originalarticles = merged.originalarticles
+	originalarticles = ast.literal_eval(originalarticles)
+	articles = Articles.objects.filter(pk__in=originalarticles)
+	for article in articles:
+		article.state = state
+		article.save()
+		ArticleStates.objects.create(
+			article = article,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now(),
+			body = article.body,
+		)
+
+	originalmedia = merged.originalmedia
+	originalmedia = ast.literal_eval(originalmedia)
+	medias = Media.objects.filter(pk__in=originalmedia)
+	for media in medias:
+		media.state = state
+		media.save()
+		MediaStates.objects.create(
+			media = media,
+			state = state,
+			changedby = request.user,
+			changedon = datetime.datetime.now()
+		)

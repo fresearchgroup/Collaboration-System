@@ -156,6 +156,7 @@ class MergedArticles(models.Model):
 	changedby = models.ForeignKey(User,null=True,related_name='mergedarticle_author')
 	changedon = models.DateTimeField(auto_now_add=True)
 	originalarticles = models.TextField(null=True)
+	originalmedia = models.TextField(null=True)
 	publishedlink = models.CharField(max_length=200, null=True)
 
 class MergedArticleStates(models.Model):
