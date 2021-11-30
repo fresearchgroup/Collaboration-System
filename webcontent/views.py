@@ -122,3 +122,42 @@ def sendEmail_curator_new_curator_contributions(to, uname, pow):
 		<p>Curator named " + uname + " has taken up the curation activity of " + pow + " which was originally assgined to you </p>"
 	sendEmail(subject, to, text_content, html_content)
 
+def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedlink):
+
+	if status == 'sendForApproval':
+		subject = "Contributions for " + pow + " are ready for review"
+		text_content = "Dear ICP Approver, \n\n \
+			Contributions under the " + pow + " have been collated. Requesting to you kindly review it. Click " + url + " to view it."
+		html_content = "<p>Dear ICP Approver,</p> \
+			<p>Contributions under the " + pow + " have been collated. Requesting to you kindly review it. \
+			Click <a href='" + url +"'>here</a> to view it.</p>"
+
+	if status == 'recurate':
+		subject = "Recurate contributions of " + pow
+		text_content = "Dear Curator, \n\n \
+			Please re-curate the contribution of the " + pow + \
+			" based on the following comments given by the curator. Click " + url + " to view. \n\n" + comments
+		html_content = "<p>Dear Curator,</p> \
+			<p>Please re-curate the contribution of the " + pow + \
+			" based on the following comments given by the curator. \
+			Click <a href='" + url +"'>here</a> to view. </p>" \
+			"<p><b>Comments</b></p><p>" + comments + "</p>"
+
+	if status == 'accept':
+		subject = "Contributions of " + pow + " have been accepted"
+		text_content = "Dear Curator, \n\n \
+			The contributions of " + pow + " have been accepted by the ICP approver. Click " + url + " to view."
+		html_content = "<p>Dear Curator,</p> \
+			<p>The contributions of " + pow + " have been accepted by the ICP approver. \
+			Click <a href='" + url +"'>here</a> to view.</p>"
+
+	if status == 'publishedonicp':
+		subject = "Contributions of " + pow + " have been published on the ICP"
+		text_content = "Dear Contributor, \n\n \
+			The contributions of " + pow + " have been published on the ICP. Click " + publishedlink + " to view."
+		html_content = "<p>Dear Contributor,</p> \
+			<p>The contributions of " + pow + " have been published on the ICP. \
+			Click <a href='" + publishedlink +"'>here</a> to view.</p>"
+		
+	sendEmail(subject, to, text_content, html_content)
+

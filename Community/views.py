@@ -47,7 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -1206,27 +1206,44 @@ def curate_merged(request):
 	merged = MergedArticles.objects.get(pk=pk)
 	status = request.POST['status']
 	comments = ''
+	publishedlink = ''
+	to = []
 
 	if status == 'sendForApproval':
 		state = States.objects.get(name='sentForApproval')
 		comments = request.POST['reason']
+		icpapprovers = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
+		for approver in icpapprovers:
+			to.append(approver)
 
 	if status == 'recurate':
 		state = States.objects.get(name='merged')
 		comments = request.POST['reason']
 		originalstate = States.objects.get(name='accepted')
 		change_state_orginal_contributions(merged, originalstate, request)
+		to.append(merged.changedby.email)
 
 	if status == 'accept':
 		state = States.objects.get(name='publish')
 		change_state_orginal_contributions(merged, state, request)
+		to.append(merged.changedby.email)
 
 	if status == 'publishedonicp':
 		state = States.objects.get(name='publishedICP')
 		publishedlink = request.POST['publishedlink']
 		merged.publishedlink = publishedlink
 		set_published_link(merged, publishedlink)
-		change_state_orginal_contributions(merged, state, request)		
+		change_state_orginal_contributions(merged, state, request)  
+		to.append(merged.changedby.email)
+
+		articleids = merged.originalarticles
+		mediaids = merged.originalmedia
+		articleids = ast.literal_eval(articleids)
+		mediaids = ast.literal_eval(mediaids)
+		articles = Articles.objects.filter(pk__in=articleids).values_list('created_by__email', flat=True).distinct()
+		medias = Media.objects.filter(pk__in=mediaids).values_list('created_by__email', flat=True).distinct()
+		to = list(articles) + list(medias)
+		to = list(set(to))
 
 	merged.state = state
 	merged.save()
@@ -1244,6 +1261,7 @@ def curate_merged(request):
 		moreinfo = merged.moreinfo,
 		comments = comments
 	)
+	sendEmail_merged_content_curated(to, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink)
 	return redirect('view_merged_content',pk=merged.community.pk)
 
 def set_published_link(merged, publishedlink):
