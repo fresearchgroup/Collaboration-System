@@ -30,6 +30,7 @@ from django.contrib import messages
 from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
+from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -427,6 +428,17 @@ def submit_article(request):
 				role = role,
 				assignedon = datetime.datetime.now()
 			)
+
+		# Send email to contributor and curator
+		commarticles = article.communityarticles.all()
+		section = commarticles[0].community.name
+		to = []
+		to.append(request.user.email)
+		sendEmail_contributor_contribution_submitted(to, 'Article', section, community.name, request.META.get('HTTP_REFERER'))
+		to = []
+		curator = CommunityMembership.objects.filter(community=community, role=role).order_by('-assignedon')[:1]
+		to.append(curator[0].user.email)
+		sendEmail_curator_contribution_submitted(to, 'Article', section, community.name, request.META.get('HTTP_REFERER'))
 
 		return redirect('article_view',pk=pk)
 
