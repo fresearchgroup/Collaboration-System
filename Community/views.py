@@ -47,7 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -945,6 +945,13 @@ def assign_community_curation(request):
 	pk = request.POST['community_parent']
 	community = Community.objects.get(pk=pk)
 	role = Roles.objects.get(name='curator')
+
+	curatorname = CommunityMembership.objects.filter(community=community, role=role).order_by('-assignedon')[:1]
+	to = []
+	to.append(curatorname[0].user.email)
+	newcurator = request.user.username
+	sendEmail_curator_new_curator_contributions(to, newcurator, community.name)
+
 	CommunityMembership.objects.create(
 		user = request.user,
 		community = community,

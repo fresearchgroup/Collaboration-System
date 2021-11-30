@@ -113,3 +113,12 @@ def sendEmail_contributor_content_curated(to, status, section, pow, comments, ur
 			"cannot be accepted based on the following comments given by the curator.</p> Click <a href='" + url +"'>here</a> to view your contribution.</p>" + \
 			"<p><b>Comments</b> <br />" + comments + "</p>"
 	sendEmail(subject, to, text_content, html_content)
+
+def sendEmail_curator_new_curator_contributions(to, uname, pow):
+	subject = "New curator for " + pow
+	text_content = "Dear curator, \n\n \
+		Curator named " + uname + " has taken up the curation activity of " + pow + " which was originally assgined to you "
+	html_content = "<p>Dear curator, </p> \
+		<p>Curator named " + uname + " has taken up the curation activity of " + pow + " which was originally assgined to you </p>"
+	sendEmail(subject, to, text_content, html_content)
+
