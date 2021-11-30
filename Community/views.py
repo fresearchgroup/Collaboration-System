@@ -47,6 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
+from webcontent.views import sendEmail_contributor_content_curated
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -990,6 +991,12 @@ def curate_content(request):
 					body = article.body,
 					comments = comments
 				)
+				commarticles = article.communityarticles.all()
+				section = commarticles[0].community.name
+				parent = commarticles[0].community.parent.name
+				to = []
+				to.append(article.created_by)
+				sendEmail_contributor_content_curated(to, status, section, parent, comments, request.META.get('HTTP_REFERER'))
 				if 'redirecto' in request.POST:
 					redirecto = request.POST['redirecto']
 					if redirecto == 'view_all_content':
@@ -1009,6 +1016,12 @@ def curate_content(request):
 					changedon = datetime.datetime.now(),
 					comments = comments
 				)
+				commmedia = media.communitymedia.all()
+				section = commmedia[0].community.name
+				parent = commmedia[0].community.parent.name
+				to = []
+				to.append(media.created_by)
+				sendEmail_contributor_content_curated(to, status, section, parent, comments, request.META.get('HTTP_REFERER'))
 				if 'redirecto' in request.POST:
 					redirecto = request.POST['redirecto']
 					if redirecto == 'view_all_content':

@@ -74,3 +74,42 @@ def sendEmail_curator_contribution_submitted(to, type, section, pow, url):
 	html_content = "<p>Dear Curator, </p> <p>A contribution (" + type + ") has been submitted under the " + \
 		section + " section of " + pow + ". Click <a href='" + url +"'>here</a> to view it and start curating. </p>"  
 	sendEmail(subject, to, text_content, html_content)
+
+def sendEmail_contributor_content_curated(to, status, section, pow, comments, url):
+	if status == 'markreview':
+		subject = "Your contribution in " + section + " section of " + pow + " has been taken up for curation"
+		text_content = "Dear Contributor, \n\n \
+			Your contribution in the " + section + " section of the " + pow + \
+			"has been taken up for curation. You will no longer be able to edit it unless the curator sends it back to you for modification. " + \
+			"Click " + url + " to view your contribution."
+		html_content = "<p>Dear Contributor, </p>\n\n \
+			<p>Your contribution in the " + section + " section of the " + pow + \
+			"has been taken up for curation. You will no longer be able to edit it unless the curator sends it back to you for modification. " + \
+			"Click <a href='" + url +"'>here</a> to view your contribution.</p>"
+	if status == 'accept':
+		subject = "Your contribution is accepted in " + section + " section of " + pow
+		text_content = "Dear Contributor, \n\n \
+			Your contribution in the " + section + " section of the " + pow + \
+			"has passed the first review. Click " + url + " to view your contribution. You will be notified when it is published."
+		html_content = "<p>Dear Contributor, </p> \
+			<p>Your contribution in the " + section + " section of the " + pow + \
+			"has passed the first review . Click <a href='" + url +"'>here</a> to view your contribution. You will be notified when it is published.</p>"
+	if status == 'modify':
+		subject = "Update your contribution in " + section + " section of " + pow
+		text_content = "Dear Contributor, \n\n \
+			Please update your contribution in the " + section + " section of the " + pow + \
+			" based on the following comments given by the curator. Click " + url + " to view your contribution. \n\n" + comments
+		html_content = "<p>Dear Contributor, </p> \
+			<p>Please update your contribution in the " + section + " section of the " + pow + \
+			" based on the following comments given by the curator.</p> Click <a href='" + url +"'>here</a> to view your contribution.</p>" + \
+			"<p><b>Comments</b> <br />" + comments + "</p>"
+	if status == 'reject':
+		subject = "Your contribution in " + section + " section of " + pow + " cannot be accepted"
+		text_content = "Dear Contributor, \n\n \
+			Your contribution in the " + section + " section of the " + pow + \
+			"cannot be accccepted based on the following comments given by the curator. Click " + url + " to view your contribution. \n\n" + comments
+		html_content = "<p>Dear Contributor, </p> \
+			<p>Your contribution in the " + section + " section of the " + pow + \
+			"cannot be accepted based on the following comments given by the curator.</p> Click <a href='" + url +"'>here</a> to view your contribution.</p>" + \
+			"<p><b>Comments</b> <br />" + comments + "</p>"
+	sendEmail(subject, to, text_content, html_content)
