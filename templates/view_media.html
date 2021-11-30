@@ -130,6 +130,12 @@
         {{state.name}}
       </h4>
 
+      <h4>
+        {% if gcmedia.media.publishedlink %}
+          <a href="{{gcmedia.media.publishedlink}}">{{gcmedia.media.publishedlink}}</a>
+        {% endif %}
+      </h4>
+
       <p style="margin-bottom: 20px;"></p>
       {% if state.name == 'draft' or state.name == 'sentToModify' %}
         {% if request.user == gcmedia.media.created_by %}
