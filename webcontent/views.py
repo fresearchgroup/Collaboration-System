@@ -161,3 +161,15 @@ def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedli
 		
 	sendEmail(subject, to, text_content, html_content)
 
+def sendEmail_contributor_pow_request_submitted(to):
+	subject = 'thank you for submitting request for creating a new Place of worship'
+	text_content = "Dear Contributor, \n\n Thank you for submitting request for creating a new Place of Worship . The curators will start reviewing and shall get back to you."
+	html_content = "<p>Dear Contributor,</p> <p>Thank you for submitting request for creating a new Place of Worship . The curators will start reviewing and shall get back to you.</p>"
+	sendEmail(subject, to, text_content, html_content)
+
+def sendEmail_curator_contribution_submitted(to):
+	subject = 'Request for creating a new Place of Worship'
+	text_content = "Dear Curator, \n\n Contributor has rasised a request for creating a new place of worship. Kindly go through it."
+	html_content = "<p>Dear Curator,</p> <p>Contributor has rasised a request for creating a new place of worship. Kindly go through it.</p>"
+	sendEmail(subject, to, text_content, html_content)
+

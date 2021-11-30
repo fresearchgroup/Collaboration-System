@@ -47,7 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_contribution_submitted
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -233,6 +233,14 @@ class RequestCommunityCreationView(CreateView):
 			assignedto = assignedto,
 			assignedon = datetime.datetime.now()
 		)
+
+		to = []
+		to.append(self.request.user.email)
+		sendEmail_contributor_pow_request_submitted(to)
+		to = []
+		to.append(assignedto.email)
+		sendEmail_curator_contribution_submitted(to)
+
 		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)
 
