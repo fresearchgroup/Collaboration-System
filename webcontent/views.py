@@ -60,9 +60,9 @@ def sendEmail(subject, to, text_content, html_content):
 def sendEmail_contributor_contribution_submitted(to, type, section, pow, url):
 	subject = 'thank you for your submission'
 	text_content = "Dear Contributor, \n\n \
-         Thank you for your submission in the " + section + "section of the " + pow + ". The curators will start reviewing and shall get back to you."
+         Thank you for your submission in the " + section + " section of the " + pow + ". The curators will start reviewing and shall get back to you."
 	html_content = "<p>Dear Contributor, </p> \
-         <p>Thank you for your submission in the " + section + "section of the " + pow + ". The curators will start reviewing and shall get back to you.</p>"
+         <p>Thank you for your submission in the " + section + " section of the " + pow + ". The curators will start reviewing and shall get back to you.</p>"
 
 	sendEmail(subject, to, text_content, html_content)
 
@@ -70,7 +70,7 @@ def sendEmail_curator_contribution_submitted(to, type, section, pow, url):
 	subject = 'curate content'
 	text_content = "Dear Curator, \n\n \
     	A contribution (" + type + ") has been submitted under the " + \
-		section + "section of " + pow + ". Click " + url + " to view it and start curating."
+		section + " section of " + pow + ". Click " + url + " to view it and start curating."
 	html_content = "<p>Dear Curator, </p> <p>A contribution (" + type + ") has been submitted under the " + \
-		section + "section of " + pow + ". Click <a href='" + url +"'>here</a> to view it and start curating. </p>"  
+		section + " section of " + pow + ". Click <a href='" + url +"'>here</a> to view it and start curating. </p>"  
 	sendEmail(subject, to, text_content, html_content)
