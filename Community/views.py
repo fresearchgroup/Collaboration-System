@@ -128,6 +128,10 @@ def community_view(request, pk):
 			modifyCount += CommunityMedia.objects.filter(community=gc, media__state__name='sentToModify').count()
 			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='accepted').count()
 			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='accepted').count()
+			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='publish').count()
+			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='publish').count()
+			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='publishedICP').count()
+			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='publishedICP').count()
 			rejectedCount += CommunityArticles.objects.filter(community=gc, article__state__name='rejected').count()
 			rejectedCount += CommunityMedia.objects.filter(community=gc, media__state__name='rejected').count()
 
@@ -1069,9 +1073,14 @@ def display_curation_list(request, pk1='', pk2=''):
 	# pk1-community pk, pk2-state name
 	if pk1 and pk2:
 		community = Community.objects.get(pk=pk1)
-		state = States.objects.get(name=pk2)
-		commarticles = CommunityArticles.objects.filter(community__parent=community, article__state=state)
-		commmedia = CommunityMedia.objects.filter(community__parent=community, media__state=state)
+		if pk2 == 'accepted':
+			states = ['accepted', 'publish', 'publishedICP']
+			commarticles = CommunityArticles.objects.filter(community__parent=community, article__state__name__in=states)
+			commmedia = CommunityMedia.objects.filter(community__parent=community, media__state__name__in=states)
+		else:
+			state = States.objects.get(name=pk2)
+			commarticles = CommunityArticles.objects.filter(community__parent=community, article__state=state)
+			commmedia = CommunityMedia.objects.filter(community__parent=community, media__state=state)
 	if not (pk1 and pk2):
 		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') |Q(article__state__name='submitted') | Q(article__state__name='reviewStarted') | Q(article__state__name='sentToModify') | Q(article__state__name='accepted') |Q(article__state__name='rejected'))
 		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='reviewStarted') | Q(media__state__name='sentToModify') |Q(media__state__name='accepted') | Q(media__state__name='rejected'))
