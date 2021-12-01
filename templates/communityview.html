@@ -322,10 +322,10 @@
           </td>
           <td>
             {% if user.is_authenticated %}
-              <a href="{% url 'community_article_create' child.pk %}"><button type="button" class="btn btn-success"><p><i class="fa fa-file-text-o" style="font-size:24px;"></i></p></button></a>
-              <a href="{% url 'community_media_create' child.pk 'IMAGE'%}"><button type="button" class="btn btn-success"><p><i class="fa fa-picture-o" style="font-size:24px;"></i></p></button></a>
-              <a href="{% url 'community_media_create' child.pk 'AUDIO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-music" style="font-size:24px;"></i></p></button></a>
-              <a href="{% url 'community_media_create' child.pk 'VIDEO' %}"><button type="button" class="btn btn-success"><p><i class="fa fa-film" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_article_create' child.pk %}"><button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Article"><p><i class="fa fa-file-text-o" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'IMAGE'%}"><button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Image"><p><i class="fa fa-picture-o" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'AUDIO' %}"><button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Audio"><p><i class="fa fa-music" style="font-size:24px;"></i></p></button></a>
+              <a href="{% url 'community_media_create' child.pk 'VIDEO' %}"><button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Video"><p><i class="fa fa-film" style="font-size:24px;"></i></p></button></a>
             {% endif %}
           </td>
         </tr>
