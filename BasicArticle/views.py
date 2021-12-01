@@ -30,6 +30,7 @@ from django.contrib import messages
 from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
+from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -96,7 +97,7 @@ def view_article(request, pk):
 		state = get_state_article(article.article)
 		# if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 		u = User.objects.get(username=request.user)
-		if article.article.created_by != request.user and not (u.groups.filter(name='curator').exists()):
+		if article.article.created_by != request.user and not (u.groups.filter(name='curator').exists()) and not (u.groups.filter(name='icpapprover').exists()):
 			return redirect('home')
 		count = article_watch(request, article.article)
 	except CommunityArticles.DoesNotExist:
@@ -427,6 +428,17 @@ def submit_article(request):
 				role = role,
 				assignedon = datetime.datetime.now()
 			)
+
+		# Send email to contributor and curator
+		commarticles = article.communityarticles.all()
+		section = commarticles[0].community.name
+		to = []
+		to.append(request.user.email)
+		sendEmail_contributor_contribution_submitted(to, 'Article', section, community.name, request.META.get('HTTP_REFERER'))
+		to = []
+		curator = CommunityMembership.objects.filter(community=community, role=role).order_by('-assignedon')[:1]
+		to.append(curator[0].user.email)
+		sendEmail_curator_contribution_submitted(to, 'Article', section, community.name, request.META.get('HTTP_REFERER'))
 
 		return redirect('article_view',pk=pk)
 

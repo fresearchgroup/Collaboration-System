@@ -47,6 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_contribution_submitted, sendEmail_curate_new_pow
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -127,6 +128,10 @@ def community_view(request, pk):
 			modifyCount += CommunityMedia.objects.filter(community=gc, media__state__name='sentToModify').count()
 			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='accepted').count()
 			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='accepted').count()
+			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='publish').count()
+			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='publish').count()
+			acceptedCount += CommunityArticles.objects.filter(community=gc, article__state__name='publishedICP').count()
+			acceptedCount += CommunityMedia.objects.filter(community=gc, media__state__name='publishedICP').count()
 			rejectedCount += CommunityArticles.objects.filter(community=gc, article__state__name='rejected').count()
 			rejectedCount += CommunityMedia.objects.filter(community=gc, media__state__name='rejected').count()
 
@@ -138,17 +143,24 @@ def community_view(request, pk):
 		child.rejectedCount = rejectedCount
 		if MergedArticles.objects.filter(community=child).exists():
 			child.merged = True
+			mergedstatus = MergedArticles.objects.filter(community=child)
+			child.mergedstatus = mergedstatus[0].state.name
 		else:
 			child.merged = False
 
 	childrencount = children.count()
 
 	createpow = False
+	isCurator = False
+	isApprover = False
 	if request.user.is_authenticated:
 		u = User.objects.get(username=request.user)
 		if u.groups.filter(name='curator').exists():
 			createpow = True
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow})
+			isCurator = True
+		if u.groups.filter(name='icpapprover').exists():
+			isApprover = True
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
@@ -189,7 +201,7 @@ class RequestCommunityCreationView(CreateView):
 	form_class = RequestCommunityCreateForm
 	model = RequestCommunityCreationDetails
 	template_name = 'request_community_creation.html'
-	success_url = 'request_community_creation'
+	success_url = 'user_dashboard'
 
 	def get_form_kwargs(self):
 		kwargs = super(RequestCommunityCreationView, self).get_form_kwargs()
@@ -248,6 +260,14 @@ class RequestCommunityCreationView(CreateView):
 			assignedto = assignedto,
 			assignedon = datetime.datetime.now()
 		)
+
+		to = []
+		to.append(self.request.user.email)
+		sendEmail_contributor_pow_request_submitted(to)
+		to = []
+		to.append(assignedto.email)
+		sendEmail_curator_contribution_submitted(to)
+
 		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)
 
@@ -291,6 +311,14 @@ def update_community_requests(request):
 		reason = reason,
 		actionon = datetime.datetime.now()
 	)
+
+	to = []
+	to.append(request.user.email)
+	sendEmail_contributor_pow_request_submitted(to)
+	to = []
+	uname = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=pk).order_by('-assignedon')[:1]
+	to.append(uname[0].assignedto.email)
+	sendEmail_curator_contribution_submitted(to)
 	return redirect('user_dashboard')
 
 def handle_community_creation_requests(request):
@@ -305,13 +333,21 @@ def handle_community_creation_requests(request):
 			community_parent = request.POST['community_parent']
 			parent = Community.objects.get(pk=community_parent)
 			status = request.POST['status']
+			reason = ''
+			pow = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=pk).order_by('-actionon')[:1]
+			pow = pow[0].name
+			uname = ''
+			to = []
 
 			if status == 'changeassignee':
+				uname = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=pk).order_by('-assignedon')[:1]
+				to.append(uname[0].assignedto.email)
 				RequestCommunityCreationAssignee.objects.create(
 					requestcommunity = rcommunity,
 					assignedto = user,
 					assignedon = datetime.datetime.now()
 				)
+				uname = request.user.username
 
 			if status=='accept':
 				name = request.POST['name']
@@ -357,6 +393,7 @@ def handle_community_creation_requests(request):
 					community = communitycreation,
 					role = communityadmin
 				)
+				to.append(rcommunity.requestedby.email)
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 		
 			if status=='modify' or status=='rejected':
@@ -375,6 +412,9 @@ def handle_community_creation_requests(request):
 					actionby = user,
 					actionon = datetime.datetime.now()
 				)
+				to.append(rcommunity.requestedby.email)
+
+			sendEmail_curate_new_pow(to, pow, parent.name, reason, uname, status)
 
 		rids = RequestCommunityCreation.objects.all().values_list('pk', flat=True)
 		requestcommunitycreation = []
@@ -960,6 +1000,13 @@ def assign_community_curation(request):
 	pk = request.POST['community_parent']
 	community = Community.objects.get(pk=pk)
 	role = Roles.objects.get(name='curator')
+
+	curatorname = CommunityMembership.objects.filter(community=community, role=role).order_by('-assignedon')[:1]
+	to = []
+	to.append(curatorname[0].user.email)
+	newcurator = request.user.username
+	sendEmail_curator_new_curator_contributions(to, newcurator, community.name)
+
 	CommunityMembership.objects.create(
 		user = request.user,
 		community = community,
@@ -1006,6 +1053,12 @@ def curate_content(request):
 					body = article.body,
 					comments = comments
 				)
+				commarticles = article.communityarticles.all()
+				section = commarticles[0].community.name
+				parent = commarticles[0].community.parent.name
+				to = []
+				to.append(article.created_by)
+				sendEmail_contributor_content_curated(to, status, section, parent, comments, request.META.get('HTTP_REFERER'))
 				if 'redirecto' in request.POST:
 					redirecto = request.POST['redirecto']
 					if redirecto == 'view_all_content':
@@ -1025,6 +1078,12 @@ def curate_content(request):
 					changedon = datetime.datetime.now(),
 					comments = comments
 				)
+				commmedia = media.communitymedia.all()
+				section = commmedia[0].community.name
+				parent = commmedia[0].community.parent.name
+				to = []
+				to.append(media.created_by)
+				sendEmail_contributor_content_curated(to, status, section, parent, comments, request.META.get('HTTP_REFERER'))
 				if 'redirecto' in request.POST:
 					redirecto = request.POST['redirecto']
 					if redirecto == 'view_all_content':
@@ -1037,9 +1096,14 @@ def display_curation_list(request, pk1='', pk2=''):
 	# pk1-community pk, pk2-state name
 	if pk1 and pk2:
 		community = Community.objects.get(pk=pk1)
-		state = States.objects.get(name=pk2)
-		commarticles = CommunityArticles.objects.filter(community__parent=community, article__state=state)
-		commmedia = CommunityMedia.objects.filter(community__parent=community, media__state=state)
+		if pk2 == 'accepted':
+			states = ['accepted', 'publish', 'publishedICP']
+			commarticles = CommunityArticles.objects.filter(community__parent=community, article__state__name__in=states)
+			commmedia = CommunityMedia.objects.filter(community__parent=community, media__state__name__in=states)
+		else:
+			state = States.objects.get(name=pk2)
+			commarticles = CommunityArticles.objects.filter(community__parent=community, article__state=state)
+			commmedia = CommunityMedia.objects.filter(community__parent=community, media__state=state)
 	if not (pk1 and pk2):
 		commarticles = CommunityArticles.objects.filter( Q(article__state__name='submitted') |Q(article__state__name='submitted') | Q(article__state__name='reviewStarted') | Q(article__state__name='sentToModify') | Q(article__state__name='accepted') |Q(article__state__name='rejected'))
 		commmedia = CommunityMedia.objects.filter( Q(media__state__name='submitted') | Q(media__state__name='reviewStarted') | Q(media__state__name='sentToModify') |Q(media__state__name='accepted') | Q(media__state__name='rejected'))
@@ -1202,27 +1266,44 @@ def curate_merged(request):
 	merged = MergedArticles.objects.get(pk=pk)
 	status = request.POST['status']
 	comments = ''
+	publishedlink = ''
+	to = []
 
 	if status == 'sendForApproval':
 		state = States.objects.get(name='sentForApproval')
 		comments = request.POST['reason']
+		icpapprovers = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
+		for approver in icpapprovers:
+			to.append(approver)
 
 	if status == 'recurate':
 		state = States.objects.get(name='merged')
 		comments = request.POST['reason']
 		originalstate = States.objects.get(name='accepted')
 		change_state_orginal_contributions(merged, originalstate, request)
+		to.append(merged.changedby.email)
 
 	if status == 'accept':
 		state = States.objects.get(name='publish')
 		change_state_orginal_contributions(merged, state, request)
+		to.append(merged.changedby.email)
 
 	if status == 'publishedonicp':
 		state = States.objects.get(name='publishedICP')
 		publishedlink = request.POST['publishedlink']
 		merged.publishedlink = publishedlink
 		set_published_link(merged, publishedlink)
-		change_state_orginal_contributions(merged, state, request)		
+		change_state_orginal_contributions(merged, state, request)  
+		to.append(merged.changedby.email)
+
+		articleids = merged.originalarticles
+		mediaids = merged.originalmedia
+		articleids = ast.literal_eval(articleids)
+		mediaids = ast.literal_eval(mediaids)
+		articles = Articles.objects.filter(pk__in=articleids).values_list('created_by__email', flat=True).distinct()
+		medias = Media.objects.filter(pk__in=mediaids).values_list('created_by__email', flat=True).distinct()
+		to = list(articles) + list(medias)
+		to = list(set(to))
 
 	merged.state = state
 	merged.save()
@@ -1240,6 +1321,7 @@ def curate_merged(request):
 		moreinfo = merged.moreinfo,
 		comments = comments
 	)
+	sendEmail_merged_content_curated(to, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink)
 	return redirect('view_merged_content',pk=merged.community.pk)
 
 def set_published_link(merged, publishedlink):

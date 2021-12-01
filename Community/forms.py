@@ -44,7 +44,7 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		super().__init__(*args, **kwargs)
 		# self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name', 'ng-pattern':'/^[a-z A-Z ()]*$/'})
 		self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name'})
-		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
+		self.fields['desc'].widget.attrs.update({'class': 'form-control', 'maxlength': '100', 'rows':4})
 		# self.fields['category'].widget.attrs.update({'class': 'form-control'})
 		# self.fields['tag_line'].widget.attrs.update({'class': 'form-control', 'ng-model':'tag_line', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
 		# self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})

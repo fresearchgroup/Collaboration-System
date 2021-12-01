@@ -15,6 +15,7 @@ from .forms import *
 from django.contrib.auth.models import User
 import datetime
 from django.contrib.auth.models import Group as Roles
+from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -276,6 +277,17 @@ def submit_media(request):
 				role = role,
 				assignedon = datetime.datetime.now()
 			)
+
+		commmedia = media.communitymedia.all()
+		section = commmedia[0].community.name
+		to = []
+		to.append(request.user.email)
+		sendEmail_contributor_contribution_submitted(to, media.mediatype, section, community.name, request.META.get('HTTP_REFERER'))
+		to = []
+		curator = CommunityMembership.objects.filter(community=community, role=role).order_by('-assignedon')[:1]
+		to.append(curator[0].user.email)
+		sendEmail_curator_contribution_submitted(to, media.mediatype, section, community.name, request.META.get('HTTP_REFERER'))
+
 		return redirect('media_view',pk=pk)
 
 def get_state_media(media):

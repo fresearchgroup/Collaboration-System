@@ -26,6 +26,12 @@ var videoPublished = {{videopublished}};
 {% block content %}
 
 <div class="row recent-work margin-bottom-40">
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
   <div class="col-md-4" style="width: 350px">
       <div class="recent-work-item">
         <em>
@@ -133,6 +139,7 @@ var videoPublished = {{videopublished}};
           <th style="color:white">Status</th>
           <th style="color:white">Created</th>
           <th style="color:white">Action</th>
+          <th style="color:white">Published Link</th>
         </tr>
     </thead>
       <tbody>
@@ -197,6 +204,17 @@ var videoPublished = {{videopublished}};
               {% endif %}
               {% if content.type == 'Media' %}
                 <a href="{% url 'media_view' content.media.pk %}"> View </a>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if content.article.publishedlink or content.media.publishedlink %}
+                {% if content.type == 'article' %}
+                  <a href="{{content.article.publishedlink}}">{{content.article.publishedlink}}</a>
+                {% endif %}
+                {% if content.type == 'Media' %}
+                  <a href="{{content.media.publishedlink}}">{{content.media.publishedlink}}</a>
+                {% endif %}
               {% endif %}
             </td>
           </tr>
