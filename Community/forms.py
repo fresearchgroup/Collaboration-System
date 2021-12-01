@@ -1,6 +1,7 @@
 
+#from typing import ItemsView
 from django import forms
-from .models import Community, RequestCommunityCreation, RequestCommunityCreationDetails
+from .models import Community, RequestCommunityCreation, RequestCommunityCreationDetails, Locations
 from Categories.models import Category
 from mptt.forms import TreeNodeChoiceField
 from haystack.forms import FacetedSearchForm
@@ -35,7 +36,7 @@ class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = RequestCommunityCreationDetails
 		# fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
-		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent', 'reason']
+		fields = ['name', 'desc', 'area', 'city', 'state', 'district', 'pincode', 'parent', 'reason']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('cid', None)
@@ -48,14 +49,41 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		# self.fields['tag_line'].widget.attrs.update({'class': 'form-control', 'ng-model':'tag_line', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
 		# self.fields['purpose'].widget.attrs.update({'class': 'form-control', 'ng-model':'purpose', 'ng-pattern': "/^[a-z A-Z0-9 !&()':-]*$/"})
 		self.fields['area'].widget.attrs.update({'class': 'form-control'})
-		self.fields['city'].widget.attrs.update({'class': 'form-control'})
-		self.fields['state'].widget.attrs.update({'class': 'form-control'})
-		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
 		self.fields['parent'].widget.attrs['readonly'] = True
 		self.fields['reason'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
 		self.fields['reason'].required = False
+
+		self.fields['state'] = forms.ChoiceField(choices=[('', '---------')] + [(item,item) for item in Locations.objects.all().values_list('state', flat=True).order_by('state').distinct()])
+		self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		self.fields['district'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['district'].widget.attrs.update({'class': 'form-control'})
+		self.fields['city'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['city'].widget.attrs.update({'class': 'form-control'})
+		self.fields['pincode'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
+
+		if 'state' in self.data:
+			try:
+				state = self.data.get('state')
+				self.fields['district'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state).values_list('district', flat=True).order_by('district').distinct()]
+			except (ValueError, TypeError):
+				pass
+		
+		if 'district' in self.data:
+			try:
+				district = self.data.get('district')
+				self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
+			except (ValueError, TypeError):
+				pass
+		
+		if 'city' in self.data:
+			try:
+				city = self.data.get('city')
+				self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,district=district,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
+			except (ValueError, TypeError):
+				pass
 
 		if community:
 			community = Community.objects.get(pk=community)

@@ -137,6 +137,10 @@ urlpatterns = [
 
     url(r'^create_community/$', communityview.CreateCommunityView.as_view(), name='create_community'),
 
+    url(r'^ajax/get_districts/', communityview.get_districts, name='get_districts'),
+    url(r'^ajax/get_cities/', communityview.get_cities, name='get_cities'),
+    url(r'^ajax/get_pincodes/', communityview.get_pincodes, name='get_pincodes'),
+
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 

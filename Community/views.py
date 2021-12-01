@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia, MergedArticles, MergedArticleStates
+from .models import Community, CommunityMembership, CommunityArticles, Locations, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia, MergedArticles, MergedArticleStates
 from rest_framework import viewsets
 # from .models import CommunityGroups
 from UserRolesPermission.views import user_dashboard
@@ -209,6 +209,22 @@ class RequestCommunityCreationView(CreateView):
 		self.object = form.save(commit=False)
 		self.object.actionby = self.request.user
 
+		self.object.state = form.cleaned_data.get('state')
+		if form.cleaned_data.get('district') == "Others":
+			self.object.district = self.request.POST['districtOthers']
+		else:
+			self.object.district = form.cleaned_data.get('district')
+
+		if form.cleaned_data.get('city') == "Others":
+			self.object.city = self.request.POST['cityOthers']
+		else:
+			self.object.city = form.cleaned_data.get('city')
+
+		if form.cleaned_data.get('pincode') == "Others":
+			self.object.pincode = self.request.POST['pincodeOthers']
+		else:
+			self.object.pincode = form.cleaned_data.get('pincode')
+		
 		cid = form.cleaned_data.get('parent')
 		parent = Community.objects.get(name=cid)
 
@@ -1268,3 +1284,26 @@ def change_state_orginal_contributions(merged, state, request):
 			changedby = request.user,
 			changedon = datetime.datetime.now()
 		)
+
+def get_districts(request):
+	state = request.GET.get('state')
+	results = Locations.objects.filter(state=state).values_list('district', flat=True).order_by('district').distinct()
+	return render(request, 'address_dropdown_list_options.html', {'results': results})
+
+def get_cities(request):
+	district = request.GET.get('district')
+	if district == 'Others':
+		state = request.GET.get('state')
+		results = Locations.objects.filter(state=state).values_list('city', flat=True).order_by('city').distinct()
+	else:
+		results = Locations.objects.filter(district=district).values_list('city', flat=True).order_by('city').distinct()
+	return render(request, 'address_dropdown_list_options.html', {'results': results})
+
+def get_pincodes(request):
+	city = request.GET.get('city')
+	if city == 'Others':
+		state = request.GET.get('state')
+		results = Locations.objects.filter(state=state).values_list('pincode', flat=True).order_by('pincode').distinct()
+	else:
+		results = Locations.objects.filter(city=city).values_list('pincode', flat=True).order_by('pincode').distinct()
+	return render(request, 'address_dropdown_list_options.html', {'results': results})
