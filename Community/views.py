@@ -190,7 +190,7 @@ class RequestCommunityCreationView(CreateView):
 	form_class = RequestCommunityCreateForm
 	model = RequestCommunityCreationDetails
 	template_name = 'request_community_creation.html'
-	success_url = 'request_community_creation'
+	success_url = 'user_dashboard'
 
 	def get_form_kwargs(self):
 		kwargs = super(RequestCommunityCreationView, self).get_form_kwargs()
