@@ -47,7 +47,7 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_contribution_submitted
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_contribution_submitted, sendEmail_curate_new_pow
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -284,6 +284,14 @@ def update_community_requests(request):
 		reason = reason,
 		actionon = datetime.datetime.now()
 	)
+
+	to = []
+	to.append(request.user.email)
+	sendEmail_contributor_pow_request_submitted(to)
+	to = []
+	uname = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=pk).order_by('-assignedon')[:1]
+	to.append(uname[0].assignedto.email)
+	sendEmail_curator_contribution_submitted(to)
 	return redirect('user_dashboard')
 
 def handle_community_creation_requests(request):
@@ -298,13 +306,21 @@ def handle_community_creation_requests(request):
 			community_parent = request.POST['community_parent']
 			parent = Community.objects.get(pk=community_parent)
 			status = request.POST['status']
+			reason = ''
+			pow = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=pk).order_by('-actionon')[:1]
+			pow = pow[0].name
+			uname = ''
+			to = []
 
 			if status == 'changeassignee':
+				uname = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=pk).order_by('-assignedon')[:1]
+				to.append(uname[0].assignedto.email)
 				RequestCommunityCreationAssignee.objects.create(
 					requestcommunity = rcommunity,
 					assignedto = user,
 					assignedon = datetime.datetime.now()
 				)
+				uname = request.user.username
 
 			if status=='accept':
 				name = request.POST['name']
@@ -350,6 +366,7 @@ def handle_community_creation_requests(request):
 					community = communitycreation,
 					role = communityadmin
 				)
+				to.append(rcommunity.requestedby.email)
 				remove_or_add_user_feed(rcommunity.requestedby,communitycreation,'community_created')
 		
 			if status=='modify' or status=='rejected':
@@ -368,6 +385,9 @@ def handle_community_creation_requests(request):
 					actionby = user,
 					actionon = datetime.datetime.now()
 				)
+				to.append(rcommunity.requestedby.email)
+
+			sendEmail_curate_new_pow(to, pow, parent.name, reason, uname, status)
 
 		rids = RequestCommunityCreation.objects.all().values_list('pk', flat=True)
 		requestcommunitycreation = []

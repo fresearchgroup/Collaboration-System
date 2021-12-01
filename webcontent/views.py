@@ -173,3 +173,41 @@ def sendEmail_curator_contribution_submitted(to):
 	html_content = "<p>Dear Curator,</p> <p>Contributor has rasised a request for creating a new place of worship. Kindly go through it.</p>"
 	sendEmail(subject, to, text_content, html_content)
 
+def sendEmail_curate_new_pow(to, pow, parent, reason, uname, status):
+	if status == 'changeassignee':
+		subject = "New curator for curating requests for new place of worship, " + pow
+		text_content = "Dear curator, \n\n \
+			Curator named " + uname + " has taken up the curation activity for curating requests of a new place of worship " + pow + " which was originally assgined to you "
+		html_content = "<p>Dear curator, </p> \
+			<p>Curator named " + uname + " has taken up the curation activity for curating requests of a new place of worship " + pow + " which was originally assgined to you </p>"
+
+	if status == 'accept':
+		subject = 'Your requested place of worship has been created'
+		text_content = "Dear Contributor, \n\n \
+			The place of worship, " + pow + ", that you had requested has been accepted and created under " + parent + "." \
+			"You can now start contributing under the respective sections."
+		html_content = "<p>Dear Contributor,</p> \
+			<p>The place of worship, " + pow + ", that you had requested has been accepted and created under " + parent + "." \
+			"You can now start contributing under the respective sections.</p>"
+
+	if status == 'modify':
+		subject = "Update your details for the new place of worship requested by you"
+		text_content = "Dear Contributor, \n\n \
+			Please update the details given by you for the creation of a new place of worship (" + pow + ") based on the following comments given by the curator." \
+			"\n\nComments \n " + reason
+		html_content = "<p>Dear Contributor,</p> \
+			<p>Please update the details given by you for the creation of a new place of worship (" + pow + ") based on the following comments given by the curator.</p>" \
+			"<p><b>Comments</b></p><p>" + reason + "</p>"
+
+	if status == 'rejected':
+		subject = "Cannot create the requested place of worship" + pow
+		text_content = "Dear Contributor, \n\n \
+			The requested place of worship " + pow + " cannot be created due to the following reasons given by the curator. \n\n" \
+			+ reason
+		html_content = "<p>Dear Contributor,</p> \
+			<p>The requested place of worship " + pow + " cannot be created due to the following reasons given by the curator. </p>" \
+			"<p>" + reason + "</p>"
+
+	sendEmail(subject, to, text_content, html_content)
+
+
