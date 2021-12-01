@@ -318,7 +318,7 @@
       {% for child in children %}
         <tr>
           <td>
-            <a href="{% url 'community_view' child.pk %}">{{child.name}}</a>
+            {{child.name}}
           </td>
           <td>
             {% if user.is_authenticated %}
