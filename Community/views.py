@@ -143,17 +143,24 @@ def community_view(request, pk):
 		child.rejectedCount = rejectedCount
 		if MergedArticles.objects.filter(community=child).exists():
 			child.merged = True
+			mergedstatus = MergedArticles.objects.filter(community=child)
+			child.mergedstatus = mergedstatus[0].state.name
 		else:
 			child.merged = False
 
 	childrencount = children.count()
 
 	createpow = False
+	isCurator = False
+	isApprover = False
 	if request.user.is_authenticated:
 		u = User.objects.get(username=request.user)
 		if u.groups.filter(name='curator').exists():
 			createpow = True
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow})
+			isCurator = True
+		if u.groups.filter(name='icpapprover').exists():
+			isApprover = True
+	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
