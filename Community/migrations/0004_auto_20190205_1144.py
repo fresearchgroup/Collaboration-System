@@ -14,13 +14,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='community',
-            name='category',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='communitycategory', to='Categories.Category'),
-        ),
-        migrations.AlterField(
             model_name='requestcommunitycreation',
-            name='category',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Categories.Category'),
+            name='status',
+            field=models.CharField(default='Request', max_length=100, null=True),
         ),
     ]
