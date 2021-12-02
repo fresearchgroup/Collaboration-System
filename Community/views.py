@@ -1057,7 +1057,7 @@ def curate_content(request):
 				section = commarticles[0].community.name
 				parent = commarticles[0].community.parent.name
 				to = []
-				to.append(article.created_by)
+				to.append(article.created_by.email)
 				sendEmail_contributor_content_curated(to, status, section, parent, comments, request.META.get('HTTP_REFERER'))
 				if 'redirecto' in request.POST:
 					redirecto = request.POST['redirecto']
