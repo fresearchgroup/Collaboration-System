@@ -15,11 +15,14 @@
     {% csrf_token %}
     <div class="form-group">
       <label for="Sorting">Sort by</label>
-      <select id="select_community" name="sortby" class="btn btn-primary" onchange="this.form.submit()">
-        <option value="a_to_z">Name: A to Z</option>
-        <option value="z_to_a">Name: Z to A</option>
-        <option value="oldest">oldest</option>
-        <option value="latest">Latest</option>
+      <select id="select_community" name="sortingby" class="btn btn-primary" onchange="this.form.submit()">
+        {% for sort in sorting_by %}
+          {% if sort == sortselected%}
+            <option value="{{sort}}" selected>{{sort}}</option>
+          {% else %}
+            <option value="{{sort}}">{{sort}}</option>
+          {% endif %}
+        {% endfor %}
       </select>
 
     </div>

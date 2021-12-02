@@ -47,27 +47,29 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_contribution_submitted, sendEmail_curate_new_pow
+from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_pow_request_submitted, sendEmail_curate_new_pow
 
 def display_communities(request):
+	sorting_by = ["A to Z", "Z to A"]
 	if request.method == 'POST':
-		if 'sortby' in request.POST:
-			sortby = request.POST['sortby']
-			if sortby == 'a_to_z':
+		if 'sortingby' in request.POST:
+			sortselected = request.POST['sortingby']
+			if sortselected == 'A to Z':
 				communities=Community.objects.filter(parent=None).order_by('name')
-			if sortby == 'z_to_a':
+			if sortselected == 'Z to A':
 				communities=Community.objects.filter(parent=None).order_by('-name')
-			if sortby == 'oldest':
+			if sortselected == 'oldest':
 				communities=Community.objects.filter(parent=None).order_by('created_at')
-			if sortby == 'latest':
+			if sortselected == 'latest':
 				communities=Community.objects.filter(parent=None).order_by('-created_at')
 		elif 'category' in request.POST:
 			category = request.POST['category']
 			category = Category.objects.get(pk=category)
 			communities=Community.objects.filter(category=category)
 	else:
+		sortselected = None
 		communities=Community.objects.filter(parent=None).order_by('name')
-	return render(request, 'communities.html',{'communities':communities})
+	return render(request, 'communities.html',{'communities':communities, 'sorting_by':sorting_by, 'sortselected':sortselected})
 
 def community_view(request, pk):
 	try:
@@ -266,7 +268,7 @@ class RequestCommunityCreationView(CreateView):
 		sendEmail_contributor_pow_request_submitted(to)
 		to = []
 		to.append(assignedto.email)
-		sendEmail_curator_contribution_submitted(to)
+		sendEmail_curator_pow_request_submitted(to)
 
 		messages.success(self.request, 'Request for creation of place of worship successfully submited.')
 		return super(RequestCommunityCreationView, self).form_valid(form)
@@ -318,7 +320,7 @@ def update_community_requests(request):
 	to = []
 	uname = RequestCommunityCreationAssignee.objects.filter(requestcommunity__id=pk).order_by('-assignedon')[:1]
 	to.append(uname[0].assignedto.email)
-	sendEmail_curator_contribution_submitted(to)
+	sendEmail_curator_pow_request_submitted(to)
 	return redirect('user_dashboard')
 
 def handle_community_creation_requests(request):
