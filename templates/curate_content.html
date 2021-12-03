@@ -69,7 +69,12 @@
                     <a href="{% url 'media_view' content.media.pk %}"> {{ content.media.title }}  </a>
                     {% endif %}
                 </td> -->
-                <td>
+
+                {% if content.deadlinepassed %}
+                    <td style="color:red; font-weight: bold;">
+                {% else %}
+                    <td>
+                {% endif %}
                     {% if content.type == 'Article' %}
                         {{content.article.state.name}}
                     {% endif %}
@@ -77,7 +82,11 @@
                         {{content.media.state.name}}
                     {% endif %}
                 </td>
-                <td>
+                {% if content.deadlinepassed %}
+                    <td style="color:red; font-weight: bold;">
+                {% else %}
+                    <td>
+                {% endif %}
                     {{content.changedby}} <br />
                     {{content.changedon}}
                 </td>
