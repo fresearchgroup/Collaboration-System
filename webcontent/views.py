@@ -53,7 +53,7 @@ def sendEmail(subject, to, text_content, html_content):
 	text_content += signature_text
 	html_content += signature_html
 	from_email = 'pow@cse.iitb.ac.in'
-	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
 
