@@ -186,6 +186,32 @@
           {% endif %}
         {% endif %}
       {% endif %}
+
+      {% if state.name == 'draft' and request.user == gcmedia.media.created_by %}
+      <button style="align-content: right;" type="radio" name="delete" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteMedia" data-whatever="@mdo" id="status">Delete</button>
+      <div class="modal fade" id="modalDeleteMedia" tabindex="-1" role="dialog" aria-labelledby="DeleteMediaModal" aria-hidden="true">
+        <div class="modal-dialog text-left" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="exampleModalLabel">Delete Media</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this media? You will not be able to recover it once it is deleted.
+              <form method = "post" action ="{% url 'media_delete' gcmedia.media.pk %}">
+                {% csrf_token %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button id="articleDelete" type="submit" class="btn btn-primary">Yes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
     <!-- </p> -->
 
       {% for group_for in request.user.groups.all %}

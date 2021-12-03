@@ -204,6 +204,22 @@ class MediaUpdateView(UpdateView):
 				" a get_absolute_url method on the Model.")
 		return url
 
+def media_delete(request, pk):
+	media = Media.objects.get(pk=pk)
+	state = States.objects.get(initial=True)
+	if request.user.is_authenticated:
+		if media.created_by != request.user:
+			return redirect('home')
+		if media.state == state:
+			media.delete()
+			messages.success(request, 'Media deleted successfully')
+			return redirect('user_dashboard')
+		else:
+			messages.warning(request, 'Cannot delete this media which is not in the draft state')
+			return redirect('media_view',pk=pk)
+	else:
+		return redirect('login')
+
 def media_reports(request, pk):
 	if request.user.is_authenticated:
 		try:
