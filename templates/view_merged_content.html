@@ -140,6 +140,7 @@
                                 </audio>
                             {% else %}
                                 <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                                <a href="{{gcmedia.media.medialink}}">Click here if you are unable to hear the audio</a>
                             {% endif %}
                         {% endif %}
                         {% if gcmedia.media.mediatype == 'VIDEO' %}
@@ -153,6 +154,7 @@
                                 </video>      
                             {% else %}
                                 <iframe height="250px" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+                                <a href="{{ gcmedia.media.medialink }}">Click here if you are unable to view the video</a>
                             {% endif %}
                         {% endif %}
                         <h5 style="text-align: center; font-weight: bold;">

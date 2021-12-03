@@ -82,6 +82,7 @@
           </audio>
         {% else %}
           <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+          <h4 style="margin-top: 10px;">Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to hear the audio</h4>
         {% endif %}
       {% endif %}
       {% if gcmedia.media.mediatype == 'VIDEO' %}
@@ -95,6 +96,7 @@
           </video>      
         {% else %}
           <iframe height="350" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+          <h4 style="margin-top: 10px;">Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to view the video</h4>
         {% endif %}
       {% endif %}
     </div>
