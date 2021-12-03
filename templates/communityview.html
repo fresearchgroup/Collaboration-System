@@ -190,8 +190,7 @@
       <table id="listPow" class="table table-striped table-bordered" style="font-size: small;" cellspacing="0" width="100%">
         <thead>
             <tr style="background-color:#89216B">
-              <th style="color:white">Name</th>
-              <th style="color:white">Address</th>
+              <th style="color:white">Name & Address</th>
               <th style="color:white">Accepting Contributions</th>
               <th style="color:white">Curator</th>
               <th style="color:white">Draft</th>
@@ -214,9 +213,8 @@
                 {% else %}
                   {{child.name}}
                 {% endif %}
-              </td>
-              <td>
-                {{child.area}}, {{child.city}}, {{child.state}}, {{child.pincode}}
+                <br />
+                {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}}
               </td>
               <td>
                 {% if child.contribution_status == 'Ongoing' %} 
