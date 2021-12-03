@@ -14,13 +14,13 @@ from workflow.models import States
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Course.views import course_view, create_course
-from notifications.signals import notify
+# from notifications.signals import notify
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType
 from feeds.views import update_role_feed,remove_or_add_user_feed
-from notification.views import notify_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
+# from notification.views import notify_subscribe_unsubscribe, notify_update_role, notify_remove_or_add_user
 from django.conf import settings
 from ast import literal_eval
 import json
@@ -174,7 +174,7 @@ def community_subscribe(request):
 
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				return redirect('community_view',pk=cid)
-			notify_subscribe_unsubscribe(request.user,community, 'subscribe')
+			# notify_subscribe_unsubscribe(request.user,community, 'subscribe')
 			obj = CommunityMembership.objects.create(user=user, community=community, role=role)
 			return redirect('community_view',pk=cid)
 		return render(request, 'communityview.html')
@@ -191,7 +191,7 @@ def community_unsubscribe(request):
 			user = request.user
 			if CommunityMembership.objects.filter(user=user, community=community).exists():
 				remove_or_add_user_feed(user,community,'left')
-				notify_remove_or_add_user(user, user, community, 'left')
+				# notify_remove_or_add_user(user, user, community, 'left')
 				obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 				#notify_subscribe_unsubscribe(request.user, community, 'unsubscribe')
 			return redirect('community_view',pk=cid)
@@ -455,7 +455,7 @@ def manage_community(request,pk):
 								is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 							except CommunityMembership.DoesNotExist:
 								obj = CommunityMembership.objects.create(user=user, community=community, role=role)
-								notify_remove_or_add_user(request.user, user, community, 'added')
+								# notify_remove_or_add_user(request.user, user, community, 'added')
 								if rolename=='publisher' or rolename=='community_admin':
 									remove_or_add_user_feed(user,community,'added')
 
@@ -465,7 +465,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									update_role_feed(user,community,rolename)
-									notify_update_role(request.user, user,community,rolename)
+									# notify_update_role(request.user, user,community,rolename)
 									is_member = CommunityMembership.objects.get(user =user, community = community.pk)
 									is_member.role = role
 									is_member.save()
@@ -479,7 +479,7 @@ def manage_community(request,pk):
 							if count > 1 or count == 1 and username != request.user.username:
 								try:
 									remove_or_add_user_feed(user,community,'removed')
-									notify_remove_or_add_user(request.user, user,community,'removed')
+									# notify_remove_or_add_user(request.user, user,community,'removed')
 									obj = CommunityMembership.objects.filter(user=user, community=community).delete()
 
 

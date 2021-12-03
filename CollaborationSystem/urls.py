@@ -30,7 +30,7 @@ from django.conf.urls.static import static
 from webcontent import views as web
 from Course import views as courseview
 from Group import viewsets as groupviewsets
-import notifications.urls
+# import notifications.urls
 from Dashboard import views as dashboardview
 from Recommendation_API import views
 from Reputation import views as repuationview
@@ -192,7 +192,7 @@ urlpatterns = [
     url(r'^manage-resource/(?P<pk>\d+)/$', courseview.manage_resource, name='manage_resource'),
     url(r'^update-course-info/(?P<pk>\d+)/$', courseview.update_course_info, name='update_course_info'),
 
-    url(r'^notifications/', include(notifications.urls, namespace='notifications')),
+    # url(r'^notifications/', include(notifications.urls, namespace='notifications')),
 
     url(r'api/dspace/communityarticlesapi', communityviewsets.CommunityArticleViewsets.as_view(), name='community-articles-dspace-api'),
     url(r'api/dspace/communityapi', communityviewsets.CommunityViewSet.as_view(), name='community-dspace-api'),
@@ -205,7 +205,7 @@ urlpatterns = [
 
 
     url(r'api/course/', include('Course.api.urls', namespace = 'api-course')),
-    url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
+    # url(r'logapi/', include('eventlog.api.urls', namespace="api-log")),
     url(r'recommendation_json_object/',views.get_Recommendations().as_view(),name='recommendation_json_object'),
     url(r'^community_media_create/(?P<pk>\d+)/(?P<mediatype>[\w\-]+)$', mediaview.MediaCreateView.as_view(), name='community_media_create'),
 
@@ -242,7 +242,7 @@ from wiki.urls import get_pattern as get_wiki_pattern
 from django_nyt.urls import get_pattern as get_nyt_pattern
 
 urlpatterns += [
-    url(r'^wiki-notifications/', get_nyt_pattern()),
+    # url(r'^wiki-notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
     url(r'^search/', FacetedSearchView.as_view(), name='haystack_search'),
     # url(r'^search_category/', SearchView.search_queries, name='search_queries'),

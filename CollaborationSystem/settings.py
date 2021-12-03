@@ -70,18 +70,18 @@ INSTALLED_APPS = [
     'search',
     'webcontent',
     'Course',
-    'notifications',
-    'notification',
+    # 'notifications',
+    # 'notification',
     'actstream',
     'feeds',
-    'eventlog',
+    # 'eventlog',
     'django.contrib.humanize.apps.HumanizeConfig',
     'django_nyt.apps.DjangoNytConfig',
     'sekizai',
     'sorl.thumbnail',
     'wiki.apps.WikiConfig',
     'wiki.plugins.attachments.apps.AttachmentsConfig',
-    'wiki.plugins.notifications.apps.NotificationsConfig',
+    # 'wiki.plugins.notifications.apps.NotificationsConfig',
     'wiki.plugins.images.apps.ImagesConfig',
     'wiki.plugins.macros.apps.MacrosConfig',
     'Recommendation_API',
@@ -120,7 +120,7 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'eventlog.middleware.Middleware',
+    # 'eventlog.middleware.Middleware',
 ]
 
 ROOT_URLCONF = 'CollaborationSystem.urls'
@@ -307,11 +307,11 @@ SESSION_COOKIE_AGE = 7200
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-DJANGO_NOTIFICATIONS_CONFIG = {
-    'PAGINATE_BY': 10,
-    'USE_JSONFIELD': True,
-    'SOFT_DELETE': True
-}
+# DJANGO_NOTIFICATIONS_CONFIG = {
+#     'PAGINATE_BY': 10,
+#     'USE_JSONFIELD': True,
+#     'SOFT_DELETE': True
+# }
 SERVERURL = config('NODE_SERVER_APIURL')+":"+config('NODESERVERPORT')
 APIKEY = config('APIKEY')
 APIURL = SERVERURL+"/api"

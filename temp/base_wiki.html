@@ -181,13 +181,13 @@ $(document).ready(function() {
             <li><a href="{% url 'logout' %}">Log out</a></li>
           </ul>
         </li>
-        {% load notifications_tags %}
+        <!-- {% load notifications_tags %} -->
         <!--{% notifications_unread as unread_count %}-->
-        {% register_notify_callbacks badge_class='badge' refresh_period='180' callbacks='fill_notification_badge' %}
+        <!-- {% register_notify_callbacks badge_class='badge' refresh_period='180' callbacks='fill_notification_badge' %} -->
 
-        <li>
+        <!-- <li>
             <a class="glyphicon glyphicon-bell" href="{% url 'notifications:all' %}">{% live_notify_badge badge_class='badge' %}</a>
-        </li>
+        </li> -->
 
         {% endif %}
 

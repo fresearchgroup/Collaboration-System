@@ -4,7 +4,7 @@ from django.test import TestCase
 from .views import *
 from graphs import get_data
 from unittest import mock
-from eventlog.main.handlers import *
+# from eventlog.main.handlers import *
 
 
 class ArticleDashboardTests(TestCase):

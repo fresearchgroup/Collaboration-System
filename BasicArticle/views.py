@@ -11,14 +11,14 @@ from workflow.models import States, Transitions
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from UserRolesPermission.models import favourite
 import datetime
-from notifications.signals import notify
+# from notifications.signals import notify
 from django.contrib.auth.models import User
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
 from django.contrib.contenttypes.models import ContentType 
 from feeds.views import create_resource_feed
-from notification.views import notify_update_article_state, notify_edit_article
+# from notification.views import notify_update_article_state, notify_edit_article
 from py_etherpad import EtherpadLiteClient
 from django.conf import settings
 from Recommendation_API.views import get_Recommendations
@@ -315,7 +315,7 @@ class ArticleEditView(UpdateView):
 		self.object.published_by=self.request.user
 		self.object.save()
 		create_resource_feed(self.object,'article_published',self.object.created_by)
-		notify_update_article_state(self.request.user, self.object,'published')
+		# notify_update_article_state(self.request.user, self.object,'published')
 		return
 
 	def process_visible(self):
@@ -323,7 +323,7 @@ class ArticleEditView(UpdateView):
 		return
 
 	def process_publishable(self):
-		notify_update_article_state(self.request.user,self.object,'publishable')
+		# notify_update_article_state(self.request.user,self.object,'publishable')
 		create_resource_feed(self.object,"article_no_edit",self.request.user)
 		return
 
