@@ -30,7 +30,7 @@ class Community(MPTTModel):
 		district = models.CharField(max_length=30, null=True)
 		city = models.CharField(max_length=30, null=True)
 		state = models.CharField(max_length=30, null=True)
-		pincode = models.PositiveIntegerField(null=True)
+		pincode = models.CharField(max_length=6, null=True)
 		contribution_status_choices = (
 			('Ongoing', 'Ongoing'),
 			('Completed', 'Completed'),
