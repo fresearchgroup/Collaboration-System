@@ -30,6 +30,7 @@ def createbulkcommunity(taskid):
 		tag_line = i['tag_line']
 		area = i['area']
 		city = i['city']
+		district=i['district']
 		state = i['state']
 		pincode = i['pincode']
 		admin = i['admin']
@@ -65,6 +66,7 @@ def createbulkcommunity(taskid):
 					created_by = admin,
 					area = area,
 					city = city,
+					district=district,
 					state = state,
 					pincode = pincode,
 					parent = parent
