@@ -120,14 +120,10 @@ class CommunityUpdateForm(forms.ModelForm):
 		# 	self.fields['category'] = TreeNodeChoiceField(queryset=Category.objects.all())
 
 class SubCommunityCreateForm(forms.ModelForm):
-	# x = forms.FloatField(widget=forms.HiddenInput())
-	# y = forms.FloatField(widget=forms.HiddenInput())
-	# width = forms.FloatField(widget=forms.HiddenInput())
-	# height = forms.FloatField(widget=forms.HiddenInput())
 
 	class Meta:
 		model = Community
-		fields = ['name', 'desc', 'area', 'city', 'state', 'pincode', 'parent']
+		fields = ['name', 'desc', 'area', 'city', 'district', 'state', 'pincode', 'parent']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('community', None)
@@ -135,17 +131,41 @@ class SubCommunityCreateForm(forms.ModelForm):
 		self.fields['name'].widget.attrs.update({'class': 'form-control'})
 		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
 		self.fields['area'].widget.attrs.update({'class': 'form-control'})
-		self.fields['city'].widget.attrs.update({'class': 'form-control'})
-		self.fields['state'].widget.attrs.update({'class': 'form-control'})
-		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
+
+		self.fields['state'] = forms.ChoiceField(choices=[('', '---------')] + [(item,item) for item in Locations.objects.all().values_list('state', flat=True).order_by('state').distinct()])
+		self.fields['state'].widget.attrs.update({'class': 'form-control'})
+		self.fields['district'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['district'].widget.attrs.update({'class': 'form-control'})
+		self.fields['city'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['city'].widget.attrs.update({'class': 'form-control'})
+		self.fields['pincode'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.none()])
+		self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
+
+		if 'state' in self.data:
+			try:
+				state = self.data.get('state')
+				self.fields['district'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state).values_list('district', flat=True).order_by('district').distinct()]
+			except (ValueError, TypeError):
+				pass
+		
+		if 'district' in self.data:
+			try:
+				district = self.data.get('district')
+				self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
+			except (ValueError, TypeError):
+				pass
+		
+		if 'city' in self.data:
+			try:
+				city = self.data.get('city')
+				self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,district=district,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
+			except (ValueError, TypeError):
+				pass
+
 		if community:
 			self.fields['parent'].queryset = Community.objects.filter(pk=community.pk)
-		# if community.category:
-		# 	self.fields['category'] = TreeNodeChoiceField(community.category.get_descendants(include_self=False))
-		# else:
-		# 	self.fields['category'].queryset = Category.objects.none()
 
 
 

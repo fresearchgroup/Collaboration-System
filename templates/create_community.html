@@ -52,27 +52,52 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="title">Area</label>
-                    {{ form.area }}
-                    <div class="invalid-feedback">{{ form.area.errors }}</div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="title">City</label>
-                    {{ form.city }}
-                    <div class="invalid-feedback">{{ form.city.errors }}</div>
-                  </div>
-
-                  <div class="form-group">
                     <label for="title">State</label>
                     {{ form.state }}
-                    <div class="invalid-feedback">{{ form.state.errors }}</div>
+                    <div class="invalid-feedback">{{ form.state.errors }}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">District</label>
+                    <div class="row">
+                      <div class="col-md-6">
+                        {{ form.district }}
+                        <div class="invalid-feedback">{{ form.district.errors }}</div>
+                      </div>
+                      <div id="districtOthers" class="col-md-6">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="title">City</label>
+                    <div class="row">
+                      <div class="col-md-6">
+                        {{ form.city }}
+                        <div class="invalid-feedback">{{ form.city.errors }}</div>
+                      </div>
+                      <div id="cityOthers" class="col-md-6">
+                      </div>
+                    </div>
                   </div>
 
                   <div class="form-group">
                     <label for="title">Pincode</label>
-                    {{ form.pincode }}
-                    <div class="invalid-feedback">{{ form.pincode.errors }}</div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        {{ form.pincode }}
+                        <div class="invalid-feedback">{{ form.pincode.errors }}</div>
+                      </div>
+                      <div id="pincodeOthers" class="col-md-6">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Landmark</label>
+                    {{ form.area }}
+                    <div class="invalid-feedback">{{ form.area.errors }}</div>
                   </div>
 
                   <!-- <div class="form-group custom-file">
@@ -158,6 +183,103 @@
 <br />
 {% endblock %}
 {% block javascript %}
+
+<script>
+  $("#id_state").change(function () {
+    var url = "{% url 'get_districts' %}"
+    var state = $(this).val();
+    $.ajax({
+      url: url,
+      data: {
+        'state': state
+      },
+      success: function (data) {
+        $("#id_district").html(data);
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#id_district").change(function () {
+    var url = "{% url 'get_cities' %}"
+    var district = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="text" value="" name="districtOthers" class="form-control" placeholder="Enter district in this textbox">'
+    document.getElementById("districtOthers").innerHTML="";
+    if (district == 'Others') {
+      document.getElementById("districtOthers").appendChild(div);
+      $.ajax({
+        url: url,
+        data: {
+          'district': district,
+          'state': $(id_state).val()
+        },
+        success: function (data) {
+          $("#id_city").html(data);
+        }
+      });
+    }
+    else {
+      $.ajax({
+        url: url,
+        data: {
+          'district': district
+        },
+        success: function (data) {
+          $("#id_city").html(data);
+        }
+      });      
+    }
+  });
+</script>
+
+<script>
+  $("#id_city").change(function () {
+    var url = "{% url 'get_pincodes' %}"
+    var city = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="text" value="" name="cityOthers" class="form-control" placeholder="Enter city in this textbox">'
+    document.getElementById("cityOthers").innerHTML="";
+    if (city == 'Others') {
+      document.getElementById("cityOthers").appendChild(div);
+      $.ajax({
+        url: url,
+        data: {
+          'city': city,
+          'state': $(id_state).val()
+        },
+        success: function (data) {
+          $("#id_pincode").html(data);
+        }
+      });
+    }
+    else {
+      $.ajax({
+        url: url,
+        data: {
+          'city': city
+        },
+        success: function (data) {
+          $("#id_pincode").html(data);
+        }
+      });      
+    }
+  });
+</script>
+
+<script>
+  $("#id_pincode").change(function () {
+    var pincode = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="number" min="100000" max="999999" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox">'
+    document.getElementById("pincodeOthers").innerHTML="";
+    if (pincode == 'Others') {
+      document.getElementById("pincodeOthers").appendChild(div);
+    }
+  });
+</script>
+
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
 <script>
   ClassicEditor
