@@ -200,7 +200,7 @@
   $("#id_pincode").change(function () {
     var pincode = $(this).val();
     var div = document.createElement('DIV');
-    div.innerHTML = '<input type="text" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox">'
+    div.innerHTML = '<input type="number" min="100000" max="999999" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox">'
     document.getElementById("pincodeOthers").innerHTML="";
     if (pincode == 'Others') {
       document.getElementById("pincodeOthers").appendChild(div);
