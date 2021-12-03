@@ -344,38 +344,48 @@ class ArticleEditView(UpdateView):
 
 	
 def delete_article(request, pk):
-	"""
-	a function to delete an article.
-	The business logic is not yet implemented for deleting an article.
-	It just displays a message
-
-	"""
+	article = Articles.objects.get(pk=pk)
+	state = States.objects.get(initial=True)
 	if request.user.is_authenticated:
-		article = Articles.objects.get(pk=pk)
-		if article.state != States.objects.get(name='publish'):
-			if request.method=='POST':
-				status = request.POST['status']
-				if status == '0':
-					return redirect('article_view',pk=pk)
-				elif status == '1':
-					deletePad(article)
-					article.delete()
-					return redirect('display_articles')
-			else:
-				message=""
-				try:
-					article = CommunityArticles.objects.get(article=pk)
-					try:
-						membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
-					except CommunityMembership.DoesNotExist:
-						membership = 'FALSE'
-				except CommunityArticles.DoesNotExist:
-					raise Http404
-				return render(request, 'delete_article.html', {'article': article,'membership':membership})
+		if article.created_by != request.user:
+			return redirect('home')
+		if article.state == state:
+			article.delete()
+			messages.success(request, 'Article deleted successfully')
+			return redirect('user_dashboard')
 		else:
+			messages.warning(request, 'Cannot delete an article which is not in the draft state')
 			return redirect('article_view',pk=pk)
 	else:
 		return redirect('login')
+
+
+	# if request.user.is_authenticated:
+	# 	article = Articles.objects.get(pk=pk)
+	# 	if article.state != States.objects.get(name='publish'):
+	# 		if request.method=='POST':
+	# 			status = request.POST['status']
+	# 			if status == '0':
+	# 				return redirect('article_view',pk=pk)
+	# 			elif status == '1':
+	# 				deletePad(article)
+	# 				article.delete()
+	# 				return redirect('display_articles')
+	# 		else:
+	# 			message=""
+	# 			try:
+	# 				article = CommunityArticles.objects.get(article=pk)
+	# 				try:
+	# 					membership = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
+	# 				except CommunityMembership.DoesNotExist:
+	# 					membership = 'FALSE'
+	# 			except CommunityArticles.DoesNotExist:
+	# 				raise Http404
+	# 			return render(request, 'delete_article.html', {'article': article,'membership':membership})
+	# 	else:
+	# 		return redirect('article_view',pk=pk)
+	# else:
+	# 	return redirect('login')
 
 
 def article_watch(request, article):
