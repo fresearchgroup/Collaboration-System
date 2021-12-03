@@ -14,11 +14,11 @@ class ArticleUpdateForm(forms.ModelForm):
 	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
 	class Meta:
 		model = Articles
-		if settings.REALTIME_EDITOR:
+		#if settings.REALTIME_EDITOR:
 			# fields = ['title', 'image', 'state', 'tags']
-			pass
-		else:
-			fields = ['body', 'tags', 'comments']
+		#	pass
+		#else:
+		fields = ['body', 'tags', 'comments']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'state', 'tags']
 
 
@@ -70,11 +70,11 @@ class ArticleCreateForm(forms.ModelForm):
 	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
 	class Meta:
 		model = Articles
-		if settings.REALTIME_EDITOR:
+		#if settings.REALTIME_EDITOR:
 			# fields = ['title', 'image', 'tags']
-			pass
-		else:
-			fields = ['body', 'tags', 'comments']
+		#	pass
+		#else:
+		fields = ['body', 'tags', 'comments']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'tags']
 
 	def __init__(self, *args, **kwargs):
