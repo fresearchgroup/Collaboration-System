@@ -1123,6 +1123,16 @@ def get_content(commarticles, commmedia):
 		cart.comments = articlestate[0].comments
 		cart.assignedto = commembership[0].user.username
 		cart.assignedon = commembership[0].assignedon
+		currentday = datetime.datetime.now().date() 
+		changedon = articlestate[0].changedon.date()
+		diff = (currentday - changedon).days
+		if cart.article.state.name == 'submitted' or cart.article.state.name == 'reviewStarted' or cart.article.state.name == 'sentToModify':
+			if int(diff) > int(settings.DEADLINE):
+				cart.deadlinepassed = True
+			else:
+				cart.deadlinepassed = False
+		else:
+			cart.deadlinepassed = False
 	for cmedia in commmedia:
 		role = Roles.objects.get(name='curator')
 		commembership = CommunityMembership.objects.filter(community=cmedia.community.parent, role=role).order_by('-assignedon')[:1]
@@ -1133,6 +1143,16 @@ def get_content(commarticles, commmedia):
 		cmedia.comments = mediastate[0].comments
 		cmedia.assignedto = commembership[0].user.username
 		cmedia.assignedon = commembership[0].assignedon
+		currentday = datetime.datetime.now().date() 
+		changedon = mediastate[0].changedon.date()
+		diff = (currentday - changedon).days
+		if cmedia.media.state.name == 'submitted' or cmedia.media.state.name == 'reviewStarted' or cmedia.media.state.name == 'sentToModify':
+			if int(diff) > int(settings.DEADLINE):
+				cmedia.deadlinepassed = True
+			else:
+				cmedia.deadlinepassed = False
+		else:
+			cmedia.deadlinepassed = False
 	lstContent = list(commarticles) + list(commmedia)
 	return lstContent
 
