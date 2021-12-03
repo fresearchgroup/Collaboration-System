@@ -5,14 +5,15 @@ from django.contrib import messages
 # Create your views here.
 
 def upload_task(request):
+    tasktype = "Community Upload"
     if request.user.is_superuser:
         if request.method == 'POST':
             name = request.POST['name']
             task = request.FILES['taskfile']
-            Task.objects.create(name=name, tfile=task)
+            Task.objects.create(name=name, tfile=task, tasktype = tasktype)
             return redirect('upload_task')
         else:
-            task = Task.objects.all()
+            task = Task.objects.filter(tasktype=tasktype)
             return render(request, 'tasks.html',{'task':task})
     else:
         return redirect('home')
@@ -31,14 +32,15 @@ def run_task(request):
         return redirect('home')
     
 def upload_locations(request):
+    tasktype = "Locations Upload"
     if request.user.is_superuser:
         if request.method == 'POST':
             name = request.POST['name']
             task = request.FILES['taskfile']
-            Task.objects.create(name=name, tfile=task)
+            Task.objects.create(name=name, tfile=task, tasktype = tasktype)
             return redirect('upload_locations')
         else:
-            task = Task.objects.all()
+            task = Task.objects.filter(tasktype=tasktype)
             return render(request, 'upload_locations.html',{'task':task})
     else:
         return redirect('home')

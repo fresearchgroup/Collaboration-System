@@ -6,4 +6,4 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     tfile = models.FileField(upload_to='task/')
     status = models.BooleanField(default=False)
-    
+    tasktype = models.CharField(max_length=100, null=True)
