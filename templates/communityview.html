@@ -214,7 +214,8 @@
                   {{child.name}}
                 {% endif %}
                 <br />
-                {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}}
+                {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
+                <a href="{% url 'update_community_info' child.pk %}">Update information</a>
               </td>
               <td>
                 {% if child.contribution_status == 'Ongoing' %} 

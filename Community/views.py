@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 
 # Create your views here.
 from django.http import Http404, HttpResponse, JsonResponse
@@ -512,18 +513,16 @@ class UpdateCommunityView(UpdateView):
 
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated:
-			self.object = self.get_object()
-			membership = self.get_membership()
-			if membership and membership.role == Roles.objects.get(name='community_admin'):
+			u = User.objects.get(username=request.user)
+			if u.groups.filter(name='curator').exists():
+				self.object = self.get_object()
 				return super(UpdateCommunityView, self).get(request, *args, **kwargs)
+			messages.warning(self.request, 'You cannot update a pow')
 			return redirect(self.success_url, self.object.pk)
 		return redirect('home')
 
 	def get_context_data(self, **kwargs):
-		# Call the base implementation first to get a context
 		context = super().get_context_data(**kwargs)
-		if self.request.user.is_authenticated:
-			context['membership'] = self.get_membership()
 		return context
 
 	def get_membership(self):
@@ -536,18 +535,35 @@ class UpdateCommunityView(UpdateView):
 		If the form is valid, save the associated model.
 		"""
 		self.object = form.save(commit=False)
-		self.object.image_thumbnail = form.cleaned_data.get('image')
+		# self.object.image_thumbnail = form.cleaned_data.get('image')
+
+		self.object.state = form.cleaned_data.get('state')
+		if form.cleaned_data.get('district') == "Others":
+			self.object.district = self.request.POST['districtOthers']
+		else:
+			self.object.district = form.cleaned_data.get('district')
+
+		if form.cleaned_data.get('city') == "Others":
+			self.object.city = self.request.POST['cityOthers']
+		else:
+			self.object.city = form.cleaned_data.get('city')
+
+		if form.cleaned_data.get('pincode') == "Others":
+			self.object.pincode = self.request.POST['pincodeOthers']
+		else:
+			self.object.pincode = form.cleaned_data.get('pincode')
+
 		self.object.save()
 		
-		if form.cleaned_data.get('x'):
-			x = form.cleaned_data.get('x')
-			y = form.cleaned_data.get('y')
-			w = form.cleaned_data.get('width')
-			h = form.cleaned_data.get('height')
-			image = Image.open(self.object.image_thumbnail)
-			cropped_image = image.crop((x, y, w+x, h+y))
-			resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-			resized_image.save(self.object.image_thumbnail.path)
+		# if form.cleaned_data.get('x'):
+		# 	x = form.cleaned_data.get('x')
+		# 	y = form.cleaned_data.get('y')
+		# 	w = form.cleaned_data.get('width')
+		# 	h = form.cleaned_data.get('height')
+		# 	image = Image.open(self.object.image_thumbnail)
+		# 	cropped_image = image.crop((x, y, w+x, h+y))
+		# 	resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+		# 	resized_image.save(self.object.image_thumbnail.path)
 
 		return super(UpdateCommunityView, self).form_valid(form)
 
@@ -556,7 +572,7 @@ class UpdateCommunityView(UpdateView):
 		Returns the supplied URL.
 		"""
 		if self.success_url:
-			return reverse(self.success_url,kwargs={'pk': self.object.pk})
+			return reverse(self.success_url,kwargs={'pk': self.object.parent.pk})
 		else:
 			try:
 				url = self.object.get_absolute_url()
