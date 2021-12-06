@@ -31,6 +31,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils import six
 from django.contrib import messages as auth_messages
+from webcontent.models import Feedback
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
@@ -189,7 +190,9 @@ def user_dashboard(request):
             audiopublished.append(Media.objects.filter(created_by=request.user, mediatype='Audio', created_at__year=yearby, created_at__month=i).count())
             videopublished.append(Media.objects.filter(created_by=request.user, mediatype='Video', created_at__year=yearby, created_at__month=i).count())
 
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number})
+        feedback = Feedback.objects.filter(user=request.user)
+
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback})
     else:
         return redirect('login')
 
