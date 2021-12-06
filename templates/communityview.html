@@ -112,7 +112,8 @@
                   {% if child.contribution_status == 'Ongoing' %} 
                     Yes
                   {% else %}
-                    No
+                    No <br />
+                    <a href="{% url 'provide_feedback' child.pk %}">Feedback</a>
                   {% endif %}
                 </td>
               </tr>
@@ -221,7 +222,8 @@
                 {% if child.contribution_status == 'Ongoing' %} 
                   Yes
                 {% else %}
-                  No
+                  No <br />
+                  <a href="{% url 'provide_feedback' child.pk %}">Feedback</a>
                 {% endif %}
               </td>
               <td>{{child.curatorname}}</td>

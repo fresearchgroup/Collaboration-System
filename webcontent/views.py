@@ -2,14 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import Feedback, Faq, FaqCategory
 from django.core.mail import EmailMultiAlternatives
+from Community.models import Community
 
 def FAQs(request):
 	faqs=Faq.objects.all().order_by('flow')
 	categories = FaqCategory.objects.all()
 	return render(request, 'FAQs.html',{'faqs':faqs,'categories':categories})
 
-def provide_feedback(request):
+def provide_feedback(request, pk):
 	if request.user.is_authenticated:
+		community = Community.objects.get(pk=pk)
 		if request.method == 'POST':
 			title = request.POST['title']
 			body  = request.POST['body']
@@ -17,12 +19,13 @@ def provide_feedback(request):
 			feedback = Feedback.objects.create(
 				title = title,
 				body  = body,
-				user = user
+				user = user,
+				community = community
 				)
-			message = 'Your feedback was successfully submitted!'
+			message = 'Your feedback was successfully submitted for' + community.name
 			return render(request, 'feedback.html', {'message':message})
 		else:
-			return render(request, 'feedback.html')
+			return render(request, 'feedback.html', {'community':community})
 	else:
 		return redirect('login')
 
