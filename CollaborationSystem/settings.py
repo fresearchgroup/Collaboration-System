@@ -328,3 +328,5 @@ CELERY_BROKER_URL = 'amqp://localhost'
 REALTIME_EDITOR = config('REALTIME_EDITOR', cast=bool)
 
 TAGGIT_CASE_INSENSITIVE = True
+
+DEADLINE = config('DEADLINE')
