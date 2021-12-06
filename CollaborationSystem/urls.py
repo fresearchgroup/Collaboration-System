@@ -177,6 +177,7 @@ urlpatterns = [
     #url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset = SearchQuerySet().facet('desc'), name='haystack_search')),
 
     url(r'^provide_feedback/(?P<pk>\d+)/$', web.provide_feedback, name ='provide_feedback'),
+    url(r'^view_feedback/$', web.view_feedback, name ='view_feedback'),
     url(r'^contact_us/$', web.contact_us, name ='contact_us' ),
     url(r'^create_faq/$', web.create_faq, name ='create_faq' ),
 

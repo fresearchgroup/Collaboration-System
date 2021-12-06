@@ -178,6 +178,11 @@ $(document).ready(function() {
                 <li><a href="{% url 'handle_community_creation_requests' %}">Handle PoW Creation Requests</a></li>
                 <li><a href="{% url 'display_curation_list' %}">Curate Contributions</a></li>
               {% endif %}
+
+              {% if group_for.name == 'curator' or group_for.name == 'icpapprover' %}
+                <li><a href="{% url 'view_feedback' %}">View Feedback</a></li>
+              {% endif %}
+
             {% endfor %}
 
             <li><a href="{% url 'view_profile' %}">My Profile</a></li>
@@ -327,6 +332,7 @@ $(document).ready(function() {
 	$('#articleHistory').DataTable();
 	$('#mergedArticleHistory').DataTable();
 	$('#myFeedback').DataTable();
+	$('#allFeedback').DataTable();  
 	$('#mediaHistory').DataTable({"order": [ 2, 'desc' ]});
 } );
 </script>

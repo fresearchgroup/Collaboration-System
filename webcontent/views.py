@@ -29,6 +29,17 @@ def provide_feedback(request, pk):
 	else:
 		return redirect('login')
 
+def view_feedback(request):
+	if request.user.is_authenticated:
+		u = User.objects.get(username=request.user)
+		if u.groups.filter(name='curator').exists() or u.groups.filter(name='icpapprover').exists():
+			feedback = Feedback.objects.all().order_by('community')
+			return render(request, 'view_feedback.html', {'feedback':feedback})
+		else:
+			return redirect('user_dashboard')
+	else:
+		return redirect('login')
+
 def contact_us(request):
 	return render(request, 'contact.html')
 
