@@ -35,3 +35,5 @@ django-crispy-forms
 djangorestframework-simplejwt==4.1.0
 pandas==1.1.4
 numpy==1.19.5
+python-docx==0.8.11
+htmldocx==0.0.6
