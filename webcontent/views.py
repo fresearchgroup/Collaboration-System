@@ -138,7 +138,7 @@ def sendEmail_curator_new_curator_contributions(to, uname, pow):
 
 
 
-def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedlink, filepath):
+def sendEmail_merged_content_curated(to, from_email, status, pow, comments, url, publishedlink, filepath):
 
 	if status == 'sendForApproval':
 		subject = "Contributions for " + pow + " are ready for review"
@@ -179,7 +179,6 @@ def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedli
 	signature_html = "<p>Thank you</p> <p>PoW team</p>"
 	text_content += signature_text
 	html_content += signature_html
-	from_email = 'pow@cse.iitb.ac.in'
 	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 	msg.attach_alternative(html_content, "text/html")
 	msg.attach_file(filepath)

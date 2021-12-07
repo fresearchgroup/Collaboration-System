@@ -1365,7 +1365,7 @@ def curate_merged(request):
 		moreinfo = merged.moreinfo,
 		comments = comments
 	)
-	sendEmail_merged_content_curated(to, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink, filepath)
+	sendEmail_merged_content_curated(to, request.user.email, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink, filepath)
 	return redirect('view_merged_content',pk=merged.community.pk)
 
 def convert_to_docx(merged):
