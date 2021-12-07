@@ -27,7 +27,7 @@
 <div>
   <ul class="nav nav-tabs">
     <li class="nav-item">
-      <a class="nav-link " href="{% url 'view_merged_content' article.pk %}">View</a>
+      <a class="nav-link " href="{% url 'view_merged_content' article.community.pk %}">View</a>
     </li>
     {% if user.is_authenticated %}
       {% if article.state.name != 'publish' %}
