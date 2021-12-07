@@ -49,6 +49,10 @@ from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
 from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_pow_request_submitted, sendEmail_curate_new_pow
+from django.contrib.sites.models import Site
+from docx import Document
+from htmldocx import HtmlToDocx
+import os
 
 def display_communities(request):
 	sorting_by = ["A to Z", "Z to A"]
@@ -1305,6 +1309,7 @@ def curate_merged(request):
 	status = request.POST['status']
 	comments = ''
 	publishedlink = ''
+	filepath = ''
 	to = []
 
 	if status == 'sendForApproval':
@@ -1313,6 +1318,7 @@ def curate_merged(request):
 		icpapprovers = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
 		for approver in icpapprovers:
 			to.append(approver)
+		filepath = convert_to_docx(merged)
 
 	if status == 'recurate':
 		state = States.objects.get(name='merged')
@@ -1359,8 +1365,62 @@ def curate_merged(request):
 		moreinfo = merged.moreinfo,
 		comments = comments
 	)
-	sendEmail_merged_content_curated(to, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink)
+	sendEmail_merged_content_curated(to, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink, filepath)
 	return redirect('view_merged_content',pk=merged.community.pk)
+
+def convert_to_docx(merged):
+
+	document = Document()
+	new_parser = HtmlToDocx()
+
+	document.add_heading(merged.community.name, 0)
+
+	document.add_heading('Introduction', level=1)
+	new_parser.add_html_to_document(merged.introduction, document)
+
+	document.add_heading('Architecture', level=1)
+	new_parser.add_html_to_document(merged.architecture, document)
+
+	document.add_heading('Rituals', level=1)
+	new_parser.add_html_to_document(merged.rituals, document)
+
+	document.add_heading('Ceremonies', level=1)
+	new_parser.add_html_to_document(merged.ceremonies, document)
+
+	document.add_heading('Tales', level=1)
+	new_parser.add_html_to_document(merged.tales, document)
+
+	document.add_heading('More information', level=1)
+	new_parser.add_html_to_document(merged.moreinfo, document)
+
+	document.add_heading('Gallery', level=1)
+
+	mediaids = merged.originalmedia
+	mediaids = ast.literal_eval(mediaids)
+	medias = Media.objects.filter(pk__in=mediaids)
+	current_site = Site.objects.get_current()
+	domain = current_site.domain
+	for media in medias:
+		if media.mediafile:
+			name = domain + settings.MEDIA_URL + f'{media.mediafile}'
+			document.add_paragraph(name, style='List Bullet')
+		else:
+			name = media.medialink
+			document.add_paragraph(name, style='List Bullet')
+
+
+	path = settings.MEDIA_ROOT + "/writeup/" + f'{merged.community.pk}' 
+	try:
+		os.makedirs(path, exist_ok = True)
+	except OSError as error:
+		print("Directory can not be created")
+
+	now = datetime.datetime.now()
+	filename = f'{now.year}' + "_" + f'{now.month}' + "_" + f'{now.day}' + "_" + f'{now.hour}' + f'{now.minute}' + "_" + f'{merged.community.pk}' + "_" + merged.community.name + ".docx"
+	filepath = settings.MEDIA_ROOT + "/writeup/" + f'{merged.community.pk}' + "/" + filename
+	document.save(filepath)
+
+	return filepath
 
 def set_published_link(merged, publishedlink):
 	originalarticles = merged.originalarticles
