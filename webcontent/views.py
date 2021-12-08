@@ -136,7 +136,9 @@ def sendEmail_curator_new_curator_contributions(to, uname, pow):
 		<p>Curator named " + uname + " has taken up the curation activity of " + pow + " which was originally assgined to you </p>"
 	sendEmail(subject, to, text_content, html_content)
 
-def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedlink):
+
+
+def sendEmail_merged_content_curated(to, from_email, status, pow, comments, url, publishedlink, filepath):
 
 	if status == 'sendForApproval':
 		subject = "Contributions for " + pow + " are ready for review"
@@ -173,7 +175,14 @@ def sendEmail_merged_content_curated(to, status, pow, comments, url, publishedli
 			<p>The contributions of " + pow + " have been published on the ICP. \
 			Click <a href='" + publishedlink +"'>here</a> to view.</p>"
 		
-	sendEmail(subject, to, text_content, html_content)
+	signature_text = "\n\n Thank you \n\n PoW team"
+	signature_html = "<p>Thank you</p> <p>PoW team</p>"
+	text_content += signature_text
+	html_content += signature_html
+	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+	msg.attach_alternative(html_content, "text/html")
+	msg.attach_file(filepath)
+	msg.send()
 
 def sendEmail_contributor_pow_request_submitted(to):
 	subject = 'thank you for submitting request for creating a new Place of worship'
