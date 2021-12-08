@@ -204,15 +204,16 @@ def badges_progress_dashboard(request):
 
 def home(request):
 	state = States.objects.get(name='publish')
-	articles=Articles.objects.all().order_by('-views')[:3]
-	articlesdate=Articles.objects.all().order_by('-created_at')[:3]
+	# articles=Articles.objects.all().order_by('-views')[:3]
+	# articlesdate=Articles.objects.all().order_by('-created_at')[:3]
 	community=Community.objects.all().order_by('?')[:4]
-	userphoto=ProfileImage.objects.all().order_by('?')[:15]
+	# userphoto=ProfileImage.objects.all().order_by('?')[:15]
 	countcommunity = Community.objects.filter(parent = None).count()
 	countsubcomm = Community.objects.filter(~Q(parent = None)).count()
 	countarticles = Articles.objects.all().count()
 	countusers = User.objects.all().count()
-	return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
+	# return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
+	return render(request, 'home.html', {'community':community, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
     if request.user.is_authenticated:

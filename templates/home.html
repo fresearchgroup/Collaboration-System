@@ -185,10 +185,9 @@
 <!-- TESTIMONIALS -->
 <div class="row margin-bottom-40">
   <!-- BEGIN TESTIMONIALS -->
-  <div class="col-md-6 testimonials-v1 testimonials-v1-another-color">
+  <!-- <div class="col-md-6 testimonials-v1 testimonials-v1-another-color">
     <h2>Most Viewed Articles</h2>
     <div id="myCarousel1" class="carousel slide">
-      <!-- Carousel items -->
       <div class="carousel-inner">
       {{myhtml|safe}}{% autoescape off%}
         {% for article in articles %}
@@ -214,16 +213,15 @@
 
       </div>
         {% endautoescape%}
-        <!-- Carousel nav -->
       <a class="left-btn" href="#myCarousel1" data-slide="prev"></a>
       <a class="right-btn" href="#myCarousel1" data-slide="next"></a>
     </div>
-  </div>
+  </div> -->
   <!-- END TESTIMONIALS -->
 
 <!-- BEGIN BLOG PHOTOS STREAM -->
 <div class="col-md-3 blog-photo-stream margin-bottom-20">
-  <h2>Contributors</h2>
+  <!-- <h2>Contributors</h2>
   <ul class="list-unstyled">
     {{myhtml|safe}}{% autoescape off%}
     {% for uphoto in userphoto %}
@@ -232,12 +230,12 @@
       {%endif%}
     {% endfor %}
     {% endautoescape%}
-  </ul>
+  </ul> -->
 </div>
 <!-- END BLOG PHOTOS STREAM -->
 
 <!-- BEGIN RECENT NEWS -->
-<div class="col-md-3 recent-news margin-bottom-10">
+<!-- <div class="col-md-3 recent-news margin-bottom-10">
   <h2>Recent Articles</h2>
   {{myhtml|safe}}{% autoescape off%}
     {% for articles in articlesdate %}
@@ -256,7 +254,7 @@
   </div>
   {% endfor %}
   {% endautoescape%}
-</div>
+</div> -->
 <!-- END RECENT NEWS -->
 </div>
 
