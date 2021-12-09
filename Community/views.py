@@ -1312,25 +1312,28 @@ def curate_merged(request):
 	filepath = ''
 	to = []
 
-	if status == 'sendForApproval':
-		state = States.objects.get(name='sentForApproval')
+	if status == 'sentForReview' or status == 'sentForApproval': 
+		state = States.objects.get(name=status)
 		comments = request.POST['reason']
-		icpapprovers = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
-		for approver in icpapprovers:
-			to.append(approver)
+		if status == 'sentForReview':
+			users = User.objects.filter(groups__name='icpreviewer').exclude(username='admin').values_list('email', flat=True)
+		if status == 'sentForApproval':
+			users = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
+		for user in users:
+			to.append(user)
 		filepath = convert_to_docx(merged)
 
-	if status == 'recurate':
-		state = States.objects.get(name='merged')
-		comments = request.POST['reason']
-		originalstate = States.objects.get(name='accepted')
-		change_state_orginal_contributions(merged, originalstate, request)
-		to.append(merged.changedby.email)
+	# if status == 'recurate':
+	# 	state = States.objects.get(name='merged')
+	# 	comments = request.POST['reason']
+	# 	originalstate = States.objects.get(name='accepted')
+	# 	change_state_orginal_contributions(merged, originalstate, request)
+	# 	to.append(merged.changedby.email)
 
-	if status == 'accept':
-		state = States.objects.get(name='publish')
-		change_state_orginal_contributions(merged, state, request)
-		to.append(merged.changedby.email)
+	# if status == 'accept':
+	# 	state = States.objects.get(name='publish')
+	# 	change_state_orginal_contributions(merged, state, request)
+	# 	to.append(merged.changedby.email)
 
 	if status == 'publishedonicp':
 		state = States.objects.get(name='publishedICP')

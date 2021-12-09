@@ -140,13 +140,19 @@ def sendEmail_curator_new_curator_contributions(to, uname, pow):
 
 def sendEmail_merged_content_curated(to, from_email, status, pow, comments, url, publishedlink, filepath):
 
-	if status == 'sendForApproval':
+	if status == 'sentForReview':
 		subject = "Contributions for " + pow + " are ready for review"
+		text_content = "Dear ICP Reviewer, \n\n \
+			Contributions under the " + pow + " have been collated. Requesting to you kindly review the attached .docx file, provide comments, and email the file back to this email address."
+		html_content = "<p>Dear ICP Reviewer,</p> \
+			<p>Contributions under the " + pow + " have been collated. Requesting to you kindly review the attached .docx file, provide comments, and email the file back to this email address.</p>"
+
+	if status == 'sentForApproval':
+		subject = "Contributions for " + pow + " are ready for approval"
 		text_content = "Dear ICP Approver, \n\n \
-			Contributions under the " + pow + " have been collated. Requesting to you kindly review it. Click " + url + " to view it."
+			Contributions under the " + pow + " have been collated. Requesting to you kindly review the attached .docx file, provide comments, and email the file back to this email address."
 		html_content = "<p>Dear ICP Approver,</p> \
-			<p>Contributions under the " + pow + " have been collated. Requesting to you kindly review it. \
-			Click <a href='" + url +"'>here</a> to view it.</p>"
+			<p>Contributions under the " + pow + " have been collated. Requesting to you kindly review the attached .docx file, provide comments, and email the file back to this email address.</p>"
 
 	if status == 'recurate':
 		subject = "Recurate contributions of " + pow

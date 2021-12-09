@@ -50,6 +50,11 @@
     "fields": {"name": "publishedICP", "desc": "published on ICP", "final": 1}
   },
   {
+    "model": "workflow.states",
+    "pk": 11,
+    "fields": {"name": "sentForReview", "desc": "merged contribution sent for review"}
+  },
+  {
     "model": "workflow.transitions",
     "pk": 1,
     "fields": {"name": "Send for reviewing", "from_state": 1, "to_state": 2}

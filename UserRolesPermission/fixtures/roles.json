@@ -46,5 +46,13 @@
 			"name": "icpapprover",
 			"permissions": []
 		}
+	},
+	{
+		"model": "auth.group",
+		"pk": 7,
+		"fields": {
+			"name": "icpreviewer",
+			"permissions": []
+		}
 	}
 ]
