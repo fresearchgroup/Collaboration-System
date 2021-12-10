@@ -29,7 +29,7 @@ import datetime
 import requests
 from etherpad.views import create_community_ether, create_article_ether_community, create_session_community
 from django.views.generic import CreateView, UpdateView
-from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm
+from .forms import CommunityCreateForm, RequestCommunityCreateForm, CommunityUpdateForm, SubCommunityCreateForm, DocumentForm
 from django.contrib import messages
 from django.db import connection
 from django.urls import reverse
@@ -1300,7 +1300,8 @@ def view_merged_content(request, pk):
 		media = CommunityMedia.objects.filter(community__parent=community, media__state__name='accepted')
 		merged = MergedArticles.objects.get(community=community)
 		statehistory = MergedArticleStates.objects.filter(mergedarticle=merged).order_by('-changedon')
-		return render(request, 'view_merged_content.html',{'merged':merged, 'media':media, 'statehistory':statehistory})
+		docuploadform = DocumentForm()
+		return render(request, 'view_merged_content.html',{'merged':merged, 'media':media, 'statehistory':statehistory, 'docuploadform':docuploadform})
 	return redirect('login')
 
 def curate_merged(request):
@@ -1493,3 +1494,19 @@ def get_pincodes(request):
 	else:
 		results = Locations.objects.filter(city=city).values_list('pincode', flat=True).order_by('pincode').distinct()
 	return render(request, 'address_dropdown_list_options.html', {'results': results})
+
+def upload_received_document(request):
+	pk = request.POST['pk']
+	mpk = request.POST['mpk']
+	commpk = request.POST['commpk']
+	form = DocumentForm(request.POST, request.FILES)
+	if form.is_valid():
+		merged = MergedArticles.objects.get(pk=pk)
+		merged.document_received = request.FILES['docfile']
+		merged.save()
+
+		mergedarticlestate = MergedArticleStates.objects.get(pk=mpk)
+		mergedarticlestate.document_received = merged.document_received
+		mergedarticlestate.save()
+
+		return redirect(view_merged_content, commpk)

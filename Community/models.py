@@ -10,6 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from Categories.models import Category
 from django.db import connection
 from workflow.models import States
+import datetime
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -152,6 +153,11 @@ class CommunityMedia(models.Model):
 	user = models.ForeignKey(User, null=True, related_name='communitymedia')
 	community = models.ForeignKey(Community, null=True, related_name='communitymedia')	
 
+def get_doc_upload_path(instance, filename):
+	now = datetime.datetime.now()
+	filename = f'{now.year}' + "_" + f'{now.month}' + "_" + f'{now.day}' + "_" + f'{now.hour}' + f'{now.minute}' + "_" + f'{instance.community.pk}' + "_" + instance.community.name + "_received.docx"
+	return os.path.join('writeup', f'{instance.community.pk}', filename)
+
 class MergedArticles(models.Model):
 	community = models.ForeignKey(Community, related_name='communitymergedarticles')
 	introduction = models.TextField(null=True)
@@ -167,6 +173,7 @@ class MergedArticles(models.Model):
 	originalmedia = models.TextField(null=True)
 	publishedlink = models.CharField(max_length=200, null=True)
 	document_sent = models.CharField(max_length=500, null=True)
+	document_received = models.FileField(null=True, upload_to=get_doc_upload_path)
 
 class MergedArticleStates(models.Model):
 	mergedarticle = models.ForeignKey(MergedArticles, related_name='mergedarticleinfo')
@@ -181,3 +188,4 @@ class MergedArticleStates(models.Model):
 	tales = models.TextField(null=True)
 	moreinfo = models.TextField(null=True)
 	document_sent = models.CharField(max_length=500, null=True)
+	document_received = models.CharField(max_length=500, null=True)

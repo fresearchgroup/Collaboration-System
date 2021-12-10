@@ -266,3 +266,8 @@ class FacetedProductSearchForm(FacetedSearchForm):
             sqs = sqs.filter(created_at__gte=datetime.datetime(2018, 1, 1)).filter(created_at__lte=datetime.datetime(2020, 1, 1))
         print("sqs >>>>>>>>>>>> ", str(sqs.query))
         return sqs
+
+class DocumentForm(forms.Form):
+    docfile = forms.FileField(
+        label='Select a file'
+    )

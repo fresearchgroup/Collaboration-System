@@ -368,6 +368,7 @@
                 <th style="color:white">Action on</th>
                 <th style="color:white">Comments</th>
                 <th style="color:white">Document Sent</th>
+                <th style="color:white">Document Received</th>
                 <!-- <th style="color:white">Content</th> -->
                 <th style="color:white"></th>
               </tr>
@@ -389,6 +390,27 @@
                   <td>
                     {% if history.document_sent %}
                       <a href="{{ MEDIA_URL }}{{ history.document_sent }}">View</a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if history.document_sent %}
+                      {% if history.document_received %}
+                        <a href="{{ MEDIA_URL }}{{ history.document_received }}">View</a>
+                      {% else %}
+
+                        <form action="{% url 'upload_received_document' %}" method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <p>{{ docuploadform.non_field_errors }}</p>
+                          <p>
+                              {{ docuploadform.docfile.errors }}
+                              {{ docuploadform.docfile }}
+                          </p>
+                          <input type='hidden' name='pk' value="{{merged.pk}}" />
+                          <input type='hidden' name='mpk' value="{{history.pk}}" />
+                          <input type='hidden' name='commpk' value="{{merged.community.pk}}" />
+                          <p><input type="submit" value="Upload received document"/></p>
+                        </form>
+                      {% endif %}
                     {% endif %}
                   </td>
                   <!-- <td>{{ history.body }}</td> -->
