@@ -1321,7 +1321,8 @@ def curate_merged(request):
 			users = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
 		for user in users:
 			to.append(user)
-		filepath = convert_to_docx(merged)
+		filepath, fileurl = convert_to_docx(merged)
+		merged.document_sent = fileurl
 
 	# if status == 'recurate':
 	# 	state = States.objects.get(name='merged')
@@ -1366,7 +1367,8 @@ def curate_merged(request):
 		ceremonies = merged.ceremonies,
 		tales = merged.tales,
 		moreinfo = merged.moreinfo,
-		comments = comments
+		comments = comments,
+		document_sent = fileurl
 	)
 	sendEmail_merged_content_curated(to, request.user.email, status, merged.community.name, comments, request.META.get('HTTP_REFERER'), publishedlink, filepath)
 	return redirect('view_merged_content',pk=merged.community.pk)
@@ -1421,9 +1423,10 @@ def convert_to_docx(merged):
 	now = datetime.datetime.now()
 	filename = f'{now.year}' + "_" + f'{now.month}' + "_" + f'{now.day}' + "_" + f'{now.hour}' + f'{now.minute}' + "_" + f'{merged.community.pk}' + "_" + merged.community.name + ".docx"
 	filepath = settings.MEDIA_ROOT + "/writeup/" + f'{merged.community.pk}' + "/" + filename
+	fileurl = "writeup/" + f'{merged.community.pk}' + "/" + filename
 	document.save(filepath)
 
-	return filepath
+	return filepath, fileurl
 
 def set_published_link(merged, publishedlink):
 	originalarticles = merged.originalarticles

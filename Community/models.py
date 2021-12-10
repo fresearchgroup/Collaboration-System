@@ -166,6 +166,7 @@ class MergedArticles(models.Model):
 	originalarticles = models.TextField(null=True)
 	originalmedia = models.TextField(null=True)
 	publishedlink = models.CharField(max_length=200, null=True)
+	document_sent = models.CharField(max_length=500, null=True)
 
 class MergedArticleStates(models.Model):
 	mergedarticle = models.ForeignKey(MergedArticles, related_name='mergedarticleinfo')
@@ -179,3 +180,4 @@ class MergedArticleStates(models.Model):
 	ceremonies = models.TextField(null=True)
 	tales = models.TextField(null=True)
 	moreinfo = models.TextField(null=True)
+	document_sent = models.CharField(max_length=500, null=True)
