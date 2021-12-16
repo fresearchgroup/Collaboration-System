@@ -36,7 +36,7 @@ class RequestCommunityCreateForm(forms.ModelForm):
 	class Meta:
 		model = RequestCommunityCreationDetails
 		# fields = ['name', 'desc', 'tag_line', 'purpose', 'parent']
-		fields = ['name', 'desc', 'area', 'city', 'state', 'district', 'pincode', 'parent', 'reason']
+		fields = ['name', 'desc', 'area', 'city', 'state', 'district', 'pincode', 'parent', 'reason', 'latitude', 'longitude']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('cid', None)
@@ -54,6 +54,11 @@ class RequestCommunityCreateForm(forms.ModelForm):
 		self.fields['parent'].widget.attrs['readonly'] = True
 		self.fields['reason'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
 		self.fields['reason'].required = False
+
+		self.fields['latitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['latitude'].widget.attrs['readonly'] = True
+		self.fields['longitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['longitude'].widget.attrs['readonly'] = True
 
 		self.fields['state'] = forms.ChoiceField(choices=[('', '---------')] + [(item,item) for item in Locations.objects.all().values_list('state', flat=True).order_by('state').distinct()])
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})

@@ -4,6 +4,11 @@
 
 {% load static %}
 
+{% block css%}
+  <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+{% endblock %}
+
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item">Community Creation</li>
@@ -87,6 +92,23 @@
                     <div class="invalid-feedback">{{ form.area.errors }}<span class="label" style="color:red" ng-show = "form.tag_line.$error.pattern" >Only alphabets are allowed</span></div>
                   </div>
 
+                  <div class="form-group">
+                    <label for="title">Mark location on the map</label>
+                    <div id="map" style="width:100%; height:400px;"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Latitude</label>
+                    {{ form.latitude }}
+                    <div class="invalid-feedback">{{ form.latitude.errors }}</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Longitude</label>
+                    {{ form.longitude }}
+                    <div class="invalid-feedback">{{ form.longitude.errors }}</div>
+                  </div>
+
                 {% if form.parent %}
                 <div class="form-group">
                   <label for="title">Place of Worship for</label>
@@ -111,6 +133,9 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/angular.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/ol.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ol-ext.js' %}"></script>
 
 <script>
   $("#id_state").change(function () {
@@ -207,5 +232,107 @@
     }
   });
 </script>
+
+<script type="text/javascript">
+	// Layers
+	var layers = [ new ol.layer.Tile({ source: new ol.source.OSM() }) ];
+
+	// Popup overlay
+	var placemark = new ol.Overlay.Placemark ({
+    color: '#369',
+    contentColor: '#000',
+    onshow: function(){ console.log("You opened a placemark"); },
+    autoPan: true,
+    autoPanAnimation: { duration: 250 }
+  });
+
+  // The map
+  longitude = 72.94300402713354;
+  latitude = 19.170426426421088;
+  var map = new ol.Map ({	
+    target: 'map',
+    view: new ol.View({	
+      zoom: 16,
+      center: ol.proj.fromLonLat([longitude, latitude]),
+    }),
+    interactions: ol.interaction.defaults({ altShiftDragRotate:false, pinchRotate:false }),
+    layers: layers,
+    overlays: [placemark]
+  });
+
+	// Current selection
+	var sLayer = new ol.layer.Vector({
+		source: new ol.source.Vector(),
+		style: new ol.style.Style({
+			image: new ol.style.Circle({
+				radius: 5,
+				stroke: new ol.style.Stroke ({
+					color: 'rgb(255,165,0)',
+					width: 3
+				}),
+				fill: new ol.style.Fill({
+					color: 'rgba(255,165,0,.3)'
+				})
+			}),
+			stroke: new ol.style.Stroke ({
+				color: 'rgb(255,165,0)',
+				width: 3
+			}),
+			fill: new ol.style.Fill({
+				color: 'rgba(255,165,0,.3)'
+			})
+		})
+	});
+	map.addLayer(sLayer);
+
+	// Set the search control 
+	var search = new ol.control.SearchNominatim ({
+    polygon: $("#polygon").prop("checked"),
+    reverse: true,
+    position: true
+	});
+	map.addControl (search);
+
+	// Select feature when click on the reference index
+	search.on('select', function(e) {
+    sLayer.getSource().clear();
+    // Check if we get a geojson to describe the search
+    if (e.search.geojson) {
+      var format = new ol.format.GeoJSON();
+      var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: map.getView().getProjection() });
+      sLayer.getSource().addFeature(f);
+      var view = map.getView();
+      var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), map.getSize());
+      var zoom = view.getZoomForResolution(resolution);
+      var center = ol.extent.getCenter(f.getGeometry().getExtent());
+      // redraw before zoom
+      setTimeout(function(){
+          view.animate({
+          center: center,
+          zoom: Math.min (zoom, 16)
+        });
+      }, 100);
+    }
+    else {
+      map.getView().animate({
+        center:e.coordinate,
+        zoom: Math.max (map.getView().getZoom(),16)
+      });
+    }
+	});
+
+  //Get latitude and longitude
+  map.on('click', function(evt){
+    console.info(evt.pixel);
+    console.info(map.getPixelFromCoordinate(evt.coordinate));
+    console.info(ol.proj.toLonLat(evt.coordinate));
+    var coords = ol.proj.toLonLat(evt.coordinate);
+    var lat = coords[1];
+    var lon = coords[0];
+    $("#id_latitude").val(lat)
+    $("#id_longitude").val(lon)
+    placemark.show(evt.coordinate); 
+  });
+	</script>
 
 {% endblock %}
