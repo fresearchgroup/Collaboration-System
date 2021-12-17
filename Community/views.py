@@ -301,6 +301,9 @@ def update_community_requests(request):
 	desc = request.POST['description']
 	area = request.POST['area']
 	city = request.POST['city']
+	district = request.POST['district']
+	latitude = request.POST['latitude']
+	longitude = request.POST['longitude']
 	state = request.POST['state']
 	pincode = request.POST['pincode']
 	reason = request.POST['reason']
@@ -311,6 +314,9 @@ def update_community_requests(request):
 		desc = desc,
 		area = area,
 		city = city,
+		district = district,
+		latitude = latitude,
+		longitude = longitude,
 		state = state,
 		pincode = pincode,
 		status = 'Requested',
