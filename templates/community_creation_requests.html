@@ -90,56 +90,23 @@
 
                 {% if req.status == 'Requested' or req.status == 'modify' %}
                   {% if req.assignedto == request.user %}
-                  <a href="#modalaccept{{req.id}}" data-toggle="modal"><i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i></a> 
-                  <div class="modal fade" id="modalaccept{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
-                    <div class="modal-dialog text-left" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h3 class="modal-title" id="exampleModalLabel">Verify details and Accept</h3>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
-                            {% csrf_token %}
-                            <input type='hidden' name = 'status' value='accept'/>
-                            <input type='hidden' name = 'pk' value ={{req.requestcommunity.pk}} />
-                            <input type='hidden' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
 
-                            <div class="form-group">
-                              <label for="name">Name</label>
-                              <input class="form-control form-control-sm" id="name" name = 'name' type="text" value="{{ req.name }}" required>
-                            </div>
-                            <div class="form-group">
-                              <label for="desc">Description</label>
-                              <textarea class="form-control is-invalid" id="description" name = 'description' required>{{ req.desc }}</textarea>
-                            </div>
-                            <div class="form-group">
-                              <label for="area">Area</label>
-                              <input class="form-control form-control-sm" id="area" name = 'area' type="text" value="{{ req.area }}" required>
-                            </div>
-                            <div class="form-group">
-                              <label for="city">City</label>
-                              <input class="form-control form-control-sm" id="city" name = 'city' type="text" value="{{ req.city }}" required>
-                            </div>
-                            <div class="form-group">
-                              <label for="state">State</label>
-                              <input class="form-control form-control-sm" id="state" name = 'state' type="text" value="{{ req.state }}" required>
-                            </div>
-                            <div class="form-group">
-                              <label for="pincode">Pincode</label>
-                              <input class="form-control form-control-sm" id="pincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
-                            </div>
-                          </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                          <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <button class="btn btn-link" name="accept" 
+                    data-req-id='{{req.pk}}'
+                    data-req-name='{{req.name}}'
+                    data-req-desc="{{req.desc}}"
+                    data-req-area='{{req.area}}'
+                    data-req-city='{{req.city}}'
+                    data-req-state='{{req.state}}'
+                    data-req-district='{{req.district}}'
+                    data-req-pincode='{{req.pincode}}'
+                    data-req-latitude='{{req.latitude}}'
+                    data-req-longitude='{{req.longitude}}'
+                    data-req-requestcommunity='{{req.requestcommunity.pk}}'
+                    data-req-requestcommunityparent='{{req.requestcommunity.parent.pk}}'
+                    onclick="loadlatlong(this)">
+                    <i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i>
+                  </button>
 
                   <a href="#modalRejectasExists{{req.pk}}" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
                   <div class="modal fade" id="modalRejectasExists{{req.pk}}" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
@@ -223,6 +190,73 @@
     </div>
   </div>
 
+  <div id="modalaccept" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLabel">Verify details and Accept</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method = "post" action ="{% url 'handle_community_creation_requests' %}">
+            {% csrf_token %}
+            <input type='hidden' id='acceptstatus' name = 'status' value='accept'/>
+            <input type='hidden' id='acceptpk' name = 'pk' value ={{req.requestcommunity.pk}} />
+            <input type='hidden' id='acceptparent' name = 'community_parent' value ={{req.requestcommunity.parent.pk}} />            
+
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input class="form-control form-control-sm" id="acceptname" name = 'name' type="text" value="{{ req.name }}" required>
+            </div>
+            <div class="form-group">
+              <label for="desc">Description</label>
+              <textarea class="form-control is-invalid" id="acceptdescription" name = 'description' required>{{ req.desc }}</textarea>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input class="form-control form-control-sm" id="acceptstate" name = 'state' type="text" value="{{ req.state }}" required>
+            </div>
+            <div class="form-group">
+              <label for="state">District</label>
+              <input class="form-control form-control-sm" id="acceptdistrict" name = 'district' type="text" value="{{ req.district }}" required>
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input class="form-control form-control-sm" id="acceptcity" name = 'city' type="text" value="{{ req.city }}" required>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode</label>
+              <input class="form-control form-control-sm" id="acceptpincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
+            </div>
+            <div class="form-group">
+              <label for="area">Landmark</label>
+              <input class="form-control form-control-sm" id="acceptarea" name = 'area' type="text" value="{{ req.area }}" required>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Map</label>
+              <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
+            </div>
+            <div class="form-group">
+              <label for="lat">Latitude</label>
+              <input readonly class="form-control form-control-sm" id="acceptlat" name = 'latitude' type="text" value="{{ req.latitude }}" required>
+            </div>
+            <div class="form-group">
+              <label for="long">Longitude</label>
+              <input readonly class="form-control form-control-sm" id="acceptlong" name = 'longitude' type="text" value="{{ req.longitude }}" required>
+            </div>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <br /><br /><br />
 
 
@@ -283,6 +317,170 @@
       mapview.addLayer(layer);
       $("#view_location_on_map_modal").modal('show');
     } 
+  </script>
+
+  <script type="text/javascript">
+    var mapedit
+    var latitude
+    var longitude
+
+    function loadlatlong(clicked_object) {
+      id = clicked_object.getAttribute('data-req-id');
+      name = clicked_object.getAttribute('data-req-name');
+      desc = clicked_object.getAttribute('data-req-desc');
+      area = clicked_object.getAttribute('data-req-area');
+      city = clicked_object.getAttribute('data-req-city');
+      district = clicked_object.getAttribute('data-req-district');
+      state = clicked_object.getAttribute('data-req-state');
+      pincode = clicked_object.getAttribute('data-req-pincode');
+      latitude = clicked_object.getAttribute('data-req-latitude');
+      longitude = clicked_object.getAttribute('data-req-longitude');
+      requestcommunity = clicked_object.getAttribute('data-req-requestcommunity');
+      requestcommunityparent = clicked_object.getAttribute('data-req-requestcommunityparent');
+
+      document.getElementById("acceptname").value=name;
+      document.getElementById("acceptdescription").value=desc;
+      document.getElementById("acceptarea").value=area;
+      document.getElementById("acceptcity").value=city;
+      document.getElementById("acceptdistrict").value=district;
+      document.getElementById("acceptstate").value=state;
+      document.getElementById("acceptpincode").value=pincode;
+      document.getElementById("acceptlat").value=latitude;
+      document.getElementById("acceptlong").value=longitude;
+      document.getElementById("acceptpk").value=requestcommunity;
+      document.getElementById("acceptparent").value=requestcommunityparent;
+
+      $("#modalaccept").modal('show');
+      editLocationOnMap();
+    }
+
+    function editLocationOnMap() {
+      document.getElementById("mapedit").innerHTML = "";
+      // Layers
+      var layers = [ new ol.layer.Tile({ source: new ol.source.OSM() }) ];
+
+      // Popup overlay
+      var placemark = new ol.Overlay.Placemark ({
+        color: '#369',
+        contentColor: '#000',
+        onshow: function(){ console.log("You opened a placemark"); },
+        autoPan: true,
+        autoPanAnimation: { duration: 250 }
+      });
+
+      // The map
+      var mapedit = new ol.Map ({	
+        target: 'mapedit',
+        view: new ol.View({	
+          zoom: 16,
+          center: ol.proj.fromLonLat([longitude, latitude]),
+        }),
+        interactions: ol.interaction.defaults({ altShiftDragRotate:false, pinchRotate:false }),
+        layers: layers,
+        overlays: [placemark]
+      });
+
+      // Current selection
+      var sLayer = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+        style: new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 5,
+            stroke: new ol.style.Stroke ({
+              color: 'rgb(255,165,0)',
+              width: 3
+            }),
+            fill: new ol.style.Fill({
+              color: 'rgba(255,165,0,.3)'
+            })
+          }),
+          stroke: new ol.style.Stroke ({
+            color: 'rgb(255,165,0)',
+            width: 3
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255,165,0,.3)'
+          })
+        })
+      });
+      mapedit.addLayer(sLayer);
+
+      // Set the search control 
+      var search = new ol.control.SearchNominatim ({
+        polygon: $("#polygon").prop("checked"),
+        reverse: true,
+        position: true
+      });
+      mapedit.addControl (search);
+
+      // Select feature when click on the reference index
+      search.on('select', function(e) {
+        sLayer.getSource().clear();
+        // Check if we get a geojson to describe the search
+        if (e.search.geojson) {
+          var format = new ol.format.GeoJSON();
+          var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: mapedit.getView().getProjection() });
+          sLayer.getSource().addFeature(f);
+          var view = mapedit.getView();
+          var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), mapedit.getSize());
+          var zoom = view.getZoomForResolution(resolution);
+          var center = ol.extent.getCenter(f.getGeometry().getExtent());
+          // redraw before zoom
+          setTimeout(function(){
+              view.animate({
+              center: center,
+              zoom: Math.min (zoom, 16)
+            });
+          }, 100);
+        }
+        else {
+          mapedit.getView().animate({
+            center:e.coordinate,
+            zoom: Math.max (mapedit.getView().getZoom(),16)
+          });
+        }
+      });
+
+      //Get latitude and longitude
+      mapedit.on('click', function(evt){
+        console.info(evt.pixel);
+        console.info(mapedit.getPixelFromCoordinate(evt.coordinate));
+        console.info(ol.proj.toLonLat(evt.coordinate));
+        var coords = ol.proj.toLonLat(evt.coordinate);
+        var lat = coords[1];
+        var lon = coords[0];
+        $("#acceptlat").val(lat)
+        $("#acceptlong").val(lon)
+        placemark.show(evt.coordinate); 
+      });
+
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [12, 37],
+          anchorXUnits: 'pixels', //'fraction'
+          anchorYUnits: 'pixels',
+          opacity: 0.8,
+          src: '../static/assets/pages/img/blue.png'
+        })
+      });        
+      var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [
+            new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+            })
+          ]
+        })
+      });
+      layer.setStyle(iconStyle)
+      mapedit.addLayer(layer);
+    }
+  </script>
+
+  <script>
+    $('#modalaccept').on('shown.bs.modal', function () {
+      editLocationOnMap();
+    })
   </script>
 
   <script>

@@ -362,7 +362,10 @@ def handle_community_creation_requests(request):
 				area = request.POST['area']
 				city = request.POST['city']
 				state = request.POST['state']
+				district = request.POST['district']
 				pincode = request.POST['pincode']
+				latitude = request.POST['latitude']
+				longitude = request.POST['longitude']
 				communitycreation = Community.objects.create(
 					name = name,
 					desc = desc,
@@ -370,6 +373,9 @@ def handle_community_creation_requests(request):
 					city = city,
 					state = state,
 					pincode = pincode,
+					district = district,
+					latitude = latitude,
+					longitude = longitude,
 					created_by = user,
 					parent = parent,
 					contributed_by = rcommunity.requestedby

@@ -32,6 +32,8 @@ class Community(MPTTModel):
 		city = models.CharField(max_length=30, null=True)
 		state = models.CharField(max_length=30, null=True)
 		pincode = models.CharField(max_length=6, null=True)
+		latitude = models.FloatField(null=True)
+		longitude = models.FloatField(null=True)
 		contribution_status_choices = (
 			('Ongoing', 'Ongoing'),
 			('Completed', 'Completed'),
