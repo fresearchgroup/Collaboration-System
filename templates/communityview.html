@@ -3,6 +3,8 @@
 {% load mptt_tags %}
 {% block css %}
   <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -106,7 +108,8 @@
                   {% endif %}
                 </td>
                 <td>
-                  {{child.area}}, {{child.city}}, {{child.state}}, {{child.pincode}}
+                  {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
+                  <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})">View Location on Map</button>
                 </td>
                 <td>
                   {% if child.contribution_status == 'Ongoing' %} 
@@ -149,7 +152,8 @@
                 {% endif %}
               </td>
               <td>
-                {{child.area}}, {{child.city}}, {{child.state}}, {{child.pincode}}
+                {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
+                <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})">View Location on Map</button>
               </td>
               <td>{{child.curatorname}}</td>
               <td>
@@ -216,6 +220,7 @@
                 {% endif %}
                 <br />
                 {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
+                <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})">View Location on Map</button> <br />
                 <a href="{% url 'update_community_info' child.pk %}">Update information</a>
               </td>
               <td>
@@ -345,5 +350,80 @@
   <button type="radio" name ="status" value="submit" class="btn btn-success" >Create sub-community</button>
 </form>
 {% endif %}
+
+<div id="view_location_on_map_modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="map" class="map" style="width:100%; height:500px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/angular.min.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'js/ol.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/ol-ext.js' %}"></script>
+
+  <script type="text/javascript">
+    var mapview
+    var latitude
+    var longitude
+
+    function displayLocation(lat, long) {
+      latitude = lat;
+      longitude = long;
+      viewLocationOnMap();
+    }
+
+    function viewLocationOnMap() {
+      document.getElementById("map").innerHTML = "";
+      mapview = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+          zoom: 16
+        })
+      });
+
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [12, 37],
+          anchorXUnits: 'pixels', //'fraction'
+          anchorYUnits: 'pixels',
+          opacity: 0.8,
+          src: "{% static 'assets/pages/img/blue.png' %}"
+        })
+      });        
+      var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [
+            new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+            })
+          ]
+        })
+      });
+      layer.setStyle(iconStyle)
+      mapview.addLayer(layer);
+      $("#view_location_on_map_modal").modal('show');
+    } 
+  </script>
+
+  <script>
+    $('#view_location_on_map_modal').on('shown.bs.modal', function () {
+      viewLocationOnMap();
+    })
+  </script>
 
 {% endblock %}
