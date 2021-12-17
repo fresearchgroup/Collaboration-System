@@ -389,6 +389,9 @@ def handle_community_creation_requests(request):
 					city = communitycreation.city,
 					state = communitycreation.state,
 					pincode = communitycreation.pincode,
+					district = communitycreation.district,
+					latitude = communitycreation.latitude,
+					longitude = communitycreation.longitude,
 					status = 'accepted',
 					actionby = user,
 					actionon = datetime.datetime.now()
