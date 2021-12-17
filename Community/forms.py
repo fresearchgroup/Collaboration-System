@@ -106,7 +106,7 @@ class CommunityUpdateForm(forms.ModelForm):
 
 	class Meta:
 		model = Community
-		fields = ['name', 'desc', 'area', 'state', 'district', 'city', 'pincode', 'districtOthers', 'cityOthers', 'pincodeOthers']
+		fields = ['name', 'desc', 'area', 'state', 'district', 'city', 'pincode', 'latitude', 'longitude', 'districtOthers', 'cityOthers', 'pincodeOthers']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -115,6 +115,13 @@ class CommunityUpdateForm(forms.ModelForm):
 		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
 
 		self.fields['area'].widget.attrs.update({'class': 'form-control'})
+
+		self.fields['latitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['latitude'].widget.attrs['readonly'] = True
+		self.fields['longitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['longitude'].widget.attrs['readonly'] = True
+		self.fields['latitude'].required = False
+		self.fields['longitude'].required = False
 
 		self.fields['state'] = forms.ChoiceField(choices=[(item,item) for item in Locations.objects.all().values_list('state', flat=True).order_by('state').distinct()])
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})
