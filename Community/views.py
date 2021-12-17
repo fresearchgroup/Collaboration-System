@@ -1329,6 +1329,7 @@ def curate_merged(request):
 	comments = ''
 	publishedlink = ''
 	filepath = ''
+	fileurl = ''
 	to = []
 
 	if status == 'sentForReview' or status == 'sentForApproval': 

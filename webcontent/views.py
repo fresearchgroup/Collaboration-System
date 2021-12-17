@@ -187,7 +187,8 @@ def sendEmail_merged_content_curated(to, from_email, status, pow, comments, url,
 	html_content += signature_html
 	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 	msg.attach_alternative(html_content, "text/html")
-	msg.attach_file(filepath)
+	if status == 'sentForReview' or status == 'sentForApproval':
+		msg.attach_file(filepath)
 	msg.send()
 
 def sendEmail_contributor_pow_request_submitted(to):
