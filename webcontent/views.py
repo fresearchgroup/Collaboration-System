@@ -156,14 +156,10 @@ def sendEmail_merged_content_curated(to, from_email, status, pow, comments, url,
 
 	if status == 'recurate':
 		subject = "Recurate contributions of " + pow
-		text_content = "Dear Curator, \n\n \
-			Please re-curate the contribution of the " + pow + \
-			" based on the following comments given by the curator. Click " + url + " to view. \n\n" + comments
-		html_content = "<p>Dear Curator,</p> \
-			<p>Please re-curate the contribution of the " + pow + \
-			" based on the following comments given by the curator. \
-			Click <a href='" + url +"'>here</a> to view. </p>" \
-			"<p><b>Comments</b></p><p>" + comments + "</p>"
+		text_content = "Dear Reviewers/Approvers, \n\n \
+			The curator, " + from_email + " is re-curating the contribution of the " + pow + "because of the following reasons\n\n" + comments
+		html_content = "<p>Dear Reviewers/Approvers,</p> \
+			<p>The curator, " + from_email + " is re-curating the contribution of the " + pow + "because of the following reasons</p>" + comments
 
 	if status == 'accept':
 		subject = "Contributions of " + pow + " have been accepted"

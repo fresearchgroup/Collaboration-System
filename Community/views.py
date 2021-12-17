@@ -1345,12 +1345,18 @@ def curate_merged(request):
 		filepath, fileurl = convert_to_docx(merged)
 		merged.document_sent = fileurl
 
-	# if status == 'recurate':
-	# 	state = States.objects.get(name='merged')
-	# 	comments = request.POST['reason']
-	# 	originalstate = States.objects.get(name='accepted')
-	# 	change_state_orginal_contributions(merged, originalstate, request)
-	# 	to.append(merged.changedby.email)
+	if status == 'recurate':
+		state = States.objects.get(name='merged')
+		comments = request.POST['reason']
+		originalstate = States.objects.get(name='accepted')
+		change_state_orginal_contributions(merged, originalstate, request)
+
+		reviewers = User.objects.filter(groups__name='icpreviewer').exclude(username='admin').values_list('email', flat=True)
+		approvers = User.objects.filter(groups__name='icpapprover').exclude(username='admin').values_list('email', flat=True)
+		users = []
+		users = list(reviewers) + list(approvers)
+		for user in users:
+			to.append(user)
 
 	# if status == 'accept':
 	# 	state = States.objects.get(name='publish')
