@@ -184,7 +184,7 @@ class SubCommunityCreateForm(forms.ModelForm):
 
 	class Meta:
 		model = Community
-		fields = ['name', 'desc', 'area', 'city', 'district', 'state', 'pincode', 'parent']
+		fields = ['name', 'desc', 'area', 'city', 'district', 'state', 'pincode', 'latitude', 'longitude', 'parent']
 
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('community', None)
@@ -194,6 +194,11 @@ class SubCommunityCreateForm(forms.ModelForm):
 		self.fields['area'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
+
+		self.fields['latitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['latitude'].widget.attrs['readonly'] = True
+		self.fields['longitude'].widget.attrs.update({'class': 'form-control'})
+		self.fields['longitude'].widget.attrs['readonly'] = True
 
 		self.fields['state'] = forms.ChoiceField(choices=[('', '---------')] + [(item,item) for item in Locations.objects.all().values_list('state', flat=True).order_by('state').distinct()])
 		self.fields['state'].widget.attrs.update({'class': 'form-control'})
