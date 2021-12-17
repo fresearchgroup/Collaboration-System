@@ -152,6 +152,7 @@ def community_view(request, pk):
 			child.merged = True
 			mergedstatus = MergedArticles.objects.filter(community=child)
 			child.mergedstatus = mergedstatus[0].state.name
+			child.publishedlink = mergedstatus[0].publishedlink
 		else:
 			child.merged = False
 
