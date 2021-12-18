@@ -396,6 +396,49 @@
     overlays: [placemark]
   });
 
+  //Mark existing pow
+  details = []
+  {% for c in community %}
+      detail = []
+      detail.push('{{c.name}}')
+      detail.push('{{c.latitude}}')
+      detail.push('{{c.longitude}}')
+      details.push(detail)
+  {% endfor %}
+  for (let i = 0; i < details.length; i++) {
+      style = new ol.style.Style({
+          image: new ol.style.Icon({
+              anchor: [0.5, 24],
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'pixels',
+              src: 'https://maps.google.com/mapfiles/ms/micons/blue.png'
+          }),
+          text: new ol.style.Text({
+              font: 'bold 12px Arial, Helvetica, sans-serif',
+              fill: new ol.style.Fill({
+                  color: 'white',
+              }),
+              backgroundFill: new ol.style.Fill({
+                  color: 'gray'
+              }),
+              padding: [2, 2, 2, 2],
+              text: details[i][0],
+              offsetY: -35
+          })
+      });
+      var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+              features: [
+                  new ol.Feature({
+                      geometry: new ol.geom.Point(ol.proj.fromLonLat([details[i][2], details[i][1]])),
+                  })
+              ]
+          })
+      });
+      layer.setStyle(style)
+      map.addLayer(layer);
+  }
+
 	// Current selection
 	var sLayer = new ol.layer.Vector({
 		source: new ol.source.Vector(),

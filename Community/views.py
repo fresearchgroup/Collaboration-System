@@ -717,6 +717,12 @@ class CreateSubCommunityView(CreateView):
 	template_name = 'create_community.html'
 	success_url = 'community_view'
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		community = Community.objects.filter(parent__pk=self.kwargs['pk'])
+		context['community'] = community
+		return context
+
 	def get_initial(self):
 		"""
 		Returns the initial data to use for forms on this view.
