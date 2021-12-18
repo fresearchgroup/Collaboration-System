@@ -210,6 +210,13 @@ class RequestCommunityCreationView(CreateView):
 	model = RequestCommunityCreationDetails
 	template_name = 'request_community_creation.html'
 	success_url = 'user_dashboard'
+	context_object_name = 'context'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		community = Community.objects.filter(parent__pk=self.request.GET.get('cid'))
+		context['community'] = community
+		return context
 
 	def get_form_kwargs(self):
 		kwargs = super(RequestCommunityCreationView, self).get_form_kwargs()
