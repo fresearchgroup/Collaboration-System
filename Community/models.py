@@ -32,8 +32,8 @@ class Community(MPTTModel):
 		city = models.CharField(max_length=30, null=True)
 		state = models.CharField(max_length=30, null=True)
 		pincode = models.CharField(max_length=6, null=True)
-		latitude = models.FloatField(null=True)
-		longitude = models.FloatField(null=True)
+		latitude = models.FloatField(default=0)
+		longitude = models.FloatField(default=0)
 		contribution_status_choices = (
 			('Ongoing', 'Ongoing'),
 			('Completed', 'Completed'),
@@ -137,8 +137,8 @@ class RequestCommunityCreationDetails(models.Model):
 	city = models.CharField(max_length=30, null=True)
 	state = models.CharField(max_length=30, null=True)
 	pincode = models.CharField(max_length=6, null=True)
-	latitude = models.FloatField(null=True)
-	longitude = models.FloatField(null=True)
+	latitude = models.FloatField(default=0)
+	longitude = models.FloatField(default=0)
 	status = models.CharField(null=True, default='Requested', max_length=100)
 	actionby = models.ForeignKey(User, null=True)
 	actionon = models.DateTimeField(null=True, auto_now_add=True)
