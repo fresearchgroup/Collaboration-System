@@ -224,7 +224,9 @@
                 <br />
                 {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
                 <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})">View Location on Map</button> <br />
-                <a href="{% url 'update_community_info' child.pk %}">Update information</a>
+                {% if not child.publishedlink %}
+                  <a href="{% url 'update_community_info' child.pk %}">Update information</a>
+                {% endif %}
               </td>
               <td>
                 {% if child.contribution_status == 'Ongoing' %} 
