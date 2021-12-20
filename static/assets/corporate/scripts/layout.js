@@ -302,8 +302,8 @@ var Layout = function () {
             handleInit();
             handleResponsiveOnResize();
             handleIEFixes();
-            handleSearch();
-            handleFancybox();
+            // handleSearch();
+            // handleFancybox();
             handleDifInits();
             handleSidebarMenu();
             handleAccordions();
