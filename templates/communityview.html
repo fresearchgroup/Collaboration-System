@@ -116,7 +116,9 @@
                     Yes
                   {% else %}
                     No <br />
-                    <a href="{{child.publishedlink}}">Published link</a> <br />
+                    {% if child.publishedlink %}
+                      <a href="{{child.publishedlink}}">Published link</a> <br />
+                    {% endif %}
                     <a href="{% url 'provide_feedback' child.pk %}">Feedback</a>
                   {% endif %}
                 </td>
@@ -281,8 +283,10 @@
               <td>
                 {% if child.merged %}
                   {{child.mergedstatus}} <br />
-                  <a href="{{child.publishedlink}}">Published link</a> <br />
-                {% endif %}
+                  {% if child.publishedlink %}
+                    <a href="{{child.publishedlink}}">Published link</a> <br />
+                  {% endif %}
+              {% endif %}
               </td>
               <td>
                 {% if child.merged %}
