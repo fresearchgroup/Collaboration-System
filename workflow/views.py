@@ -14,7 +14,7 @@ def canEditResource(state, resource, request):
 		isApprover = True
 	else:
 		isApprover = False
-	if state=='publish':
+	if state=='publish' or state=='publishedICP':
 		messages.warning(request, 'You cannot edit content which is already published')
 		return False
 	if state=='reviewStarted' and isCurator==False:
