@@ -398,15 +398,15 @@ var videoPublished = {{videopublished}};
       // url: '/api/reputation/score',
       // type: 'GET',
       // success: function(mycommunities) {
-        $ (function () {
-        (function(name) {
+        // $ (function () {
+        // (function(name) {
 
-          var container = $('#pagination-mycommunities');
+        //   var container = $('#pagination-mycommunities');
 
-          var sources = function () {
-            var result = [];
+        //   var sources = function () {
+        //     var result = [];
 
-            var i = 0;
+        //     var i = 0;
             // var badgeLevelMapping = {
             //   '1': 'btn-secondary',
             //   '2': 'btn-danger',
@@ -414,20 +414,20 @@ var videoPublished = {{videopublished}};
             //   '4': 'btn-primary',
             //   '5': 'btn-success'
             // };
-            for (i = 0; i < mycommunities.length; i++) {
-              var temp = '';
-              var comm = mycommunities[i];
+            // for (i = 0; i < mycommunities.length; i++) {
+            //   var temp = '';
+            //   var comm = mycommunities[i];
 
-              if (comm.role.name === 'author') {
-                temp += '<i class="fa fa-pencil" style="top:3px;"></i> ';
-              } else if (comm.role.name == 'publisher') {
-                temp += '<i class="fa fa-print" style="top:3px;"></i> ';
-              } else {
-                temp += '<i class="fa fa-trophy" style="top:3px;"></i> ';
-              }
+            //   if (comm.role.name === 'author') {
+            //     temp += '<i class="fa fa-pencil" style="top:3px;"></i> ';
+            //   } else if (comm.role.name == 'publisher') {
+            //     temp += '<i class="fa fa-print" style="top:3px;"></i> ';
+            //   } else {
+            //     temp += '<i class="fa fa-trophy" style="top:3px;"></i> ';
+            //   }
 
-              var url = "{% url 'community_view' 999 %}";
-              temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
+            //   var url = "{% url 'community_view' 999 %}";
+            //   temp += '<a href="' + url.replace('999', comm.community.pk) + '">' + comm.community.name + '</a>';
               
               // var badgeDiv = $("<div>", {
               //   'css': {
@@ -442,34 +442,34 @@ var videoPublished = {{videopublished}};
 
               // temp += badgeDiv.prop('outerHTML');
 
-              result.push(temp);
-            }
+      //         result.push(temp);
+      //       }
 
-            return result;
-          }();  
+      //       return result;
+      //     }();  
 
-          var options = {
-            dataSource: sources,
-            pageSize: 5,
-            showGoInput: true,
-            showGoButton: true,
-            showPageNumbers: false,
-            showNavigator: true,
+      //     var options = {
+      //       dataSource: sources,
+      //       pageSize: 5,
+      //       showGoInput: true,
+      //       showGoButton: true,
+      //       showPageNumbers: false,
+      //       showNavigator: true,
 
-            callback: function (data, pagination) {
-              var dataHtml = '';
-              //Get the datasource (item)
-              $.each(data, function (index, item) {
-                dataHtml += item + '<br />';
-              });
-              dataHtml += '<br />'
-              //Add data to container
-              container.prev().html(dataHtml);
-            }
-          };
-          container.pagination(options);
-        })('mycommunities-pagination');
-      })
+      //       callback: function (data, pagination) {
+      //         var dataHtml = '';
+      //         //Get the datasource (item)
+      //         $.each(data, function (index, item) {
+      //           dataHtml += item + '<br />';
+      //         });
+      //         dataHtml += '<br />'
+      //         //Add data to container
+      //         container.prev().html(dataHtml);
+      //       }
+      //     };
+      //     container.pagination(options);
+      //   })('mycommunities-pagination');
+      // })
     // });
   </script>
 
