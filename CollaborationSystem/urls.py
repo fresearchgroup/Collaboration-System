@@ -172,6 +172,7 @@ urlpatterns = [
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),
+    url(r'^about_us/$', web.about_us, name='about_us'),
     #url(r'^search/', include('haystack.urls')),
     # url(r'^$', FacetedSearchView.as_view(form_class=FacetedSearchForm, facet_fields=['name'],template_name='search.html', context_object_name='page_object')),
     #url(r'^$', FacetedSearchView.as_view(), name='haystack_search'),

@@ -4,6 +4,9 @@ from .models import Feedback, Faq, FaqCategory
 from django.core.mail import EmailMultiAlternatives
 from Community.models import Community
 
+def about_us(request):
+	return render(request, 'aboutus.html')
+
 def FAQs(request):
 	faqs=Faq.objects.all().order_by('flow')
 	categories = FaqCategory.objects.all()

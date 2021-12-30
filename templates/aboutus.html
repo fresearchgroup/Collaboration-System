@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item ">About Us</li>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <div class="container">
+        <div class="row margin-bottom-40">
+            <div class="col-md-12 col-sm-12">
+                <div class="icp-content-comm-title-image">
+                    <h2 class="icp-content-comm-title-text">
+                        About Us
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="content-page">
+                <div class="row margin-bottom-30" >
+                    <p>
+                        Places of Worship portal (pow) is an online platform that provides an interface to collect information on various places of worship located in India. The approved contributions are curated and published on the Indian Culture portal.
+                    </p>
+                    <p>
+                        A place of worship is a specially designed structure or space where individuals or a group of people such as a congregation come to perform acts of devotion, veneration, or religious study. A building constructed or used for this purpose is sometimes called a house of worship. Temples, Churches, Mosques, Gurudwaras, and Synagogues, etc., are some examples of structures created for worship.
+                    </p>
+                    <p>
+                        We are inviting contributions for the following types of places of worship, any new types of pows identified, if any, will be added subsequently.
+                    </p>
+                    <p>
+                        <ol>
+                            <li>Bahai Temple</li>
+                            <li>Buddhist Temple</li>
+                            <li>Church</li>
+                            <li>Fire Temple</li>
+                            <li>Gurudwara</li>
+                            <li>Hindu Temple</li>
+                            <li>Jain Temple</li>
+                            <li>Masjid and Dargah</li>
+                            <li>Synagogue</li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
