@@ -217,11 +217,13 @@
     line-height: 1.4;
     color: #fff;
     background: #89216B;
-    padding: 5px;
+    padding: 15px;
+    border-radius: 22.5px;
+    font-weight: bold;
 }
 
 .carousel-slider .carousel-subtitle-v7 {
-    font-size: 14px;
+    font-size: 20px;
     line-height: 1.4;
     color: #7b8793;
 }
