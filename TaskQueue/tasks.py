@@ -35,6 +35,8 @@ def createbulkcommunity(taskid):
 		pincode = i['pincode']
 		admin = i['admin']
 		parent = i['parent']
+		image_thumbnail = i['image']
+		image = i['image']
 
 		admin = User.objects.get(username=admin)
 		if parent == "null":
@@ -69,6 +71,8 @@ def createbulkcommunity(taskid):
 					district=district,
 					state = state,
 					pincode = pincode,
+					image_thumbnail = image_thumbnail,
+					image = image,
 					parent = parent
 					# forum_link = forum_link
 					)
