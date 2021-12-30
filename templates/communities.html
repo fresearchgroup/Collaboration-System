@@ -37,21 +37,21 @@
         <div class="row mix-grid thumbnails">
           {{myhtml|safe}}{% autoescape off%}
           {% for community in communities %}
-          <div class="col-md-3 col-sm-4 mix mix_all" style="display: block; opacity: 1; width: 280px;">
+          <div class="col-md-4 mix mix_all" style="display: block; opacity: 1;">
             <div>
               <a href="{% url 'community_view' community.pk %}">
                 {% if community.image_thumbnail %}
-                <img src="{{ MEDIA_URL }}{{ community.image_thumbnail}}" alt="image" class="img-responsive" style="height: 280px; width: 280px;">
+                <img src="{{ MEDIA_URL }}{{ community.image_thumbnail}}" alt="image" class="img-responsive" style="width: 100%;">
                 {% else %}
-                <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="height: 280px; width: 280px;">
+                <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="width: 100%;">
                 {%endif%}
 
                 <div class="mix-details">
-                  <h4>{{community.name}}</h4>
+                  <h3 style="margin-top: 40px;">{{community.name}}</h3>
                   <!-- <h5>{{community.tag_line|truncatewords:5}}</h5> -->
                   <!-- <p>{{ community.desc |striptags|truncatewords:20}}</p> -->
                 </div>
-                <h3 style="padding-bottom: 10px; margin-top: 2px; text-align: center; color:white; background-image: linear-gradient(to right, #89216B , #DA4453);">{{community.name|truncatewords:2}}</h3>
+                <h3 style="padding-bottom: 10px; margin-top: 2px; text-align: center; color:white; background-image: linear-gradient(to right, #89216B , #DA4453);">{{community.name}}</h3>
                 <!-- {{community.category|truncatewords:2 }} -->
               </a>
             </div>
