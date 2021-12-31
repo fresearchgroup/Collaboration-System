@@ -97,19 +97,19 @@
 
 /* Carousel Item Background Images */
 .carousel-slider .carousel-item-eight {
-    background: url(../../../assets/pages/img/frontend-slider/sha.jpg);
+    background: url(../../../assets/pages/img/frontend-slider/sha.png);
     background-size: cover;
     background-position: center center;
 }
 
 .carousel-slider .carousel-item-nine {
-    background: url(../../../assets/pages/img/frontend-slider/bg1.jpg);
+    background: url(../../../assets/pages/img/frontend-slider/bg1.png);
     background-size: cover;
     background-position: center center;
 }
 
 .carousel-slider .carousel-item-ten {
-    background: url(../../../assets/pages/img/frontend-slider/bg2.jpg);
+    background: url(../../../assets/pages/img/frontend-slider/bg2.png);
     background-size: cover;
     background-position: center center;
 }
