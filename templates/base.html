@@ -162,11 +162,11 @@ $(document).ready(function() {
 			{% if user.is_authenticated %}
 
         <li class="dropdown">
-         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+         <a class="dropdown-toggle" data-toggle="dropdown" data-target="basemodalUsername" href="#">
             {{ user.username }}
           </a>
 
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" id="basemodalUsername" style="background-color:white;">
             {% if request.user.is_superuser %}
             <li><a href="{% url 'create_community' %}">Create Community</a></li>
             <li><a href="{% url 'transition' %}"> Manage Workflow</a></li>
