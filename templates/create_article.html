@@ -3,40 +3,44 @@
 {% block css %}
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+<link rel="stylesheet" type="text/css"
+  href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
 <style>
-.ck-editor__editable {
+  .ck-editor__editable {
     min-height: 200px;
-}
+  }
 </style>
 {% endblock %}
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">PoW</a></li>
-  {% for cat in community.get_ancestors %}
-    <li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
-  {% endfor %}
-  <li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
-  <li class="breadcrumb-item">Create an Article</li>
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">PoW</a></li>
+{% for cat in community.get_ancestors %}
+<li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+{% endfor %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
+<li class="breadcrumb-item">Create an Article</li>
 {% endblock %}
 {% load static %}
 {% block content %}
 {% if messages %}
-    {% for message in messages %}
-      {% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
-    {% endfor %}
+{% for message in messages %}
+{% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+{% endfor %}
 
 {% endif %}
-<br/>
+<br />
 
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-md-12" style="margin-bottom: 20px;">
 
-            <form method="post" enctype="multipart/form-data" novalidate>
-                      {% csrf_token %}
-                      <div class="invalid-feedback" style="color: red; font-weight: bold;">
-                        {{ form.tags.errors }}
-                      </div>
-  
-                  <!-- <div class="form-group">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="invalid-feedback" style="color: red; font-weight: bold;">
+          {{ form.tags.errors }}
+        </div>
+
+        <!-- <div class="form-group">
                     <label for="title">Title</label>
                     {{ form.title }}
                     <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
@@ -44,16 +48,16 @@
                       {{ form.title.errors }}
                     </div>
                   </div> -->
-                {% if form.body %}
-                    <div class="form-group">
-                      <label for="title">Body</label>
-                      {{ form.body }}
-                      <div class="invalid-feedback">
-                        {{ form.body.errors }}
-                      </div>
-                    </div>
-                {% endif %}
-                    <!-- <div class="form-group">
+        {% if form.body %}
+        <div class="form-group">
+          <label for="title">Body</label>
+          {{ form.body }}
+          <div class="invalid-feedback">
+            {{ form.body.errors }}
+          </div>
+        </div>
+        {% endif %}
+        <!-- <div class="form-group">
                       <label for="title">Introduction</label>
                       {{ form.introduction }}
                       <div class="invalid-feedback">
@@ -96,49 +100,50 @@
                       </div>
                     </div>     -->
 
-                  <!-- <div class="form-group custom-file">
+        <!-- <div class="form-group custom-file">
                     <label for="image">Article Image</label>
                       {{form.image}}
                 </div> -->
-                <div class="form-group">
-                    <label for="title">Keywords</label>
-                    <small id="bodyhelp" class="form-text text-muted"><p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;" >Clear</a></p></small>
-                    {{ form.tags }}
-                    <!-- <div class="invalid-feedback" style="color: red; font-weight: bold;">
+        <div class="form-group">
+          <label for="title">Keywords</label>
+          <small id="bodyhelp" class="form-text text-muted">
+            <p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;">Clear</a></p>
+          </small>
+          {{ form.tags }}
+          <!-- <div class="invalid-feedback" style="color: red; font-weight: bold;">
                       {{ form.tags.errors }}
                     </div> -->
-                  </div>
-                  <div class="form-group">
-                    <label for="comments">Comments</label>
-                    {{ form.comments }}
-                    <div class="invalid-feedback">
-                      {{ form.comments.errors }}
-                    </div>
-                  </div>
-                <div class="form-group">
-                <button type="submit"  class="btn btn-outline-info"  name="submit" value='submit' id="submit">Save</button>
-              </div>
-              
-          </form>
-  
+        </div>
+        <div class="form-group">
+          <label for="comments">Comments</label>
+          {{ form.comments }}
+          <div class="invalid-feedback">
+            {{ form.comments.errors }}
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-outline-info" name="submit" value='submit' id="submit">Save</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
 <br />
-</div>
-
-</div>
-
 
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
 <script>
   ClassicEditor
-    .create( document.querySelector( '#id_body' ) )
-    .then( editor => {
-      console.log( editor );
-    } )
-    .catch( error => {
-      console.error( error );
-    } );
+    .create(document.querySelector('#id_body'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 </script>
 <!-- <script>
   ClassicEditor
@@ -204,18 +209,18 @@
 <script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-  (function($) {
+  (function ($) {
     if (!$.curCSS) {
-       $.curCSS = $.css;
+      $.curCSS = $.css;
     }
-})(jQuery);
+  })(jQuery);
 
   $("#id_tags").tagit({
 
     caseSensitive: false,
     allowDuplicates: false,
 
-});
+  });
 </script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
