@@ -36,7 +36,7 @@
 {% block content %}
 
 <div class="main" style="margin-bottom: 50px;">
-    <div class="container">
+    <div class="container-fluid">
 
         <div class="row margin-bottom-10">
             <div class="col-md-12 col-sm-12">
@@ -448,7 +448,13 @@
                 </tr>
               {% endfor %}
               <tr style="text-align: right;">
-                <td colspan="6" style="text-align: right;">Select 2 checkboxes and click <button id="compare">Compare</button></td>
+                <td colspan="7" style="text-align: right;">Select 2 checkboxes and click <button id="compare">Compare</button></td>
+                <td style="display: none;"></td>
+                <td style="display: none;"></td>
+                <td style="display: none;"></td>
+                <td style="display: none;"></td>
+                <td style="display: none;"></td>
+                <td style="display: none;"></td>
               </tr>
           {% endautoescape%}
             </tbody>
