@@ -324,16 +324,16 @@ $(function(){
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#myArticles').DataTable();
-	$('#userlist').DataTable();
-	$('#userArticles').DataTable();
-	$('#listPow').DataTable({"order": [ 5, 'desc' ]});
-	$('#handleCommReq').DataTable();
-	$('#articleHistory').DataTable();
-	$('#mergedArticleHistory').DataTable();
-	$('#myFeedback').DataTable();
-	$('#allFeedback').DataTable();  
-	$('#mediaHistory').DataTable({"order": [ 2, 'desc' ]});
+	$('#myArticles').DataTable({"scrollX": true});
+	$('#userlist').DataTable({"scrollX": true});
+	$('#userArticles').DataTable({"scrollX": true});
+	$('#listPow').DataTable({"order": [ 5, 'desc' ], "scrollX": true});
+	$('#handleCommReq').DataTable({"scrollX": true});
+	$('#articleHistory').DataTable({"scrollX": true});
+	$('#mergedArticleHistory').DataTable({"scrollX": true});
+	$('#myFeedback').DataTable({"scrollX": true});
+	$('#allFeedback').DataTable({"scrollX": true});  
+	$('#mediaHistory').DataTable({"order": [ 2, 'desc' ], "scrollX": true});
 } );
 </script>
 
