@@ -43,3 +43,40 @@
 .modal-content{
     margin-top: 100px;
 }
+
+.page-item.active .page-link {
+    color: #fff;
+    background-color: #89216B;
+    border-color: #89216B
+}
+
+.page-item.disabled .page-link {
+    color: #868e96;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #ddd
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #89216B;
+    background-color: #fff;
+    border: 1px solid #ddd
+}
+
+.page-link:focus, .page-link:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #89216B;
+    border-color: #89216B
+}
+
+.page-item:first-child .page-link {
+    margin-left: -40;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem
+}
