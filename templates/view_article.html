@@ -428,21 +428,20 @@
             <td>{{ history.changedby.username }}</td>
             <td>{{ history.changedon }}</td>
             <td>{{ history.comments }}</td>
-            <td>{{ history.body }}</td>
+            <td>
+              <a data-toggle="collapse" href="#collapseArticle{{history.pk}}" aria-expanded="false">Show/Hide</a>
+              <div class="collapse" id="collapseArticle{{history.pk}}">{{ history.body }}</div>
+            </td>
             <td style="text-align: right;"><input type="checkbox" id="history" name="history" value="{{history.body|escape}}" data-title="{{history.changedon}}"></td>
           </tr>
         {% endfor %}
-        <tr style="text-align: right;">
-          <td colspan="6" style="text-align: right;">Select 2 checkboxes and click <button id="compare">Compare</button></td>
-          <td style="display: none;"></td>
-          <td style="display: none;"></td>
-          <td style="display: none;"></td>
-          <td style="display: none;"></td>
-          <td style="display: none;"></td>
-        </tr>
     {% endautoescape%}
       </tbody>
     </table>
+    <br />
+    <div style="text-align: right;">
+      Select 2 checkboxes and click <button id="compare">Compare</button>
+    </div>
     <br /><br /><br />
 
 
