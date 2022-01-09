@@ -16,27 +16,30 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table" id="handleCommReq" style="font-size: small;">
-    <thead class="thead-inverse">
-      <tr>
-        <th>Faith</th>
-        <th>Details</th>
-        <th>Requested</th>
-        <th>Assignee</th>
-        <th>Status</th>
-        <th>Action on</th>
-        <th>Comments</th>
+  <table class="table" id="handleCommReq">
+    <thead>
+      <tr style="background-color:#89216B">
+        <th style="color:white">Faith</th>
+        <th style="color:white">Details</th>
+        <th style="color:white">Requested</th>
+        <th style="color:white">Assignee</th>
+        <th style="color:white">Status</th>
+        <th style="color:white">Action on</th>
+        <th style="color:white">Comments</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
     {{myhtml|safe}}{% autoescape off%}
       {% for req in requestcommunitycreation %}
-        <tr>
+        <tr style="font-size: small;">
           <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a></td>
           <td>
             <b>Name:</b> {{ req.name }} <br />
-            <b>Description:</b> {{ req.desc }} <br />
+            <b>Description:</b>
+              <a data-toggle="collapse" href="#collapseCommDesc{{req.pk}}" aria-expanded="false">Show/Hide</a>
+              <div class="collapse" id="collapseCommDesc{{req.pk}}">{{ req.desc }}</div>             
+              <br />
             <b>Area:</b> {{ req.area }} <br />
             <b>City:</b> {{ req.city }} <br />
             <b>District:</b> {{ req.district }} <br />
@@ -106,9 +109,9 @@
                     data-req-requestcommunityparent='{{req.requestcommunity.parent.pk}}'
                     onclick="loadlatlong(this)">
                     <i class="fa fa-check fa-border" aria-hidden="true" title="Accept" style='font-size:14px;color:green; border-color:green; margin-right: 5px;'></i>
-                  </button>
+                  </button> <br /><br />
 
-                  <a href="#modalRejectasExists{{req.pk}}" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a>
+                  <a class="btn btn-link" href="#modalRejectasExists{{req.pk}}" data-toggle="modal"><i class="fa fa-times fa-border" aria-hidden="true" title="Reject"  style='font-size:14px;color:red; border-color:red;  margin-right: 5px;'></i></a><br /><br />
                   <div class="modal fade" id="modalRejectasExists{{req.pk}}" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
@@ -141,7 +144,7 @@
                 {% endif %}
                   
                 {% if req.status == 'Requested' and req.assignedto == request.user %}
-                  <a href="#modalRejectmodify{{req.pk}}" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
+                  <a class="btn btn-link" href="#modalRejectmodify{{req.pk}}" data-toggle="modal"><i class="fa fa-scissors fa-border" aria-hidden="true" title="Send for modification" style='font-size:14px;color:red; border-color:red; margin-right: 5px;'></i></a>
                   <div class="modal fade" id="modalRejectmodify{{req.pk}}" tabindex="-1" role="dialog" aria-labelledby="RejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
