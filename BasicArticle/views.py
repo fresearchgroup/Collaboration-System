@@ -31,6 +31,7 @@ from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
 from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from browsehistory.mixins import ObjectViewMixin
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -193,7 +194,7 @@ class ArticleCreateView(CreateView):
 		return CommunityMembership.objects.filter(user =request.user, community = community).exists()
 
 
-class ArticleEditView(UpdateView):
+class ArticleEditView(ObjectViewMixin, UpdateView):
 	form_class = ArticleUpdateForm
 	model = Articles
 	template_name = 'edit_article.html'

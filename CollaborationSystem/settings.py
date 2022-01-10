@@ -94,6 +94,7 @@ INSTALLED_APPS = [
     'Categories',
     'crispy_forms',
     'taggit',
+    'browsehistory',
 ] + get_machina_apps()
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
