@@ -194,17 +194,7 @@ def user_dashboard(request):
 
         feedback = Feedback.objects.filter(user=request.user)
 
-        articlebrowsehistory = BrowseHistory.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(Articles))
-        articleids = []
-        for history in articlebrowsehistory:
-            articleids.append(history.object_id)
-
-        recentarticles = CommunityArticles.objects.filter(article__pk__in=articleids)
-        for r in recentarticles:
-            print(r.community)
-
-
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback, 'articlebrowsehistory':articlebrowsehistory})
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback})
     else:
         return redirect('login')
 
