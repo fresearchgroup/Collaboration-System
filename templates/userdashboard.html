@@ -359,6 +359,18 @@ var videoPublished = {{videopublished}};
 
 <br />
 
+{% if articlebrowsehistory %}
+  <table>
+    {% for history in articlebrowsehistory %}
+      <tr>
+          <td>{{ history.content_type }}</td>
+          <td>{{ history.link }}</td>
+          <td>{{ history.viewed_on }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+
 {% if feedback %}
   <h2 style="text-align: center;">My feedback</h2>
   <table class="table table-striped table-bordered" id="myFeedback" style="margin-bottom: 50px;" cellspacing="0" width="100%">

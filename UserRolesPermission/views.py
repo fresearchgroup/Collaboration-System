@@ -32,6 +32,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils import six
 from django.contrib import messages as auth_messages
 from webcontent.models import Feedback
+from browsehistory.models import BrowseHistory
+from django.contrib.contenttypes.models import ContentType
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
@@ -192,7 +194,17 @@ def user_dashboard(request):
 
         feedback = Feedback.objects.filter(user=request.user)
 
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback})
+        articlebrowsehistory = BrowseHistory.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(Articles))
+        articleids = []
+        for history in articlebrowsehistory:
+            articleids.append(history.object_id)
+
+        recentarticles = CommunityArticles.objects.filter(article__pk__in=articleids)
+        for r in recentarticles:
+            print(r.community)
+
+
+        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback, 'articlebrowsehistory':articlebrowsehistory})
     else:
         return redirect('login')
 
