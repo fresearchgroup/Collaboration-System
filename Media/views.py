@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 import datetime
 from django.contrib.auth.models import Group as Roles
 from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from browsehistory.mixins import ObjectViewMixin
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -119,7 +120,7 @@ def media_view(request, pk):
 
 	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user, 'merged':merged})
 
-class MediaUpdateView(UpdateView):
+class MediaUpdateView(ObjectViewMixin, UpdateView):
 	form_class = MediaUpdateForm
 	model = Media
 	template_name = 'create_update_media.html'
