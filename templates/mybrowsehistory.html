@@ -25,6 +25,7 @@
                                 <th style="color:white">Faith</th>
                                 <th style="color:white">Type</th>
                                 <th style="color:white">Status</th>
+                                <th style="color:white">Accessed on</th>
                                 <th style="color:white">Action</th>
                                 <th style="color:white">Published Link</th>
                             </tr>
@@ -38,6 +39,7 @@
                                 <td><a href="{% url 'community_view' content.community.parent.parent.pk %}">{{ content.community.parent.parent }}</a></td>
                                 <td><i class="fa fa-file-text" style="color:#89216B;"></i> Article</td>
                                 <td>{{content.article.state.name}}</td>
+                                <td>{{content.accessedon}}</td>
                                 <td><a href="{% url 'article_view' content.article.pk %}"> View </a></td>
                                 <td>
                                     {% if content.article.publishedlink %}
@@ -63,6 +65,7 @@
                                 <th style="color:white">Faith</th>
                                 <th style="color:white">Type</th>
                                 <th style="color:white">Status</th>
+                                <th style="color:white">Accessed on</th>
                                 <th style="color:white">Action</th>
                                 <th style="color:white">Published Link</th>
                             </tr>
@@ -76,6 +79,7 @@
                                 <td><a href="{% url 'community_view' content.community.parent.parent.pk %}">{{ content.community.parent.parent }}</a></td>
                                 <td><i class="fa fa-file-text" style="color:#89216B;"></i> Media</td>
                                 <td>{{content.media.state.name}}</td>
+                                <td>{{content.accessedon}}</td>
                                 <td><a href="{% url 'media_view' content.media.pk %}"> View </a></td>
                                 <td>
                                     {% if content.media.publishedlink %}
