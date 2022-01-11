@@ -48,6 +48,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from browsehistory import views as browsehistoryview
 
 router = routers.DefaultRouter()
 #router.register(r'articleapi', viewsets.ArticleViewSet)
@@ -240,6 +241,8 @@ urlpatterns = [
 
     url(r'^workflow/transition$', workflowview.getAllStates, name='transition'),
     url(r'^workflow/transition/create$', workflowview.createTransitions, name='create_transition'),
+
+    url(r'^my_browse_history/$', browsehistoryview.my_browse_history, name='my_browse_history'),
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
