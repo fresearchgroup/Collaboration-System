@@ -32,8 +32,6 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils import six
 from django.contrib import messages as auth_messages
 from webcontent.models import Feedback
-from browsehistory.models import BrowseHistory
-from django.contrib.contenttypes.models import ContentType
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
@@ -305,4 +303,3 @@ def favourites(request):
                 obj = favourite.objects.filter(user = user, resource = resource_id, category= category).delete()
                 return HttpResponse('removed')
         return HttpResponse('ok')
-
