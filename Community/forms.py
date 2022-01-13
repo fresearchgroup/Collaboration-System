@@ -170,14 +170,20 @@ class CommunityUpdateForm(forms.ModelForm):
 		if 'district' in self.data:
 			try:
 				district = self.data.get('district')
-				self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
+				if district == 'Others':
+					self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state).values_list('city', flat=True).order_by('city').distinct()]
+				else:
+					self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
 			except (ValueError, TypeError):
 				pass
 		
 		if 'city' in self.data:
 			try:
 				city = self.data.get('city')
-				self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,district=district,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
+				if city == 'Others':
+					self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state).values_list('pincode', flat=True).order_by('pincode').distinct()]
+				else:
+					self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
 			except (ValueError, TypeError):
 				pass
 
@@ -225,14 +231,20 @@ class SubCommunityCreateForm(forms.ModelForm):
 		if 'district' in self.data:
 			try:
 				district = self.data.get('district')
-				self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
+				if district == 'Others':
+					self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state).values_list('city', flat=True).order_by('city').distinct()]
+				else:
+					self.fields['city'].choices=[('', '---------')] + [('Others', 'Others')]  + [(item,item) for item in Locations.objects.filter(state=state,district=district).values_list('city', flat=True).order_by('city').distinct()]
 			except (ValueError, TypeError):
 				pass
 		
 		if 'city' in self.data:
 			try:
 				city = self.data.get('city')
-				self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,district=district,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
+				if city == 'Others':
+					self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state).values_list('pincode', flat=True).order_by('pincode').distinct()]
+				else:
+					self.fields['pincode'].choices=[('', '---------')] + [('Others', 'Others')] + [(item,item) for item in Locations.objects.filter(state=state,city=city).values_list('pincode', flat=True).order_by('pincode').distinct()]
 			except (ValueError, TypeError):
 				pass
 
