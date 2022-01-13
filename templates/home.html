@@ -110,7 +110,7 @@
     			<div>
     				<i class="fa fa-users" style="font-size: 70px;"></i><br />
     				<h1 class="timer" id="item4" data-to="{{countcommunity}}" data-speed="5000"></h1>
-    				<h2>Communities</h2><p>Pre-defined communities</p>
+    				<h2>Faiths</h2>
     			</div>
     		</div>
     	</div>
@@ -119,7 +119,7 @@
     			<div>
     				<i class="fa fa-soccer-ball-o" style="font-size: 70px;"></i><br />
     				<h1 class="timer" id="item4" data-to="{{countsubcomm}}" data-speed="5000"></h1>
-    				<h2>Sub-Communities</h2><p>Created by users</p>
+    				<h2>Places of Worship</h2><p>Created by users</p>
     			</div>
     		</div>
     	</div>
@@ -128,7 +128,7 @@
     			<div>
     				<i class="fa fa-file-text" style="font-size: 70px;"></i><br />
     				<h1 class="timer" id="item4" data-to="{{countarticles}}" data-speed="5000"></h1>
-    				<h2>Articles</h2><p>Articles</p>
+    				<h2>Contributions</h2><p>Articles, Image, Audio, Video</p>
     			</div>
     		</div>
     	</div>
@@ -181,6 +181,7 @@
       {% endfor %}
       {% endautoescape%}
     </div>
+    <h5 style="text-align: right;">Click <a href="{% url 'display_communities' %}"><b>here</b></a> to view all</h5>
   </div>
 </div>
 <!-- END RECENT WORKS -->
