@@ -334,12 +334,13 @@ var videoPublished = {{videopublished}};
           <div class="form-group">
             <label for="pincode">Map</label>
             <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
+            <div>Cannot view the map? Click 'Allow' on the popup that requests access to your location or navigate to your browser's privacy settings and allow accessing the location for this site.</div>
           </div>
-          <div class="form-group">
+          <div class="form-group hidden">
             <label for="lat">Latitude</label>
             <input readonly class="form-control form-control-sm" id="updatelat" name = 'latitude' type="text" value="{{ req.latitude }}" required>
           </div>
-          <div class="form-group">
+          <div class="form-group hidden">
             <label for="long">Longitude</label>
             <input readonly class="form-control form-control-sm" id="updatelong" name = 'longitude' type="text" value="{{ req.longitude }}" required>
           </div>
