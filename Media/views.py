@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 import datetime
 from django.contrib.auth.models import Group as Roles
 from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from django.contrib.auth.decorators import login_required
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
@@ -95,6 +96,7 @@ class MediaCreateView(CreateView):
 	def is_communitymember(self, request, community):
 		return CommunityMembership.objects.filter(user=request.user, community=community).exists()
 
+@login_required(login_url='/login')
 def media_view(request, pk):
 	try:
 		gcmedia = CommunityMedia.objects.get(media=pk)

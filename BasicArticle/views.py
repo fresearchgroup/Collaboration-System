@@ -31,6 +31,7 @@ from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
 from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from django.contrib.auth.decorators import login_required
 
 def article_autosave(request,pk):
 	if request.user.is_authenticated:
@@ -84,6 +85,7 @@ def display_articles(request):
 		fav_articles = Articles.objects.filter(pk__in=resource_ids)
 	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
 
+@login_required(login_url='/login')
 def view_article(request, pk):
 	"""
 	A function to view an article. The function will check if the article belongs to group or
