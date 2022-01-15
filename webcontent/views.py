@@ -223,10 +223,10 @@ def sendEmail_curate_new_pow(to, pow, parent, reason, uname, status):
 		subject = "Update your details for the new place of worship requested by you"
 		text_content = "Dear Contributor, \n\n \
 			Please update the details given by you for the creation of a new place of worship (" + pow + ") based on the following comments given by the curator." \
-			"\n\nComments \n " + reason
+			"\n\nComments \n " + reason + "\n\nSteps to modify and submit these changes. \n(a) Login into your account, click your username in the top right corner, and go to dashboard. \n(b) Scroll down to 'My requested Place of Worship' and click 'Modify' in the 'Status' column, next to the desired PoW. Edit and Submit."
 		html_content = "<p>Dear Contributor,</p> \
 			<p>Please update the details given by you for the creation of a new place of worship (" + pow + ") based on the following comments given by the curator.</p>" \
-			"<p><b>Comments</b></p><p>" + reason + "</p>"
+			"<p><b>Comments</b></p><p>" + reason + "</p><p><b>Steps to modify and submit these changes.</b></p> <p>(a)) Login into your account, click your username in the top right corner, and go to dashboard. </p>(b) Scroll down to 'My requested Place of Worship' and click 'Modify' in the 'Status' column, next to the desired PoW. Edit and Submit.</p>"
 
 	if status == 'rejected':
 		subject = "Cannot create the requested place of worship" + pow
