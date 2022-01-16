@@ -49,6 +49,17 @@
       console.error(error);
     });
 </script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_references'))
+    .then(editor => {
+      editor.ui.view.editable.editableElement.style.height = '100px';
+      // console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>

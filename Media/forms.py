@@ -15,12 +15,14 @@ class MediaCreateForm(forms.ModelForm):
 
 	class Meta:
 		model = Media
-		fields = ['title', 'mediafile', 'medialink']
+		fields = ['title', 'mediafile', 'medialink', 'references']
 
 	def __init__(self, *args, **kwargs):
 		mtype = kwargs.pop('mediatype', None)
 		super().__init__(*args, **kwargs)
 		self.fields['title'].widget.attrs.update({'class': 'form-control'})
+		self.fields['references'].widget.attrs.update({'class': 'form-control'})
+		self.fields['references'].required = False
 		self.fields['mediafile'].required = False
 		if mtype == 'IMAGE':
 		    self.fields['mediafile'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select image for upload...'})
@@ -42,6 +44,7 @@ class MediaCreateForm(forms.ModelForm):
                 Field('medialink'),
                 # Field('medialink','value'),
                 Field('mediafile'),
+                Field('references'),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'Create')),
                 )
