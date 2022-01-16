@@ -18,7 +18,7 @@ class ArticleUpdateForm(forms.ModelForm):
 			# fields = ['title', 'image', 'state', 'tags']
 		#	pass
 		#else:
-		fields = ['body', 'tags', 'comments']
+		fields = ['body', 'tags', 'comments', 'references']
 			# fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'more_information', 'state', 'tags']
 
 
@@ -41,6 +41,7 @@ class ArticleUpdateForm(forms.ModelForm):
 		# self.fields['image'].widget.attrs.update({'class': 'file', 'data-allowed-file-extensions':'["jpeg", "jpg","png"]', 'data-show-upload':'false', 'data-show-preview':'false', 'data-msg-placeholder':'Select article image for upload...'})
 		# self.fields['image'].required = False
 		self.fields['body'].widget.attrs.update({'class': 'form-control'})
+		self.fields['references'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
 		#self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tags'].required = False
