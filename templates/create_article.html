@@ -5,11 +5,11 @@
 <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css"
   href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
-<style>
+<!-- <style>
   .ck-editor__editable {
     min-height: 200px;
   }
-</style>
+</style> -->
 {% endblock %}
 {% block breadcrumb %}
 <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
@@ -57,6 +57,15 @@
           </div>
         </div>
         {% endif %}
+
+        <div class="form-group">
+          <label for="title">References</label>
+          {{ form.references }}
+          <div class="invalid-feedback">
+            {{ form.references.errors }}
+          </div>
+        </div>
+
         <!-- <div class="form-group">
                       <label for="title">Introduction</label>
                       {{ form.introduction }}
@@ -139,7 +148,19 @@
   ClassicEditor
     .create(document.querySelector('#id_body'))
     .then(editor => {
-      console.log(editor);
+      editor.ui.view.editable.editableElement.style.height = '200px';
+      // console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_references'))
+    .then(editor => {
+      editor.ui.view.editable.editableElement.style.height = '100px';
+      // console.log(editor);
     })
     .catch(error => {
       console.error(error);
