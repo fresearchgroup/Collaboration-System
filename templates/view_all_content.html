@@ -41,6 +41,8 @@
                 {% for obj in introduction %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -61,6 +63,8 @@
                 {% for obj in architecture %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -81,6 +85,8 @@
                 {% for obj in rituals %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -101,6 +107,8 @@
                 {% for obj in ceremonies %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname  %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -121,6 +129,8 @@
                 {% for obj in tales %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -141,6 +151,8 @@
                 {% for obj in moreinfo %}
                     <b>By {{obj.article.created_by}}</b>: <br />
                     {{myhtml|safe}}{% autoescape off%} {{obj.article.body}}{% endautoescape%}
+                    <b>References</b>: <br />
+                    {{myhtml|safe}}{% autoescape off%} {{obj.article.references}}{% endautoescape%}
                     {% if not merged and request.user == curatorname %}
                         {% if obj.article.created_by != request.user %}
                             <button name="modify" class="btn btn-primary" data-type='Article' data-article-id='{{obj.article.pk}}' data-article-state='{{obj.article.state.name}}' onClick="contentModifyReject(this)">Ask contributor to modify</button>
@@ -203,6 +215,8 @@
                             <button class="btn btn-link"  name="modify" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Ask contributor to modify</button>
                             <button class="btn btn-link"  name="reject" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Reject</button>
                         {% endif %}
+                        <b>References</b>: <br />
+                        {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.references}}{% endautoescape%}    
                     </div>
                 {% endfor %}
             </div>
