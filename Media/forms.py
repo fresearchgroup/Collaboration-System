@@ -54,13 +54,15 @@ class MediaUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Media
 		# fields = ['title', 'mediafile', 'medialink', 'state']
-		fields = ['title', 'mediafile', 'medialink']
+		fields = ['title', 'mediafile', 'medialink', 'references']
 
 	def __init__(self, *args, **kwargs):
 		role = kwargs.pop('role', None)
 		mtype = kwargs.pop('mediatype', None)
 		super().__init__(*args, **kwargs)
 		self.fields['title'].widget.attrs.update({'class': 'form-control'})
+		self.fields['references'].widget.attrs.update({'class': 'form-control'})
+		self.fields['references'].required = False
 		# self.fields['state'].widget.attrs.update({'class': 'form-control'})
 		# self.fields['state'].required = False
 		# states = getStatesCommunity(self.instance.state.id, role)
@@ -83,6 +85,7 @@ class MediaUpdateForm(forms.ModelForm):
                 Field('media_type'),
                 Field('medialink'),
                 Field('mediafile'),
+                Field('references'),
 				# Field('state'),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'Update')),
