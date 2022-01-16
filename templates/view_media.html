@@ -132,6 +132,9 @@
         {{state.name}}
       </h4>
 
+      <h4><b>References</b></h4>
+      {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.references}}{% endautoescape%}
+
       <h4>
         {% if gcmedia.media.publishedlink %}
           <a href="{{gcmedia.media.publishedlink}}">{{gcmedia.media.publishedlink}}</a>
