@@ -287,7 +287,7 @@
                   </div>
                 {% endif %} <!-- review started -->
                 {% if article.article.state.name == 'reviewStarted' %}
-                  <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: red;">Send for modification</button>
+                  <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-warning" data-toggle="modal" data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus" style="background-color: #ffc107; color:black;">Send for modification</button>
                   <div class="modal fade" id="modalModifyArticle" tabindex="-1" role="dialog" aria-labelledby="ModifyArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
@@ -318,7 +318,7 @@
                   </div>
                 {% endif %} <!-- review started -->
                 {% if article.article.state.name == 'reviewStarted' %}
-                  <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalrejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: red;">Reject</button>
+                  <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal" data-target="#modalrejectArticle" data-whatever="@mdo" id="articlerejectstatus" style="background-color: #bd2130;">Reject</button>
                   <div class="modal fade" id="modalrejectArticle" tabindex="-1" role="dialog" aria-labelledby="rejectArticleModal" aria-hidden="true">
                     <div class="modal-dialog text-left" role="document">
                       <div class="modal-content">
