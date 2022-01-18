@@ -57,8 +57,8 @@
             {{ req.assignedon }} <br />
             {% if req.status == 'Requested' or req.status == 'modify'  %}
               {% if req.assignedto != request.user %}
-                <a href="#modalassigntome" data-toggle="modal">Assign to me</a> 
-                <div class="modal fade" id="modalassigntome" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
+                <a href="#modalassigntome{{req.requestcommunity.pk}}" data-toggle="modal">Assign to me</a> 
+                <div class="modal fade" id="modalassigntome{{req.requestcommunity.pk}}" tabindex="-1" role="dialog" aria-labelledby="acceptcomm" aria-hidden="true">
                   <div class="modal-dialog text-left" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
