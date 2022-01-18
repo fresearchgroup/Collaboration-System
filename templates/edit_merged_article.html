@@ -93,6 +93,13 @@
       {{ form.moreinfo.errors }}
     </div>
   </div>
+  <div class="form-group">
+    <label for="title">References</label>
+    {{ form.articlereferences }}
+    <div class="invalid-feedback">
+      {{ form.articlereferences.errors }}
+    </div>
+  </div>
 
   <div class="form-group">
     <label for="title">Keywords</label>
@@ -180,6 +187,16 @@
 <script>
   ClassicEditor
     .create(document.querySelector('#id_moreinfo'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>
+<script>
+  ClassicEditor
+    .create(document.querySelector('#id_articlereferences'))
     .then(editor => {
       console.log(editor);
     })

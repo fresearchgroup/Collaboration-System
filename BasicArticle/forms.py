@@ -121,7 +121,7 @@ class MergedArticleUpdateForm(forms.ModelForm):
 	comments = forms.CharField(widget=forms.TextInput(attrs={'class': 'special'}))
 	class Meta:
 		model = MergedArticles
-		fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'moreinfo']
+		fields = ['introduction', 'architecture', 'rituals', 'ceremonies', 'tales', 'moreinfo', 'articlereferences']
 
 	def __init__(self, *args, **kwargs):
 		role = kwargs.pop('role', None)
@@ -131,6 +131,8 @@ class MergedArticleUpdateForm(forms.ModelForm):
 		self.fields['rituals'].widget.attrs.update({'class': 'form-control'})
 		self.fields['ceremonies'].widget.attrs.update({'class': 'form-control'})
 		self.fields['tales'].widget.attrs.update({'class': 'form-control'})
+		self.fields['articlereferences'].widget.attrs.update({'class': 'form-control'})
+		self.fields['articlereferences'].required = False
 		self.fields['moreinfo'].widget.attrs.update({'class': 'form-control'})
 		self.fields['moreinfo'].required = False
 		self.fields['comments'].widget.attrs.update({'class': 'form-control', 'rows':4, 'cols':15})
