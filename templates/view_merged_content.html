@@ -112,6 +112,10 @@
             {% endif %}
         </div>
 
+        <h3 class="sectiontitle">References</h3>
+        <div style="margin-left:30px;">
+            {{myhtml|safe}}{% autoescape off%} {{merged.articlereferences}} {% endautoescape%}
+        </div>
 
         <h3 class="sectiontitle">Gallery</h3>
         <div class="content-page">
@@ -164,6 +168,8 @@
                             <button class="btn btn-link"  name="modify" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Ask contributor to modify</button>
                             <button class="btn btn-link"  name="reject" data-type='Media' data-article-id='{{gcmedia.media.pk}}' data-article-state='{{gcmedia.media.state.name}}' onclick="contentModifyReject(this)">Reject</button>
                         {% endif %}
+                        <b>References</b>: <br />
+                        {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.references}}{% endautoescape%}
                     </div>
                 {% endfor %}
             </div>

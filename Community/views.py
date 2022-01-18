@@ -1248,44 +1248,57 @@ def merge_content(request, pk):
 		ceremonies = ''
 		tales = ''
 		moreinfo = ''
+		articlereferences = ''
 		originals = []
 		originalmedia = []
 		community = Community.objects.get(pk=pk)
 
 		introductionQuery = CommunityArticles.objects.filter(community__name='Introduction', community__parent=community, article__state__name=state)
+		articlereferences = '<h4><b>Introduction</b></h4>'
 		for obj in introductionQuery:
 			introduction += obj.article.body
 			introduction += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 
 		architectureQuery = CommunityArticles.objects.filter(community__name='Architecture', community__parent=community, article__state__name=state)
+		articlereferences += '<h4><b>Architecture</b></h4>'
 		for obj in architectureQuery:
 			architecture += obj.article.body
 			architecture += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 
 		ritualsQuery = CommunityArticles.objects.filter(community__name='Rituals', community__parent=community, article__state__name=state)
+		articlereferences += '<h4><b>Rituals</b></h4>'
 		for obj in ritualsQuery:
 			rituals += obj.article.body
 			rituals += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 		
 		ceremoniesQuery = CommunityArticles.objects.filter(community__name='Ceremonies', community__parent=community, article__state__name=state)
+		articlereferences += '<h4><b>Ceremonies</b></h4>'
 		for obj in ceremoniesQuery:
 			ceremonies += obj.article.body
 			ceremonies += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 		
 		talesQuery = CommunityArticles.objects.filter(community__name='Tales', community__parent=community, article__state__name=state)
+		articlereferences += '<h4><b>Tales</b></h4>'
 		for obj in talesQuery:
 			tales += obj.article.body
 			tales += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 		
 		moreinfoQuery = CommunityArticles.objects.filter(community__name='More Information', community__parent=community, article__state__name=state)
+		articlereferences += '<h4><b>More Information</b></h4>'
 		for obj in moreinfoQuery:
 			moreinfo += obj.article.body
 			moreinfo += '<br />'
+			articlereferences += obj.article.references
 			originals.append(obj.article.pk)
 
 		medias = CommunityMedia.objects.filter(community__parent=community, media__state__name=state)
@@ -1302,6 +1315,7 @@ def merge_content(request, pk):
 			tales = tales,
 			moreinfo = moreinfo,
 			state = state,
+			articlereferences = articlereferences,
 			changedby = request.user,
 			changedon = datetime.datetime.now(),
 			originalarticles = originals,
