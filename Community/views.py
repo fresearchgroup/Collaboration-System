@@ -1452,6 +1452,9 @@ def convert_to_docx(merged):
 	document.add_heading('More information', level=1)
 	new_parser.add_html_to_document(merged.moreinfo, document)
 
+	document.add_heading('References', level=1)
+	new_parser.add_html_to_document(merged.articlereferences, document)
+
 	document.add_heading('Gallery', level=1)
 
 	mediaids = merged.originalmedia
@@ -1466,6 +1469,9 @@ def convert_to_docx(merged):
 		else:
 			name = media.medialink
 			document.add_paragraph(name, style='List Bullet')
+		document.add_paragraph('References', style='List Bullet')
+		new_parser.add_html_to_document(media.references, document)
+		new_parser.add_html_to_document('<br />', document)
 
 
 	path = settings.MEDIA_ROOT + "/writeup/" + f'{merged.community.pk}' 
