@@ -394,18 +394,28 @@
   var map;
 
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
+    navigator.geolocation.getCurrentPosition(getCurrentLatLong, getDefaultLatLong);
   }
   else {
     alert("Geolocation is not supported by this browser.");
   }
+  function getCurrentLatLong(position) {
+    longitude = position.coords.longitude;
+    latitude = position.coords.latitude;
+    showMap()
+  }
+  function getDefaultLatLong(error) {
+    longitude = 72.8537904456501;
+    latitude = 19.02009319033155;
+    showMap()
+  }
 
-  function showPosition(position) {
+  function showMap(position) {
     map = new ol.Map({
       target: 'map',
       view: new ol.View({
         zoom: 16,
-        center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
+        center: ol.proj.fromLonLat([longitude, latitude]),
       }),
       interactions: ol.interaction.defaults({ altShiftDragRotate: false, pinchRotate: false }),
       layers: layers,
