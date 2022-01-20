@@ -65,8 +65,8 @@ def create_faq(request):
 		return render(request, 'new_faq.html', {'categories':categories})
 
 def sendEmail(subject, to, text_content, html_content):
-	signature_text = "\n\n Thank you \n\n PoW team"
-	signature_html = "<p>Thank you</p> <p>PoW team</p>"
+	signature_text = "\n\n Thank you \n\n PoW team \n\n This email was automatically sent from the PoW portal. Please do not respond to it."
+	signature_html = "<p>Thank you</p> <p>PoW team</p> <p>This email was automatically sent from the PoW portal. Please do not respond to it.</p>"
 	text_content += signature_text
 	html_content += signature_html
 	from_email = 'pow@cse.iitb.ac.in'
