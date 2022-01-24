@@ -142,6 +142,10 @@
               <th style="color:white">Name</th>
               <th style="color:white">Address</th>
               <th style="color:white">Curator</th>
+              <th style="color:white">Draft</th>
+              <th style="color:white">Submitted</th>
+              <th style="color:white">In-review</th>
+              <th style="color:white">Modify</th>
               <th style="color:white">Accepted</th>
               <th style="color:white">Rejected</th>
               <th style="color:white">Status</th>
@@ -164,6 +168,34 @@
                 <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})">View Location on Map</button>
               </td>
               <td>{{child.curatorname}}</td>
+              <td>
+                {% if child.draftCount > 0 %}
+                  <a href="{% url 'display_curation_list' pk1=child.pk pk2='draft' %}">{{child.draftCount}}</a>
+                {% else %}
+                  {{child.draftCount}}
+                {% endif %}
+              </td>
+              <td>
+                {% if child.submittedCount > 0 %}
+                  <a href="{% url 'display_curation_list' pk1=child.pk pk2='submitted' %}">{{child.submittedCount}}</a>
+                {% else %}
+                  {{child.submittedCount}}
+                {% endif %}
+              </td>
+              <td>
+                {% if child.inreviewCount > 0 %}
+                  <a href="{% url 'display_curation_list' pk1=child.pk pk2='reviewStarted' %}">{{child.inreviewCount}}</a>
+                {% else %}
+                  {{child.inreviewCount}}
+                {% endif %}
+              </td>
+              <td>
+                {% if child.modifyCount > 0 %}
+                  <a href="{% url 'display_curation_list' pk1=child.pk pk2='sentToModify' %}">{{child.modifyCount}}</a>
+                {% else %}
+                  {{child.modifyCount}}
+                {% endif %}
+              </td>
               <td>
                 {% if child.acceptedCount > 0 %}
                   <a href="{% url 'display_curation_list' pk1=child.pk pk2='accepted' %}">{{child.acceptedCount}}</a> <br />
