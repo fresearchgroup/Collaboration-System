@@ -107,7 +107,7 @@ def media_view(request, pk):
 		return redirect('home')
 	# if gcmedia.media.state == States.objects.get(name='draft') and gcmedia.media.created_by != request.user:
 	u = User.objects.get(username=request.user)
-	if gcmedia.media.created_by != request.user and not (u.groups.filter(name='curator').exists()):
+	if gcmedia.media.created_by != request.user and not (u.groups.filter(name='curator').exists()) and not (u.groups.filter(name='icpapprover').exists()):
 		return redirect('home')
 	merged = ''
 	if MergedArticles.objects.filter(community=gcmedia.community.parent).exists():
