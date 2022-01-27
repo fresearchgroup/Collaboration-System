@@ -462,12 +462,14 @@ def add_content_by_curator(request):
 	commpk = request.POST['pk']
 	section = request.POST['section']
 	body = request.POST['body']
+	references = request.POST['references']
 	user = request.user
 	state = States.objects.get(name='accepted')
 	parent = Community.objects.get(pk=commpk)
 	community = Community.objects.get(name=section, parent=parent)
 	article = Articles.objects.create(
 		body = body,
+		references = references,
 		state = state,
 		created_at = datetime.datetime.now(),
 		created_by = user

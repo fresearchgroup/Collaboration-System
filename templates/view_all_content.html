@@ -292,8 +292,12 @@
             <input id="modalSection" type='hidden' name='section' value='' />
             <div class="form-group">
               <label for="reason-text" class="col-form-label">Enter content</label>
-              <textarea class="form-control" id="body" name='body'></textarea>                                              
+              <textarea class="form-control" id="body" name='body' required></textarea>                                              
             </div>
+            <div class="form-group">
+                <label for="reason-text" class="col-form-label">Enter References</label>
+                <textarea class="form-control" id="references" name='references' required></textarea>                                              
+              </div>  
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
