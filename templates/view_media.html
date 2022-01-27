@@ -70,7 +70,8 @@
         {% if gcmedia.media.mediafile %}
           <img src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" alt="image" class="img-responsive">
         {% else %}
-          <img src="{{ gcmedia.media.medialink}}" alt="image" class="img-responsive">
+          <img src="{{ gcmedia.media.medialink}}" alt="image" class="img-responsive"> <br />
+          Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to view the image</h4>
         {% endif %}
       {% endif %}
       {% if gcmedia.media.mediatype == 'AUDIO' %}
