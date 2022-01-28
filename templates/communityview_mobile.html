@@ -93,36 +93,49 @@
     {% if community.level == 0 %}
 
       {% if not isCurator and not isApprover %}
-        <table id="listPowmobile" class="table table-bordered" cellspacing="0" width="100%">
-          <thead>
-              <tr style="background-color:#89216B">
-                <th style="color:white">Name</th>
-              </tr>
-          </thead>
-          <tbody>
-            {{myhtml|safe}}{% autoescape off%}
-            {% for child in children %}
-              <tr>
-                <td>
-                  <a data-toggle="collapse" href="#{{child.pk}}" aria-expanded="false">{{child.name}}</a>
-                  <div class="collapse" id="{{child.pk}}">
-                    {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
-                    <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})" class="btn btn-success"><i class="fa fa-map-marker" aria-hidden="true" style="font-size: larger;"></i></button>
-                    {% if child.contribution_status == 'Ongoing' %}
-                      <a href="{% url 'community_view' child.pk %}" class="btn btn-success" style="margin-left: 10px;">Contribute</a>
-                    {% else %}
-                      <a href="{% url 'provide_feedback' child.pk %}" class="btn btn-success" style="margin-left: 10px;">Feedback</a>
-                      {% if child.publishedlink %}
-                        <br /><a href="{{child.publishedlink}}">Published link</a>
-                      {% endif %}
-                    {% endif %}
+      <table id="listPowmobile" class="table" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+              <th style="color:white">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+          {{myhtml|safe}}{% autoescape off%}
+          {% for child in children %}
+            <tr>
+              <td>
+                <div class="panel panel-danger">
+                  <div class="panel-heading">
+                     <h4 class="panel-title" >
+                        <a href="#{{child.pk}}" style="color:white;" data-parent="#accordion{{outer}}" data-toggle="collapse" class="accordion-toggle collapsed">
+                          <div style="text-align:center; font-weight: bold;">
+                            {{child.name}} 
+                            <i class="fa fa-plus" aria-hidden="true" style="margin-left: 10px;"></i>
+                          </div>
+                        </a>
+                     </h4>
                   </div>
-                </td>
-              </tr>
-            {% endfor %}
-            {% endautoescape%}
-          </tbody>
-        </table>
+                  <div class="panel-collapse collapse " id="{{child.pk}}">
+                    <div class="panel-body">
+                      {{child.area}}, {{child.city}}, {{child.district}}, {{child.state}}, {{child.pincode}} <br />
+                      <button onclick="displayLocation({{child.latitude}}, {{child.longitude}})" class="btn btn-success"><i class="fa fa-map-marker" aria-hidden="true" style="font-size: larger;"></i></button>
+                      {% if child.contribution_status == 'Ongoing' %}
+                        <a href="{% url 'community_view' child.pk %}" class="btn btn-success" style="margin-left: 10px;">Contribute</a>
+                      {% else %}
+                        <a href="{% url 'provide_feedback' child.pk %}" class="btn btn-success" style="margin-left: 10px;">Feedback</a>
+                        {% if child.publishedlink %}
+                          <br /><a href="{{child.publishedlink}}">Published link</a>
+                        {% endif %}
+                      {% endif %}    
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          {% endautoescape%}
+        </tbody>
+      </table>
       {% endif %} <!-- normal user -->
 
 
@@ -336,8 +349,8 @@
       </form>
     {% else %}
       {% if user.is_authenticated %}
-        <h4>
-          Can't find a {{ community.name }}? 
+        <h4 style="margin-top: 20px;">
+          Can't find a {{ community.name }}? <br/><br/>
           <form method = "get" action ="{% url 'request_community_creation' %}">
             <input type="hidden" name="cid" value={{community.pk}}>
             <button type="radio" name ="status" value="submit" class="btn btn-success" >Click to add</button>
