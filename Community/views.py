@@ -170,13 +170,16 @@ def community_view(request, pk):
 		if u.groups.filter(name='icpapprover').exists():
 			isApprover = True
 
+	# if mobileBrowser(request):
+	# 	t = loader.get_template('communityview_mobile.html')
+	# else:
+	# 	t = loader.get_template('communityview.html')
+	# c = {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover}
+	# return HttpResponse(t.render(c))
+	context = {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover}
 	if mobileBrowser(request):
-		t = loader.get_template('communityview_mobile.html')
-	else:
-		t = loader.get_template('communityview.html')
-	c = {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover}
-	return HttpResponse(t.render(c))
-	# return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover})
+		return render(request, 'communityview_mobile.html', context)
+	return render(request, 'communityview.html', context)
 
 def community_subscribe(request):
 	cid = request.POST['cid']
