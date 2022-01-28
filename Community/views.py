@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 # Create your views here.
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from .models import Community, CommunityMembership, CommunityArticles, Locations, RequestCommunityCreation, RequestCommunityCreationAssignee, RequestCommunityCreationDetails, CommunityCourses, CommunityMedia, MergedArticles, MergedArticleStates
 from rest_framework import viewsets
 # from .models import CommunityGroups
@@ -48,11 +48,12 @@ from BasicArticle.models import ArticleStates, Articles
 from Media.models import Media, MediaStates
 from django.contrib.auth.models import User
 import ast
-from webcontent.views import sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_pow_request_submitted, sendEmail_curate_new_pow
+from webcontent.views import mobileBrowser, sendEmail_contributor_content_curated, sendEmail_curator_new_curator_contributions, sendEmail_merged_content_curated, sendEmail_contributor_pow_request_submitted, sendEmail_curator_pow_request_submitted, sendEmail_curate_new_pow
 from django.contrib.sites.models import Site
 from docx import Document
 from htmldocx import HtmlToDocx
 import os
+from django.template import Context, loader
 
 def display_communities(request):
 	sorting_by = ["A to Z", "Z to A"]
@@ -168,7 +169,14 @@ def community_view(request, pk):
 			isCurator = True
 		if u.groups.filter(name='icpapprover').exists():
 			isApprover = True
-	return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover})
+
+	if mobileBrowser(request):
+		t = loader.get_template('communityview_mobile.html')
+	else:
+		t = loader.get_template('communityview.html')
+	c = {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover}
+	return HttpResponse(t.render(c))
+	# return render(request, 'communityview.html', {'community': community, 'membership':membership, 'subscribers':subscribers, 'top_contributors':top_contributors, 'message':message, 'pubarticles':pubarticles, 'communitymem':communitymem, 'children':children, 'childrencount':childrencount, 'createpow':createpow, 'isCurator':isCurator, 'isApprover':isApprover})
 
 def community_subscribe(request):
 	cid = request.POST['cid']
