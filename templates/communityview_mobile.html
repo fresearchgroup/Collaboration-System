@@ -378,41 +378,53 @@
             <div class="panel-collapse collapse " id="sec{{child.pk}}">
               <div class="panel-body">
                 {% if user.is_authenticated %}
-                  <div class="col-xs-3">
-                    <a href="{% url 'community_article_create' child.pk %}">
-                      <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Article">
-                        <p>
-                          <i class="fa fa-file-text-o" style="font-size:24px;"></i>
-                        </p>
-                      </button>
-                    </a>
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <a href="{% url 'community_article_create' child.pk %}">
+                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Article">
+                          <p>
+                            <i class="fa fa-file-text-o" style="font-size:42px;"></i>
+                            <h5 style="font-weight: bold;">Article</h5>
+                          </p>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="col-xs-3">
+                      <a href="{% url 'community_media_create' child.pk 'IMAGE'%}">
+                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Image">
+                          <p>
+                            <i class="fa fa-picture-o" style="font-size:42px;"></i> 
+                            <h5 style="font-weight: bold;">Image</h5>
+                          </p>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="col-xs-3">
+                      <a href="{% url 'community_media_create' child.pk 'AUDIO' %}">
+                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Audio">
+                          <p>
+                            <i class="fa fa-music" style="font-size:42px;"></i>
+                            <h5 style="font-weight: bold;">Audio</h5>
+                          </p>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="col-xs-3">
+                      <a href="{% url 'community_media_create' child.pk 'VIDEO' %}">
+                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Video">
+                          <p>
+                            <i class="fa fa-film" style="font-size:42px;"></i>
+                            <h5 style="font-weight: bold;">Video</h5>
+                          </p>
+                        </button>
+                      </a>
+                    </div>
                   </div>
-                  <div class="col-xs-3">
-                    <a href="{% url 'community_media_create' child.pk 'IMAGE'%}">
-                      <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Image">
-                        <p>
-                          <i class="fa fa-picture-o" style="font-size:24px;"></i>
-                        </p>
-                      </button>
-                    </a>
-                  </div>
-                  <div class="col-xs-3">
-                    <a href="{% url 'community_media_create' child.pk 'AUDIO' %}">
-                      <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Audio">
-                        <p>
-                          <i class="fa fa-music" style="font-size:24px;"></i>
-                        </p>
-                      </button>
-                    </a>
-                  </div>
-                  <div class="col-xs-3">
-                    <a href="{% url 'community_media_create' child.pk 'VIDEO' %}">
-                      <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Video">
-                        <p>
-                          <i class="fa fa-film" style="font-size:24px;"></i>
-                        </p>
-                      </button>
-                    </a>
+                  <div class="row">
+                    <!-- <div class="col-xs-3"><h4 style="font-weight: bold; color:#89216B;">Article</h4></div>
+                    <div class="col-xs-3"><h4 style="font-weight: bold; color:#89216B;">Image</h4></div>
+                    <div class="col-xs-3"><h4 style="font-weight: bold; color:#89216B;">Audio</h4></div>
+                    <div class="col-xs-3"><h4 style="font-weight: bold; color:#89216B;">Video</h4></div> -->
                   </div>
                 {% endif %}
               </div>
