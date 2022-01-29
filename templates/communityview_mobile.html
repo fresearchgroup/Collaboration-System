@@ -5,6 +5,23 @@
   <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
   <link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+
+  <style>
+    .panel-danger {
+      border-color: #89216B;
+    }
+    .panel-danger>.panel-heading {
+      color: #89216B;
+      background-color: gray;
+      border-color: gray;
+    }
+    .active .panel-heading {
+      background-color: #89216B;
+      border-color: #89216B;
+    }
+  </style>
+
+
 {% endblock %}
 
 {% block breadcrumb %}
@@ -520,4 +537,17 @@
     })
   </script>
 
+  <script>
+    (function() {
+  
+  $(".panel").on("show.bs.collapse hide.bs.collapse", function(e) {
+    if (e.type=='show'){
+      $(this).addClass('active');
+    }else{
+      $(this).removeClass('active');
+    }
+  });  
+
+}).call(this);
+  </script>
 {% endblock %}

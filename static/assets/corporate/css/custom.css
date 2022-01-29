@@ -81,12 +81,3 @@
     border-bottom-left-radius: .25rem
 }
 
-.panel-danger {
-    border-color: #89216B;
-}
-
-.panel-danger>.panel-heading {
-    color: #ffff;
-    background-color: #89216B;
-    border-color: #89216B;
-}
