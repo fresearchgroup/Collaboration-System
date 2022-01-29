@@ -56,26 +56,31 @@ import os
 from django.template import Context, loader
 
 def display_communities(request):
-	sorting_by = ["A to Z", "Z to A"]
-	if request.method == 'POST':
-		if 'sortingby' in request.POST:
-			sortselected = request.POST['sortingby']
-			if sortselected == 'A to Z':
-				communities=Community.objects.filter(parent=None).order_by('name')
-			if sortselected == 'Z to A':
-				communities=Community.objects.filter(parent=None).order_by('-name')
-			if sortselected == 'oldest':
-				communities=Community.objects.filter(parent=None).order_by('created_at')
-			if sortselected == 'latest':
-				communities=Community.objects.filter(parent=None).order_by('-created_at')
-		elif 'category' in request.POST:
-			category = request.POST['category']
-			category = Category.objects.get(pk=category)
-			communities=Community.objects.filter(category=category)
-	else:
-		sortselected = None
-		communities=Community.objects.filter(parent=None).order_by('name')
-	return render(request, 'communities.html',{'communities':communities, 'sorting_by':sorting_by, 'sortselected':sortselected})
+	communities=Community.objects.filter(parent=None).order_by('name')
+	return render(request, 'communities.html',{'communities':communities})
+
+
+# def display_communities(request):
+# 	sorting_by = ["A to Z", "Z to A"]
+# 	if request.method == 'POST':
+# 		if 'sortingby' in request.POST:
+# 			sortselected = request.POST['sortingby']
+# 			if sortselected == 'A to Z':
+# 				communities=Community.objects.filter(parent=None).order_by('name')
+# 			if sortselected == 'Z to A':
+# 				communities=Community.objects.filter(parent=None).order_by('-name')
+# 			if sortselected == 'oldest':
+# 				communities=Community.objects.filter(parent=None).order_by('created_at')
+# 			if sortselected == 'latest':
+# 				communities=Community.objects.filter(parent=None).order_by('-created_at')
+# 		elif 'category' in request.POST:
+# 			category = request.POST['category']
+# 			category = Category.objects.get(pk=category)
+# 			communities=Community.objects.filter(category=category)
+# 	else:
+# 		sortselected = None
+# 		communities=Community.objects.filter(parent=None).order_by('name')
+# 	return render(request, 'communities.html',{'communities':communities, 'sorting_by':sorting_by, 'sortselected':sortselected})
 
 def community_view(request, pk):
 	try:
