@@ -57,8 +57,9 @@ from django.template import Context, loader
 
 def display_communities(request):
 	communities=Community.objects.filter(parent=None).order_by('name')
-	return render(request, 'communities.html',{'communities':communities})
-
+	if mobileBrowser(request):
+		return render(request, 'communities_mobile.html', {'communities':communities})
+	return render(request, 'communities.html', {'communities':communities})
 
 # def display_communities(request):
 # 	sorting_by = ["A to Z", "Z to A"]

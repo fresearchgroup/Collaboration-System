@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">PoW</a></li>
+  {% if user.is_authenticated %}
+  <li class="breadcrumb-item active">{{ message }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <!-- <form class="pull-right" method="post" >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="Sorting">Sort by</label>
+      <select id="select_community" name="sortingby" class="btn btn-primary" onchange="this.form.submit()">
+        {% for sort in sorting_by %}
+          {% if sort == sortselected%}
+            <option value="{{sort}}" selected>{{sort}}</option>
+          {% else %}
+            <option value="{{sort}}">{{sort}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+
+    </div>
+  </form> -->
+
+
+  <!-- BEGIN SIDEBAR & CONTENT -->
+  <div class="row margin-bottom-40">
+    <!-- BEGIN CONTENT -->
+    <div class="col-md-12 col-sm-12">
+      <div class="content-page">
+        <div class="row mix-grid thumbnails">
+          {{myhtml|safe}}{% autoescape off%}
+          {% for community in communities %}
+          <div class="col-xs-6 mix mix_all" style="display: block; opacity: 1;">
+            <div>
+              <a href="{% url 'community_view' community.pk %}">
+                {% if community.image_thumbnail %}
+                <img src="{{ MEDIA_URL }}{{ community.image_thumbnail}}" alt="image" class="img-responsive" style="width: 100%;">
+                {% else %}
+                <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="width: 100%;">
+                {%endif%}
+
+                <div class="mix-details">
+                  <h3 style="margin-top: 40px;">{{community.name}}</h3>
+                  <!-- <h5>{{community.tag_line|truncatewords:5}}</h5> -->
+                  <!-- <p>{{ community.desc |striptags|truncatewords:20}}</p> -->
+                </div>
+                <h3 style="padding-bottom: 10px; margin-top: 2px; text-align: center; color:white; background-image: linear-gradient(to right, #89216B , #DA4453);">{{community.name}}</h3>
+                <!-- {{community.category|truncatewords:2 }} -->
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+          {% endautoescape%}
+        </div>
+      </div>
+    </div>
+    <!-- END CONTENT -->
+  </div>
+  <!-- BEGIN SIDEBAR & CONTENT -->
+</div>
+
+
+
+<br /><br />
+{% endblock %}
