@@ -37,7 +37,8 @@
         <div class="row mix-grid thumbnails">
           {{myhtml|safe}}{% autoescape off%}
           {% for community in communities %}
-          <div class="col-md-4 mix mix_all" style="display: block; opacity: 1;">
+          <div class="col-md-1 col-xs-1"></div>
+          <div class="col-md-3 col-xs-5 mix mix_all" style="display: block; opacity: 1;">
             <div>
               <a href="{% url 'community_view' community.pk %}">
                 {% if community.image_thumbnail %}
