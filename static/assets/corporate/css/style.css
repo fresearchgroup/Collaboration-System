@@ -2405,6 +2405,7 @@ Demo Utils
 /* Service Box v1 */
 .service-box-v1 {
   text-align: center;
+  color:white;
   padding: 15px;
 }
 .service-box-v1 i {
@@ -2412,7 +2413,7 @@ Demo Utils
   font-size: 35px;
 }
 .service-box-v1:hover {
-  background: #89216B;
+  /* background: #89216B; */
   transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;
