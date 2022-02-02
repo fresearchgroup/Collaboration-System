@@ -57,6 +57,8 @@ from django.template import Context, loader
 
 def display_communities(request):
 	communities=Community.objects.filter(parent=None).order_by('name')
+	for community in communities:
+		community.childrencount = Community.objects.filter(parent=community).count()
 	if mobileBrowser(request):
 		return render(request, 'communities_mobile.html', {'communities':communities})
 	return render(request, 'communities.html', {'communities':communities})
