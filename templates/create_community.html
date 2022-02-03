@@ -7,16 +7,16 @@
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
-<style>
+<!-- <style>
   .ck-editor__editable {
     min-height: 200px;
   }
-</style>
+</style> -->
 <link href="{% static 'css/cropper.min.css' %}" rel="stylesheet">
 {% endblock %}
 {% block breadcrumb %}
 <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-<li class="breadcrumb-item">Community Creation</li>
+<li class="breadcrumb-item">PoW Creation</li>
 {% if user.is_authenticated %}
 <!--li class="breadcrumb-item active"><a href="{% url 'user_dashboard' %}">Dashboard</a></-->
 {% endif %}
@@ -35,11 +35,11 @@
 <div class="container-fluid ">
   <div class="row">
     <div class="col-md-12" style="margin-bottom: 20px;">
-      <form method="post" enctype="multipart/form-data" novalidate>
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-group">
-          <label for="title">Name</label>
+          <label for="title">* Name</label>
           {{ form.name }}
           <div class="invalid-feedback">
             {{ form.name.errors }}
@@ -47,23 +47,22 @@
         </div>
 
         <div class="form-group">
-          <label for="title">Description</label>
+          <label for="title">* Description</label>
           {{ form.desc }}
           <div class="invalid-feedback">
             {{ form.desc.errors }}
           </div>
-          <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
         </div>
 
         <div class="form-group">
-          <label for="title">State</label>
+          <label for="title">* State</label>
           {{ form.state }}
           <div class="invalid-feedback">{{ form.state.errors }}
           </div>
         </div>
 
         <div class="form-group">
-          <label for="title">District</label>
+          <label for="title">* District</label>
           <div class="row">
             <div class="col-md-6">
               {{ form.district }}
@@ -75,7 +74,7 @@
         </div>
 
         <div class="form-group">
-          <label for="title">City</label>
+          <label for="title">* City</label>
           <div class="row">
             <div class="col-md-6">
               {{ form.city }}
@@ -87,7 +86,7 @@
         </div>
 
         <div class="form-group">
-          <label for="title">Pincode</label>
+          <label for="title">* Pincode</label>
           <div class="row">
             <div class="col-md-6">
               {{ form.pincode }}
@@ -99,13 +98,13 @@
         </div>
 
         <div class="form-group">
-          <label for="title">Landmark</label>
+          <label for="title">* Landmark</label>
           {{ form.area }}
           <div class="invalid-feedback">{{ form.area.errors }}</div>
         </div>
 
         <div class="form-group">
-          <label for="title">Mark location on the map</label>
+          <label for="title">* Mark location on the map</label>
           <div id="map" style="width:100%; height:400px;"></div>
         </div>
 
@@ -167,7 +166,7 @@
         {% endif %}
 
         <div class="form-group">
-          <button type="submit" class="btn btn-outline-info" name="submit" value='submit' id="submit">Submit</button>
+          <button type="submit" class="btn btn-primary" name="submit" value='submit' id="submit">Submit</button>
         </div>
 
       </form>
@@ -307,14 +306,14 @@
 
 <script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
 <script>
-  ClassicEditor
-    .create(document.querySelector('#id_desc'))
-    .then(editor => {
-      console.log(editor);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  // ClassicEditor
+  //   .create(document.querySelector('#id_desc'))
+  //   .then(editor => {
+  //     console.log(editor);
+  //   })
+  //   .catch(error => {
+  //     console.error(error);
+  //   });
 
   $(function () {
     /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */

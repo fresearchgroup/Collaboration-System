@@ -201,8 +201,8 @@ class SubCommunityCreateForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		community = kwargs.pop('community', None)
 		super().__init__(*args, **kwargs)
-		self.fields['name'].widget.attrs.update({'class': 'form-control'})
-		self.fields['desc'].widget.attrs.update({'class': 'form-control'})
+		self.fields['name'].widget.attrs.update({'class': 'form-control', 'ng-model':'name'})
+		self.fields['desc'].widget.attrs.update({'class': 'form-control', 'maxlength': '1000', 'rows':4})
 		self.fields['area'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].widget.attrs.update({'class': 'form-control'})
 		self.fields['parent'].empty_label = None
