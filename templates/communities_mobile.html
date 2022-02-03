@@ -46,13 +46,7 @@
                 {% else %}
                 <img src="{{ MEDIA_URL }}default/community_image_default.png" alt="default" class="img-responsive" style="width: 100%;">
                 {%endif%}
-
-                <div class="mix-details">
-                  <h3 style="margin-top: 40px;">{{community.name}}</h3>
-                  <!-- <h5>{{community.tag_line|truncatewords:5}}</h5> -->
-                  <!-- <p>{{ community.desc |striptags|truncatewords:20}}</p> -->
-                </div>
-                <h3 style="padding-bottom: 10px; margin-top: 2px; text-align: center; color:white; background-image: linear-gradient(to right, #89216B , #DA4453);">{{community.name}}</h3>
+                <h4 style="padding-bottom: 10px; margin-top: 2px; color:white; background-image: linear-gradient(to right, #89216B , #DA4453);"> <b style="margin-left: 10px; font-weight: normal;"> {{community.name}}</b> <b style="margin-right: 10px; float: right;  font-weight: normal;">({{community.childrencount}}) </b></h4>
                 <!-- {{community.category|truncatewords:2 }} -->
               </a>
             </div>
