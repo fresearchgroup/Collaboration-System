@@ -770,6 +770,22 @@ class CreateSubCommunityView(CreateView):
 		"""
 		self.object = form.save(commit=False)
 		self.object.created_by = self.request.user
+
+		if form.cleaned_data.get('district') == "Others":
+			self.object.district = self.request.POST['districtOthers']
+		else:
+			self.object.district = form.cleaned_data.get('district')
+
+		if form.cleaned_data.get('city') == "Others":
+			self.object.city = self.request.POST['cityOthers']
+		else:
+			self.object.city = form.cleaned_data.get('city')
+
+		if form.cleaned_data.get('pincode') == "Others":
+			self.object.pincode = self.request.POST['pincodeOthers']
+		else:
+			self.object.pincode = form.cleaned_data.get('pincode')
+
 		self.object.image_thumbnail = form.cleaned_data.get('image')
 		self.object.save()
 
