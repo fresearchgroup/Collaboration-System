@@ -229,7 +229,7 @@
     var url = "{% url 'get_cities' %}"
     var district = $(this).val();
     var div = document.createElement('DIV');
-    div.innerHTML = '<input type="text" value="" name="districtOthers" class="form-control" placeholder="Enter district in this textbox">'
+    div.innerHTML = '<input type="text" value="" name="districtOthers" class="form-control" placeholder="Enter district in this textbox" required>'
     document.getElementById("districtOthers").innerHTML = "";
     if (district == 'Others') {
       document.getElementById("districtOthers").appendChild(div);
@@ -263,7 +263,7 @@
     var url = "{% url 'get_pincodes' %}"
     var city = $(this).val();
     var div = document.createElement('DIV');
-    div.innerHTML = '<input type="text" value="" name="cityOthers" class="form-control" placeholder="Enter city in this textbox">'
+    div.innerHTML = '<input type="text" value="" name="cityOthers" class="form-control" placeholder="Enter city in this textbox" required>'
     document.getElementById("cityOthers").innerHTML = "";
     if (city == 'Others') {
       document.getElementById("cityOthers").appendChild(div);
@@ -296,7 +296,7 @@
   $("#id_pincode").change(function () {
     var pincode = $(this).val();
     var div = document.createElement('DIV');
-    div.innerHTML = '<input type="number" min="100000" max="999999" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox">'
+    div.innerHTML = '<input type="number" min="100000" max="999999" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox" required>'
     document.getElementById("pincodeOthers").innerHTML = "";
     if (pincode == 'Others') {
       document.getElementById("pincodeOthers").appendChild(div);
