@@ -212,7 +212,7 @@
 
             <div class="form-group">
               <label for="name">Name</label>
-              <input class="form-control form-control-sm" id="acceptname" name = 'name' type="text" value="{{ req.name }}" required>
+              <input class="form-control form-control-sm" id="acceptname" name = 'name' type="text" value="{{ req.name }}" maxlength="100" required>
             </div>
             <div class="form-group">
               <label for="desc">Description</label>
@@ -224,19 +224,19 @@
             </div>
             <div class="form-group">
               <label for="state">District</label>
-              <input class="form-control form-control-sm" id="acceptdistrict" name = 'district' type="text" value="{{ req.district }}" required>
+              <input class="form-control form-control-sm" id="acceptdistrict" name = 'district' type="text" value="{{ req.district }}" maxlength="200" required>
             </div>
             <div class="form-group">
               <label for="city">City</label>
-              <input class="form-control form-control-sm" id="acceptcity" name = 'city' type="text" value="{{ req.city }}" required>
+              <input class="form-control form-control-sm" id="acceptcity" name = 'city' type="text" value="{{ req.city }}" maxlength="200" required>
             </div>
             <div class="form-group">
               <label for="pincode">Pincode</label>
-              <input class="form-control form-control-sm" id="acceptpincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
+              <input class="form-control form-control-sm" id="acceptpincode" name = 'pincode' type="number" min="100000" max="999999" value="{{ req.pincode }}" required>
             </div>
             <div class="form-group">
               <label for="area">Landmark</label>
-              <input class="form-control form-control-sm" id="acceptarea" name = 'area' type="text" value="{{ req.area }}" required>
+              <input class="form-control form-control-sm" id="acceptarea" name = 'area' type="text" value="{{ req.area }}" maxlength="200" required>
             </div>
             <div class="form-group">
               <label for="pincode">Map</label>

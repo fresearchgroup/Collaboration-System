@@ -305,7 +305,7 @@ var videoPublished = {{videopublished}};
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input class="form-control form-control-sm" id="updatename" name = 'name' type="text" value="{{ req.name }}" required>
+            <input class="form-control form-control-sm" id="updatename" name = 'name' type="text" value="{{ req.name }}" maxlength="100" required>
           </div>
           <div class="form-group">
             <label for="desc">Description</label>
@@ -313,23 +313,23 @@ var videoPublished = {{videopublished}};
           </div>
           <div class="form-group">
             <label for="state">State</label>
-            <input class="form-control form-control-sm" id="updatestate" name = 'state' type="text" value="{{ req.state }}" required>
+            <input class="form-control form-control-sm" id="updatestate" name = 'state' type="text" value="{{ req.state }}" maxlength="200" required>
           </div>
           <div class="form-group">
             <label for="district">District</label>
-            <input class="form-control form-control-sm" id="updatedistrict" name = 'district' type="text" value="{{ req.district }}" required>
+            <input class="form-control form-control-sm" id="updatedistrict" name = 'district' type="text" value="{{ req.district }}" maxlength="200" required>
           </div>
           <div class="form-group">
             <label for="city">City</label>
-            <input class="form-control form-control-sm" id="updatecity" name = 'city' type="text" value="{{ req.city }}" required>
+            <input class="form-control form-control-sm" id="updatecity" name = 'city' type="text" value="{{ req.city }}" maxlength="200" required>
           </div>
           <div class="form-group">
             <label for="pincode">Pincode</label>
-            <input class="form-control form-control-sm" id="updatepincode" name = 'pincode' type="text" value="{{ req.pincode }}" required>
+            <input class="form-control form-control-sm" id="updatepincode" name = 'pincode' type="number" min="100000" max="999999" value="{{ req.pincode }}" required>
           </div>
           <div class="form-group">
             <label for="area">Landmark</label>
-            <input class="form-control form-control-sm" id="updatearea" name = 'area' type="text" value="{{ req.area }}" required>
+            <input class="form-control form-control-sm" id="updatearea" name = 'area' type="text" value="{{ req.area }}" maxlength="200" required>
           </div>
           <div class="form-group">
             <label for="pincode">Map</label>
