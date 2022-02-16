@@ -1,0 +1,350 @@
+{% load static %}
+<html>
+{% load i18n %}
+
+<html ng-app>
+
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+-->
+  <!-- metronic start -->
+
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <meta content="Metronic Shop UI description" name="description">
+  <meta content="Metronic Shop UI keywords" name="keywords">
+  <meta content="keenthemes" name="author">
+
+  <meta property="og:site_name" content="-CUSTOMER VALUE-">
+  <meta property="og:title" content="-CUSTOMER VALUE-">
+  <meta property="og:description" content="-CUSTOMER VALUE-">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="-CUSTOMER VALUE-"><!-- link to image for socio -->
+  <meta property="og:url" content="-CUSTOMER VALUE-">
+
+  <!-- Fonts START -->
+  <link
+    href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all"
+    rel="stylesheet" type="text/css">
+  <!-- Fonts END -->
+
+
+  <!-- Global styles START -->
+  <link href="{% static 'assets/plugins/font-awesome/css/font-awesome.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Global styles END -->
+
+  <!-- Page level plugin styles START -->
+  <link href="{% static 'assets/pages/css/animate.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/plugins/fancybox/source/jquery.fancybox.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/plugins/owl.carousel/assets/owl.carousel.css' %}" rel="stylesheet">
+  <!-- Page level plugin styles END -->
+
+  <!-- Theme styles START -->
+  <link href="{% static 'assets/pages/css/components.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/slider.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/gallery.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/themes/red.css' %}" rel="stylesheet" id="style-color">
+  <link href="{% static 'assets/corporate/css/custom.css' %}" rel="stylesheet">
+  <!-- Theme styles END -->
+
+  <!-- Theme styles START for communities page i.e. portfolio -->
+  <link href="{% static 'assets/pages/css/components.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/pages/css/portfolio.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/corporate/css/themes/red.css' %}" rel="stylesheet" id="style-color">
+  <link href="{% static 'assets/corporate/css/custom.css' %}" rel="stylesheet">
+  <!-- Theme styles END for communities page i.e. portfolio-->
+  <!-- metronic end -->
+
+  <!-- Chart.js -->
+  <script src="{% static 'js/Chart.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/notify.js' %}" type="text/javascript"></script>
+
+  <!-- JavaScript Cookie Library -->
+  <script src="{% static 'js/js.cookie.js' %}"></script>
+
+  <!-- c3.js  c3.css and d3.js-->
+  <link rel="stylesheet" href="{% static 'css/c3.min.css'%}">
+  <script src="{% static 'js/d3.v5.min.js' %}"></script>
+  <script src="{% static 'js/c3.min.js' %}"></script>
+
+  <!-- Data tables -->
+  <link href="{% static 'datatable/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+  <!--
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#myArticles').DataTable();
+	$('#userlist').DataTable();
+	$('#userArticles').DataTable();
+} );
+</script>-->
+  {% block css %}{% endblock %}
+  {% block extra_css %} {% endblock extra_css %}
+
+</head>
+
+<body>
+
+  {% block js %}
+
+  {% endblock js %}
+  {% block body %}
+
+  <!-- BEGIN HEADER -->
+  <div class="header">
+    <div class="container">
+      <div class="col-md-4 col-sm-4 col-xs-4">
+        <a href="javascript:history.go(-1)">
+          <i class="fa fa-angle-left" style="font-size:58px;color:white;"></i>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4" style="text-align: center;">
+        <a href="{% url 'home' %}">
+          <img src="{% static 'assets/corporate/img/logos/CC-logo.png' %}" alt="Logo" style="margin-top: 10px;">
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4" style="text-align: right;">
+        <button class="openbtn" onclick="openNav()">☰</button>
+      </div>
+
+      <div id="mySidebar" class="mobilesidebar">
+
+        <a href="{% url 'home' %}">
+          <img src="{% static 'assets/corporate/img/logos/CC-logo.png' %}" alt="Logo"
+            style="margin-top:-50;">
+        </a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+
+        {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}?next={{request.path}}">Log In</a>
+        <a href="{% url 'signup' %}">Sign up</a>
+        {% endif %}
+
+        <a href="{% url 'about_us' %}">About Us</a>
+        <a href="{% url 'display_communities' %}">Places of Worship</a>
+        <a href="{% url 'FAQs' %}">FAQs</a>
+
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+          <a class="" data-toggle="dropdown" data-target="basemodalUsername" href="#">
+            {{ user.username }}
+          </a>
+
+          <div class="dropdown-menu dropdown-size" id="basemodalUsername" style="background-color:transparent;">
+            {% if request.user.is_superuser %}
+            <a href="{% url 'create_community' %}" style="font-size: 16px;">Create Community</a>
+            <a href="{% url 'transition' %}" style="font-size: 16px;"> Manage Workflow</a>
+            <a href="{% url 'manage_reputation' %}" style="font-size: 16px;">Manage Reputation</a>
+            <a href="{% url 'create_faq' %}" style="font-size: 16px;">Add an FAQ</a>
+            <a href="{% url 'upload_task' %}" style="font-size: 16px;">Create bulk communities</a>
+            <a href="{% url 'upload_locations' %}" style="font-size: 16px;">Upload bulk Locations</a>
+            {% endif%}
+
+            {% for group_for in request.user.groups.all %}
+            {% if group_for.name == 'curator' %}
+            <a href="{% url 'handle_community_creation_requests' %}" style="font-size: 16px;">Handle PoW Creation
+              Requests</a>
+            <a href="{% url 'display_curation_list' %}" style="font-size: 16px;">Curate Contributions</a>
+            {% endif %}
+
+            {% if group_for.name == 'curator' or group_for.name == 'icpapprover' %}
+            <a href="{% url 'view_feedback' %}" style="font-size: 16px;">View Feedback</a>
+            {% endif %}
+
+            {% endfor %}
+
+            <a href="{% url 'view_profile' %}" style="font-size: 16px;">My Profile</a>
+            <a href="{% url 'user_dashboard' %}" style="font-size: 16px;">Dashboard</a>
+            <a href="{% url 'logout' %}" style="font-size: 16px;">Log out</a>
+          </div>
+        </div>
+        {% endif %}
+
+
+      </div>
+
+    </div>
+  </div>
+  <!-- Header END -->
+
+  <div class="page-slider margin-bottom-40">
+    {% block pagecar %}
+    {% endblock %}
+  </div>
+
+  <div class="container" style="min-height: 580px">
+    <ol class="breadcrumb my-4">
+      {% block breadcrumb %}
+      {% endblock %}
+    </ol>
+    {% block content %}
+
+
+    {% endblock %}
+  </div>
+
+  {% endblock body %}
+  <!-- AND HERE -->
+  {% block extra_js %}
+  {% endblock extra_js %}
+  <!-- BEGIN FOOTER -->
+  <div class="pre-footer">
+    <div class="container">
+      <div class="row">
+        <!-- BEGIN COPYRIGHT -->
+        <div class="col-md-4 col-sm-4 padding-top-10 pre-footer-col">
+          <!-- <h2>Sitemap</h2>
+        <ul>
+            <li><a href="{% url 'display_communities' %}">Communities</a></li>
+            <li><a href="{% url 'display_articles' %}">Articles</a></li>
+            <li><a href="{% url 'display_published_media' 'Image' %}">Images</a></li>
+            <li><a href="{% url 'display_published_media' 'Audio' %}">Audio</a></li>
+            <li><a href="{% url 'display_published_media' 'Video' %}">Video</a></li>
+            <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+            <li><a href="{% url 'FAQs' %}">FAQs</a></li>
+        </ul>         -->
+        </div>
+        <!-- END COPYRIGHT -->
+        <!-- BEGIN PAYMENTS -->
+        <div class="col-md-5 col-sm-5 padding-top-10 pre-footer-col">
+          <ul class="social-footer list-unstyled list-inline">
+            <!-- <h2>Other Links</h2> -->
+            <!-- <li><h4>Github: <a href="https://github.com/fresearchgroup/Collaboration-System" target="_blank"><i class="fa fa-github"></i></a></h4></li> -->
+            <!--<li><a href="javascript:;"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-google-plus"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-dribbble"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-skype"></i></a></li>
+          <li><a href="javascript:;"><i class="fa fa-youtube"></i></a></li>
+          <li><a href="javascriptjavascript:;"><i class="fa fa-dropbox"></i></a></li>-->
+          </ul>
+        </div>
+        <!-- END PAYMENTS -->
+        <!-- BEGIN POWERED -->
+        <div class="col-md-3 col-sm-3 padding-top-10 pre-footer-col">
+          <!-- <h2>More Information</h2> -->
+          <ul>
+            <li><a href="javascript:;">Privacy Policy</a></li>
+            <li><a href="javascript:;">Terms of Service</a> </li>
+          </ul>
+          <br />
+          <!-- <h2>Site Theme by</h2> -->
+          <!-- <p style="padding-left: 15px;"><a href="http://www.keenthemes.com/">KeenThemes.com</a></p> -->
+        </div>
+        <!-- END POWERED -->
+      </div>
+    </div>
+  </div>
+  <!-- END FOOTER -->
+
+  <!-- <script language="JavaScript" type="text/javascript" src="{% static 'assets/plugins/jquery.min.js' %}" ></script> -->
+
+  <script src="{% static 'js/jquery.js' %}"></script>
+
+  <script src="{% static 'js/propper.min.js' %}"></script>
+
+  <!-- Data table -->
+
+  <!--<script src="{% static 'datatable/jquery-3.2.1.min.js' %}" type="text/javascript"></script>-->
+  <script src="{% static 'datatable/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'datatable/dataTables.bootstrap4.min.js' %}" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      $('.header-navigation li a').filter(function () {
+        return this.href == location.href
+      }).parent().addClass('active').siblings().removeClass('active');
+
+      $('.header-navigation li a').click(function () {
+        $(this).parent().addClass('active').siblings().removeClass('active')
+      });
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#myArticles').DataTable({ "scrollX": true });
+      $('#userlist').DataTable({ "scrollX": true });
+      $('#userArticles').DataTable({ "scrollX": true });
+      $('#listPow').DataTable({ "order": [2, 'desc'], "scrollX": true });
+      $('#listPowmobile').DataTable({ "scrollX": true });
+      $('#handleCommReq').DataTable({ "scrollX": true });
+      $('#articleHistory').DataTable({ "scrollX": true });
+      $('#mergedArticleHistory').DataTable({ "order": [2, 'desc'], "scrollX": true });
+      $('#myFeedback').DataTable({ "scrollX": true });
+      $('#allFeedback').DataTable({ "scrollX": true });
+      $('#mediaHistory').DataTable({ "order": [2, 'desc'], "scrollX": true });
+    });
+  </script>
+
+  <!-- Load javascripts at bottom, this will reduce page load time -->
+  <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
+  <!--[if lt IE 9]>
+<script src="assets/plugins/respond.min.js"></script>
+<![endif]-->
+  <!--<script src="{% static 'assets/plugins/jquery.min.js' %}" type="text/javascript"></script>-->
+  <script src="{% static 'assets/plugins/jquery-migrate.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/corporate/scripts/back-to-top.js' %}" type="text/javascript"></script>
+  <!-- END CORE PLUGINS -->
+
+  <!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
+  <script src="{% static 'assets/plugins/fancybox/source/jquery.fancybox.pack.js' %}" type="text/javascript"></script>
+  <!-- pop up -->
+  <script src="{% static 'assets/plugins/owl.carousel/owl.carousel.min.js' %}" type="text/javascript"></script>
+  <!-- slider for products -->
+
+  <script src="{% static 'assets/corporate/scripts/layout.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/pages/scripts/bs-carousel.js' %}" type="text/javascript"></script>
+  <script type="text/javascript">
+    jQuery(document).ready(function () {
+      Layout.init();
+      Layout.initTwitter();
+
+      Layout.initNavScrolling();
+    });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      Layout.initOWL();
+
+      Layout.initFixHeaderWithPreHeader(); /* Switch On Header Fixing (only if you have pre-header) */
+    });
+  </script>
+  <!-- END PAGE LEVEL JAVASCRIPTS -->
+
+  <script src="{% static 'assets/plugins/count-to.js' %}" type="text/javascript"></script><!-- number counter -->
+  <script src="{% static 'assets/plugins/script.js' %}" type="text/javascript"></script><!-- number counter -->
+  <!-- <script src="{% static 'js/our_search_code.js' %}" type="text/javascript"></script> -->
+  <!-- number counter -->
+
+  <script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+    }
+
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    }
+  </script>
+
+
+  {% block javascript %}{% endblock %}
+
+</body>
+
+</html>

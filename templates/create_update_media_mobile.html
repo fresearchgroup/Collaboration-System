@@ -1,0 +1,96 @@
+{% extends 'base_mobile.html' %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">PoW</a></li>
+{% for cat in community.get_ancestors %}
+<li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+{% endfor %}
+<li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
+<li class="breadcrumb-item">Upload {{mediatype|lower}}</li>
+{% endblock %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 20px;">
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% crispy form %}
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#description'))
+        .then(description => {
+            console.log(description);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#id_references'))
+        .then(editor => {
+            editor.ui.view.editable.editableElement.style.height = '100px';
+            // console.log(editor);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+
+<script>
+    $(function () {
+        $('input[name="media_type"]').on('click', function () {
+            if ($(this).val() == 'Link') {
+                $('#div_id_medialink').show();
+                $('#div_id_mediafile').hide();
+            }
+            if ($(this).val() == 'Upload') {
+                $('#div_id_medialink').hide();
+                $('#div_id_mediafile').show();
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        {% if not media.title %}
+        $('#div_id_medialink').hide();
+        {% else %}
+        {% if media.mediafile %}
+        $('#div_id_medialink').hide();
+        {% else %}
+        $('#div_id_mediafile').hide();
+        {% endif %}
+        {% endif %}
+    });
+</script>
+{% endblock %}

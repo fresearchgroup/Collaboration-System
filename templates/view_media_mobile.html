@@ -1,0 +1,482 @@
+{% extends 'base_mobile.html' %} {%load static %} {% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/plugins/css/style.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/css/jquerysctipttop.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/lib/jquery.ntm/themes/default/css/theme.css' %}" rel="stylesheet" />
+<style type="text/css">
+    #liclr {
+        background-color: #FE642E;
+
+    }
+
+    #clr {
+        color: black;
+    }
+</style>
+{% endblock %} {% load mptt_tags %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">PoW</a></li>
+{% for cat in gcmedia.community.get_ancestors %}
+<li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+{% endfor %}
+<li class="breadcrumb-item">{{ gcmedia.community.name }}</li>
+<li class="breadcrumb-item">View {{ gcmedia.media.mediatype|lower }}</li>
+<li class="breadcrumb-item">{{ gcmedia.media.title }} </li>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item active">
+                        <a class="nav-link " href="{% url 'media_view' gcmedia.media.pk %}">View</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    {% if state.name != 'publish'%}
+                    <li class="nav-item ">
+                        <a id="media_edit_id" class="nav-link " href="{% url 'media_edit' gcmedia.media.pk %}">Edit</a>
+                    </li>
+                    {%endif%}
+                    {% endif %}
+                    <!-- <li class="nav-item">
+            <a href="{% url 'media_reports' gcmedia.media.pk%}" id="media_reports_id" class="nav-link">Reports</a>
+          </li> -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    {% if messages %}
+    <div class="alert alert-warning">
+        {% for message in messages %}
+        <b> {{ message }} </b> <br />
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="blog-item">
+        <h2><a href="#">{{ gcmedia.media.title }} </a></h2>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {% if gcmedia.media.mediatype == 'IMAGE' %}
+            {% if gcmedia.media.mediafile %}
+            <img src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" alt="image" class="img-responsive">
+            {% else %}
+            <img src="{{ gcmedia.media.medialink}}" alt="image" class="img-responsive"> <br />
+            Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to view the image</h4>
+            {% endif %}
+            {% endif %}
+            {% if gcmedia.media.mediatype == 'AUDIO' %}
+            {% if gcmedia.media.mediafile %}
+            <audio controls>
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+            </audio>
+            {% else %}
+            <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}"
+                allow="autoplay; encrypted-media" style="border: 1px solid red;" allowfullscreen></iframe>
+            <h4 style="margin-top: 10px;">Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to
+                hear the audio</h4>
+            {% endif %}
+            {% endif %}
+            {% if gcmedia.media.mediatype == 'VIDEO' %}
+            {% if gcmedia.media.mediafile %}
+            <video class="img-responsive margin-bottom-10" style="width: 100%; border: 1px solid red;" controls>
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/vob" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/webm" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/avi" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/mp4" />
+                <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="video/wmv" />
+            </video>
+            {% else %}
+            <iframe height="350" width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}"
+                allow="autoplay; encrypted-media" style="border: 1px solid red;" allowfullscreen></iframe>
+            <h4 style="margin-top: 10px;">Click <a href="{{ gcmedia.media.medialink }}">here</a> if you are unable to
+                view the video</h4>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <h4>
+                <i class="fa fa-user"></i>
+                <a href="{% url 'display_user_profile' gcmedia.media.created_by %}">
+                    {{gcmedia.media.created_by}}
+                </a>
+            </h4>
+            <h4>
+                <i class="fa fa-calendar"></i> {{gcmedia.media.created_at}}
+            </h4>
+            <h4>
+                <i class="fa fa-print" aria-hidden="true"></i> {{curator}}
+            </h4>
+
+            <!-- <h4>
+      {% if gcmedia.community.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'community_view' gcmedia.community.pk %}">{{gcmedia.community.name}}</a> Community
+      {% endif %}
+      {% if gcmedia.group.name %}
+        <i class="fa fa-users"></i> <a href="{% url 'group_view' gcmedia.group.pk %}">{{gcmedia.group.name}}</a> Group
+      {% endif %}      
+      </h4> -->
+
+            <h4>
+                {% if state.name == 'draft' %}<i class="fa fa-cut"></i>{% endif %}
+                {% if state.name == 'submitted' %}<i class="fa fa-arrow-circle-right"></i>{% endif %}
+                {% if state.name == 'accepted' %}<i class="fa fa-check-circle"></i> {% endif %}
+                {% if state.name == 'rejected' %}<i class="fa fa-times-circle"></i>{% endif %}
+                {% if state.name == 'publish' %}<i class="fa fa-newspaper-o"></i>{% endif %}
+                {{state.name}}
+            </h4>
+
+            <h4><b>References</b></h4>
+            {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.references}}{% endautoescape%}
+
+            <h4>
+                <b>Published Link</b>
+                {% if gcmedia.media.publishedlink %}
+                <a href="{{gcmedia.media.publishedlink}}">{{gcmedia.media.publishedlink}}</a>
+                {% endif %}
+            </h4>
+
+            <p style="margin-bottom: 20px;"></p>
+            {% if state.name == 'draft' or state.name == 'sentToModify' %}
+            {% if request.user == gcmedia.media.created_by %}
+            {% if not merged %}
+            <button type="radio" name="status" class="btn btn-success" data-toggle="modal"
+                data-target="#modalSubmitArticle" data-whatever="@mdo" id="status">Submit</button>
+            <div class="modal fade" id="modalSubmitArticle" tabindex="-1" role="dialog"
+                aria-labelledby="SubmitArticleModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'submit_media' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='pk' value={{gcmedia.media.pk}} />
+                                <input type='hidden' name='commparentpk' value={{gcmedia.community.parent.pk}} />
+                                <div class="form-group">
+                                    <h4>I confirm that I understand the following terms.</h4>
+                                    <ul>
+                                        <li> Resource created on this portal should not contain explicit or harmful
+                                            material that is inappropriate for young learners. For more details, please
+                                            refer to the guidelines </li>
+                                        <li> Resource will not collect any sensitive data or personal information about
+                                            users, such as name, address, photo or other personally identifiable
+                                            information. For more details,please refer to the Data and privacy policy
+                                        </li>
+                                        <li> Resource should not violate copyright laws. For more details, please refer
+                                            to the License policy</li>
+                                        <li> Resource created or uploaded on this portal will be available for free and
+                                            public use without limitations- for both commercial and noncommercial
+                                            purposes</li>
+                                    </ul>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                                        I accept these terms and conditions and agree to my work being licenced under <a
+                                            target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/"> CC BY
+                                            4.0 </a>
+                                    </div><br />
+                                    <img src="{{ MEDIA_URL }}default/license.png" alt="license" class="img-responsive"
+                                        style="width:150px"><br />
+                                    <h5><b>I understand that in the case of a violation of any of these terms, my
+                                            content can be removed by Collaborative Communities.</b></h5>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articleCreate" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <h5><b>Sorry, you cannot submit this contribution as the content for {{gcmedia.community.parent.name}} has
+                    already been merged</b></h5>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+
+            {% if state.name == 'draft' and request.user == gcmedia.media.created_by %}
+            <button style="align-content: right;" type="radio" name="delete" class="btn btn-danger" data-toggle="modal"
+                data-target="#modalDeleteMedia" data-whatever="@mdo" id="status">Delete</button>
+            <div class="modal fade" id="modalDeleteMedia" tabindex="-1" role="dialog" aria-labelledby="DeleteMediaModal"
+                aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Delete Media</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this media? You will not be able to recover it once it is
+                            deleted.
+                            <form method="post" action="{% url 'media_delete' gcmedia.media.pk %}">
+                                {% csrf_token %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articleDelete" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- </p> -->
+
+            {% for group_for in request.user.groups.all %}
+            {% if group_for.name == 'curator' %}
+            {% if request.user == curator %}
+            {% if gcmedia.media.state.name == 'submitted' or gcmedia.media.state.name == 'sentToModify' %}
+            <button type="radio" name="articlemarkreview" value="markreview" class="btn btn-success" data-toggle="modal"
+                data-target="#modalarticlemarkreview" data-whatever="@mdo" id="articlemarkreview">Lock and Mark for
+                review</button>
+            <div class="modal fade" id="modalarticlemarkreview" tabindex="-1" role="dialog"
+                aria-labelledby="modalarticlemarkreview" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Start reviewing</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure that you want to start reviewing this content? Once this review process begins
+                            the contributor will not be allowed to edit it.
+                            <form method="post" action="{% url 'curate_content' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='status' value='markreview' />
+                                <input type='hidden' name='type' value='Media' />
+                                <input type='hidden' name='pk' value={{gcmedia.media.pk}} />
+                                <div class="form-group">
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articlestartreview" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if gcmedia.media.state.name == 'reviewStarted' %}
+            <button type="radio" name="articleacceptstatus" value="accept" class="btn btn-success" data-toggle="modal"
+                data-target="#modalAcceptArticle" data-whatever="@mdo" id="articleacceptstatus"
+                style="background-color: green;">Accept</button>
+            <div class="modal fade" id="modalAcceptArticle" tabindex="-1" role="dialog"
+                aria-labelledby="AcceptArticleModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Accept Contribution</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to accept this contribution?
+                            <form method="post" action="{% url 'curate_content' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='status' value='accept' />
+                                <input type='hidden' name='type' value='Media' />
+                                <input type='hidden' name='pk' value={{gcmedia.media.pk}} />
+                                <div class="form-group">
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- review started -->
+            {% if gcmedia.media.state.name == 'reviewStarted' %}
+            <button type="radio" name="articlemodifystatus" value="modify" class="btn btn-success" data-toggle="modal"
+                data-target="#modalModifyArticle" data-whatever="@mdo" id="articlemodifystatus"
+                style="background-color: #ffc107; color:black;;">Send for modification</button>
+            <div class="modal fade" id="modalModifyArticle" tabindex="-1" role="dialog"
+                aria-labelledby="ModifyArticleModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Send back for modification</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'curate_content' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='status' value='modify' />
+                                <input type='hidden' name='type' value='Media' />
+                                <input type='hidden' name='pk' value={{gcmedia.media.pk}} />
+                                <div class="form-group">
+                                    <label for="reason-text" class="col-form-label">Enter more details about what
+                                        modification are required</label>
+                                    <textarea class="form-control" id="reason-text" name="reason"></textarea>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articleAccept" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- review started -->
+            {% if gcmedia.media.state.name == 'reviewStarted' %}
+            <button type="radio" name="articlerejectstatus" value="reject" class="btn btn-success" data-toggle="modal"
+                data-target="#modalrejectArticle" data-whatever="@mdo" id="articlerejectstatus"
+                style="background-color: bd2130;">Reject</button>
+            <div class="modal fade" id="modalrejectArticle" tabindex="-1" role="dialog"
+                aria-labelledby="rejectArticleModal" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Reject this contribution</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'curate_content' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='status' value='reject' />
+                                <input type='hidden' name='type' value='Media' />
+                                <input type='hidden' name='pk' value={{gcmedia.media.pk}} />
+                                <div class="form-group">
+                                    <label for="reason-text" class="col-form-label">Enter more details as to why this
+                                        contribution is being rejected</label>
+                                    <textarea class="form-control" id="reason-text" name="reason"></textarea>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="articleReject" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- review started -->
+            {% else %}
+            <!-- check if the current user is the assigned curator -->
+            <button type="radio" class="btn btn-success" data-toggle="modal" data-target="#modalassigntome">Assign
+                curation activity to me</button>
+            <div class="modal fade" id="modalassigntome" tabindex="-1" role="dialog" aria-labelledby="acceptcomm"
+                aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel">Assign this activity to yourself?</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'assign_community_curation' %}">
+                                {% csrf_token %}
+                                <input type='hidden' name='mediapk' value={{gcmedia.media.pk}} />
+                                <input type='hidden' name='community_parent' value={{gcmedia.community.parent.pk}} />
+                                Are you sure you want to assign the whole curation activity of
+                                {{gcmedia.community.parent.name}} to yourself?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- check if the current user is the assigned curator -->
+            {% endif %}
+            <!-- check if the current user has a curator role in the system -->
+            {% endfor %}
+
+
+
+
+
+
+
+
+
+
+            <!-- <h4>
+        {{myhtml|safe}}{% autoescape off%} {{gcmedia.media.metadata.description}} {% endautoescape%}
+      </h4> -->
+            <!-- {% if user.is_authenticated %} 
+        {% if gcmedia.media.state.name != 'publish'%}
+          {% if gcmedia.media.metadata %}
+            <h5><a id="metadata_edit_id" class="nav-link" href="{% url 'metadata_update' gcmedia.media.pk gcmedia.media.metadata.pk %}">Update metadata</a></h5>
+          {% else %}
+            <h5><a id="metadata_create_id" class="nav-link" href="{% url 'metadata_create' gcmedia.community.pk gcmedia.media.pk%}">Add metadata</a></h5>
+          {% endif %}
+        {%endif%} 
+      {% endif %} -->
+        </div>
+    </div>
+    <!-- {% include "includes/reputation_buttons.html" with id=gcmedia.media.pk resource_type="media" %} -->
+
+</div>
+<br />
+
+<h2>State history</h2>
+
+<table id="mediaHistory" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+            <th style="color:white">Status</th>
+            <th style="color:white">Action by</th>
+            <th style="color:white">Action on</th>
+            <th style="color:white">Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for history in statehistory %}
+        <tr>
+            <td>{{ history.state.name }}</td>
+            <td>{{ history.changedby.username }}</td>
+            <td>{{ history.changedon }}</td>
+            <td>{{ history.comments }}</td>
+        </tr>
+        {% endfor %}
+        {% endautoescape%}
+    </tbody>
+</table>
+<br /><br /><br />
+
+
+
+
+{% endblock %}
+{% block javascript %}
+{% endblock %}

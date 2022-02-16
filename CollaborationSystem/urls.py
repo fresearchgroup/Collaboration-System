@@ -55,7 +55,9 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^$', user_views.home, name='home'),
     url(r'^admin/', admin.site.urls),
-    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login'),
+    # url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login'),
+    url(r'^login/', user_views.WebLoginView.as_view(redirect_authenticated_user=True), name='login'),
+
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^signup/$', user_views.signup, name ='signup' ),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',user_views.activate_user, name='activate'),
@@ -146,17 +148,20 @@ urlpatterns = [
     url(r'^community_content/(?P<pk>\d+)/$', communityview.community_content, name='community_content'),
     url(r'^community_feed/(?P<pk>\d+)/$', communityview.feed_content, name='community_feed'),
 
-    url(r'^reset/$',
-    auth_views.PasswordResetView.as_view(
-        template_name='password_reset.html',
+    url(r'^reset/$', user_views.WebPasswordResetView.as_view(
         email_template_name='password_reset_email.html',
         subject_template_name='password_reset_subject.txt'
-    ),
-    name='password_reset'),
-    url(r'^reset/done/$',
-    auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'),
-    name='password_reset_done'),
-     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    ), name='password_reset'),
+    url(r'^reset/done/$', user_views.WebPasswordResetDoneView.as_view(), name='password_reset_done'),
+    # url(r'^reset/$',
+    # auth_views.PasswordResetView.as_view(
+    #     template_name='password_reset.html',
+    #     email_template_name='password_reset_email.html',
+    #     subject_template_name='password_reset_subject.txt'
+    # ), name='password_reset'),
+    # url(r'^reset/done/$', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
+
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
     auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),
     name='password_reset_confirm'),
     url(r'^reset/complete/$',
@@ -165,10 +170,12 @@ urlpatterns = [
     url(r'^reset/complete/$', auth_views.PasswordResetCompleteView.as_view
       (template_name='password_reset_complete.html') ,name='password_reset_complete'),
 
-    url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
-    name='password_change'),
-    url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
-    name='password_change_done'),
+    url(r'^settings/password/$', user_views.WebPasswordChangeView.as_view(), name='password_change'),
+    url(r'^settings/password/done/$', user_views.WebPasswordChangeDoneView.as_view(), name='password_change_done'),
+    # url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
+    # name='password_change'),
+    # url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
+    # name='password_change_done'),
 
     url(r'^group_content/(?P<pk>\d+)/$', group_views.group_content, name='group_content'),
     url(r'^FAQs/$', web.FAQs, name ='FAQs' ),

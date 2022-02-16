@@ -30,7 +30,7 @@ from django.contrib import messages
 from workflow.views import canEditResourceCommunity, canEditResource
 from django.urls import reverse
 from etherpad.views import create_article_ether_community
-from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted, mobileBrowser
 from django.contrib.auth.decorators import login_required
 
 def article_autosave(request,pk):
@@ -111,8 +111,11 @@ def view_article(request, pk):
 		merged = True
 	else:
 		merged = False
-	
-	return render(request, 'view_article.html', {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav, 'curator':curator[0].user, 'merged':merged})
+
+	context = {'article': article, 'state': state, 'statehistory':statehistory, 'count':count, 'is_fav':is_fav, 'curator':curator[0].user, 'merged':merged}
+	if mobileBrowser(request):
+		return render(request, 'view_article_mobile.html', context)
+	return render(request, 'view_article.html', context)
 
 def reports_article(request, pk):
 	try:
@@ -126,9 +129,15 @@ def reports_article(request, pk):
 class ArticleCreateView(CreateView):
 	form_class = ArticleCreateForm
 	model = Articles
-	template_name = 'create_article.html'
+	# template_name = 'create_article.html'
 	context_object_name = 'article'
 	success_url = 'article_view'
+
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['create_article_mobile.html']
+		else:
+			return ['create_article.html']
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
@@ -198,10 +207,16 @@ class ArticleCreateView(CreateView):
 class ArticleEditView(UpdateView):
 	form_class = ArticleUpdateForm
 	model = Articles
-	template_name = 'edit_article.html'
+	# template_name = 'edit_article.html'
 	pk_url_kwarg = 'pk'
 	context_object_name = 'article'
 	success_url = 'article_view'
+
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['edit_article_mobile.html']
+		else:
+			return ['edit_article.html']
 
 	def get_form_kwargs(self):
 		"""

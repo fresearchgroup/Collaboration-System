@@ -32,6 +32,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils import six
 from django.contrib import messages as auth_messages
 from webcontent.models import Feedback
+from webcontent.views import mobileBrowser
+from django.contrib.auth import views as auth_views
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
@@ -80,6 +82,41 @@ def send_mail(request, user, to_email):
     email = EmailMessage(mail_subject, message, to=[to_email])
     email.send(fail_silently=True)
 
+class WebLoginView(auth_views.LoginView):
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['login_mobile.html']
+		else:
+			return ['login.html']
+
+class WebPasswordChangeView(auth_views.PasswordChangeView):
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['password_change_mobile.html']
+		else:
+			return ['password_change.html']
+
+class WebPasswordChangeDoneView(auth_views.PasswordChangeDoneView):
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['password_change_done_mobile.html']
+		else:
+			return ['password_change_done.html']
+
+class WebPasswordResetView(auth_views.PasswordResetView):
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['password_reset_mobile.html']
+		else:
+			return ['password_reset.html']
+
+class WebPasswordResetDoneView(auth_views.PasswordResetDoneView):
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['password_reset_done_mobile.html']
+		else:
+			return ['password_reset_done.html']
+
 def signup(request):
     """
     this is a sign up function for new user in the system.  The function takes
@@ -112,6 +149,8 @@ def signup(request):
                     return redirect('user_dashboard')
                 else:
                     error = 'Captcha not verified'
+                    if mobileBrowser(request):
+                        return render(request, 'signup_mobile.html', {'form': form, 'error':error, 'captcha':Captcha})
                     return render(request, 'signup.html', {'form': form, 'error':error, 'captcha':Captcha})
             else:
                 user = form.save(commit=False)
@@ -125,9 +164,13 @@ def signup(request):
                 auth_messages.success(request, 'Please check your email and click on the activation link to activate your account.')
                 return redirect('login')
         else:
+            if mobileBrowser(request):
+                return render(request, 'signup_mobile.html', {'form': form, 'captcha':Captcha})
             return render(request, 'signup.html', {'form': form, 'captcha':Captcha})
     else:
         form = SignUpForm()
+    if mobileBrowser(request):
+        return render(request, 'signup_mobile.html', {'form': form, 'captcha':Captcha})
     return render(request, 'signup.html', {'form': form, 'captcha':Captcha})
 
 def user_dashboard(request):
@@ -192,7 +235,10 @@ def user_dashboard(request):
 
         feedback = Feedback.objects.filter(user=request.user)
 
-        return render(request, 'userdashboard.html', {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback})
+        context = {'mycommunities':mycommunities, 'commarticles':commarticles, 'myrequestedcommunities':myrequestedcommunities, 'articlespublished':articlespublished, 'user_profile':user_profile, 'lstContent':lstContent, 'imagepublished':imagepublished, 'audiopublished':audiopublished, 'videopublished':videopublished, 'yearby':yearby, 'number':number, 'feedback':feedback}
+        if mobileBrowser(request):
+            return render(request, 'userdashboard_mobile.html', context)
+        return render(request, 'userdashboard.html', context)
     else:
         return redirect('login')
 
@@ -213,6 +259,8 @@ def home(request):
 	countarticles = Articles.objects.all().count() + Media.objects.all().count()
 	countusers = User.objects.all().count()
 	# return render(request, 'home.html', {'articles':articles, 'articlesdate':articlesdate, 'community':community, 'userphoto':userphoto, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
+	if mobileBrowser(request):
+		return render(request, 'home_mobile.html', {'community':community, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 	return render(request, 'home.html', {'community':community, 'countcommunity':countcommunity, 'countsubcomm':countsubcomm, 'countarticles':countarticles, 'countusers':countusers})
 
 def update_profile(request):
@@ -233,6 +281,8 @@ def update_profile(request):
                 user_profile = ProfileImage.objects.get(user=request.user)
             except ProfileImage.DoesNotExist:
                 user_profile = "No Image available"
+            if mobileBrowser(request):
+                return render(request, 'update_profile_mobile.html', {'user_profile':user_profile})
             return render(request, 'update_profile.html', {'user_profile':user_profile})
     else:
         return redirect('login')
@@ -243,6 +293,8 @@ def view_profile(request):
             user_profile = ProfileImage.objects.get(user=request.user)
         except ProfileImage.DoesNotExist:
             user_profile = "No Image available"
+        if mobileBrowser(request):
+            return render(request, 'myprofile_mobile.html', {'user_profile':user_profile})
         return render(request, 'myprofile.html', {'user_profile':user_profile})
     else:
         return redirect('login')

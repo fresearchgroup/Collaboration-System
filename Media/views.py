@@ -15,15 +15,21 @@ from .forms import *
 from django.contrib.auth.models import User
 import datetime
 from django.contrib.auth.models import Group as Roles
-from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted
+from webcontent.views import sendEmail_contributor_contribution_submitted, sendEmail_curator_contribution_submitted, mobileBrowser
 from django.contrib.auth.decorators import login_required
 
 class MediaCreateView(CreateView):
 	form_class = MediaCreateForm
 	model = Media
-	template_name = 'create_update_media.html'
+	# template_name = 'create_update_media.html'
 	context_object_name = 'media'
 	success_url = 'media_view'
+
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['create_update_media_mobile.html']
+		else:
+			return ['create_update_media.html']
 
 	def get_initial(self):
 		"""
@@ -119,15 +125,24 @@ def media_view(request, pk):
 	# 	membership = CommunityMembership.objects.get(user=request.user.id, community=cmedia.community)
 	# 	canEdit = canEditResourceCommunity(cmedia.media.state.name, membership.role.name, cmedia.media, request)
 
-	return render(request, 'view_media.html', {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user, 'merged':merged})
+	context = {'gcmedia':gcmedia, 'state':state, 'statehistory':statehistory, 'curator':curator[0].user, 'merged':merged}
+	if mobileBrowser(request):
+		return render(request, 'view_media_mobile.html', context)
+	return render(request, 'view_media.html', context)
 
 class MediaUpdateView(UpdateView):
 	form_class = MediaUpdateForm
 	model = Media
-	template_name = 'create_update_media.html'
+	# template_name = 'create_update_media.html'
 	pk_url_kwarg = 'pk'
 	context_object_name = 'media'
 	success_url = 'media_view'
+
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['create_update_media_mobile.html']
+		else:
+			return ['create_update_media.html']
 
 	def get_form_kwargs(self):
 		print("get form kwargs")

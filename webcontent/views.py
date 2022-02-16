@@ -29,11 +29,15 @@ def mobileBrowser(request):
 	return mobile_browser
 
 def about_us(request):
+	if mobileBrowser(request):
+		return render(request, 'aboutus_mobile.html')
 	return render(request, 'aboutus.html')
 
 def FAQs(request):
 	faqs=Faq.objects.all().order_by('flow')
 	categories = FaqCategory.objects.all()
+	if mobileBrowser(request):
+		return render(request, 'FAQs_mobile.html',{'faqs':faqs,'categories':categories})
 	return render(request, 'FAQs.html',{'faqs':faqs,'categories':categories})
 
 def provide_feedback(request, pk):

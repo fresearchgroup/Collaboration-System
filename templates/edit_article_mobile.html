@@ -1,0 +1,319 @@
+{% extends 'base_mobile.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+<!-- <style>
+  .ck-editor__editable {
+    min-height: 200px;
+  }
+</style> -->
+{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">PoW</a></li>
+{% for cat in community.get_ancestors %}
+<li class="breadcrumb-item"><a href="{% url 'community_view' cat.pk %}">{{cat.name}}</a> </li>
+{% endfor %}
+<li class="breadcrumb-item">{{ community }}</li>
+<li class="breadcrumb-item">Edit Content</li>
+<!-- <li class="breadcrumb-item">{{ article.title }} </li> -->
+{% endblock %}
+{% load static %}
+{% block content %}
+<div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link " href="{% url 'article_view' article.pk %}">View</a>
+        </li>
+        {% if user.is_authenticated %}
+        {% if article.state.name != 'publish' %}
+        <li class="nav-item active">
+            <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
+        </li>
+
+        <!-- {% if role.name == 'community_admin' %}
+          <li class="nav-item">
+            <a class="nav-link " href="{% url 'article_delete' article.pk %}">Delete</a>
+          </li>
+          {% elif article.state.name == 'draft' and request.user == article.created_by and role.name %}
+          <li class="nav-item">
+            <a class="nav-link " href="{% url 'article_delete' article.pk %}">Delete</a>
+          </li>
+          {% endif %} -->
+        {%endif%}
+
+        <!-- <li class="nav-item ">
+    <a class="nav-link " href="{% url 'article_revision' article.pk %}">Revisions</a>
+  </li> -->
+        {% endif %}
+        <!-- <li class="nav-item">
+    <a class="nav-link" href="{% url 'article_dashboard' article.pk %}">Insights</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link" href="{% url 'article_reports' article.pk %}">Reports</a>
+  </li> -->
+    </ul>
+</div>
+{% if messages %}
+{% for message in messages %}
+{% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+{% endfor %}
+
+{% endif %}
+<br />
+
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 20px;">
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="invalid-feedback" style="color: red; font-weight: bold;">
+                    {{ form.tags.errors }}
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="title">Title</label>
+                    {{ form.title }}
+                    <div class="invalid-feedback">
+                      {{ form.title.errors }}
+                    </div>
+                  </div> -->
+                <!-- <div class="form-group">
+                    <label for="title">Introduction</label>
+                    {{ form.introduction }}
+                    <div class="invalid-feedback">
+                      {{ form.introduction.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Architecture</label>
+                    {{ form.architecture }}
+                    <div class="invalid-feedback">
+                      {{ form.architecture.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Rituals</label>
+                    {{ form.rituals }}
+                    <div class="invalid-feedback">
+                      {{ form.rituals.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Ceremonies</label>
+                    {{ form.ceremonies }}
+                    <div class="invalid-feedback">
+                      {{ form.ceremonies.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">Tales</label>
+                    {{ form.tales }}
+                    <div class="invalid-feedback">
+                      {{ form.tales.errors }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="title">More Information</label>
+                    {{ form.more_information }}
+                    <div class="invalid-feedback">
+                      {{ form.more_information.errors }}
+                    </div>
+                  </div> -->
+
+
+                <div class="form-group">
+                    <label for="title">Body</label>
+                    {{ form.body }}
+                    <div class="invalid-feedback">
+                        {{ form.body.errors }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">References</label>
+                    {{ form.references }}
+                    <div class="invalid-feedback">
+                        {{ form.references.errors }}
+                    </div>
+                </div>
+
+                <!-- {% if form.body %}
+                    <div class="form-group">
+                      <label for="title">Body</label>
+                      {{ form.body }}
+                      <div class="invalid-feedback">
+                        {{ form.body.errors }}
+                      </div>
+                    </div>
+                {% else %}
+
+                <div class="form-group">
+                  <label for="body">Body</label>
+                  <iframe src="{{url}}/p/{{padid}}" style="height: 50%; width: 100%; min-height: 200px; display: block"></iframe>
+                  <small id="bodyhelp" class="form-text text-muted">You can create your content in 4000 words.</small>
+                  </div>
+
+                  {% endif %} -->
+
+                <!-- {% if article.image %}
+                  <img src="{{ MEDIA_URL }}{{ article.image}}" alt="image" class="img-responsive" width="150">
+                  {% else %}
+                  <img src="{{ MEDIA_URL }}default/article_image_default.png" alt="default" class="img-responsive" width="150">
+                  {%endif%}<br />
+                  <div class="form-group custom-file">
+                    <label for="image">Article Image</label>
+                      {{form.image}}
+                </div> -->
+
+                <div class="form-group">
+                    <label for="title">Keywords</label>
+                    <small id="bodyhelp" class="form-text text-muted">
+                        <p><a href="#" onclick="$('#id_tags').tagit('removeAll');return false;">Clear</a></p>
+                    </small>
+                    {{ form.tags }}
+                    <!-- <div class="invalid-feedback" style="color: red; font-weight: bold;">
+                      {{ form.tags.errors }}
+                    </div> -->
+                </div>
+                <div class="form-group">
+                    <label for="comments">Comments</label>
+                    {{ form.comments }}
+                    <div class="invalid-feedback">
+                        {{ form.comments.errors }}
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                  {{form.state}}
+                  <div class="invalid-feedback">
+                      {{ form.state.errors }}
+                    </div>
+                </div> -->
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-info" name="submit" value='submit'
+                        id="submit">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<br />
+
+
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#id_body'))
+        .then(editor => {
+            editor.ui.view.editable.editableElement.style.height = '200px';
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#id_references'))
+        .then(editor => {
+            editor.ui.view.editable.editableElement.style.height = '100px';
+            // console.log(editor);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<!-- <script>
+  ClassicEditor
+    .create( document.querySelector( '#id_introduction' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_architecture' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_rituals' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_ceremonies' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_tales' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#id_more_information' ) )
+    .then( editor => {
+      console.log( editor );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script> -->
+
+<script src="{% static 'js/jquery-ui.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    (function ($) {
+        if (!$.curCSS) {
+            $.curCSS = $.css;
+        }
+    })(jQuery);
+
+    $("#id_tags").tagit({
+
+        caseSensitive: false,
+        allowDuplicates: false,
+
+    });
+</script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
+{% endblock %}

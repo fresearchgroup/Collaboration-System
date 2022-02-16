@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_mobile.html' %}
 {%load static %}
 {% load mptt_tags %}
 {% block css %}
@@ -84,9 +84,9 @@
 
     <div class="row margin-bottom-10">
       <!-- BEGIN CONTENT -->
-      <div class="col-md-12 col-sm-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="icp-content-comm-title-image">
-          <h2 class="icp-content-comm-title-text">
+          <h2 class="icp-content-comm-title-text" style="margin-top: -5px;">
             {{ community.name}}
           </h2>
         </div>
