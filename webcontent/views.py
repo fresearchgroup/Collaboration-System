@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Feedback, Faq, FaqCategory
 from django.core.mail import EmailMultiAlternatives
 from Community.models import Community
+from django.contrib import messages
 
 mobile_uas = [
 	'w3c ','acs-','alav','alca','amoi','audi','avan','benq','bird','blac',
@@ -53,8 +54,8 @@ def provide_feedback(request, pk):
 				user = user,
 				community = community
 				)
-			message = 'Your feedback was successfully submitted for' + community.name
-			return render(request, 'feedback.html', {'message':message})
+			messages.success(request, 'Your feedback was successfully submitted for' + community.name)
+			return redirect('user_dashboard')
 		else:
 			return render(request, 'feedback.html', {'community':community})
 	else:
