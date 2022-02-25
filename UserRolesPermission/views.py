@@ -242,6 +242,56 @@ def user_dashboard(request):
     else:
         return redirect('login')
 
+def user_dashboard_mobile_myfeedback(request):
+    if request.user.is_authenticated:
+        feedback = Feedback.objects.filter(user=request.user)
+        return render(request, 'userdashboard_mobile_myfeedback.html', {'feedback':feedback})
+    else:
+        return redirect('login')
+
+def user_dashboard_mobile_mycontributions(request):
+    if request.user.is_authenticated:
+        commarticles = CommunityArticles.objects.filter(user=request.user)
+        commcourses = CommunityCourses.objects.filter(user=request.user)
+        commmedia = CommunityMedia.objects.filter(user=request.user)
+
+        for cart in commarticles:
+            cart.type = 'article'
+            cart.belongsto = 'community'
+
+        for ccourse in commcourses:
+            ccourse.type = 'course'
+            ccourse.belongsto = 'community'
+
+        for cmedia in commmedia:
+            cmedia.type = 'Media'
+            cmedia.belongsto = 'community'
+
+        lstContent = list(commarticles) + list(commmedia) + list(commcourses)
+
+        context = {'lstContent':lstContent}
+        return render(request, 'userdashboard_mobile_mycontributions.html', context)
+    else:
+        return redirect('login')
+
+def user_dashboard_mobile_mypow(request):
+    if request.user.is_authenticated:
+        myrequestedcommunities = RequestCommunityCreation.objects.filter(requestedby=request.user)
+        rids = []
+        for mycom in myrequestedcommunities:
+            rids.append(mycom.pk)
+
+        myrequestedcommunities = []
+        for i in rids:
+            rcom = RequestCommunityCreationDetails.objects.filter(requestcommunity__id=i).order_by('-actionon')[:1]
+            for r in rcom:
+                myrequestedcommunities.append(r)
+
+        context = {'myrequestedcommunities':myrequestedcommunities}
+        return render(request, 'userdashboard_mobile_mypow.html', context)
+    else:
+        return redirect('login')
+
 def badges_progress_dashboard(request):
     if request.user.is_authenticated:
         return render(request, 'badges_progress_dashboard.html')

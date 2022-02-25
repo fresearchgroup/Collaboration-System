@@ -92,6 +92,9 @@ urlpatterns = [
     url(r'^submit_article/$', articleview.submit_article, name='submit_article'),
 
     url(r'^mydashboard/$', user_views.user_dashboard, name='user_dashboard'),
+    url(r'^mydashboardfeedback/$', user_views.user_dashboard_mobile_myfeedback, name='user_dashboard_mobile_myfeedback'),
+    url(r'^user_dashboard_mobile_mycontributions/$', user_views.user_dashboard_mobile_mycontributions, name='user_dashboard_mobile_mycontributions'),
+    url(r'^user_dashboard_mobile_mypow/$', user_views.user_dashboard_mobile_mypow, name='user_dashboard_mobile_mypow'),
     url(r'^mydashboard/badges$', user_views.badges_progress_dashboard, name='badges_progress_dashboard'),
     url(r'^community-group-create/(?P<pk>\d+)/$', communityview.CreateSubCommunityView.as_view(), name='community_group'),
 

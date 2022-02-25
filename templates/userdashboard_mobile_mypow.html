@@ -1,0 +1,329 @@
+{% extends 'base_mobile.html' %}
+{%load static %}
+{% block css %}
+<link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+{% endblock %}
+
+{% block breadcrumb %}
+{% endblock %}
+
+{% block content %}
+
+
+<!-- BEGIN CONTENT -->
+
+{% if myrequestedcommunities %}
+<h2 style="text-align: center;">My requested Place of Worship</h2>
+<table class="table" id="handleCommReq" style="margin-bottom: 20px;" cellspacing="0" width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+            <th style="color:white">Place of Worship</th>
+            <th style="color:white">Name</th>
+            <th style="color:white">Description</th>
+            <th style="color:white">Area</th>
+            <th style="color:white">City</th>
+            <th style="color:white">District</th>
+            <th style="color:white">State</th>
+            <th style="color:white">Pincode</th>
+            <th style="color:white">Status</th>
+            <th style="color:white">Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for req in myrequestedcommunities %}
+        <tr>
+            <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a>
+            </td>
+            <td>{{ req.name }}</td>
+            <td>
+                <a data-toggle="collapse" href="#collapseDesc{{req.pk}}" aria-expanded="false">Show/Hide</a>
+                <div class="collapse" id="collapseDesc{{req.pk}}"><small class="text-muted d-block">{{ req.desc }}</small></div>
+            </td>
+            <td><small class="text-muted d-block">{{ req.area }}</small></td>
+            <td><small class="text-muted d-block">{{ req.city }}</small></td>
+            <td><small class="text-muted d-block">{{ req.district }}</small></td>
+            <td><small class="text-muted d-block">{{ req.state }}</small></td>
+            <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
+            <td>
+                {% if req.status == 'modify' %}
+                <button class="btn btn-link" name="accept" data-req-id='{{req.pk}}' data-req-name='{{req.name}}'
+                    data-req-desc="{{req.desc}}" data-req-area='{{req.area}}' data-req-city='{{req.city}}'
+                    data-req-state='{{req.state}}' data-req-district='{{req.district}}'
+                    data-req-pincode='{{req.pincode}}' data-req-latitude='{{req.latitude}}'
+                    data-req-longitude='{{req.longitude}}' data-req-requestcommunity='{{req.requestcommunity.pk}}'
+                    data-req-requestcommunityparent='{{req.requestcommunity.parent.pk}}' onclick="loadlatlong(this)">
+                    {{req.status}}
+                </button>
+                {% else %}
+                {{ req.status }}
+                {% endif %}
+            </td>
+            <td>{{ req.reason }}</td>
+        </tr>
+        {% endfor %}
+        {% endautoescape%}
+    </tbody>
+</table>
+{% endif %}
+
+<div id="modalupdate" class="modal fade">
+    <div class="modal-dialog text-left" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Update details and Re-submit</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'update_community_requests' %}">
+                    {% csrf_token %}
+                    <input type='hidden' id='updatepk' name='pk' value={{req.requestcommunity.pk}} />
+                    <input type='hidden' id='updateparent' name='community_parent'
+                        value={{req.requestcommunity.parent.pk}} />
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input class="form-control form-control-sm" id="updatename" name='name' type="text"
+                            value="{{ req.name }}" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <textarea class="form-control is-invalid" id="updatedescription" name='description'
+                            required>{{ req.desc }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input class="form-control form-control-sm" id="updatestate" name='state' type="text"
+                            value="{{ req.state }}" maxlength="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="district">District</label>
+                        <input class="form-control form-control-sm" id="updatedistrict" name='district' type="text"
+                            value="{{ req.district }}" maxlength="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input class="form-control form-control-sm" id="updatecity" name='city' type="text"
+                            value="{{ req.city }}" maxlength="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">Pincode</label>
+                        <input class="form-control form-control-sm" id="updatepincode" name='pincode' type="number"
+                            min="100000" max="999999" value="{{ req.pincode }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Landmark</label>
+                        <input class="form-control form-control-sm" id="updatearea" name='area' type="text"
+                            value="{{ req.area }}" maxlength="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">Map</label>
+                        <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
+                        <div>Cannot view the map? Click 'Allow' on the popup that requests access to your location or
+                            navigate to your browser's privacy settings and allow accessing the location for this site.
+                        </div>
+                    </div>
+                    <div class="form-group hidden">
+                        <label for="lat">Latitude</label>
+                        <input readonly class="form-control form-control-sm" id="updatelat" name='latitude' type="text"
+                            value="{{ req.latitude }}" required>
+                    </div>
+                    <div class="form-group hidden">
+                        <label for="long">Longitude</label>
+                        <input readonly class="form-control form-control-sm" id="updatelong" name='longitude'
+                            type="text" value="{{ req.longitude }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Please provide additional comments here if needed</label>
+                        <textarea class="form-control is-invalid" id="reason" name='reason'></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br /><br />
+{% endblock %}
+
+{% block javascript %}
+
+
+<script src="{% static 'jquery-pagination/pagination.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/ol.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ol-ext.js' %}"></script>
+
+<script type="text/javascript">
+    var mapedit
+    var latitude
+    var longitude
+
+    function loadlatlong(clicked_object) {
+        id = clicked_object.getAttribute('data-req-id');
+        name = clicked_object.getAttribute('data-req-name');
+        desc = clicked_object.getAttribute('data-req-desc');
+        area = clicked_object.getAttribute('data-req-area');
+        city = clicked_object.getAttribute('data-req-city');
+        district = clicked_object.getAttribute('data-req-district');
+        state = clicked_object.getAttribute('data-req-state');
+        pincode = clicked_object.getAttribute('data-req-pincode');
+        latitude = clicked_object.getAttribute('data-req-latitude');
+        longitude = clicked_object.getAttribute('data-req-longitude');
+        requestcommunity = clicked_object.getAttribute('data-req-requestcommunity');
+        requestcommunityparent = clicked_object.getAttribute('data-req-requestcommunityparent');
+
+        document.getElementById("updatename").value = name;
+        document.getElementById("updatedescription").value = desc;
+        document.getElementById("updatearea").value = area;
+        document.getElementById("updatecity").value = city;
+        document.getElementById("updatedistrict").value = district;
+        document.getElementById("updatestate").value = state;
+        document.getElementById("updatepincode").value = pincode;
+        document.getElementById("updatelat").value = latitude;
+        document.getElementById("updatelong").value = longitude;
+        document.getElementById("updatepk").value = requestcommunity;
+        document.getElementById("updateparent").value = requestcommunityparent;
+
+        $("#modalupdate").modal('show');
+        editLocationOnMap();
+    }
+
+    function editLocationOnMap() {
+        document.getElementById("mapedit").innerHTML = "";
+        // Layers
+        var layers = [new ol.layer.Tile({ source: new ol.source.OSM() })];
+
+        // Popup overlay
+        var placemark = new ol.Overlay.Placemark({
+            color: '#369',
+            contentColor: '#000',
+            onshow: function () { console.log("You opened a placemark"); },
+            autoPan: true,
+            autoPanAnimation: { duration: 250 }
+        });
+
+        // The map
+        var mapedit = new ol.Map({
+            target: 'mapedit',
+            view: new ol.View({
+                zoom: 16,
+                center: ol.proj.fromLonLat([longitude, latitude]),
+            }),
+            interactions: ol.interaction.defaults({ altShiftDragRotate: false, pinchRotate: false }),
+            layers: layers,
+            overlays: [placemark]
+        });
+
+        // Current selection
+        var sLayer = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            style: new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                        color: 'rgb(255,165,0)',
+                        width: 3
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255,165,0,.3)'
+                    })
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgb(255,165,0)',
+                    width: 3
+                }),
+                fill: new ol.style.Fill({
+                    color: 'rgba(255,165,0,.3)'
+                })
+            })
+        });
+        mapedit.addLayer(sLayer);
+
+        // Set the search control 
+        var search = new ol.control.SearchNominatim({
+            polygon: $("#polygon").prop("checked"),
+            reverse: true,
+            position: true
+        });
+        mapedit.addControl(search);
+
+        // Select feature when click on the reference index
+        search.on('select', function (e) {
+            sLayer.getSource().clear();
+            // Check if we get a geojson to describe the search
+            if (e.search.geojson) {
+                var format = new ol.format.GeoJSON();
+                var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: mapedit.getView().getProjection() });
+                sLayer.getSource().addFeature(f);
+                var view = mapedit.getView();
+                var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), mapedit.getSize());
+                var zoom = view.getZoomForResolution(resolution);
+                var center = ol.extent.getCenter(f.getGeometry().getExtent());
+                // redraw before zoom
+                setTimeout(function () {
+                    view.animate({
+                        center: center,
+                        zoom: Math.min(zoom, 16)
+                    });
+                }, 100);
+            }
+            else {
+                mapedit.getView().animate({
+                    center: e.coordinate,
+                    zoom: Math.max(mapedit.getView().getZoom(), 16)
+                });
+            }
+        });
+
+        //Get latitude and longitude
+        mapedit.on('click', function (evt) {
+            console.info(evt.pixel);
+            console.info(mapedit.getPixelFromCoordinate(evt.coordinate));
+            console.info(ol.proj.toLonLat(evt.coordinate));
+            var coords = ol.proj.toLonLat(evt.coordinate);
+            var lat = coords[1];
+            var lon = coords[0];
+            $("#updatelat").val(lat)
+            $("#updatelong").val(lon)
+            placemark.show(evt.coordinate);
+        });
+
+        var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [12, 37],
+                anchorXUnits: 'pixels', //'fraction'
+                anchorYUnits: 'pixels',
+                opacity: 0.8,
+                src: "{% static 'assets/pages/img/blue.png' %}"
+            })
+        });
+        var layer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [
+                    new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+                    })
+                ]
+            })
+        });
+        layer.setStyle(iconStyle)
+        mapedit.addLayer(layer);
+    }
+</script>
+
+<script>
+    $('#modalupdate').on('shown.bs.modal', function () {
+        editLocationOnMap();
+    })
+</script>
+
+{% endblock %}

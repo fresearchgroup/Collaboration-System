@@ -1,0 +1,44 @@
+{% extends 'base_mobile.html' %}
+{%load static %}
+{% block css %}
+<link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+{% endblock %}
+
+{% block breadcrumb %}
+{% endblock %}
+
+{% block content %}
+
+{% if feedback %}
+<h2 style="text-align: center;">My feedback</h2>
+<table class="table table-striped table-bordered" id="myFeedback" style="margin-bottom: 50px;" cellspacing="0"
+    width="100%">
+    <thead>
+        <tr style="background-color:#89216B">
+            <th style="color:white">Place of Worship</th>
+            <th style="color:white">Faith</th>
+            <th style="color:white">Title</th>
+            <th style="color:white">Description</th>
+            <th style="color:white">Provided at</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{myhtml|safe}}{% autoescape off%}
+        {% for feed in feedback %}
+        <tr>
+            <td><a href="{% url 'community_view' feed.community.pk %}">{{ feed.community.name }}</a></td>
+            <td><a href="{% url 'community_view' feed.community.parent.pk %}">{{ feed.community.parent.name }}</a></td>
+            <td>{{ feed.title }}</td>
+            <td><small class="text-muted d-block">{{ feed.body }}</small></td>
+            <td>{{ feed.provided_at }}</td>
+        </tr>
+        {% endfor %}
+        {% endautoescape%}
+    </tbody>
+</table>
+{% endif %}
+
+<br /><br />
+{% endblock %}
