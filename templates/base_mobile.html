@@ -133,44 +133,44 @@ $(document).ready(function() {
         <a href="{% url 'signup' %}">Sign up</a>
         {% endif %}
 
+        <a href="{% url 'view_profile' %}">My Profile</a>
+        <a href="{% url 'user_dashboard' %}">Dashboard</a>
         <a href="{% url 'about_us' %}">About Us</a>
         <a href="{% url 'display_communities' %}">Places of Worship</a>
         <a href="{% url 'FAQs' %}">FAQs</a>
 
         {% if user.is_authenticated %}
-        <div class="dropdown">
-          <a class="" data-toggle="dropdown" data-target="basemodalUsername" href="#">
+        <!-- <div class="dropdown"> -->
+          <!-- <a class="" data-toggle="dropdown" data-target="basemodalUsername" href="#">
             {{ user.username }}
-          </a>
+          </a> -->
 
-          <div class="dropdown-menu dropdown-size" id="basemodalUsername" style="background-color:transparent;">
+          <!-- <div class="dropdown-menu dropdown-size" id="basemodalUsername" style="background-color:transparent;"> -->
             {% if request.user.is_superuser %}
-            <a href="{% url 'create_community' %}" style="font-size: 16px;">Create Community</a>
-            <a href="{% url 'transition' %}" style="font-size: 16px;"> Manage Workflow</a>
-            <a href="{% url 'manage_reputation' %}" style="font-size: 16px;">Manage Reputation</a>
-            <a href="{% url 'create_faq' %}" style="font-size: 16px;">Add an FAQ</a>
-            <a href="{% url 'upload_task' %}" style="font-size: 16px;">Create bulk communities</a>
-            <a href="{% url 'upload_locations' %}" style="font-size: 16px;">Upload bulk Locations</a>
+            <a href="{% url 'create_community' %}">Create Community</a>
+            <a href="{% url 'transition' %}"> Manage Workflow</a>
+            <a href="{% url 'manage_reputation' %}">Manage Reputation</a>
+            <a href="{% url 'create_faq' %}">Add an FAQ</a>
+            <a href="{% url 'upload_task' %}">Create bulk communities</a>
+            <a href="{% url 'upload_locations' %}">Upload bulk locations</a>
             {% endif%}
 
             {% for group_for in request.user.groups.all %}
             {% if group_for.name == 'curator' %}
-            <a href="{% url 'handle_community_creation_requests' %}" style="font-size: 16px;">Handle PoW Creation
+            <a href="{% url 'handle_community_creation_requests' %}">Handle PoW Creation
               Requests</a>
-            <a href="{% url 'display_curation_list' %}" style="font-size: 16px;">Curate Contributions</a>
+            <a href="{% url 'display_curation_list' %}">Curate Contributions</a>
             {% endif %}
 
             {% if group_for.name == 'curator' or group_for.name == 'icpapprover' %}
-            <a href="{% url 'view_feedback' %}" style="font-size: 16px;">View Feedback</a>
+            <a href="{% url 'view_feedback' %}">View Feedback</a>
             {% endif %}
 
             {% endfor %}
 
-            <a href="{% url 'view_profile' %}" style="font-size: 16px;">My Profile</a>
-            <a href="{% url 'user_dashboard' %}" style="font-size: 16px;">Dashboard</a>
-            <a href="{% url 'logout' %}" style="font-size: 16px;">Log out</a>
-          </div>
-        </div>
+            <a href="{% url 'logout' %}">Log out</a>
+          <!-- </div> -->
+        <!-- </div> -->
         {% endif %}
 
 
