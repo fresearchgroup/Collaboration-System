@@ -4,6 +4,16 @@
 <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+<style>
+    .table>tbody>tr>td,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>td,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>thead>tr>th {
+        border-top: 0px;
+    }
+</style>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -15,137 +25,177 @@
 <!-- BEGIN CONTENT -->
 
 {% if myrequestedcommunities %}
-<h2 style="text-align: center;">My requested Place of Worship</h2>
-<table class="table" id="handleCommReq" style="margin-bottom: 20px;" cellspacing="0" width="100%">
-    <thead>
-        <tr style="background-color:#89216B">
-            <th style="color:white">Place of Worship</th>
-            <th style="color:white">Name</th>
-            <th style="color:white">Description</th>
-            <th style="color:white">Area</th>
-            <th style="color:white">City</th>
-            <th style="color:white">District</th>
-            <th style="color:white">State</th>
-            <th style="color:white">Pincode</th>
-            <th style="color:white">Status</th>
-            <th style="color:white">Comments</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{myhtml|safe}}{% autoescape off%}
-        {% for req in myrequestedcommunities %}
-        <tr>
-            <td><a href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a>
-            </td>
-            <td>{{ req.name }}</td>
-            <td>
-                <a data-toggle="collapse" href="#collapseDesc{{req.pk}}" aria-expanded="false">Show/Hide</a>
-                <div class="collapse" id="collapseDesc{{req.pk}}"><small class="text-muted d-block">{{ req.desc }}</small></div>
-            </td>
-            <td><small class="text-muted d-block">{{ req.area }}</small></td>
-            <td><small class="text-muted d-block">{{ req.city }}</small></td>
-            <td><small class="text-muted d-block">{{ req.district }}</small></td>
-            <td><small class="text-muted d-block">{{ req.state }}</small></td>
-            <td><small class="text-muted d-block">{{ req.pincode }}</small></td>
-            <td>
-                {% if req.status == 'modify' %}
-                <button class="btn btn-link" name="accept" data-req-id='{{req.pk}}' data-req-name='{{req.name}}'
-                    data-req-desc="{{req.desc}}" data-req-area='{{req.area}}' data-req-city='{{req.city}}'
-                    data-req-state='{{req.state}}' data-req-district='{{req.district}}'
-                    data-req-pincode='{{req.pincode}}' data-req-latitude='{{req.latitude}}'
-                    data-req-longitude='{{req.longitude}}' data-req-requestcommunity='{{req.requestcommunity.pk}}'
-                    data-req-requestcommunityparent='{{req.requestcommunity.parent.pk}}' onclick="loadlatlong(this)">
-                    {{req.status}}
-                </button>
-                {% else %}
-                {{ req.status }}
-                {% endif %}
-            </td>
-            <td>{{ req.reason }}</td>
-        </tr>
-        {% endfor %}
-        {% endautoescape%}
-    </tbody>
-</table>
-{% endif %}
-
-<div id="modalupdate" class="modal fade">
-    <div class="modal-dialog text-left" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Update details and Re-submit</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'update_community_requests' %}">
-                    {% csrf_token %}
-                    <input type='hidden' id='updatepk' name='pk' value={{req.requestcommunity.pk}} />
-                    <input type='hidden' id='updateparent' name='community_parent'
-                        value={{req.requestcommunity.parent.pk}} />
-
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input class="form-control form-control-sm" id="updatename" name='name' type="text"
-                            value="{{ req.name }}" maxlength="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="desc">Description</label>
-                        <textarea class="form-control is-invalid" id="updatedescription" name='description'
-                            required>{{ req.desc }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input class="form-control form-control-sm" id="updatestate" name='state' type="text"
-                            value="{{ req.state }}" maxlength="200" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="district">District</label>
-                        <input class="form-control form-control-sm" id="updatedistrict" name='district' type="text"
-                            value="{{ req.district }}" maxlength="200" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input class="form-control form-control-sm" id="updatecity" name='city' type="text"
-                            value="{{ req.city }}" maxlength="200" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pincode">Pincode</label>
-                        <input class="form-control form-control-sm" id="updatepincode" name='pincode' type="number"
-                            min="100000" max="999999" value="{{ req.pincode }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="area">Landmark</label>
-                        <input class="form-control form-control-sm" id="updatearea" name='area' type="text"
-                            value="{{ req.area }}" maxlength="200" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pincode">Map</label>
-                        <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
-                        <div>Cannot view the map? Click 'Allow' on the popup that requests access to your location or
-                            navigate to your browser's privacy settings and allow accessing the location for this site.
+<div class="container-fluid">
+    <h2 style="text-align: center;">My requested Place of Worship</h2>
+    <table class="table" id="mypowmobile" style="border-top: 0px;">
+        <thead>
+            <tr>
+                <th style="color:white">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{myhtml|safe}}{% autoescape off%}
+            {% for req in myrequestedcommunities %}
+            <tr>
+                <td>
+                    <div class="panel panel-default" style="border-color: 89216B;">
+                        <div class="panel-body">
+                            <table class="table table-borderless" style="font-size: small; border-top: 0px;">
+                                <tr>
+                                    <td>Place of Worship</td>
+                                    <td style="text-align: right;"><a
+                                            href="{% url 'community_view' req.requestcommunity.parent.pk %}">{{ req.requestcommunity.parent }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td style="text-align: right;">{{ req.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td style="text-align: right;">
+                                        <a data-toggle="collapse" href="#collapseDesc{{req.pk}}"
+                                            aria-expanded="false">Show/Hide</a>
+                                        <div class="collapse" id="collapseDesc{{req.pk}}">
+                                            <small class="text-muted d-block">{{ req.desc }}</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Area</td>
+                                    <td style="text-align: right;">{{ req.area }}</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td style="text-align: right;">{{ req.city }}</td>
+                                </tr>
+                                <tr>
+                                    <td>District</td>
+                                    <td style="text-align: right;">{{ req.district }}</td>
+                                </tr>
+                                <tr>
+                                    <td>State</td>
+                                    <td style="text-align: right;">{{ req.state }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Pincode</td>
+                                    <td style="text-align: right;">{{ req.pincode }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td style="text-align: right;">
+                                        {% if req.status == 'modify' %}
+                                        <button class="btn btn-link" name="accept" data-req-id='{{req.pk}}'
+                                            data-req-name='{{req.name}}' data-req-desc="{{req.desc}}"
+                                            data-req-area='{{req.area}}' data-req-city='{{req.city}}'
+                                            data-req-state='{{req.state}}' data-req-district='{{req.district}}'
+                                            data-req-pincode='{{req.pincode}}' data-req-latitude='{{req.latitude}}'
+                                            data-req-longitude='{{req.longitude}}'
+                                            data-req-requestcommunity='{{req.requestcommunity.pk}}'
+                                            data-req-requestcommunityparent='{{req.requestcommunity.parent.pk}}'
+                                            onclick="loadlatlong(this)">
+                                            {{req.status}}
+                                        </button>
+                                        {% else %}
+                                        {{ req.status }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Comments</td>
+                                    <td style="text-align: right;">{{ req.reason }}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                    <div class="form-group hidden">
-                        <label for="lat">Latitude</label>
-                        <input readonly class="form-control form-control-sm" id="updatelat" name='latitude' type="text"
-                            value="{{ req.latitude }}" required>
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="long">Longitude</label>
-                        <input readonly class="form-control form-control-sm" id="updatelong" name='longitude'
-                            type="text" value="{{ req.longitude }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">Please provide additional comments here if needed</label>
-                        <textarea class="form-control is-invalid" id="reason" name='reason'></textarea>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
-                </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endautoescape %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div id="modalupdate" class="modal fade">
+        <div class="modal-dialog text-left" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Update details and Re-submit</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'update_community_requests' %}">
+                        {% csrf_token %}
+                        <input type='hidden' id='updatepk' name='pk' value={{req.requestcommunity.pk}} />
+                        <input type='hidden' id='updateparent' name='community_parent'
+                            value={{req.requestcommunity.parent.pk}} />
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input class="form-control form-control-sm" id="updatename" name='name' type="text"
+                                value="{{ req.name }}" maxlength="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc">Description</label>
+                            <textarea class="form-control is-invalid" id="updatedescription" name='description'
+                                required>{{ req.desc }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input class="form-control form-control-sm" id="updatestate" name='state' type="text"
+                                value="{{ req.state }}" maxlength="200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="district">District</label>
+                            <input class="form-control form-control-sm" id="updatedistrict" name='district' type="text"
+                                value="{{ req.district }}" maxlength="200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input class="form-control form-control-sm" id="updatecity" name='city' type="text"
+                                value="{{ req.city }}" maxlength="200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">Pincode</label>
+                            <input class="form-control form-control-sm" id="updatepincode" name='pincode' type="number"
+                                min="100000" max="999999" value="{{ req.pincode }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="area">Landmark</label>
+                            <input class="form-control form-control-sm" id="updatearea" name='area' type="text"
+                                value="{{ req.area }}" maxlength="200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">Map</label>
+                            <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
+                            <div>Cannot view the map? Click 'Allow' on the popup that requests access to your location
+                                or
+                                navigate to your browser's privacy settings and allow accessing the location for this
+                                site.
+                            </div>
+                        </div>
+                        <div class="form-group hidden">
+                            <label for="lat">Latitude</label>
+                            <input readonly class="form-control form-control-sm" id="updatelat" name='latitude'
+                                type="text" value="{{ req.latitude }}" required>
+                        </div>
+                        <div class="form-group hidden">
+                            <label for="long">Longitude</label>
+                            <input readonly class="form-control form-control-sm" id="updatelong" name='longitude'
+                                type="text" value="{{ req.longitude }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reason">Please provide additional comments here if needed</label>
+                            <textarea class="form-control is-invalid" id="reason" name='reason'></textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button id="commaccept" type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
