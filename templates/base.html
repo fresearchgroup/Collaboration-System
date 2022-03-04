@@ -327,7 +327,19 @@ $(document).ready(function() {
 	$('#myArticles').DataTable({"scrollX": true});
 	$('#userlist').DataTable({"scrollX": true});
 	$('#userArticles').DataTable({"scrollX": true});
-	$('#listPow').DataTable({"order": [ 2, 'desc' ], "scrollX": true});
+	$('#listPow').DataTable({
+    "order": [2, 'desc'],
+    "scrollX": true, 
+    dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+    language: {
+              'paginate': {
+                'previous': '&laquo;',
+                'next': '&raquo;'
+              }
+        }
+  });
 	$('#listPowmobile').DataTable({"scrollX": true});
 	$('#handleCommReq').DataTable({"scrollX": true});
 	$('#articleHistory').DataTable({"scrollX": true});

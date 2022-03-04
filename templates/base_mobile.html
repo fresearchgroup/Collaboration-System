@@ -281,7 +281,18 @@ $(document).ready(function() {
       $('#userlist').DataTable({ "scrollX": true });
       $('#userArticles').DataTable({ "scrollX": true });
       $('#listPow').DataTable({ "order": [2, 'desc'], "scrollX": true });
-      $('#listPowmobile').DataTable({ "scrollX": true });
+      $('#listPowmobile').DataTable({ 
+        "scrollX": true,
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        language: {
+              'paginate': {
+                'previous': '&laquo',
+                'next': '&raquo'
+              }
+        }              
+      });
       $('#handleCommReq').DataTable({ "scrollX": true });
       $('#mypowmobile').DataTable({ "scrollX": true });
       $('#articleHistory').DataTable({ "scrollX": true });

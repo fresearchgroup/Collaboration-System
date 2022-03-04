@@ -65,7 +65,7 @@
     line-height: 1.25;
     color: #89216B;
     background-color: #fff;
-    border: 1px solid #ddd
+    border: 1px solid #ddd;
 }
 
 .page-link:focus, .page-link:hover {
@@ -76,9 +76,13 @@
 }
 
 .page-item:first-child .page-link {
-    margin-left: -40;
+    margin-left: 0px;
     border-top-left-radius: .25rem;
     border-bottom-left-radius: .25rem
+}
+
+.page-item:last-child .page-link {
+  margin-left: 0px;
 }
 
 .mobilesidebar {
@@ -135,3 +139,16 @@
     }
   }
 
+  .pagination {
+    display: inline-block;
+    padding-top: 0px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .pagination > li > a, .pagination > li > span, .pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span {
+    border-radius: 0px !important;
+    border: solid 1.5px;
+    color: #89216B;
+}
