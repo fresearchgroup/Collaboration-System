@@ -302,7 +302,7 @@ def home(request):
 	state = States.objects.get(name='publish')
 	# articles=Articles.objects.all().order_by('-views')[:3]
 	# articlesdate=Articles.objects.all().order_by('-created_at')[:3]
-	community=Community.objects.filter(parent=None).order_by('?')[:4]
+	community=Community.objects.filter(parent=None).order_by('?')
 	# userphoto=ProfileImage.objects.all().order_by('?')[:15]
 	countcommunity = Community.objects.filter(parent = None).count()
 	countsubcomm = Community.objects.filter(level__exact=1).count()
