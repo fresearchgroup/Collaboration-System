@@ -168,13 +168,19 @@
                                 value="{{ req.area }}" maxlength="200" required>
                         </div>
                         <div class="form-group">
-                            <label for="pincode">Map</label>
+                            <label for="map">Mark Location on map</label>
+                            <div>
+                                <ul>
+                                    <li>Click on the 'Search' icon i.e. 'Magnifying glass'</li>
+                                    <li>Write the name of the locality, area, etc. where the place of worship is situated. </li>
+                                    <li>A list will be shown based on the search. Click on the desired search option from the list</li>
+                                    <li>The map will be updated. </li>
+                                    <li>Zoom in/out or click on the map and move left/right appropriately to locate the place of worship.</li>
+                                    <li>Click on the map to mark the place. A baloon will appear to confirm that the loation has been marked. You can mark it as many times as you like. The latest marked location will be considered.</li>
+                                    <li>Incase you are unable to locate the place of worship, try searching it on Wikipedia, Google maps, etc. </li>
+                                </ul>
+                            </div>                    
                             <div id="mapedit" class="map" style="width:100%; height:300px;"></div>
-                            <div>Cannot view the map? Click 'Allow' on the popup that requests access to your location
-                                or
-                                navigate to your browser's privacy settings and allow accessing the location for this
-                                site.
-                            </div>
                         </div>
                         <div class="form-group hidden">
                             <label for="lat">Latitude</label>
