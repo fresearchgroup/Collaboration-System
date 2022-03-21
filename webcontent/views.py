@@ -243,10 +243,12 @@ def sendEmail_curate_new_pow(to, pow, parent, reason, uname, status):
 		subject = 'Your requested place of worship has been created'
 		text_content = "Dear Contributor, \n\n \
 			The place of worship, " + pow + ", that you had requested has been accepted and created under " + parent + "." \
-			"You can now start contributing under the respective sections."
+			" To view it, navigate to the site, login, and click Places of Worship > " + parent + " > " + pow + ". You will see the sections (a) Introduction, (b) Architecture, (c) Rituals, (d) Ceremonies, (e) Tales, and (f) More Information. " \
+			" You can now start contributing under them by clicking on the respective icons for creating article, image, audio, and video."
 		html_content = "<p>Dear Contributor,</p> \
 			<p>The place of worship, " + pow + ", that you had requested has been accepted and created under " + parent + "." \
-			"You can now start contributing under the respective sections.</p>"
+			" To view it, navigate to the site, login, and click Places of Worship > " + parent + " > " + pow + ". You will see the sections (a) Introduction, (b) Architecture, (c) Rituals, (d) Ceremonies, (e) Tales, and (f) More Information. " \
+			"You can now start contributing under them by clicking on the respective icons for creating article, image, audio, and video.</p>"
 
 	if status == 'modify':
 		subject = "Update your details for the new place of worship requested by you"
