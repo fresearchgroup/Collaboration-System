@@ -227,9 +227,15 @@ def community_unsubscribe(request):
 class RequestCommunityCreationView(CreateView):
 	form_class = RequestCommunityCreateForm
 	model = RequestCommunityCreationDetails
-	template_name = 'request_community_creation.html'
+	# template_name = 'request_community_creation.html'
 	success_url = 'user_dashboard'
 	context_object_name = 'context'
+
+	def get_template_names(self):
+		if mobileBrowser(self.request):
+			return ['request_community_creation_mobile.html']
+		else:
+			return ['request_community_creation.html']
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

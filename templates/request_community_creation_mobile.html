@@ -1,0 +1,431 @@
+{% extends 'base_mobile.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block css%}
+<link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/ol-ext.css' %}" type="text/css">
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item">PoW Creation</li>
+{% endblock %}
+
+{% block content %}
+
+
+{% if messages %}
+{% for message in messages %}
+{% if message.tags %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}{{ message }}</div>
+{% endfor %}
+
+{% endif %}
+<br />
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-md-12" style="margin-bottom: 20px;">
+
+      <form name="form" method="post" enctype="multipart/form-data" action="{% url 'request_community_creation' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="title">* Name</label>
+          {{ form.name }}
+          <div class="invalid-feedback"><span class="label" style="color:red" ng-show="form.name.$error.pattern">Only
+              alphabets are allowed</span>
+            <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this
+              community</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* Description</label>
+          {{ form.desc }}
+          <div class="invalid-feedback">
+            {{ form.desc.errors }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* State</label>
+          {{ form.state }}
+          <div class="invalid-feedback">{{ form.state.errors }}<span class="label" style="color:red"
+              ng-show="form.purpose.$error.pattern">Only alphabets are allowed</span></item>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* District</label>
+          <div class="row">
+            <div class="col-md-6">
+              {{ form.district }}
+              <div class="invalid-feedback">{{ form.district.errors }}<span class="label" style="color:red"
+                  ng-show="form.purpose.$error.pattern">Only alphabets are allowed</span></div>
+            </div>
+            <div id="districtOthers" class="col-md-6">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* City</label>
+          <div class="row">
+            <div class="col-md-6">
+              {{ form.city }}
+              <div class="invalid-feedback">{{ form.city.errors }}<span class="label" style="color:red"
+                  ng-show="form.purpose.$error.pattern">Only alphabets are allowed</span></div>
+            </div>
+            <div id="cityOthers" class="col-md-6">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* Pincode</label>
+          <div class="row">
+            <div class="col-md-6">
+              {{ form.pincode }}
+              <div class="invalid-feedback">{{ form.pincode.errors }}<span class="label" style="color:red"
+                  ng-show="form.purpose.$error.pattern">Only alphabets are allowed</span></div>
+            </div>
+            <div id="pincodeOthers" class="col-md-6">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* Landmark</label>
+          {{ form.area }}
+          <div class="invalid-feedback">{{ form.area.errors }}<span class="label" style="color:red"
+              ng-show="form.tag_line.$error.pattern">Only alphabets are allowed</span></div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">* Mark location on the map</label>
+          <div>
+            <ul>
+              <li>Click on the 'Search' icon i.e. 'Magnifying glass'</li>
+              <li>Write the name of the locality, area, etc. where the place of worship is situated. </li>
+              <li>A list will be shown based on the search. Click on the desired search option from the list</li>
+              <li>The map will be updated. </li>
+              <li>Zoom in/out or click on the map and move left/right appropriately to locate the place of worship.</li>
+              <li>Click on the map to mark the place. A baloon will appear to confirm that the loation has been marked. You can mark it as many times as you like. The latest marked location will be considered.</li>
+              <li>Incase you are unable to locate the place of worship, try searching it on Wikipedia, Google maps, etc. </li>
+            </ul>
+          </div>
+          <div id="map" style="width:100%; height:400px;"></div>
+        </div>
+
+        <div class="form-group hidden">
+          <label for="title">Latitude</label>
+          {{ form.latitude }}
+          <div class="invalid-feedback">{{ form.latitude.errors }}</div>
+        </div>
+
+        <div class="form-group hidden">
+          <label for="title">Longitude</label>
+          {{ form.longitude }}
+          <div class="invalid-feedback">{{ form.longitude.errors }}</div>
+        </div>
+
+        {% if form.parent %}
+        <div class="form-group">
+          <label for="title">Place of Worship for</label>
+          {{ form.parent }}
+          <div class="invalid-feedback">
+            {{ form.parent.errors }}
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="title">Provide additional comments here</label>
+          {{ form.reason }}
+          <div class="invalid-feedback">{{ form.reason.errors }}<span class="label" style="color:red"
+              ng-show="form.tag_line.$error.pattern">Only alphabets are allowed</span></div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-outline-info" name="submit" value='submit' id="submit"
+            ng-disabled="form.$invalid">Submit</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/ol.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ol-ext.js' %}"></script>
+
+<script>
+  $("#id_state").change(function () {
+    var url = "{% url 'get_districts' %}"
+    var state = $(this).val();
+    $.ajax({
+      url: url,
+      data: {
+        'state': state
+      },
+      success: function (data) {
+        $("#id_district").html(data);
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#id_district").change(function () {
+    var url = "{% url 'get_cities' %}"
+    var district = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="text" value="" name="districtOthers" class="form-control" placeholder="Enter district in this textbox" required>'
+    document.getElementById("districtOthers").innerHTML = "";
+    if (district == 'Others') {
+      document.getElementById("districtOthers").appendChild(div);
+      $.ajax({
+        url: url,
+        data: {
+          'district': district,
+          'state': $(id_state).val()
+        },
+        success: function (data) {
+          $("#id_city").html(data);
+        }
+      });
+    }
+    else {
+      $.ajax({
+        url: url,
+        data: {
+          'district': district
+        },
+        success: function (data) {
+          $("#id_city").html(data);
+        }
+      });
+    }
+  });
+</script>
+
+<script>
+  $("#id_city").change(function () {
+    var url = "{% url 'get_pincodes' %}"
+    var city = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="text" value="" name="cityOthers" class="form-control" placeholder="Enter city in this textbox" required>'
+    document.getElementById("cityOthers").innerHTML = "";
+    if (city == 'Others') {
+      document.getElementById("cityOthers").appendChild(div);
+      $.ajax({
+        url: url,
+        data: {
+          'city': city,
+          'state': $(id_state).val()
+        },
+        success: function (data) {
+          $("#id_pincode").html(data);
+        }
+      });
+    }
+    else {
+      $.ajax({
+        url: url,
+        data: {
+          'city': city
+        },
+        success: function (data) {
+          $("#id_pincode").html(data);
+        }
+      });
+    }
+  });
+</script>
+
+<script>
+  $("#id_pincode").change(function () {
+    var pincode = $(this).val();
+    var div = document.createElement('DIV');
+    div.innerHTML = '<input type="number" min="100000" max="999999" value="" name="pincodeOthers" class="form-control" placeholder="Enter picode in this textbox" required>'
+    document.getElementById("pincodeOthers").innerHTML = "";
+    if (pincode == 'Others') {
+      document.getElementById("pincodeOthers").appendChild(div);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  // Layers
+  var layers = [new ol.layer.Tile({ source: new ol.source.OSM() })];
+
+  // Popup overlay
+  var placemark = new ol.Overlay.Placemark({
+    color: '#369',
+    contentColor: '#000',
+    onshow: function () { console.log("You opened a placemark"); },
+    autoPan: true,
+    autoPanAnimation: { duration: 250 }
+  });
+
+  // The map
+  longitude = 74.01024882911037;
+  latitude = 15.404310667583033;
+  var map;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(getCurrentLatLong, getDefaultLatLong);
+  }
+  else {
+    alert("Geolocation is not supported by this browser.");
+  }
+  function getCurrentLatLong(position) {
+    longitude = position.coords.longitude;
+    latitude = position.coords.latitude;
+    showMap()
+  }
+  function getDefaultLatLong(error) {
+    longitude = 72.8537904456501;
+    latitude = 19.02009319033155;
+    showMap()
+  }
+
+  function showMap() {
+    map = new ol.Map({
+      target: 'map',
+      view: new ol.View({
+        zoom: 16,
+        center: ol.proj.fromLonLat([longitude, latitude]),
+      }),
+      interactions: ol.interaction.defaults({ altShiftDragRotate: false, pinchRotate: false }),
+      layers: layers,
+      overlays: [placemark]
+    });
+
+    //Mark existing pow
+    details = []
+    {% for c in community %}
+    detail = []
+    detail.push('{{c.name}}')
+    detail.push('{{c.latitude}}')
+    detail.push('{{c.longitude}}')
+    details.push(detail)
+    {% endfor %}
+    for (let i = 0; i < details.length; i++) {
+      style = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [0.5, 24],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://maps.google.com/mapfiles/ms/micons/blue.png'
+        }),
+        text: new ol.style.Text({
+          font: 'bold 12px Arial, Helvetica, sans-serif',
+          fill: new ol.style.Fill({
+            color: 'white',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: 'gray'
+          }),
+          padding: [2, 2, 2, 2],
+          text: details[i][0],
+          offsetY: -35
+        })
+      });
+      var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [
+            new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.fromLonLat([details[i][2], details[i][1]])),
+            })
+          ]
+        })
+      });
+      layer.setStyle(style)
+      map.addLayer(layer);
+    }
+
+    // Current selection
+    var sLayer = new ol.layer.Vector({
+      source: new ol.source.Vector(),
+      style: new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 5,
+          stroke: new ol.style.Stroke({
+            color: 'rgb(255,165,0)',
+            width: 3
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255,165,0,.3)'
+          })
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'rgb(255,165,0)',
+          width: 3
+        }),
+        fill: new ol.style.Fill({
+          color: 'rgba(255,165,0,.3)'
+        })
+      })
+    });
+    map.addLayer(sLayer);
+
+    // Set the search control 
+    var search = new ol.control.SearchNominatim({
+      polygon: $("#polygon").prop("checked"),
+      reverse: true,
+      position: true
+    });
+    map.addControl(search);
+
+    // Select feature when click on the reference index
+    search.on('select', function (e) {
+      sLayer.getSource().clear();
+      // Check if we get a geojson to describe the search
+      if (e.search.geojson) {
+        var format = new ol.format.GeoJSON();
+        var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: map.getView().getProjection() });
+        sLayer.getSource().addFeature(f);
+        var view = map.getView();
+        var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), map.getSize());
+        var zoom = view.getZoomForResolution(resolution);
+        var center = ol.extent.getCenter(f.getGeometry().getExtent());
+        // redraw before zoom
+        setTimeout(function () {
+          view.animate({
+            center: center,
+            zoom: Math.min(zoom, 16)
+          });
+        }, 100);
+      }
+      else {
+        map.getView().animate({
+          center: e.coordinate,
+          zoom: Math.max(map.getView().getZoom(), 16)
+        });
+      }
+    });
+
+    //Get latitude and longitude
+    map.on('click', function (evt) {
+      console.info(evt.pixel);
+      console.info(map.getPixelFromCoordinate(evt.coordinate));
+      console.info(ol.proj.toLonLat(evt.coordinate));
+      var coords = ol.proj.toLonLat(evt.coordinate);
+      var lat = coords[1];
+      var lon = coords[0];
+      $("#id_latitude").val(lat)
+      $("#id_longitude").val(lon)
+      placemark.show(evt.coordinate);
+    });
+  }
+</script>
+
+{% endblock %}
